@@ -1,36 +1,37 @@
 import React, { useEffect } from "react";
-import styles from "./index.module.css";
-import Link from "@docusaurus/Link";
 import { motion, useAnimation } from "framer-motion";
-import { useInView } from "react-intersection-observer";
-import transitions from "@site/static/transitions.json";
+
+import Link from "@docusaurus/Link";
 import RightArrowSVG from "@site/static/img/svgIcons/rightArrowIcon.svg";
 import contribute from "@site/static/img/developers/contribute.webp";
+import styles from "./index.module.css";
+import transitions from "@site/static/transitions.json";
+import { useInView } from "react-intersection-observer";
 
 const cardsContent = [
   {
-    title: "Technical working groups",
-    body: "Help shape IC development ",
+    title: "Grupos de trabajo técnicos",
+    body: "Ayuda a dar forma al desarrollo de IC",
     link: "https://forum.dfinity.org/t/announcing-technical-working-groups/11781",
   },
   {
-    title: "Join the developer forum",
-    body: "Discuss with the community",
+    title: "Únete al foro de desarrolladores",
+    body: "Discute con la comunidad",
     link: "https://forum.dfinity.org/",
   },
   {
-    title: "Dev Discord Office Hours",
-    body: "Every Wednesday at 9am CET and 7pm CET",
+    title: "Office hours en Discord para desarrolladores",
+    body: "Todos los miércoles a las 9am CET y 7pm CET",
     link: "https://discord.internetcomputer.org",
   },
   {
-    title: "DFINITY developer grants and bounties",
-    body: "Kickstart your idea or get paid to build on ICP",
+    title: "Subvenciones y recompensas para desarrolladores de DFINITY",
+    body: "Inicia tu idea o recibe pago por construir en ICP",
     link: "https://dfinity.org/grants/",
   },
   {
-    title: "Bug bounty program",
-    body: "Report potential security vulnerabilities and get rewards",
+    title: "Programa de recompensas por errores",
+    body: "Informa posibles vulnerabilidades de seguridad y recibe recompensas",
     link: "https://dfinity.org/bug-bounty/",
   },
 ];
@@ -65,10 +66,11 @@ function Index() {
     >
       <div id="features" />
       <motion.p variants={transitions.item} className={styles.title}>
-        Contribute to the <br /> Internet Computer
+        Contribuir con <br /> Internet Computer
       </motion.p>
       <motion.p variants={transitions.item} className={styles.subtitle}>
-        Take a deeper dive into further resources in the developer ecosystem.
+        Explora más a fondo los recursos adicionales del ecosistema de
+        desarrolladores.
       </motion.p>
       <motion.div
         className={styles.scrollContainer}
@@ -102,14 +104,15 @@ function Index() {
             variants={transitions.item}
             className={styles.callToActionTitle}
           >
-            Help us make the docs better
+            Ayúdanos a mejorar la documentación.
           </motion.p>
           <motion.p
             variants={transitions.item}
             className={styles.callToActionText}
           >
-            These docs are a community effort. Create a PR if you see mistakes,
-            room for improvement, or new opportunities to help IC developers.
+            Esta documentación es un esfuerzo de la comunidad. Crea un PR si ves
+            errores, oportunidades de mejora o nuevas formas de ayudar a los
+            desarrolladores de IC.
           </motion.p>
           <motion.div
             variants={transitions.item}
@@ -119,7 +122,7 @@ function Index() {
               className={styles.actionButton}
               to="https://github.com/dfinity/portal"
             >
-              CONTRIBUTE
+              CONTRIBUIR
             </Link>
           </motion.div>
         </div>
@@ -134,7 +137,7 @@ function Index() {
         <img
           className={styles.mobileContributeGraphic}
           src={contribute}
-          alt=""
+          alt="Contribuir"
         />
       </motion.div>
     </motion.div>

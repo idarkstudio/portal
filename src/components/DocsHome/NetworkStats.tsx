@@ -1,7 +1,7 @@
-import { getCanisterCount } from "@site/src/utils/network-stats";
 import React from "react";
-import { useQuery } from "react-query";
 import Tooltip from "../Common/Tooltip";
+import { getCanisterCount } from "@site/src/utils/network-stats";
+import { useQuery } from "react-query";
 
 function InfoIcon() {
   return (
@@ -47,23 +47,23 @@ export const NetworkStats = () => {
     <div className="networkstats flex flex-col sm:flex-row justify-between items-stretch whitespace-nowrap">
       <figure className="m-0 text-center flex flex-col items-center">
         <figcaption className="tw-paragraph-sm font-medium text-black/60 inline-flex gap-2 items-center mb-2">
-          Storage Costs
+          Costo de Almacenamiento
           <Tooltip
-            tooltip="Cost of storing 1 GB for a year in a canister smart contract"
+            tooltip="Costo de almacenar 1 GB durante un año en un canister"
             className="w-max whitespace-normal"
             wrapperClassName="inline-flex items-center"
           >
             <InfoIcon />
           </Tooltip>
         </figcaption>
-        <div className="tw-heading-6">$5 / GB / Year</div>
+        <div className="tw-heading-6">$5 / GB / Año</div>
       </figure>
-      
+
       <figure className="m-0 text-center flex flex-col items-center">
         <figcaption className="tw-paragraph-sm font-medium text-black/60 inline-flex gap-2 items-center mb-2">
-          Cost per Instruction
+          Costo por Instrucción
           <Tooltip
-            tooltip="Cost per instruction when executing canister smart contact code"
+            tooltip="Costo por instrucción al ejecutar el código de un contrato inteligente dentro del canister"
             className="w-max whitespace-normal"
             wrapperClassName="inline-flex items-center"
           >
@@ -72,12 +72,12 @@ export const NetworkStats = () => {
         </figcaption>
         <div className="tw-heading-6">$0.000000000000536</div>
       </figure>
-      
+
       <figure className="m-0 text-center flex flex-col items-center">
         <figcaption className="tw-paragraph-sm font-medium text-black/60 inline-flex gap-2 items-center mb-2">
           Canisters
           <Tooltip
-            tooltip="Number of running canister smart contracts"
+            tooltip="Número de canisters en ejecución"
             className="w-max whitespace-normal"
             wrapperClassName="inline-flex items-center"
           >

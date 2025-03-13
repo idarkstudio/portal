@@ -824,39 +824,30 @@
         ]
       },
       {
-        "name": "AI Model for Motoko code generation",
-        "milestone_id": "Beacon",
-        "description": "This milestone is the first step towards improving the capability of Large Language Models to effectively generate code in the Motoko programming language.",
-        "eta": "April 2025",
-        "status": "in_progress",
-        "elements": [
-          {
-            "title": "Motoko coding fine-tuned model",
-            "overview": "Fine-tune multiple Large Language Models (LLMs) using high-quality Motoko code samples to develop the most efficient and high-performing model for Motoko programming.",
-            "status": "in_progress",
-            "milestone_id": "Beacon"
-          },
-          {
-            "title": "Model benchmarks for Motoko coding",
-            "overview": "Develop a comprehensive set of benchmarks to evaluate model performance for Motoko programming. This includes assessing both existing base LLMs and fine-tuned models to ensure accurate measurement of the effectiveness of fine-tuning efforts.",
-            "status": "in_progress",
-            "milestone_id": "Beacon"
-          },
-          {
-            "title": "Caffeine integration",
-            "overview": "Integrate the results of the fine-tuning work into Caffeine to improve the quality of generated Motoko code. This will involve leveraging the highest-performing fine-tuned model, implementing a Retrieval-Augmented Generation (RAG) solution, and optimizing prompt engineering.",
-            "status": "in_progress",
-            "milestone_id": "Beacon"
-          }
-        ]
-      },
-      {
         "name": "Caffeine alpha launch – dawn of the self-writing internet",
         "milestone_id": "Vertex",
         "description": "Alpha release of the Caffeine platform that allows prompt-based creation of full-stack applications. This represents a vertex where unique ICP technologies, such as its serverless compute model, enhanced orthogonal persistence, and AI models for Motoko code generation meet, creating the self-writing internet.",
         "eta": null,
         "status": "in_progress",
         "elements": [
+          {
+            "title": "Motoko coding fine-tuned model",
+            "overview": "Fine-tune multiple Large Language Models (LLMs) using high-quality Motoko code samples to develop the most efficient and high-performing model for Motoko programming.",
+            "status": "in_progress",
+            "milestone_id": "Vertex"
+          },
+          {
+            "title": "Model benchmarks for Motoko coding",
+            "overview": "Develop a comprehensive set of benchmarks to evaluate model performance for Motoko programming. This includes assessing both existing base LLMs and fine-tuned models to ensure accurate measurement of the effectiveness of fine-tuning efforts.",
+            "status": "in_progress",
+            "milestone_id": "Vertex"
+          },
+          {
+            "title": "Caffeine integration",
+            "overview": "Integrate the results of the fine-tuning work into Caffeine to improve the quality of generated Motoko code. This will involve leveraging the highest-performing fine-tuned model, implementing a Retrieval-Augmented Generation (RAG) solution, and optimizing prompt engineering.",
+            "status": "in_progress",
+            "milestone_id": "Vertex"
+          },
           {
             "title": "Caffeine platform",
             "overview": "First release of the Caffeine platform for prompt-based ICP app creation. Integrating the fine-tuned models for Motoko code generation and using the Orbit framework to claim ownership of AI-generated applications.",
