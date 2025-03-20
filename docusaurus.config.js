@@ -25,7 +25,12 @@ const howItWorksArticlesPlugin = require("./plugins/howitworks-articles");
 const math = require("remark-math");
 const katex = require("rehype-katex");
 const votingRewardsPlugin = require("./plugins/voting-rewards");
-const { getSplatRedirects, getRedirects, getExactUrlRedirects, getExternalRedirects } = require("./plugins/utils/redirects");
+const {
+  getSplatRedirects,
+  getRedirects,
+  getExactUrlRedirects,
+  getExternalRedirects,
+} = require("./plugins/utils/redirects");
 const fs = require("fs");
 const validateShowcasePlugin = require("./plugins/validate-showcase.js");
 const contentfulPlugin = require("./plugins/contentful");
@@ -59,13 +64,13 @@ const subnavItems = [
     type: "doc",
     position: "left",
     docId: "home",
-    label: "Home",
+    label: "Inicio",
   },
   {
     type: "docSidebar",
     position: "left",
     sidebarId: "build",
-    label: "Building apps",
+    label: "Construyendo apps",
     activeBasePath: "/docs/build/",
   },
   {
@@ -86,51 +91,52 @@ const subnavItems = [
     type: "docSidebar",
     position: "left",
     sidebarId: "references",
-    label: "References",
+    label: "Referencias",
     activeBasePath: "/docs/references/",
   },
   {
     type: "dropdown",
     position: "left",
-    label: "Resources",
+    label: "Recursos",
     items: [
       {
         label: "Awesome Internet Computer",
         href: "https://github.com/dfinity/awesome-internet-computer#readme",
       },
       {
-        label: "Sample projects",
+        label: "Proyectos de ejemplo",
         href: "https://internetcomputer.org/samples",
       },
       {
-        label: "SDK Release Notes",
+        label: "Notas de lanzamiento del SDK",
         type: "doc",
         docId: "other/updates/release-notes/release-notes",
       },
-      { label: "Developer Grants", href: "https://dfinity.org/grants" },
       {
-        label: "ICP Ninja",
-        href: "https://icp.ninja"
+        label: "Grants (subvenciones) para desarrolladores",
+        href: "https://dfinity.org/grants",
       },
       {
-        label: "ICP Developer Forum",
+        label: "ICP Ninja",
+        href: "https://icp.ninja",
+      },
+      {
+        label: "Foro de desarrolladores de ICP",
         href: "https://forum.dfinity.org/",
       },
       {
-        label: "ICP Developer Discord",
+        label: "Discord de desarrolladores de ICP",
         href: "https://discord.internetcomputer.org",
       },
     ],
   },
   /**
    * Add UI tests in development mode
-  * process.env.NODE_ENV === "development" && {
-  *   label: "UI Tests",
-  *   href: "/docs/tests/all",
-  */
-
+   * process.env.NODE_ENV === "development" && {
+   *   label: "UI Tests",
+   *   href: "/docs/tests/all",
+   */
 ].filter(Boolean);
-
 
 /** @type {import("./src/components/Common/MarketingNav").MarketingNavType} */
 const marketingNav = {
@@ -568,7 +574,7 @@ function getImageDataUrl(url) {
 const config = {
   title: "Internet Computer",
   tagline:
-    "The Internet Computer hosts secure, network-resident code and data. Build web apps without Big Tech and current IT. Applications are immune to cyber attacks and unstoppable, capable of processing tokens, and can run under exclusive DAO control. Build web3 social media, games, DeFi, multi-chain apps, secure front-ends, ledgers, enterprise apps, and AI models. TCP/IP connected software. Now ICP hosts software.",
+    "Internet Computer aloja código y datos seguros y residentes en la red. Construye aplicaciones web sin depender de las grandes empresas de tecnología y la infraestructura actual. Las aplicaciones son inmunes a los ataques cibernéticos, capaces de procesar tokens y pueden funcionar bajo el control exclusivo de DAO. Construye redes sociales web3, juegos, DeFi, aplicaciones multi-chain, front-ends seguros, libros contables, aplicaciones empresariales y modelos de IA. Software conectado por TCP/IP. Ahora ICP aloja software.",
   url: isDeployPreview
     ? `https://${process.env.PREVIEW_CANISTER_ID}.icp0.io`
     : "https://internetcomputer.org",
@@ -595,11 +601,11 @@ const config = {
         "https://s3.coinmarketcap.com/static-gravity/image/2fb1bc84c1494178beef0822179d137d.png",
       "data-modal-override-open-class": "ask-ai-widget-trigger",
       "data-modal-ask-ai-input-placeholder":
-        "Ask me a question about the Internet Computer Protocol",
+        "Preguntame algo sobre Internet Computer",
       "data-modal-example-questions":
-        "What is the ICP token?, How is the Internet Computer governed?, How do I start building fully onchain Web3?",
+        "¿Qué es el token ICP?, ¿Cómo Internet Computer es governado?, ¿Cómo empiezo a construir completamente en Web3?",
       "data-modal-disclaimer":
-        " This LLM provides responses are generated automatically and may be inaccurate or outdated. Please take care to verify or validate any responses before making any critical decisions.",
+        "Este LLM proporciona respuestas generadas automáticamente y pueden ser inexactas o desactualizadas. Por favor, asegúrese de verificar o validar cualquier respuesta antes de tomar decisiones críticas.",
       "data-user-analytics-fingerprint-enabled": "true",
       "data-modal-z-index": "1001",
       async: true,
@@ -627,18 +633,18 @@ const config = {
     youtubePlugin,
     validateShowcasePlugin,
     externalRedirectsPlugin({
-    redirects: [...getExternalRedirects(), ...getExactUrlRedirects()],
-  }),
+      redirects: [...getExternalRedirects(), ...getExactUrlRedirects()],
+    }),
 
-  [
-    "@docusaurus/plugin-client-redirects",
-    {
-      fromExtensions: ["html", "md"],
-      redirects: getRedirects(),
-      createRedirects: (existingPath) => getSplatRedirects(existingPath)
-    },
+    [
+      "@docusaurus/plugin-client-redirects",
+      {
+        fromExtensions: ["html", "md"],
+        redirects: getRedirects(),
+        createRedirects: (existingPath) => getSplatRedirects(existingPath),
+      },
+    ],
   ],
-],
 
   presets: [
     [
@@ -690,12 +696,12 @@ const config = {
         defaultMode: "light",
         respectPrefersColorScheme: true,
       },
-        // github codeblock theme configuration
-        codeblock: {
-          showGithubLink: true,
-          githubLinkLabel: 'View on GitHub',
-          showRunmeLink: false,
-          runmeLinkLabel: 'Checkout via Runme'
+      // github codeblock theme configuration
+      codeblock: {
+        showGithubLink: true,
+        githubLinkLabel: "View on GitHub",
+        showRunmeLink: false,
+        runmeLinkLabel: "Checkout via Runme",
       },
       metadata: [
         {
@@ -748,7 +754,7 @@ const config = {
               {
                 label: "Node Providers",
                 href: "/node-providers",
-                target: '_self',
+                target: "_self",
               },
               {
                 label: "Dashboard",
@@ -861,7 +867,5 @@ const config = {
   themes: ["@saucelabs/theme-github-codeblock", "@docusaurus/theme-mermaid"],
   clientModules: [require.resolve("./static/load_moc.ts")],
 };
-
-
 
 module.exports = config;

@@ -48,25 +48,24 @@ html[data-theme='dark']:root,
   --doc-sidebar-width: 350px !important;
 }
 
-html.docs-wrapper[data-theme='dark'] {
-
+html.docs-wrapper[data-theme="dark"] {
   --icp-white: #fff;
   --icp-black: #000;
-  --icp-raven: oklch(from var(--icp-black) calc(l + .25) c h);
-  --icp-purple: #AE9EFF;
+  --icp-raven: oklch(from var(--icp-black) calc(l + 0.25) c h);
+  --icp-purple: #ae9eff;
   --icp-pink: #e300b6;
 
   --icp-surface: var(--icp-raven);
   --icp-on-surface: var(--icp-white);
   --icp-on-surface--inverted: var(--icp-black);
 
-  --icp-surface-box: oklch(from var(--icp-raven) calc(l + .05) c h);
+  --icp-surface-box: oklch(from var(--icp-raven) calc(l + 0.05) c h);
   --icp-on-surface-box: var(--icp-white);
 
   --icp-surface-highlight: var(--icp-surface-box);
   --icp-on-surface-highlight: var(--icp-white);
 
-  --icp-line: oklch(from var(--icp-surface-box) calc(l - .05) c h);
+  --icp-line: oklch(from var(--icp-surface-box) calc(l - 0.05) c h);
 
   --icp-interaction: var(--icp-purple);
   --icp-interaction-hover: var(--icp-pink);
@@ -77,8 +76,9 @@ html.docs-wrapper[data-theme='dark'] {
 
   --ifm-color-content: var(--icp-on-surface);
 
-  --docusaurus-highlighted-code-line-bg: oklch(from var(--icp-pink) calc(l - .3) c h);
-
+  --docusaurus-highlighted-code-line-bg: oklch(
+    from var(--icp-pink) calc(l - 0.3) c h
+  );
 
   body {
     --ifm-menu-color-active: var(--icp-interaction-text);
@@ -139,7 +139,9 @@ html.docs-wrapper[data-theme='dark'] {
     // NOTE: if `--ifm-color-primary` changes, the filter value should be recomputed
     // the following can be used to create a filter for a target hex color: https://codepen.io/sosuke/pen/Pjoqqp
     // also see https://stackoverflow.com/questions/42966641/how-to-transform-black-into-any-given-color-using-only-css-filters/43960991#43960991
-    --ifm-color-primary-filter: brightness(0) saturate(100%) invert(15%) sepia(45%) saturate(5162%) hue-rotate(277deg) brightness(98%) contrast(95%);
+    --ifm-color-primary-filter: brightness(0) saturate(100%) invert(15%)
+      sepia(45%) saturate(5162%) hue-rotate(277deg) brightness(98%)
+      contrast(95%);
 
     .navbar {
       padding: var(--ifm-navbar-y-padding) var(--ifm-navbar-x-padding);
@@ -177,7 +179,7 @@ html.docs-wrapper[data-theme='dark'] {
       color: var(--icp-on-surface--inverted, #000);
     }
 
-    main[class*=docMainContainer_] {
+    main[class*="docMainContainer_"] {
       background: var(--icp-surface);
     }
   }
@@ -243,13 +245,13 @@ html.docs-wrapper[data-theme='dark'] {
   }
 
   .button-ghost {
-    background: oklch(from var(--icp-surface-box) calc(l + .05) c h);
+    background: oklch(from var(--icp-surface-box) calc(l + 0.05) c h);
     color: var(--icp-on-surface-box);
     border-color: var(--icp-line);
   }
 }
 
-html[data-theme='dark'] {
+html[data-theme="dark"] {
   .mainsearchinput,
   input.mainsearchinput {
     color: #000;
@@ -295,7 +297,8 @@ html.plugin-blog {
   // NOTE: if `--ifm-color-primary` changes, the filter value should be recomputed
   // the following can be used to create a filter for a target hex color: https://codepen.io/sosuke/pen/Pjoqqp
   // also see https://stackoverflow.com/questions/42966641/how-to-transform-black-into-any-given-color-using-only-css-filters/43960991#43960991
-  --ifm-color-primary-filter: brightness(0) saturate(100%) invert(15%) sepia(45%) saturate(5162%) hue-rotate(277deg) brightness(98%) contrast(95%);
+  --ifm-color-primary-filter: brightness(0) saturate(100%) invert(15%)
+    sepia(45%) saturate(5162%) hue-rotate(277deg) brightness(98%) contrast(95%);
 
   .navbar {
     padding: var(--ifm-navbar-y-padding) var(--ifm-navbar-x-padding);
@@ -372,7 +375,6 @@ html.docs-doc-page:not(.docs-doc-id-home) {
     }
 
     @media (min-width: 996px) {
-
       div[class*="docItemContainer_"],
       div.blog-post-content-layout {
         // padding around article content
@@ -391,7 +393,7 @@ html.docs-doc-page:not(.docs-doc-id-home) {
 
       &:before {
         // TODO: can this string be localized?
-        content: "On this page";
+        content: "En esta página";
         font-weight: 500;
         text-transform: uppercase;
       }
@@ -404,23 +406,24 @@ html.docs-doc-page:not(.docs-doc-id-home) {
       background: #fdfdfd;
     }
 
-    .ic-chip-row+p:first-of-type,
-    .ic-chip-row+iframe {
+    .ic-chip-row + p:first-of-type,
+    .ic-chip-row + iframe {
       margin-top: 1rem;
     }
   }
 }
 
-
 div[class^="announcementBarContent"] {
-  background: linear-gradient(90.1deg,
-      #fbb03b 1.35%,
-      #f57c2d 15.43%,
-      #f15a24 26.38%,
-      #ed1e79 45.16%,
-      #be217d 54.55%,
-      #5c2684 76.97%,
-      #29abe2 99.92%);
+  background: linear-gradient(
+    90.1deg,
+    #fbb03b 1.35%,
+    #f57c2d 15.43%,
+    #f15a24 26.38%,
+    #ed1e79 45.16%,
+    #be217d 54.55%,
+    #5c2684 76.97%,
+    #29abe2 99.92%
+  );
   color: white;
   font-weight: bold;
 }
@@ -462,28 +465,36 @@ div[class^="announcementBarContent"] {
 }
 
 .panel-gradient {
-  background: linear-gradient(105.94deg,
-      rgba(255, 255, 255, 0.24) 0%,
-      rgba(255, 255, 255, 0) 38.54%,
-      rgba(255, 255, 255, 0.136216) 100%);
+  background: linear-gradient(
+    105.94deg,
+    rgba(255, 255, 255, 0.24) 0%,
+    rgba(255, 255, 255, 0) 38.54%,
+    rgba(255, 255, 255, 0.136216) 100%
+  );
 }
 
 .hero-stat-red {
-  background: linear-gradient(141.63deg,
-      #ffffff 19.8%,
-      rgba(236, 0, 140, 0.5) 112.99%);
+  background: linear-gradient(
+    141.63deg,
+    #ffffff 19.8%,
+    rgba(236, 0, 140, 0.5) 112.99%
+  );
 }
 
 .hero-stat-blue {
-  background: linear-gradient(141.63deg,
-      #ffffff 19.8%,
-      rgba(59, 0, 185, 0.5) 112.99%);
+  background: linear-gradient(
+    141.63deg,
+    #ffffff 19.8%,
+    rgba(59, 0, 185, 0.5) 112.99%
+  );
 }
 
 .hero-stat-green {
-  background: linear-gradient(141.63deg,
-      #ffffff 19.8%,
-      rgba(24, 208, 181, 0.5) 112.99%);
+  background: linear-gradient(
+    141.63deg,
+    #ffffff 19.8%,
+    rgba(24, 208, 181, 0.5) 112.99%
+  );
 }
 
 .component-fade-in {
@@ -622,7 +633,7 @@ div[class^="announcementBarContent"] {
 }
 
 // mobile top level sidebar
-.navbar-sidebar__item> :not(.theme-doc-sidebar-menu).menu__list {
+.navbar-sidebar__item > :not(.theme-doc-sidebar-menu).menu__list {
   .navbar__link--divider {
     display: block;
     margin: 0;
@@ -643,7 +654,7 @@ div[class^="announcementBarContent"] {
     }
   }
 
-  >.menu__list-item {
+  > .menu__list-item {
     margin-bottom: 14px;
     padding: 0 0 14px;
     border-bottom: 1px solid #18181814;
@@ -718,11 +729,11 @@ div[class^="announcementBarContent"] {
     padding-bottom: 12px;
   }
 
-  .navbar__link.dropdown--custom+.dropdown__menu {
+  .navbar__link.dropdown--custom + .dropdown__menu {
     display: grid;
   }
 
-  .navbar__link.dropdown--custom.dropdown--columns-2+.dropdown__menu {
+  .navbar__link.dropdown--custom.dropdown--columns-2 + .dropdown__menu {
     grid-template-columns: minmax(240px, 1fr) minmax(min-content, 1fr);
 
     li:nth-child(odd) {
@@ -763,7 +774,6 @@ div[class^="announcementBarContent"] {
 }
 
 .link-primary:not(.link-with-icon) {
-
   svg,
   img {
     vertical-align: text-bottom;

@@ -1,11 +1,12 @@
 import React, { FC, useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import { createActor } from "./actor";
-import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
-import { PageSearchResult } from "@site/search/src/declarations/search/search.did";
-import { createFocusTrap } from "focus-trap";
+
 import Link from "@docusaurus/Link";
+import { PageSearchResult } from "@site/search/src/declarations/search/search.did";
+import { createActor } from "./actor";
+import { createFocusTrap } from "focus-trap";
+import { motion } from "framer-motion";
 import { trackEvent } from "@site/src/utils/matomo";
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import useLockBodyScroll from "../../../utils/use-lock-body-scroll";
 
 let initialTerm = "";
@@ -139,7 +140,7 @@ const Search: FC<{ onClose: () => void }> = ({ onClose }) => {
                 <input
                   // type="search"
                   className="mainsearchinput block border-none tw-lead-sm bg-transparent py-[22px] px-4 pl-14 w-full focus:outline-none"
-                  placeholder="Search for anything"
+                  placeholder="Buscar cualquier cosa"
                   ref={inputRef}
                   value={term}
                   onChange={(e) => setTerm(e.target.value)}
@@ -176,7 +177,7 @@ const Search: FC<{ onClose: () => void }> = ({ onClose }) => {
                 className="font-circular link-primary bg-transparent px-3 h-12 border-none appearance-none self-center"
                 onClick={onClose}
               >
-                Cancel
+                Cancelar
               </button>
             </div>
 
@@ -238,7 +239,7 @@ const Search: FC<{ onClose: () => void }> = ({ onClose }) => {
                                 }))
                               }
                             >
-                              {result.results.length - 3} more results
+                              {result.results.length - 3} más resultados
                             </button>
                           )}
                         </div>
@@ -258,7 +259,7 @@ const Search: FC<{ onClose: () => void }> = ({ onClose }) => {
                     className="w-24"
                   />
                   <p className="tw-heading-6 mb-0">
-                    No results found for "{term}"
+                    No resultados encontrados para "{term}"
                   </p>
                 </div>
               </div>
