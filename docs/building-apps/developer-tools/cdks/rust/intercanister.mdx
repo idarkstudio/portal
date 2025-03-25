@@ -4,112 +4,199 @@ keywords: [beginner, rust, tutorial, inter-canister, calls]
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Inter-canister calls
+# Llamadas entre canisters
 
-<MarkdownChipRow labels={["Beginner", "Rust", "Tutorial"]} />
+<MarkdownChipRow labels={["Principiante", "Rust", "Tutorial"]} />
 
-Just like users can call canisters, canisters can also call other canisters. This tutorial provides an introduction to using these inter-canister calls in Rust.
+Así como los usuarios pueden llamar a canisters, los canisters también pueden
+llamar a otros canisters. Este tutorial proporciona una introducción al uso de
+estas llamadas entre canisters en Rust.
 
-This example will show how to call the counter canister, which provides four operations on a counter:
-1. Getting the counter value.
-2. Incrementing the counter.
-3. Setting the counter to an arbitrary value.
-4. Setting the counter to an arbitrary value while returning the previous value.
+Este ejemplo mostrará cómo llamar al canister contador, que proporciona cuatro
+operaciones sobre un contador:
 
-## Prerequisites
+1. Obtener el valor del contador.
+2. Incrementar el contador.
+3. Establecer el contador a un valor arbitrario.
+4. Establecer el contador a un valor arbitrario mientras se devuelve el valor
+   anterior.
 
-To follow along, clone the [Git repository](https://github.com/dfinity/examples) of the example repo. The code for this tutorial is in the `rust/inter-canister-calls` directory, where you can find the completed code in the `caller` package. Note that this example uses the alpha version of the Rust CDK.
+## Prerrequisitos
 
-Check out the Git repository of the tutorial. Then, in the tutorial directory, start a local IC instance in the background and install the counter canister:
+Para seguir este tutorial, clona el
+[repositorio Git](https://github.com/dfinity/examples) del ejemplo. El código
+para este tutorial está en el directorio `rust/inter-canister-calls`, donde
+puedes encontrar el código completo en el paquete `caller`. Ten en cuenta que
+este ejemplo usa la versión alpha del Rust CDK.
+
+Clona el repositorio Git del tutorial. Luego, en el directorio del tutorial,
+inicia una instancia local de IC en segundo plano e instala el canister
+contador:
 
 ```bash
 dfx start --background
 dfx deploy counter
 ```
 
-## Basic example: getting and setting the counter value
+## Ejemplo básico: obtener y establecer el valor del contador
 
-Your first example will be a `call_get_and_set` method on the caller canister, which simply invokes the `get_and_set` method on the counter project and forwards the result. This method sets the counter to the new value and returns the previous counter value.
+Tu primer ejemplo será un método `call_get_and_set` en el canister llamador
+(caller), que simplemente invoca el método `get_and_set` del proyecto contador y
+devuelve el resultado. Este método establece el contador a un nuevo valor y
+retorna el valor previo del contador.
 
-The finished code for the project is already available in `src/caller`. You can clear the contents of `src/caller/src/lib.rs`, and paste the following code. The explanation is within the comments.
+El código terminado para este proyecto ya está disponible en `src/caller`.
+Puedes borrar el contenido de `src/caller/src/lib.rs` y pegar el siguiente
+código. La explicación se encuentra en los comentarios.
 
 ```rust reference
 https://github.com/dfinity/examples/blob/d0d3fc814d8ae646d6aba3878d01f08d42da0d4f/rust/inter-canister-calls/src/caller/src/lib.rs#L1-L40
 ```
 
-Now, deploy this code to the local replica. This will give you some warnings about unused imports, but these will be used these later in the tutorial.
+Ahora, despliega este código en la réplica local. Esto te dará algunas
+advertencias sobre importaciones no utilizadas, pero estas se usarán más tarde
+en el tutorial.
 
 ```bash
 dfx deploy caller
 ```
 
-Let's test it out. Make a call to the `caller` canister:
+Vamos a probarlo. Haz una llamada al canister `caller`:
 
 ```bash
 dfx canister call caller call_get_and_set
 ```
 
-Now, `dfx` will use the `dfx.json` file provided in this tutorial's repository to search what parameters the different endpoints of the `caller` canister require. The `dfx.json` points to the `src/caller/caller.did` file, which describes the parameters of `call_get_and_set`. With this, `dfx` will first prompt you to provide a principal for the `counter` parameter of the `call_get_and_set` method.
+Ahora, `dfx` usará el archivo `dfx.json` proporcionado en el repositorio de este
+tutorial para buscar qué parámetros requieren los diferentes endpoints del
+canister `caller`. El archivo `dfx.json` apunta al archivo
+`src/caller/caller.did`, que describe los parámetros de `call_get_and_set`. Con
+esto, `dfx` primero te pedirá que proporciones un principal para el parámetro
+`counter` del método `call_get_and_set`.
 
-You can type `counter` and press `TAB` on your keyboard to pass the principal of the counter canister as the parameter, and then `Enter` to confirm. Also, select a number to set the counter to, say `42`.  Then, you will see an output such as:
+Puedes escribir `counter` y presionar `TAB` en tu teclado para pasar el
+principal del canister contador como parámetro, y luego `Enter` para confirmar.
+También selecciona un número para establecer el contador, digamos `42`.
+Entonces, verás una salida como:
 
 ```bash
 (0 : nat, 42 : nat)
 ```
 
-Here, the counter was increased from `0` to `42`.
+Aquí, el contador se incrementó de `0` a `42`.
 
-As the example notes, panicking when handling call errors is generally a bad idea past trivial examples such as this one. This is due to the nature of the Internet Computer's messaging model.
+Como señala el ejemplo, hacer panic al manejar errores de llamadas generalmente
+es una mala idea más allá de ejemplos triviales como este. Esto se debe a la
+naturaleza del modelo de mensajería de Internet Computer.
 
-## IC calls are asynchronous: non-atomic set-then-get
+## Las llamadas en IC son asíncronas: set-then-get no atómico
 
-You have already seen that the inter-canister calls use the Rust `async/await` syntax, hinting at the fact that these calls are **asynchronous**. This is a profound difference to the messaging model of some other chains (e.g., Ethereum). It enables significantly higher throughput, but can also affect correctness.
+Ya has visto que las llamadas entre canisters usan la sintaxis `async/await` de
+Rust, lo que sugiere que estas llamadas son **asíncronas**. Esta es una
+diferencia profunda con el modelo de mensajería de otras cadenas (como
+Ethereum). Permite un rendimiento significativamente mayor, pero también puede
+afectar la corrección.
 
-To illustrate, let's look at the following example, where it first calls the `set` method on the counter, and then calls `get` afterwards. Add the following code to your `src/caller/src/lib.rs`.
+Para ilustrarlo, veamos el siguiente ejemplo donde primero llama al método `set`
+en el contador, y luego llama a `get` después. Agrega el siguiente código a tu
+`src/caller/src/lib.rs`:
 
 ```rust reference
 https://github.com/dfinity/examples/blob/d0d3fc814d8ae646d6aba3878d01f08d42da0d4f/rust/inter-canister-calls/src/caller/src/lib.rs#L42-L60
 ```
 
-Let's try this out. As shown below, you can also pass the arguments directly to `dfx` instead of using the menu by encoding [Candid values](/docs/building-apps/interact-with-canisters/candid/candid-concepts) manually.
+Vamos a probarlo. Como se muestra a continuación, también puedes pasar los
+argumentos directamente a `dfx` en lugar de usar el menú codificando los
+[valores Candid](/docs/building-apps/interact-with-canisters/candid/candid-concepts)
+manualmente.
 
 ```bash
 dfx canister call caller set_then_get "( principal \"`dfx canister id counter`\", 7 : nat )"
 ```
 
-You should get the expected result:
+Deverías obtener el resultado esperado:
 
 ```bash
 (7 : nat)
 ```
 
-The value that is read from the counter is exactly the same as the value that was set. But as noted in the comments, this doesn't always have to hold! As IC calls are executed asynchronously, in between when the `set` and `get` calls in `call_get_and_set` execute, another canister could also call the `counter` canister and change the counter value. This of course cannot happen on your local installation since you control exactly which calls are made, but it can happen as soon as you install the code on the IC mainnet.
+El valor leído del contador es exactamente el mismo que el valor establecido.
+Pero como se menciona en los comentarios, ¡esto no siempre tiene que ser así!
+Como las llamadas en IC se ejecutan de forma asíncrona, entre la ejecución de
+las llamadas `set` y `get` en `call_get_and_set`, otro canister podría llamar al
+contador y cambiar su valor. Esto no puede ocurrir en tu instalación local ya
+que controlas exactamente qué llamadas se hacen, pero sí puede pasar cuando el
+código se instale en la mainnet de IC.
 
-This behavior enables much higher concurrent throughput between different canisters, since the `counter` canister isn't blocked from processing other requests while the caller canister is doing its processing. But it also has correctness and security implications. One particularly important aspect is that state changes aren't atomic. If you make multiple calls, the failure of a later call doesn't roll back the effects of previous calls.
+Este comportamiento permite un mayor rendimiento concurrente entre diferentes
+canisters, ya que el canister contador no se bloquea para procesar otras
+solicitudes mientras el canister llamador realiza su procesamiento. Sin embargo,
+también tiene implicaciones para la corrección y seguridad. Un aspecto
+particularmente importante es que los cambios de estado no son atómicos. Si
+haces múltiples llamadas, el fallo de una llamada posterior no revierte los
+efectos de llamadas anteriores.
 
-This also holds true for the effects on the caller canister itself. In particular, a caller that panics after making a call can end up in an inconsistent state. This is not an issue for the examples demonstrated so far, as the caller's internal state doesn't exist and thus can't become inconsistent.
+Esto también aplica para los efectos en el propio canister llamador.
+Específicamente, un llamador que entra en pánico después de hacer una llamada
+puede terminar en un estado inconsistente. Esto no es un problema para los
+ejemplos mostrados hasta ahora, ya que el estado interno del llamador no existe
+y por lo tanto no puede volverse inconsistente.
 
-For more information on the asynchronous execution model and its implications, read the documentation on [inter-canister calls and async code](/docs/references/async-code), [properties of call execution](/docs/references/message-execution-properties) and [security best practices](/docs/building-apps/security/security-best-practices/inter-canister-calls).
+Para más información sobre el modelo de ejecución asíncrono y sus implicaciones,
+consulta la documentación sobre:
+
+- [Llamadas entre canisters y código asíncrono](/docs/references/async-code)
+- [Propiedades de ejecución de mensajes](/docs/references/message-execution-properties)
+- [Mejores prácticas de seguridad](/docs/building-apps/security/security-best-practices/inter-canister-calls)
 
 :::info
-To summarize, the Internet Computer has an asynchronous messaging model that is  different from Ethereum and many other blockchains. This improves scalability, but you need to understand the implications, especially around when and how state is persisted.
+
+En resumen, Internet Computer tiene un modelo de mensajería asíncrono diferente
+al de Ethereum y otras blockchains. Esto mejora la escalabilidad, pero necesitas
+entender las implicaciones, especialmente sobre cuándo y cómo se persiste el
+estado.
+
 :::
 
-## Unbounded-wait calls: semantics and error cases
+## Llamadas de espera no acotada: semántica y casos de error
 
-The examples so far we have relied on *unbounded-wait calls*, without elaborating on what these are. An unbounded wait call instructs the system to wait for however long it takes in order to receive a response. This allows the system to always provide the caller with the exact response to the call. Since the response is thus guaranteed to be delivered to the caller, these calls are also referred to as *guaranteed response*  calls.
+Los ejemplos hasta ahora han usado _llamadas de espera no acotada_ sin explicar
+qué son. Una llamada de espera no acotada instruye al sistema a esperar el
+tiempo que sea necesario para recibir una respuesta. Esto permite que el sistema
+siempre proporcione al llamador la respuesta exacta a la llamada. Como se
+garantiza que la respuesta será entregada al llamador, estas llamadas también se
+conocen como _llamadas con respuesta garantizada_.
 
-Note that this response can still be a failure. For example, a call might fail because the called canister does not exist (e.g., it has been deleted), but also because the system is overloaded and can't deliver the call to the callee, so it just returns an error to the caller. It can also fail if the callee fails, for example, if it panics. In the absence of callee failure, an error result from an unbounded-wait call ensures that the call did not execute, that is, that it's cleanly rejected. Extend the example by adding this code to `src/caller/src/lib`:
+Ten en cuenta que esta respuesta aún puede ser un fallo. Por ejemplo, una
+llamada podría fallar porque el canister llamado no existe (fue eliminado), o
+porque el sistema está sobrecargado y no puede entregar la llamada, devolviendo
+un error al llamador. También puede fallar si el canister llamado falla, por
+ejemplo, si entra en pánico. Cuando no hay fallos en el canister llamado, un
+resultado de error en una llamada de espera no acotada garantiza que la llamada
+no se ejecutó, es decir, que fue limpiamente rechazada. Extiende el ejemplo
+añadiendo este código a `src/caller/src/lib`:
 
 ```rust reference
 https://github.com/dfinity/examples/blob/d0d3fc814d8ae646d6aba3878d01f08d42da0d4f/rust/inter-canister-calls/src/caller/src/lib.rs#L62-L80
 ```
 
-A clean reject of the increment call means that the counter hasn't changed. In general, if a call that changes the callee's state (such as `increment`) is rejected, this means that the state hasn't changed. With a non-clean reject you may not know what happened on the callee side and a thorough analysis may be needed.
+Un rechazo limpio de la llamada de incremento significa que el contador no ha
+cambiado. En general, si una llamada que cambia el estado del destinatario (como
+`increment`) es rechazada, esto significa que el estado no ha cambiado. Con un
+rechazo no limpio, puede que no sepas qué pasó en el lado del destinatario y
+podría ser necesario un análisis exhaustivo.
 
-The only cause of non-clean rejects for unbounded calls are panics and rejects on the callee side. These may be intentional rejects, or intentional panics on error conditions (such as the examples with the `expect` functions used earlier). They may also be bugs in the callee or the Wasm runtime may trap (the Wasm equivalent of panics) because the callee ran out of resources, such as available memory or cycles to perform some operations. In default local configurations, you don't have to worry about such resources.
+Las únicas causas de rechazos no limpios para llamadas no acotadas son panics y
+rechazos en el lado del destinatario. Estos pueden ser rechazos intencionales, o
+panics intencionales en condiciones de error (como los ejemplos con las
+funciones `expect` usadas anteriormente). También pueden ser bugs en el
+destinatario o que el runtime Wasm falle (el equivalente Wasm de los panics)
+porque el destinatario se quedó sin recursos, como memoria disponible o cycles
+para realizar algunas operaciones. En configuraciones locales por defecto, no
+tienes que preocuparte por estos recursos.
 
-Redeploy the canister to compile the added code, then observe the effect of `call_increment`:
+Vuelve a desplegar el canister para compilar el código añadido, luego observa el
+efecto de `call_increment`:
 
 ```bash
 dfx deploy caller
@@ -121,32 +208,74 @@ dfx canister call counter get
 (8: nat)
 ```
 
-However, on mainnet, without further precautions even incrementing our simple counter canister may trap because it fails to allocate memory for processing the request. To cope, the [best practice](/docs/building-apps/best-practices/idempotency) is to modify the callee to provide an endpoint that allows callers to query the result of state-changing calls. Furthermore, where possible, it is also good practice to make endpoints *idempotent*, where executing a call twice (and thus also multiple times) has the same effect as executing it just once, allowing the caller to simply retry its call. Such practices are also helpful for ingress calls, i.e., for outside users and applications interacting with your application over HTTP.
+Sin embargo, en mainnet, sin precauciones adicionales incluso incrementar
+nuestro simple canister contador podría fallar porque no puede asignar memoria
+para procesar la solicitud. Para manejar esto, la
+[mejor práctica](/docs/building-apps/best-practices/idempotency) es modificar el
+destinatario para proporcionar un endpoint que permita a los llamadores
+consultar el resultado de llamadas que cambian el estado. Además, cuando sea
+posible, también es una buena práctica hacer que los endpoints sean
+_idempotentes_, donde ejecutar una llamada dos veces (y por lo tanto múltiples
+veces) tiene el mismo efecto que ejecutarla una sola vez, permitiendo al
+llamador simplemente reintentar su llamada. Estas prácticas también son útiles
+para llamadas de entrada, es decir, para usuarios externos y aplicaciones que
+interactúan con tu aplicación a través de HTTP.
 
-Unbounded-wait calls thus can provide a simple error handling semantics, as long as you are very confident that the callee won't trap, or you for some reason don't care about the cases of the callee trapping. However, the fact that these calls will wait for as long as it takes to receive a response means that they don't return for as long as the callee is delaying providing an answer. In the case of buggy — or even malicious — callees, the caller may end up waiting forever. This can block the caller from upgrading cleanly, since a clean upgrade requires all of the caller's outstanding calls to complete. As an alternative, you can use *bounded-wait* calls, which we will look at next.
+Las llamadas de espera no acotada pueden proporcionar una semántica simple de
+manejo de errores, siempre que estés muy seguro de que el destinatario no
+fallará, o por alguna razón no te importen los casos en que el destinatario
+falle. Sin embargo, el hecho de que estas llamadas esperarán todo el tiempo
+necesario para recibir una respuesta significa que no regresarán mientras el
+destinatario esté retrasando la respuesta. En el caso de destinatarios con
+bugs - o incluso maliciosos - el llamador podría terminar esperando para
+siempre. Esto puede bloquear al llamador para actualizarse limpiamente, ya que
+una actualización limpia requiere que todas las llamadas pendientes del llamador
+se completen. Como alternativa, puedes usar llamadas de _espera acotada_, que
+veremos a continuación.
 
 :::info
-To summarize, unbounded wait calls wait for a response forever, but the response might still be a failure. With unbounded wait calls, failures mean that either the call wasn't executed, or that the callee trapped or rejected the call. Waiting forever carries risks when calling untrusted canisters.
+
+En resumen, las llamadas de espera no acotada esperan una respuesta para
+siempre, pero la respuesta aún podría ser un fallo. Con llamadas de espera no
+acotada, los fallos significan que o la llamada no se ejecutó, o que el
+destinatario falló o rechazó la llamada. Esperar para siempre conlleva riesgos
+al llamar a canisters no confiables.
+
 :::
 
-## Bounded-wait calls: semantics and error cases
+## Llamadas de espera acotada: semántica y casos de error
 
-*Bounded-wait calls* do not wait forever for the response to arrive, but will effectively time out after a while and just return an error to the caller. For this reason, they are also referred to as *best-effort response* calls. These calls have two significant advantages over unbounded-wait calls:
+Las _llamadas de espera acotada_ no esperan para siempre a que llegue la
+respuesta, sino que efectivamente expirarán después de un tiempo y simplemente
+devolverán un error al llamador. Por esta razón, también se les conoce como
+llamadas de _respuesta de mejor esfuerzo_. Estas llamadas tienen dos ventajas
+significativas sobre las llamadas de espera no acotada:
 
-1. They ensure that your canister won't stall (in particular, become unable to stop and upgrade) if it calls into canisters you don't control or trust.
-2. They scale much better.
+1. Aseguran que tu canister no se bloqueará (en particular, no se volverá
+   incapaz de detenerse y actualizarse) si llama a canisters que no controlas o
+   en los que no confías.
+2. Escalan mucho mejor.
 
-However, they have more complicated error handling: non-clean rejects — where you don't know whether the call was executed – can result not only from panics on the caller, but also from timing the call out. This increases the chance of non-clean rejects significantly. Callee panics should be an edge case, but timeouts will also occur whenever the load on the system or the callee is high.
+Sin embargo, tienen un manejo de errores más complicado: los rechazos no
+limpios - donde no sabes si la llamada se ejecutó - pueden resultar no solo de
+panics en el llamador, sino también de que la llamada expire. Esto aumenta
+significativamente la probabilidad de rechazos no limpios. Los panics del
+destinatario deberían ser casos extremos, pero los timeouts también ocurrirán
+cuando la carga en el sistema o el destinatario sea alta.
 
-Thus, bounded-wait calls are suitable only for reads, or for state-changing calls that follow the best practice of providing a separate query endpoint for the result, and/or are idempotent.
+Por lo tanto, las llamadas de espera acotada solo son adecuadas para lecturas, o
+para llamadas que cambian el estado y siguen la mejor práctica de proporcionar
+un endpoint de consulta separado para el resultado, y/o son idempotentes.
 
-For example, you can safely call the counter's `get` endpoint using a bounded-wait call, since this is just a read. Edit `src/caller/src/lib.rs` to add the following method:
+Por ejemplo, puedes llamar de forma segura al endpoint `get` del contador usando
+una llamada de espera acotada, ya que esto es solo una lectura. Edita
+`src/caller/src/lib.rs` para añadir el siguiente método:
 
 ```rust reference
 https://github.com/dfinity/examples/blob/d0d3fc814d8ae646d6aba3878d01f08d42da0d4f/rust/inter-canister-calls/src/caller/src/lib.rs#L82-L99
 ```
 
-Let's try it out. Redeploy the canister and call the new method:
+Vamos a probarlo. Despliega el canister y llama al nuevo método:
 
 ```bash
 dfx deploy caller
@@ -154,40 +283,74 @@ dfx canister call caller call_get "( principal \"`dfx canister id counter`\" )"
 (variant { Ok = 8 : nat })
 ```
 
-Idempotent endpoints give the caller a chance to try and clean errors up by simply retrying. For example, the `set` endpoint of the counter is idempotent. But even with idempotent endpoints, there are limits to what the caller can do. For example, it shouldn't retry forever, because, as mentioned earlier, this might block the canister from upgrading.
+Idempotent endpoints give the caller a chance to try and clean errors up by
+simply retrying. For example, the `set` endpoint of the counter is idempotent.
+But even with idempotent endpoints, there are limits to what the caller can do.
+For example, it shouldn't retry forever, because, as mentioned earlier, this
+might block the canister from upgrading.
 
-Furthermore, there are also errors that are likely to be hit again if you just retry immediately. In this case, you will have to leave the clean up to the upstream caller. Let's see an example of what a retry strategy might look like.
+Furthermore, there are also errors that are likely to be hit again if you just
+retry immediately. In this case, you will have to leave the clean up to the
+upstream caller. Let's see an example of what a retry strategy might look like.
 
 ```rust reference
 https://github.com/dfinity/examples/blob/d0d3fc814d8ae646d6aba3878d01f08d42da0d4f/rust/inter-canister-calls/src/caller/src/lib.rs#L101-L137
 ```
 
-To test, let's call the new endpoint with the value 42.
+Para probar, llamemos al nuevo endpoint con el valor 42.
 
 ```bash
 dfx canister call caller stubborn_set "( principal \"`dfx canister id counter`\", 42 : nat )"
 (variant { Ok })
 ```
 
-The Rust CDK provides helpful functions such as `is_clean_reject` and `is_immediately_retryable` to help with error handling. Under the hood, this interprets the different reject codes generated by the system. If you have more knowledge of how your canister works, you may be able to provide a more precise interpretation for your use case. Consult the [interface specification](/docs/references/ic-interface-spec/) and its section on [reject codes](/docs/references/ic-interface-spec/#reject-codes) for more details.
+El Rust CDK proporciona funciones útiles como `is_clean_reject` e
+`is_immediately_retryable` para ayudar con el manejo de errores. Internamente,
+estas interpretan los diferentes códigos de rechazo generados por el sistema. Si
+tienes más conocimiento sobre cómo funciona tu canister, podrías proporcionar
+una interpretación más precisa para tu caso de uso. Consulta la
+[especificación de interfaz](/docs/references/ic-interface-spec/) y su sección
+sobre [códigos de rechazo](/docs/references/ic-interface-spec/#reject-codes)
+para más detalles.
 
 :::info
-To summarize, bounded-wait calls will time out after a while, but you might not know whether the callee executed the call or not. Use them for reads or endpoints that are idempotent or provide a way to query their results.
+
+En resumen, las llamadas de espera acotada expirarán después de un tiempo, pero
+podrías no saber si el destinatario ejecutó la llamada o no. Úsalas para
+lecturas o endpoints que sean idempotentes o que proporcionen una forma de
+consultar sus resultados.
+
 :::
 
-## Attaching cycles: canister signatures
+## Adjuntar cycles: firmas de canister
 
-A canister can attach [cycles](/docsbuilding-apps/getting-started/tokens-and-cycles) (Internet Computer "gas") to any call that they make, transferring cycles from the caller's to the callee's cycle balance. The callee must explicitly [accept](https://docs.rs/ic-cdk/latest/ic_cdk/api/call/fn.msg_cycles_accept128.html) such cycles; non-accepted cycles are refunded to the caller.
+Un canister puede adjuntar
+[cycles](/docsbuilding-apps/getting-started/tokens-and-cycles) (el "gas" de
+Internet Computer) a cualquier llamada que realice, transfiriendo cycles del
+balance del llamador al del destinatario. El destinatario debe
+[aceptar](https://docs.rs/ic-cdk/latest/ic_cdk/api/call/fn.msg_cycles_accept128.html)
+explícitamente estos cycles; los cycles no aceptados son reembolsados al
+llamador.
 
-Cycle transfers are generally either used to pay for the callee's costs of processing the call or to move and store cycles as assets. An example where they are used to pay for call processing costs is the IC [threshold signature feature](/docs/building-apps/network-features/signatures/t-ecdsa), which allows a canister to hold a cryptographic key and sign messages with it. An example of cycles being used as assets is the [cycles ledger](/docs/defi/token-ledgers/cycles-ledger/).
+Las transferencias de cycles generalmente se usan para pagar los costos de
+procesamiento de la llamada por parte del destinatario o para mover y almacenar
+cycles como activos. Un ejemplo donde se usan para pagar costos de procesamiento
+es la
+[función de firmas de umbral](/docs/building-apps/network-features/signatures/t-ecdsa)
+del IC, que permite a un canister mantener una clave criptográfica y firmar
+mensajes con ella. Un ejemplo de cycles usados como activos es el
+[libro mayor de cycles](/docs/defi/token-ledgers/cycles-ledger/).
 
-Below is a threshold signature example that shows how to attach cycles to a call:
+A continuación se muestra un ejemplo de firma de umbral que ilustra cómo
+adjuntar cycles a una llamada:
 
 ```rust reference
 https://github.com/dfinity/examples/blob/d0d3fc814d8ae646d6aba3878d01f08d42da0d4f/rust/inter-canister-calls/src/caller/src/lib.rs#L139-L181
 ```
 
-Let's test this by calling the `sign_message` method. The exact signature in your response will differ, as it will based on a secret key from your local replica.
+Vamos a probar esto llamando al método `sign_message`. La firma exacta en tu
+respuesta será diferente, ya que se basará en una clave secreta de tu réplica
+local.
 
 ```bash
 dfx canister call caller sign_message '("Some text to be signed")'
@@ -198,19 +361,47 @@ dfx canister call caller sign_message '("Some text to be signed")'
 )
 ```
 
-Cycles can be attached to both bounded and unbounded wait messages. For unbounded wait messages, cycles that are not consumed by the callee are guaranteed to be refunded to the caller. As the example notes, refunds do not happen for bounded-wait calls that result in an error with the `SysUnknown` reject code, which is the code issued when the system decides to stop waiting for a response.
+Los cycles pueden adjuntarse tanto a mensajes de espera acotada como no acotada.
+Para mensajes de espera no acotada, los cycles no consumidos por el destinatario
+están garantizados de ser reembolsados al llamador. Como señala el ejemplo, no
+hay reembolsos para llamadas de espera acotada que resulten en un error con el
+código de rechazo `SysUnknown`, que es el código emitido cuando el sistema
+decide dejar de esperar una respuesta.
 
-However, this is usually acceptable for API calls that charge for cycles, since the amount charged is usually low (10 billion cycles for signatures with the test key). For transferring larger amounts of cycles, switch to using unbounded wait calls. See the section on [inter-canister calls](/docs/references/async-code) for more details.
+Sin embargo, esto suele ser aceptable para llamadas API que cobran cycles, ya
+que el monto cargado suele ser bajo (10 mil millones de cycles para firmas con
+la clave de prueba). Para transferir cantidades mayores de cycles, cambia a usar
+llamadas de espera no acotada. Consulta la sección sobre
+[llamadas entre canisters](/docs/references/async-code) para más detalles.
 
 :::info
-To summarize, you can transfer cycles to the callee by attaching them to a bounded- or unbounded-wait call. Bounded-wait calls may drop the attached cycles, so avoid using them for large cycle amounts.
+
+En resumen, puedes transferir cycles al destinatario adjuntándolos a una llamada
+de espera acotada o no acotada. Las llamadas de espera acotada pueden perder los
+cycles adjuntos, así que evita usarlas para cantidades grandes de cycles.
+
 :::
 
-## Further reading
+## Lecturas adicionales
 
-More details on how inter-canister calls execute and how the different call types work is provided in the documentation on [inter-canister calls and async code](/docs/references/async-code). Also consult the documentation on [properties of call execution](/docs/references/message-execution-properties) and [security best practices](/docs/building-apps/security/security-best-practices/inter-canister-calls). To allow your callers to handle call errors robustly, follow the [best practice](/docs/building-apps/best-practices/idempotency) document on retries and idempotency.
+Más detalles sobre cómo se ejecutan las llamadas entre canisters y cómo
+funcionan los diferentes tipos de llamadas están disponibles en la documentación
+sobre:
 
-As noted in our examples, an `update` method can always call any method of any other canister. In cases where you only need to call query methods on other canisters, and if you are sure that these canisters are on the same subnet as your canister, you can also use [composite query calls](/docs/building-apps/interact-with-canisters/query-calls) methods instead of update methods.
+- [Llamadas entre canisters y código asíncrono](/docs/references/async-code)
+- [Propiedades de ejecución de llamadas](/docs/references/message-execution-properties)
+- [Mejores prácticas de seguridad](/docs/building-apps/security/security-best-practices/inter-canister-calls)
 
-For a real-life example of how to handle errors when calling canisters, see the [ICRC-1 examples](/docs/defi/token-ledgers/usage/icrc1_ledger_usage)
+Para permitir que tus llamadores manejen errores de llamada de manera robusta,
+sigue las [mejores prácticas](/docs/building-apps/best-practices/idempotency)
+sobre reintentos e idempotencia.
 
+Como se mencionó en nuestros ejemplos, un método `update` siempre puede llamar a
+cualquier método de otro canister. En casos donde solo necesites llamar métodos
+query en otros canisters, y si estás seguro de que estos canisters están en la
+misma subred que el tuyo, también puedes usar
+[llamadas de consulta compuestas](/docs/building-apps/interact-with-canisters/query-calls)
+en lugar de métodos update.
+
+Para un ejemplo real de cómo manejar errores al llamar canisters, consulta los
+[ejemplos de ICRC-1](/docs/defi/token-ledgers/usage/icrc1_ledger_usage)

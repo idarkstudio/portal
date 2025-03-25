@@ -7,40 +7,62 @@ import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 import TabItem from "@theme/TabItem";
 import Tabs from "@theme/Tabs";
 
-# Rust CDK
+# Rust CDK (Kit de Desarrollo de Canisters)
 
-<MarkdownChipRow labels={["Beginner", "Rust"]} />
+<MarkdownChipRow labels={["Principiante", "Rust"]} />
 
-Rust is a powerful and type-sound modern programming language with an active developer community. Because Rust compiles to WebAssembly, it offers a rich development environment for writing dapps to run on ICP.
+Rust es un lenguaje de programación moderno, potente y con sólido sistema de
+tipos, que cuenta con una activa comunidad de desarrolladores. Al compilar a
+WebAssembly, Rust ofrece un entorno de desarrollo enriquecido para crear dapps
+que se ejecutan en ICP.
 
-Developing canisters in Rust is supported on ICP through the [Rust canister development kit (CDK)](https://github.com/dfinity/cdk-rs), which is developed and maintained by DFINITY. Rust is natively supported by ICP developer tools such as [`dfx`](/docs/building-apps/developer-tools/dfx/) and [PocketIC](/docs/building-apps/advanced/test/pocket-ic), and can be used with features such as [HTTP certification](/docs/building-apps/network-features/using-http/http-certification/custom-http-canisters), [composite queries](/docs/building-apps/interact-with-canisters/query-calls), and [query stats](/docs/building-apps/interact-with-canisters/query-calls).
+El desarrollo de canisters en Rust está soportado en ICP a través del
+[Rust Canister Development Kit (CDK)](https://github.com/dfinity/cdk-rs),
+desarrollado y mantenido por DFINITY. Rust tiene soporte nativo en herramientas
+de desarrollo para ICP como [`dfx`](/docs/building-apps/developer-tools/dfx/) y
+[PocketIC](/docs/building-apps/advanced/test/pocket-ic), y puede utilizarse con
+características como:
 
-While using the IC SDK is the typical workflow for most developers to develop Rust canisters, experienced developers may choose to circumvent the IC SDK entirely and use the Rust CDK directly.
+- [Certificación HTTP](/docs/building-apps/network-features/using-http/http-certification/custom-http-canisters)
+- [Consultas compuestas](/docs/building-apps/interact-with-canisters/query-calls)
+- [Estadísticas de consultas](/docs/building-apps/interact-with-canisters/query-calls)
 
-The Rust CDK consists of the following crates:
+Aunque el uso del IC SDK es el flujo de trabajo típico para desarrollar
+canisters en Rust, desarrolladores experimentados pueden optar por omitir el IC
+SDK y usar directamente el Rust CDK.
 
-- [`ic-cdk`](https://crates.io/crates/ic-cdk): Core methods that enable Rust programs to interact with the ICP system API.
+## Componentes del Rust CDK
 
-- [`ic-cdk-macros`](https://crates.io/crates/ic-cdk-macros): Defines the procedural macros (e.g., `update`, `query`, `import`) that facilitate building operation endpoints and APIs.
+El Rust CDK consta de los siguientes crates:
 
-- [`ic-cdk-timers`](https://crates.io/crates/ic-cdk-timers): Provides an API to schedule multiple timers and periodic tasks.
+- [`ic-cdk`](https://crates.io/crates/ic-cdk): Métodos principales que permiten
+  a programas Rust interactuar con la API del sistema ICP.
 
-## Rust documentation
+- [`ic-cdk-macros`](https://crates.io/crates/ic-cdk-macros): Define macros
+  procedurales (ej. `update`, `query`, `import`) que facilitan la construcción
+  de endpoints y APIs.
 
-The Rust CDK documentation can be found on [crates.io](https://crates.io/crates/ic-cdk).
+- [`ic-cdk-timers`](https://crates.io/crates/ic-cdk-timers): Provee una API para
+  programar múltiples temporizadores y tareas periódicas.
 
-The following documentation pages detail specific Rust workflows, best practices, and considerations:
+## Documentación de Rust
 
-- [Globally mutable state](canister-state.mdx).
+La documentación del Rust CDK está disponible en
+[crates.io](https://crates.io/crates/ic-cdk).
 
-- [Generating Candid for Rust canisters](generating-candid.mdx).
+Las siguientes páginas detallan flujos de trabajo específicos, mejores prácticas
+y consideraciones para Rust:
 
-- [Inter-canister calls](intercanister.mdx).
+- [Estado mutable global](canister-state.mdx)
 
-- [Message inspection](message-inspect.mdx).
+- [Generación de Candid para canisters Rust](generating-candid.mdx)
 
-- [Rust limitations](rust-limitations.mdx).
+- [Llamadas entre canisters](intercanister.mdx)
 
-- [Stable structures](stable-structures.mdx).
+- [Inspección de mensajes](message-inspect.mdx)
 
-- [Upgrading Rust canisters](upgrading.mdx).
+- [Limitaciones de Rust](rust-limitations.mdx)
+
+- [Estructuras estables](stable-structures.mdx)
+
+- [Actualización de canisters Rust](upgrading.mdx)

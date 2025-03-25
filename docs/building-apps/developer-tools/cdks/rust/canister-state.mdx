@@ -1,20 +1,35 @@
 ---
-keywords: [beginner, rust, tutorial, canister state, counter example, rust canister state]
+keywords:
+  [
+    beginner,
+    rust,
+    tutorial,
+    canister state,
+    counter example,
+    rust canister state,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import TabItem from "@theme/TabItem";
 import Tabs from "@theme/Tabs";
 
-# Globally mutable states
+# Estados mutables globales
 
-<MarkdownChipRow labels={["Beginner", "Rust"]} />
+<MarkdownChipRow labels={["Principiante", "Rust"]} />
 
-By design, canisters on ICP are structured in a way that forces developers to use a global mutable state. However, Rust's design makes it difficult to use global mutable variables. This results in Rust developers needing to choose a method of code organization that takes ICP's design into consideration. This guide will cover a few of those code organization options.
+Por diseño, los canisters en ICP están estructurados de manera que obliga a los
+desarrolladores a usar un estado mutable global. Sin embargo, el diseño de Rust
+dificulta el uso de variables globales mutables. Esto hace que los
+desarrolladores de Rust necesiten elegir un método de organización de código que
+tenga en cuenta el diseño de ICP. Esta guía cubrirá algunas de esas opciones de
+organización de código.
 
-### Using `thread_local!` with `Cell/RefCell` for state variables
+### Usar `thread_local!` con `Cell/RefCell` para variables de estado
 
-Using `thread_local!` with `Cell/RefCell` is the safest option to avoid issues with asynchronous calls and memory corruption. The following is an example of how `thread_local!` can be used:
+Usar `thread_local!` con `Cell/RefCell` es la opción más segura para evitar
+problemas con llamadas asíncronas y corrupción de memoria. El siguiente es un
+ejemplo de cómo se puede usar `thread_local!`:
 
 ```rust
 thread_local! {
@@ -23,11 +38,15 @@ thread_local! {
 }
 ```
 
-### Canister code should be target-independent
+### El código del canister debe ser independiente del objetivo
 
-It pays off to factor most of the canister code into loosely coupled modules and packages and to test them independently. Most of the code that depends on the system API should go into the main file.
+Vale la pena dividir la mayor parte del código del canister en módulos y
+paquetes débilmente acoplados y probarlos de forma independiente. La mayor parte
+del código que depende de la API del sistema debe ir en el archivo principal.
 
-It is also possible to create a thin abstraction for the system API and test your code with a fake but faithful implementation. For example, you could use the following trait to abstract the stable memory API:
+También es posible crear una abstracción delgada para la API del sistema y
+probar tu código con una implementación falsa pero fiel. Por ejemplo, podrías
+usar el siguiente trait para abstraer la API de memoria estable:
 
 ```rust
 pub trait Memory {
@@ -38,16 +57,23 @@ pub trait Memory {
 }
 ```
 
-## Observability
+## Observabilidad
 
-Metrics can be used to gain insight into a wide range of information regarding your canister's production services. This data is important to learn about your canister's statistics and productivity. The following metrics can be important to watch:
+Las métricas se pueden usar para obtener información sobre una amplia gama de
+aspectos relacionados con los servicios de producción de tu canister. Estos
+datos son importantes para conocer las estadísticas y productividad de tu
+canister. Las siguientes métricas pueden ser importantes de monitorear:
 
-- The size of the canister's stable memory.
-- The size of the canister's internal data structures
-- The sizes of objects allocated within the heap.
-- The date and time the canister was last upgraded.
+- El tamaño de la memoria estable del canister.
+- El tamaño de las estructuras de datos internas del canister.
+- Los tamaños de los objetos asignados dentro del heap.
+- La fecha y hora en que el canister se actualizó por última vez.
 
-In Rust, you can expose a query call that returns a data structure containing your canister's metrics. If this data is not intended to be public, this query can be configured to be rejected based on the caller's principal. This approach provides a response that is structured and easy to parse.
+En Rust, puedes exponer una llamada de consulta que devuelva una estructura de
+datos que contenga las métricas de tu canister. Si estos datos no están
+destinados a ser públicos, esta consulta se puede configurar para que se rechace
+según el principal del llamante. Este enfoque proporciona una respuesta
+estructurada y fácil de analizar.
 
 ```rust
 pub struct MyMetrics {
@@ -65,7 +91,9 @@ fn metrics() -> MyMetrics {
 }
 ```
 
-You can also expose the canister's metrics in a format that your monitoring system can ingest through the canister's HTTP gateway. For text-based exposition formats, the following example can be used:
+También puedes exponer las métricas del canister en un formato que tu sistema de
+monitoreo pueda ingerir a través de la puerta de enlace HTTP del canister. Para
+formatos de exposición basados en texto, se puede usar el siguiente ejemplo:
 
 ```rust
 fn http_request(req: HttpRequest) -> HttpResponse {
@@ -82,4 +110,3 @@ registered_users_total {}",
   }
 }
 ```
-

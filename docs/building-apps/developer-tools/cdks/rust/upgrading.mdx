@@ -4,32 +4,62 @@ keywords: [beginner, rust, tutorial, upgrading canisters, upgrade]
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Upgrading a Rust canister
+# Actualización de un canister Rust
 
-<MarkdownChipRow labels={["Beginner", "Rust", "Tutorial"]} />
+<MarkdownChipRow labels={["Principiante", "Rust", "Tutorial"]} />
 
-Unlike a canister reinstall that preserves the canister identifier but no state, a canister upgrade enables you to preserve the state of a deployed canister and change the code.
+A diferencia de una reinstalación de canister que preserva el identificador pero
+no el estado, una actualización de canister permite preservar el estado mientras
+se cambia el código.
 
-For example, assume you have a dapp that manages professional profiles and social connections. If you want to add a new feature to the dapp, you need to be able to update the canister code without losing any of the previously stored data. A canister upgrade enables you to update existing canister identifiers with program changes without losing the program state.
+Por ejemplo, supongamos que tienes una dapp que gestiona perfiles profesionales
+y conexiones sociales. Si deseas añadir una nueva funcionalidad, necesitas poder
+actualizar el código del canister sin perder los datos almacenados previamente.
+Una actualización de canister te permite modificar el código manteniendo el
+mismo identificador y conservando el estado del programa.
 
-## Canister upgrades
+## Proceso de actualización de canisters
 
-When a canister needs to be upgraded, the following workflow is used:
-- The system discards canister memory and instantiates the new version of your WebAssembly module. The system does preserve the stable memory, which is now available in the new version.
-- The system calls a `post_upgrade` hook on the newly created instance if your canister defines it. The `init` function is not executed.
-- If the canister traps (throws an unrecoverable error) in any of the steps above, the system reverts the canister to the pre-upgrade state.
+Cuando un canister necesita actualizarse, se sigue este flujo:
 
-### Versioning stable memory
+1. El sistema descarta la memoria del canister e instancia la nueva versión del
+   módulo WebAssembly. La memoria estable se preserva y queda disponible en la
+   nueva versión.
+2. El sistema llama al hook `post_upgrade` en la nueva instancia si está
+   definido. La función `init` no se ejecuta.
+3. Si ocurre un error irrecuperable (trap) durante estos pasos, el sistema
+   revierte el canister a su estado previo a la actualización.
 
-Stable memory is a data persistence feature on ICP. Stable memory is used to store data that persists across canister upgrades. The maximum data storage size of stable memory is 500GiB if the subnet can accommodate it.
+### Versionado de memoria estable
 
-In comparison, heap memory (also referred to as "main memory") refers to the regular Wasm data storage for a canister. Heap memory is not persisted across canister upgrades and is limited to 4GiB.
+La memoria estable es un mecanismo de persistencia de datos en ICP que persiste
+entre actualizaciones, con capacidad máxima de 500GiB (según disponibilidad de
+la subred).
 
-Stable memory can be viewed as the communication channel between old and new versions of a canister. As good practice, communication protocols should be versioned. In some cases, developers may want to radically change something, such as the serialization format or the stable data layout of their canister. In radical changes like these, the stable memory decoding mechanism may need to guess the data's format, which can become messy and complicated. To make this process easier, stable memory versioning should be planned. It can be as simple as declaring that the first byte of the canister's stable memory will be used to represent the version number.
+Comparativamente, la memoria heap (o "memoria principal") es el almacenamiento
+regular Wasm de un canister, limitado a 4GiB y no persistente entre
+actualizaciones.
 
-### Testing upgrade hooks
+La memoria estable actúa como canal de comunicación entre versiones antiguas y
+nuevas de un canister. Como buena práctica, estos protocolos de comunicación
+deben versionarse. En cambios radicales (como modificar formatos de
+serialización o disposición de datos), el mecanismo de decodificación podría
+necesitar adivinar el formato, lo que puede volverse complejo. Para
+simplificarlo, se recomienda implementar versionado, que puede ser tan simple
+como usar el primer byte de la memoria estable para indicar el número de
+versión.
 
-It is best practice to test upgrades before applying them in order to catch any potential errors that may result in losing data irrevocably. To test upgrades, several different workflows or approaches can be used, such as shell or bash scripts or Rust test scripts. The following pseudocode showcases a Rust upgrade example that adds an additional step to execute the state validation of your upgrade test.
+### Pruebas de hooks de actualización
+
+Es una mejor práctica probar las actualizaciones antes de aplicarlas para
+detectar posibles errores que podrían causar pérdida irreversible de datos. Para
+probar actualizaciones se pueden usar varios enfoques:
+
+- Scripts en shell/bash
+- Scripts de prueba en Rust
+
+El siguiente pseudocódigo muestra un ejemplo en Rust que añade un paso adicional
+para validar el estado después de una prueba de actualización:
 
 ```
 let canister_id = install_canister(WASM);
@@ -39,53 +69,92 @@ let data = query_canister(canister_id);
 assert_eq!(data, expected_value);
 ```
 
-Then, your tests should be run twice in two different scenarios:
-- In a scenario without any upgrades, to assure that your tests run successfully without executing an upgrade.
-- In a scenario with an upgrade, to assure that your tests run successfully while executing an upgrade.
-You then run your tests twice in different modes:
+Luego, tus pruebas deben ejecutarse dos veces en dos escenarios diferentes:
 
-By running both of these tests, developers can gain confidence that when an upgrade is applied to a canister, the canister's state is preserved.
+1. **Escenario sin actualizaciones**: Para verificar que las pruebas funcionan
+   correctamente sin ejecutar una actualización.
+2. **Escenario con actualización**: Para asegurar que las pruebas funcionan
+   correctamente durante una actualización.
 
-:::caution
-Using pre_ and post_upgrade hooks is discouraged. It is error-prone and can render a canister unusable. Per best practices, using these methods should be avoided if possible.
-
-If you do use them, it is not recommended to trap within the `pre_upgrade` hook. This is because while the `pre_upgrade` and `post_upgrade` hooks appear to be symmetrical, they are not.
-
-If the `pre_upgrade` hook succeeds, but the `post_upgrade` hook traps, the canister can be debugged and another version can be built. However, if the `pre_upgrade` hook traps, there is not much you can do about it; a broken `pre_upgrade` hook prevents you from changing the canister's behavior.
-:::
-
-### Using stable memory as primary storage
-
-When a canister is upgraded, there is a limit regarding how many cycles a canister can burn during that upgrade. If the canister goes beyond that limit, the upgrade will be canceled by the system, and the canister's state will be reverted. That means if you serialize the canister's whole state to stable memory in the `pre_upgrade` hook and the state becomes very large, the canister may not be able to be upgraded again.
-
-One way to prevent this is to avoid serializing the canister state to begin with. Stable memory can be used as the canister's primary storage, where it can be used to store each upgrade call. Using this method, the `pre_upgrade` hook may not be necessary, and the `post_upgrade` hook will burn fewer cycles.
+Al ejecutar ambos tipos de pruebas, los desarrolladores pueden confirmar que
+cuando se aplica una actualización a un canister, se preserva correctamente el
+estado del mismo.
 
 :::caution
-While this approach might be useful for some workflows, there are a few drawbacks to this approach:
-- It is a challenge to organize the flat address space of stable storage into a data structure, especially for complex canister states that consist of multiple interconnected data structures. The [ic-stable-structures](https://crates.io/crates/ic-stable-structures) package provides tools to help you organize data in stable memory.
-- Altering your canister's data layout may be counterproductive and infeasible.
-- There may be a need for your canister to have backward compatibility of its data structures; new versions of your canister may need to read data written by previous versions.
+
+Advertencia sobre hooks de actualización El uso de hooks `pre_upgrade` y
+`post_upgrade` está desaconsejado porque:
+
+- Son propensos a errores
+- Pueden dejar el canister inutilizable
+- Según las mejores prácticas, deberían evitarse cuando sea posible
+
+Si decides usarlos:
+
+- Evita que el hook `pre_upgrade` falle (haga trap), ya que mientras un error en
+  `post_upgrade` permite depurar y crear otra versión, un error en `pre_upgrade`
+  te deja sin opciones para cambiar el comportamiento del canister.
+
 :::
 
-Overall, if your canister plans to store gigabytes of state data and upgrade the code, it may be worth considering using stable memory for the primary storage despite the drawbacks of the approach.
+### Usar memoria estable como almacenamiento principal
 
-## Upgrading a canister
+Durante una actualización, existe un límite de cycles que el canister puede
+consumir. Si se excede este límite:
 
-Obtain the canister identifier of the canister(s) you'd like to upgrade. To do so, the following command can be used:
+- El sistema cancelará la actualización
+- Revertirá el estado del canister
+
+Esto es especialmente problemático si:
+
+- Serializas todo el estado del canister a memoria estable en `pre_upgrade`
+- El estado es muy grande (podría impedir futuras actualizaciones)
+
+**Solución alternativa**: Usar memoria estable como almacenamiento principal
+desde el inicio, guardando cada llamada de actualización. Esto permite:
+
+- Eliminar la necesidad del hook `pre_upgrade`
+- Reducir el consumo de cycles en `post_upgrade`
+
+:::caution
+
+Consideraciones importantes Este enfoque tiene desventajas:
+
+1. Organizar el espacio de direcciones plano de la memoria estable en
+   estructuras de datos complejas es difícil (puedes usar el paquete
+   [ic-stable-structures](https://crates.io/crates/ic-stable-structures) para
+   ayudar)
+2. Modificar el diseño de datos puede ser contraproducente
+3. Necesidad de mantener compatibilidad hacia atrás (nuevas versiones deben
+   poder leer datos de versiones anteriores)
+
+:::
+
+**Recomendación**: Vale la pena considerar este enfoque si tu canister:
+
+- Almacenará gigabytes de datos
+- Necesitará actualizaciones frecuentes de código
+
+## Procedimiento para actualizar un canister
+
+Para actualizar un canister:
+
+1. Obtén el identificador del canister usando el comando:
 
 ```bash
 dfx canister id [canister-name]
 ```
 
-Then, make any changes to the canister's code that you'd like to be included in the update.
+Luego, haz cualquier cambio en el código del canister que desees incluir en la
+actualización.
 
-To upgrade all canisters, the following command can be used:
+Para actualizar todos los canisters, usa el comando:
 
 ```bash
 dfx canister install --all --mode upgrade
 ```
 
-To upgrade a single canister, use the command:
+Para actualizar un solo canister, usa el comando:
 
 ```bash
 dfx canister install [canister-id] --mode upgrade

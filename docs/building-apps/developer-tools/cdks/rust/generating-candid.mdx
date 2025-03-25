@@ -6,37 +6,41 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import TabItem from "@theme/TabItem";
 import Tabs from "@theme/Tabs";
 
-# Generating Candid files for Rust canisters
+# Generación de archivos Candid para canisters Rust
 
-<MarkdownChipRow labels={["Beginner", "Rust"]} />
+<MarkdownChipRow labels={["Principiante", "Rust"]} />
 
-In versions of the Rusk CDK `v0.11.0` and higher, the Candid export workflow has been changed.
-You can call the `ic_cdk::export_candid!()` macro to enable the Candid export behavior, then use the [candid-extractor](https://github.com/dfinity/cdk-rs/tree/main/src/candid-extractor) to extract the Candid from the canister's Wasm.
+En las versiones del Rust CDK `v0.11.0` y superiores, el flujo de trabajo para
+exportar Candid ha cambiado. Puedes llamar a la macro `ic_cdk::export_candid!()`
+para habilitar el comportamiento de exportación Candid, y luego usar el
+[candid-extractor](https://github.com/dfinity/cdk-rs/tree/main/src/candid-extractor)
+para extraer el Candid del Wasm del canister.
 
-### Preparation
+### Preparación
 
-- #### Step 1: Upgrade `ic-cdk` dependency to v0.11.0 or higher:
+- #### Paso 1: Actualizar la dependencia `ic-cdk` a la versión v0.11.0 o superior:
 
 ```toml title="Cargo.toml"
 [dependencies]
 ic-cdk = "0.11.0"
 ```
 
-- #### Step 2: Install [candid-extractor](https://github.com/dfinity/cdk-rs/tree/main/src/candid-extractor):
+- #### Paso 2: Instalar [candid-extractor](https://github.com/dfinity/cdk-rs/tree/main/src/candid-extractor)
 
 ```bash
 cargo install candid-extractor
 ```
 
-With `cargo-binstall` you can install the prebuilt binary without waiting for compilation:
+Con `cargo-binstall` puedes instalar el binario precompilado sin esperar a la
+compilación:
 
 ```bash
 cargo binstall candid-extractor
 ```
 
-### Workflow
+### Flujo de trabajo
 
-- #### Step 1: Call the `export_candid` macro at the end of your `lib.rs` file:
+- #### Paso 1: Llama a la macro `export_candid` al final de tu archivo `lib.rs`:
 
 ```rust title="lib.rs"
 #[query]
@@ -53,19 +57,19 @@ fn world(name: String) -> String {
 ic_cdk::export_candid!();
 ```
 
-- #### Step 2: Compile the Canister Wasm module.
+- #### Paso 2: Compila el módulo Wasm del canister:
 
 ```bash
 cargo build --release --target wasm32-unknown-unknown --package <CANISTER>
 ```
 
-The Wasm module will be at:
+El módulo Wasm estará en:
 
 ```bash
 target/wasm32-unknown-unknown/release/<CANISTER>.wasm
 ```
 
-- #### Step 3: Extract candid from the Wasm module and save it to a file:
+- #### Paso 3: Extrae el archivo Candid del módulo Wasm y guárdalo en un archivo:
 
 ```bash
 candid-extractor target/wasm32-unknown-unknown/release/<CANISTER>.wasm > <CANISTER>.did

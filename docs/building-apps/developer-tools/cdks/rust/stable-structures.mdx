@@ -4,17 +4,28 @@ keywords: [intermediate, rust, tutorial, stable structures]
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Stable structures
+# Estructuras estables
 
-<MarkdownChipRow labels={["Intermediate", "Rust", "Tutorial"]} />
+<MarkdownChipRow labels={["Intermedio", "Rust", "Tutorial"]} />
 
-Stable structures are designed to use stable memory as the backing store, allowing them to grow to gigabytes in size without the need for `pre_upgrade`/`post_upgrade` hooks.
+Las estructuras estables están diseñadas para usar memoria estable como
+almacenamiento subyacente, permitiéndoles crecer hasta gigabytes de tamaño sin
+necesidad de hooks `pre_upgrade`/`post_upgrade`.
 
 :::danger
-Using pre_ and post_upgrade hooks is discouraged. It is error-prone and can render a canister unusable. Per best practices, using these methods should be avoided if possible.
+
+El uso de hooks pre_upgrade y post_upgrade está desaconsejado. Es propenso a
+errores y puede dejar un canister inutilizable. Según las mejores prácticas, se
+debe evitar el uso de estos métodos cuando sea posible.
+
 :::
 
-A [stable structure library](https://github.com/dfinity/stable-structures#readme) exists that aims to simplify managing data structures directly in stable memory and provides example code templates.
+Existe una
+[librería de estructuras estables](https://github.com/dfinity/stable-structures#readme)
+que busca simplificar el manejo de estructuras de datos directamente en memoria
+estable y proporciona plantillas de código de ejemplo.
 
-For more information about stable structures, please see the [stable structures library](https://github.com/dfinity/stable-structures) and [Roman's tutorial on stable structures](https://mmapped.blog/posts/14-stable-structures.html).
+Para más información sobre estructuras estables, consulta:
 
+- [La librería de estructuras estables](https://github.com/dfinity/stable-structures)
+- [El tutorial de Roman sobre estructuras estables](https://mmapped.blog/posts/14-stable-structures.html)
