@@ -7,116 +7,130 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import TabItem from "@theme/TabItem";
 import { OsType, useOs } from "/src/hooks/useOs";
 
-# Quick start
+# Inicio rápido
 
-<MarkdownChipRow labels={["Beginner"]} />
+<MarkdownChipRow labels={["Principiante"]} />
 
-Build Web3, DeFi, fully network-resident social media, games, enterprise apps,
-and just about anything else you can imagine. Your projects are immune to cyberattacks and unstoppable.
+Construye aplicaciones Web3, DeFi, redes sociales completamente residentes en la
+red, juegos, aplicaciones empresariales y prácticamente cualquier otra cosa que
+puedas imaginar. Tus proyectos son inmunes a los ciberataques e imparables.
 
-**Open your terminal and deploy in minutes using these steps.**
+**Abre tu terminal y despliega en minutos siguiendo estos pasos.**
 
 <AdornedTabs defaultValue={useOs().current}>
 <TabItem value={OsType.Linux} label="Linux">
 
-#### Prerequisites
+#### Prerrequisitos
 
-<input type="checkbox"/> Download and <a href="https://nodejs.org/en/download/package-manager">install Node.js</a>.
-<div>
-</div>
-<input type="checkbox"/> Install the <a href="https://github.com/libunwind/libunwind">libunwind</a> package. On Debian/Ubuntu: <code>sudo apt install libunwind-dev</code>.
+<input type="checkbox" /> Descargar e <a href="https://nodejs.org/en/download/package-manager">
+  instalar Node.js
+</a>
+.<div></div>
+<input type="checkbox" /> Instalar el paquete <a href="https://github.com/libunwind/libunwind">
+  libunwind
+</a>. En Debian/Ubuntu: <code>sudo apt install libunwind-dev</code>.
 
----------
+---
 
-#### 1. Install the IC SDK.
+#### 1. Instala el IC SDK.
 
 ```bash
 sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"
 ```
 
-Confirm the IC SDK has been installed (you may need to open a new terminal window):
+Confirma que el IC SDK se haya instalado (es posible que necesites abrir una
+nueva ventana de terminal):
 
 ```bash
 dfx --version
 ```
 
-#### 2. Create a new project.
+#### 2. Crea un nuevo proyecto.
 
 ```
 dfx new hello --type motoko --frontend react
 ```
 
-This generates a simple "Hello, [name]!" application that uses [Motoko](/docs/motoko/main/getting-started/motoko-introduction), React, and TypeScript.
+Esto genera una aplicación simple "Hola, [nombre]!" que utiliza
+[Motoko](/docs/motoko/main/getting-started/motoko-introduction), React y
+TypeScript.
 
-
-#### 3. Deploy the project.
+#### 3. Despliega el proyecto.
 
 ```
 cd hello
 dfx deploy --playground
 ```
 
-#### 4. Interact with the app.
+#### 4. Interactúa con la aplicación.
 
-Open the `frontend` URL in a web browser. You'll see the template React frontend interface.
+Abre la URL `frontend` en un navegador web. Verás la interfaz frontal de React
+del template.
 
-*Congratulations, you just created your first internet-native app!*
+_¡Felicidades, acabas de crear tu primera aplicación nativa de Internet!_
 
 :::info
 
-You can try other templates. Run `dfx new -h` for more information about the supported backend and frontend options.
+Puedes probar otros templates. Ejecuta `dfx new -h` para obtener más información
+sobre las opciones de backend y frontend admitidas.
 
 :::
 
 </TabItem>
 <TabItem value={OsType.macOs} label="macOS">
 
-#### Prerequisites
+#### Prerrequisitos
 
-<input type="checkbox"/> Download and <a href="https://nodejs.org/en/download/package-manager">install Node.js</a>. Using <a href="https://brew.sh/"> HomeBrew </a> is recommended.
-<div>
-</div>
-<input type="checkbox"/> Apple silicon machines (M1, M2, etc): Download and install Rosetta: <code>softwareupdate --install-rosetta</code>
+<input type="checkbox" /> Descargar e <a href="https://nodejs.org/en/download/package-manager">
+  instalar Node.js
+</a>
+. Se recomienda utilizar <a href="https://brew.sh/">HomeBrew</a>.<div></div>
+<input type="checkbox" /> Máquinas Apple Silicon (M1, M2, etc): Descargar e instalar
+Rosetta: <code>softwareupdate --install-rosetta</code>
 
----------
+---
 
-#### 1. Install the IC SDK.
+#### 1. Instala el IC SDK.
 
 ```bash
 sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"
 ```
 
-Confirm the IC SDK has been installed (you may need to open a new terminal window):
+Confirma que el IC SDK se haya instalado (es posible que necesites abrir una
+nueva ventana de terminal):
 
 ```bash
 dfx --version
 ```
 
-#### 2. Create a new project.
+#### 2. Crea un nuevo proyecto.
 
 ```
 dfx new hello --type motoko --frontend react
 ```
 
-This generates a simple "Hello, [name]!" application that uses [Motoko](/docs/motoko/main/getting-started/motoko-introduction), React, and TypeScript.
+Esto genera una aplicación simple "Hello, [name]!" que utiliza
+[Motoko](/docs/motoko/main/getting-started/motoko-introduction), React y
+TypeScript.
 
-
-#### 3. Deploy the project.
+#### 3. Despliega el proyecto.
 
 ```
 cd hello
 dfx deploy --playground
 ```
 
-#### 4. Interact with the app.
+#### 4. Interactúa con la aplicación.
 
-Open the `frontend` URL in a web browser. You'll see the template React frontend interface.
+Abre la URL `frontend` en un navegador web. Verás la interfaz frontal de React
+del template.
 
-*Congratulations, you just created your first internet-native app!*
+_¡Felicidades, acabas de crear tu primera aplicación nativa de Internet!_
 
 :::info
 
-You can try other templates. Run `dfx new -h` for more information about the supported backend and frontend options.
+Puedes probar otros templates. Ejecuta `dfx new -h` para obtener más información
+sobre las opciones de backend y frontend admitidas.
 
 :::
 
@@ -124,63 +138,74 @@ You can try other templates. Run `dfx new -h` for more information about the sup
 
 <TabItem value={OsType.Windows} label="Windows">
 
-#### Prerequisites
+#### Prerrequisitos
 
-`dfx` is not natively supported on Windows. You will need to install a Linux instance via Windows Subsystem for Linux and run all commands within that Linux instance.
+`dfx` no es compatible de forma nativa en Windows. Deberás instalar una
+instancia de Linux a través de Windows Subsystem for Linux y ejecutar todos los
+comandos dentro de esa instancia de Linux.
 
-<input type="checkbox"/> Download and install <a href="https://docs.microsoft.com/en-us/windows/wsl/install"> Windows Subsystem for Linux</a>.
-<div>
-</div>
-<input type="checkbox"/> Open a WSL terminal window.
-<div>
-</div>
-<input type="checkbox"/> Download and install a Linux distribution (i.e., Ubuntu) using Windows Subsystem for Linux: <code>wsl --install -d ubuntu</code>
-<div>
-</div>
-<input type="checkbox"/> Open the WSL Linux environment. Run all of the following commands within this environment.
-<div>
-</div>
-<input type="checkbox"/> Download and <a href="https://learn.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-wsl">install Node.js</a> within your WSL Linux environment.
+<input type="checkbox" /> Descargar e instalar <a href="https://docs.microsoft.com/en-us/windows/wsl/install">
+  {" "}
+  Windows Subsystem for Linux
+</a>
+.<div></div>
+<input type="checkbox" /> Abrir una ventana de terminal de WSL.
+<div></div>
+<input type="checkbox" /> Descargar e instalar una distribución de Linux (por
+ejemplo, Ubuntu) utilizando Windows Subsystem for Linux: <code>
+  wsl --install -d ubuntu
+</code>
+<div></div>
+<input type="checkbox" /> Abrir el entorno de Linux de WSL. Ejecutar todos los siguientes
+comandos dentro de este entorno.
+<div></div>
+<input type="checkbox" /> Descargar e <a href="https://learn.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-wsl">
+  instalar Node.js
+</a> dentro de tu entorno de Linux de WSL.
 
----------
+---
 
-#### 1. Install the IC SDK.
+#### 1. Instala el IC SDK.
 
 ```bash
 sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"
 ```
 
-Confirm the IC SDK has been installed (you may need to open a new terminal window):
+Confirma que el IC SDK se haya instalado (es posible que necesites abrir una
+nueva ventana de terminal):
 
 ```bash
 dfx --version
 ```
 
-#### 2. Create a new project.
+#### 2. Crea un nuevo proyecto.
 
 ```
 dfx new hello --type motoko --frontend react
 ```
 
-This generates a simple "Hello, [name]!" application that uses [Motoko](/docs/motoko/main/getting-started/motoko-introduction), React, and TypeScript.
+Esto genera una aplicación simple "Hola, [nombre]!" que utiliza
+[Motoko](/docs/motoko/main/getting-started/motoko-introduction), React y
+TypeScript.
 
-
-#### 3. Deploy the project.
+#### 3. Despliega el proyecto.
 
 ```
 cd hello
 dfx deploy --playground
 ```
 
-#### 4. Interact with the app.
+#### 4. Interactúa con la aplicación.
 
-Open the `frontend` URL in a web browser. You'll see the template React frontend interface.
+Abre la URL `frontend` en un navegador web. Verás la interfaz frontal de React
+del template.
 
-*Congratulations, you just created your first internet-native app!*
+_¡Felicidades, acabas de crear tu primera aplicación nativa de Internet!_
 
 :::info
 
-You can try other templates. Run `dfx new -h` for more information about the supported backend and frontend options.
+Puedes probar otros templates. Ejecuta `dfx new -h` para obtener más información
+sobre las opciones de backend y frontend admitidas.
 
 :::
 
@@ -188,14 +213,25 @@ You can try other templates. Run `dfx new -h` for more information about the sup
 
 </AdornedTabs>
 
-#### Possible next steps
+#### Posibles siguientes pasos
 
-- Learn more about this example [application's architecture](app-architecture.mdx).
+- Aprende más sobre la [arquitectura de la aplicación](app-architecture.mdx) de
+  este ejemplo.
 
-- Take a look at curated example code in [ICP Ninja](https://icp.ninja), a web-based IDE that allows you to deploy to the mainnet with a few clicks.
+- Echa un vistazo al código de ejemplo seleccionado en
+  [ICP Ninja](https://icp.ninja), un IDE basado en web que te permite
+  implementar en la mainnet con unos pocos clics.
 
-- Fork the [ICP example repo](https://github.com/dfinity/examples) that includes various code examples in different languages.
+- Haz un fork del
+  [repositorio de ejemplos de ICP](https://github.com/dfinity/examples) que
+  incluye varios ejemplos de código en diferentes lenguajes.
 
-- Continue setting up your local development environment by creating a [developer identity](/docs/building-apps/getting-started/identities) and [getting tokens](/docs/building-apps/getting-started/tokens-and-cycles) for more dapp deployments.
+- Continúa configurando tu entorno de desarrollo local creando una
+  [identidad de desarrollador](/docs/building-apps/getting-started/identities) y
+  obteniendo [tokens](/docs/building-apps/getting-started/tokens-and-cycles)
+  para más implementaciones de dapps.
 
-- Learn more about [canister smart contracts](/docs/building-apps/developing-canisters/write) and how to [deploy and manage them](/docs/building-apps/developing-canisters/deploy).
+- Aprende más sobre los
+  [contratos inteligentes de canister](/docs/building-apps/developing-canisters/write)
+  y cómo
+  [implementarlos y gestionarlos](/docs/building-apps/developing-canisters/deploy).
