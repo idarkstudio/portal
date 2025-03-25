@@ -1,108 +1,177 @@
 ---
-keywords: [beginner, concept, inside canisters, canister components, canister ids, input queues, canister storage, cycles balance]
+keywords:
+  [
+    beginner,
+    concept,
+    inside canisters,
+    canister components,
+    canister ids,
+    input queues,
+    canister storage,
+    cycles balance,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 
-# Canister smart contracts
+# Canisters (contratos inteligentes)
 
-<MarkdownChipRow labels={["Beginner", "Concept"]} />
+<MarkdownChipRow labels={["Principiante", "Concepto"]} />
 
-Canisters are WebAssembly (Wasm) programs with additional features that allow them to store persistent data, communicate with users and other canisters, and be managed by entities such as DAOs.
-To enable these functionalities, canisters have additional components alongside the standard Wasm code and memory. These components are outlined in the diagram below.
+Los canisters son programas WebAssembly (Wasm) con características adicionales
+que les permiten almacenar datos persistentes, comunicarse con usuarios y otros
+canisters, y ser gestionados por entidades como DAOs. Para habilitar estas
+funcionalidades, los canisters tienen componentes adicionales además del código
+Wasm estándar y la memoria. Estos componentes se ilustran en el siguiente
+diagrama.
 
 <div class="text--center">
-<img src="/img/docs/inside-canister.png" alt="Canister" width="600"/>
+  <img src="/img/docs/inside-canister.png" alt="Canister" width="600" />
 </div>
 
-## Canister ID
-A canister has a unique identifier that is often referred to as the address of the canister or the <GlossaryTooltip>principal</GlossaryTooltip> of the canister.
-When a user or a canister sends a message to another canister, they specify the target canister by its ID in the header of the message.
-The system then routes the message to the target canister and adds it to the input queue of that canister.
+## ID del Canister
 
-## Input queue
-Canisters have queues for incoming messages.
-When a canister is scheduled for execution, it takes one message from the queue and runs the corresponding Wasm function specified by that message.
-The code of the function is stored in the Wasm binary of the canister.
-During execution, the function reads the payload of the message and modifies the data stored in the canister.
+Cada canister tiene un identificador único que se conoce como la dirección del
+canister o el <GlossaryTooltip>principal</GlossaryTooltip> del canister. Cuando
+un usuario u otro canister envía un mensaje, especifica el canister destino
+mediante su ID en el encabezado del mensaje. El sistema luego enruta el mensaje
+al canister objetivo y lo agrega a su cola de entrada.
 
-:::info
-The order of messages in the queue depends on the implementation, and it is not necessarily FIFO (first-in, first-out).
-:::
+## Cola de entrada
 
-## Canister storage
-There are two types of [storage](/docs/building-apps/canister-management/storage) available to the canister: the Wasm memory and the stable memory.
-A function doesn’t need to do anything special to use the Wasm memory since this memory type is automatically used for heap-allocated objects.
-Wasm memory is currently 32-bit, with a maximum size limitation of 4GiB.
-Stable memory is 64-bit and allows the canister to scale beyond 4GiB.
-The function can access the stable memory by calling special [system functions](/docs/references/ic-interface-spec#system-api-stable-memory) such as `stable64_read` and `stable64_write`.
+Los canisters tienen colas para mensajes entrantes. Cuando un canister es
+programado para ejecución, toma un mensaje de la cola y ejecuta la función Wasm
+correspondiente especificada por ese mensaje. El código de la función se
+almacena en el binario Wasm del canister. Durante la ejecución, la función lee
+el contenido del mensaje y modifica los datos almacenados en el canister.
 
-Both the Wasm and stable memories are persistent in the sense that the system automatically commits all memory modifications after a successful execution of a message.
-If the message execution fails, then the changes are not committed.
-The difference between the Wasm and the stable memory becomes important during canister upgrades to new Wasm code.
-A canister upgrade clears the Wasm memory but preserves the stable memory (hence the name).
+:::info El orden de los mensajes en la cola depende de la implementación y no
+necesariamente sigue un esquema FIFO (primero en entrar, primero en salir). :::
 
-## Output queue
-During execution, the canister may send messages to other canisters.
-These messages are enqueued in the output queue of the canister after a successful execution.
-Later on, ICP delivers these messages to the target canisters for processing.
+## Almacenamiento del Canister
 
-:::info
-Canister-to-canister calls are implemented on top of messages. Each call consists of two messages: the call message from the caller to the callee and the response message from the callee to the caller.
-:::
+Existen dos tipos de
+[almacenamiento](/docs/building-apps/canister-management/storage) disponibles
+para el canister: la memoria Wasm y la memoria estable (stable memory). Las
+funciones usan automáticamente la memoria Wasm para objetos asignados en el
+heap. La memoria Wasm es actualmente de 32 bits, con un límite máximo de 4GiB.
+La memoria estable es de 64 bits y permite al canister escalar más allá de 4GiB.
+Las funciones pueden acceder a la memoria estable llamando a
+[funciones especiales del sistema](/docs/references/ic-interface-spec#system-api-stable-memory)
+como `stable64_read` y `stable64_write`.
 
-## Cycles balance
-Canisters pay for execution in [cycles](/docs/building-apps/essentials/gas-cost).
-The cost of execution depends on the number and type of executed Wasm instructions.
-The system charges this cost to the cycles balance of the canister for both successful and failed executions.
+Ambos tipos de memoria son persistentes, ya que el sistema guarda
+automáticamente todos los cambios después de una ejecución exitosa de un
+mensaje. Si la ejecución falla, los cambios no se guardan. La diferencia entre
+ambas memorias es importante durante actualizaciones del canister: una
+actualización borra la memoria Wasm pero preserva la memoria estable (de ahí su
+nombre).
 
-## Controllers
-Only [controllers](/docs/building-apps/canister-management/control) of the canister can do certain system-level operations on the canister, such as stopping it, starting it, upgrading it, etc.
-The list of controller principals is stored in the canister.
-Both users and canisters can be controllers.
-If the canister has no controllers, then it is immutable in the sense that its Wasm code cannot be changed.
+## Cola de salida
 
-## Settings
-A canister also has various other settings and flags that can be modified by controllers of the canister.
-For example, a controller can set the freezing threshold of the canister such that the canister becomes frozen and doesn't execute messages when it is low on cycles in order to reduce chances of it running out of cycles.
-[View the full list of canister settings](/docs/references/ic-interface-spec#ic-create_canister).
+Durante la ejecución, el canister puede enviar mensajes a otros canisters. Estos
+mensajes se encolan en la cola de salida después de una ejecución exitosa.
+Posteriormente, ICP entrega estos mensajes a los canisters destino para su
+procesamiento.
 
-## Ways to think about canisters
+:::info Las llamadas entre canisters se implementan mediante mensajes. Cada
+llamada consiste en dos mensajes: el mensaje de llamada del emisor al receptor y
+el mensaje de respuesta del receptor al emisor. :::
 
-A systems engineer will likely consider operating systems processes, whereas a virtual machine expert might think about WebAssembly module instances.
+## Balance de Cycles
 
-While these associations are partial, they are correct. Together they form a comprehensive picture of what a canister is. Let’s look at them one by one.
+Los canisters pagan por la ejecución en
+[cycles](/docs/building-apps/essentials/gas-cost). El costo depende del número y
+tipo de instrucciones Wasm ejecutadas. El sistema carga este costo al balance de
+cycles del canister, tanto para ejecuciones exitosas como fallidas.
 
-[Introducing canisters — An evolution of smart contracts](https://www.youtube.com/watch?v=LKpGuBOXxtQ).
+## Controladores
 
-### Canisters as smart contracts
+Solo los [controladores](/docs/building-apps/canister-management/control) del
+canister pueden realizar ciertas operaciones a nivel del sistema, como
+detenerlo, iniciarlo, actualizarlo, etc. La lista de controladores se almacena
+en el canister. Tanto usuarios como otros canisters pueden ser controladores. Si
+un canister no tiene controladores, es inmutable en el sentido de que su código
+Wasm no puede modificarse.
 
-Canisters are much like a smart contract in that their execution is governed by a secure protocol; in this case, the ICP protocol. Canisters running on ICP are tamper-proof, since their state can only be modified through messages that are executed onchain. A canister’s state can be audited and cryptographically verified using ICP’s chain-key cryptography.
-For a brief comparison between canisters and Ethereum smart contracts, refer to the table [Quick comparison with Ethereum](/docs/building-apps/essentials/network-overview#quick-comparison-with-ethereum).
+## Configuraciones
 
-### Canisters as actors
+Un canister también tiene diversas configuraciones y banderas que pueden ser
+modificadas por sus controladores. Por ejemplo, un controlador puede establecer
+el umbral de congelación del canister para que este se congele y deje de
+ejecutar mensajes cuando tenga pocos cycles, reduciendo así las posibilidades de
+que se agoten por completo.
+[Ver la lista completa de configuraciones de canisters](/docs/references/ic-interface-spec#ic-create_canister).
 
-Canisters are much like actors when thinking about them abstractly. Following the [actor model of concurrent computation](https://en.wikipedia.org/wiki/Actor_model), canisters respond to messages they receive by performing one or more of the following actions:
-- Modifying their private state.
-- Sending messages to other canisters (actors).
-- Creating more canisters (actors).
+## Formas de entender los canisters
 
-Although canisters have a single thread of execution, multiple can be executed concurrently. This is a key feature of ICP that overcomes the scaling challenges of other smart contract platforms.
+Un ingeniero de sistemas podría compararlos con procesos de sistemas operativos,
+mientras que un experto en máquinas virtuales podría pensar en instancias de
+módulos WebAssembly.
 
-### Canisters as OS processes
+Aunque estas asociaciones son parciales, son correctas. Juntas forman una imagen
+completa de lo que es un canister. Analicémoslas una por una.
 
-Canisters behave much like operating system processes. Similar to how an operating system schedules processes, ICP schedules the execution of canisters. [Learn more about the execution of canisters](https://internetcomputer.org/how-it-works).
+[Introducción a canisters — Una evolución de los contratos inteligentes](https://www.youtube.com/watch?v=LKpGuBOXxtQ).
 
-An operating system maintains state on behalf of processes, like their open file descriptors, similar to how ICP maintains state on behalf of canisters, such as their cycle balance or their outstanding calls to other canisters.
+### Canisters como contratos inteligentes
 
-Operating system processes cannot directly modify their table of file descriptors or manipulate peripheral devices, similar to how canisters cannot directly modify their <GlossaryTooltip>cycles</GlossaryTooltip> balance.
+Los canisters son similares a contratos inteligentes en que su ejecución está
+gobernada por un protocolo seguro (en este caso, el protocolo ICP). Los
+canisters en ICP son a prueba de manipulaciones, ya que su estado solo puede
+modificarse mediante mensajes ejecutados en la cadena. El estado de un canister
+puede auditarse y verificarse criptográficamente usando la criptografía
+chain-key de ICP. Para una comparación breve con contratos de Ethereum, consulta
+la tabla
+[Comparación rápida con Ethereum](/docs/building-apps/essentials/network-overview#quick-comparison-with-ethereum).
 
-ICP provides APIs to canisters that allow them to make payments to other canisters, send them messages, and create and manage other canisters.
+### Canisters como actores
 
-### Canisters as WebAssembly module instances
+Abstractamente, los canisters se comportan como actores en el
+[modelo de actores para computación concurrente](https://en.wikipedia.org/wiki/Actor_model).
+Al recibir mensajes, pueden:
 
-Canisters are implemented as WebAssembly modules. This allows for maximum interoperability, as developers can write canisters in a variety of languages that target WebAssembly.
+1. Modificar su estado interno
+2. Enviar mensajes a otros canisters (actores)
+3. Crear nuevos canisters (actores)
 
-A canister is a WebAssembly module instance complete with its own state and execution stack. Canisters’ memory uses [orthogonal persistence](https://medium.com/dfinity/ic-internals-orthogonal-persistence-9e0c094aac1a), which makes storing canister data transparent for users. The data of the canister’s WebAssembly module is persisted automatically by the system and is present the next time the canister is scheduled for execution. The WebAssembly module itself is stored along with other bits of the canister’s state.
+Aunque cada canister tiene un único hilo de ejecución, múltiples canisters
+pueden ejecutarse concurrentemente. Esta es una característica clave de ICP que
+supera los desafíos de escalabilidad de otras plataformas de contratos
+inteligentes.
+
+### Canisters como procesos de SO
+
+Los canisters se comportan de manera similar a procesos de sistemas operativos.
+Así como un SO programa procesos, ICP programa la ejecución de canisters.
+[Más información sobre la ejecución de canisters](https://internetcomputer.org/how-it-works).
+
+Un SO mantiene estado por cada proceso (como sus descriptores de archivos
+abiertos), similar a cómo ICP mantiene estado por cada canister (como su balance
+de cycles o llamadas pendientes a otros canisters).
+
+Así como los procesos no pueden modificar directamente su tabla de descriptores,
+los canisters no pueden modificar directamente su balance de
+<GlossaryTooltip>cycles</GlossaryTooltip>.
+
+ICP provee APIs que permiten a los canisters:
+
+- Realizar pagos a otros canisters
+- Enviar mensajes
+- Crear y gestionar otros canisters
+
+### Canisters como instancias de módulos WebAssembly
+
+Los canisters se implementan como módulos WebAssembly, lo que permite máxima
+interoperabilidad al poder desarrollarse en múltiples lenguajes que compilen a
+Wasm.
+
+Cada canister es una instancia de módulo Wasm con su propio estado y pila de
+ejecución. Su memoria utiliza
+[persistencia ortogonal](https://medium.com/dfinity/ic-internals-orthogonal-persistence-9e0c094aac1a),
+haciendo transparente el almacenamiento de datos. El sistema persiste
+automáticamente los datos del módulo Wasm, estando disponibles en la siguiente
+ejecución programada del canister. El módulo Wasm se almacena junto con otros
+componentes del estado del canister.

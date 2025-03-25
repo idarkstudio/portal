@@ -1,50 +1,107 @@
 ---
-keywords: [ingress message, query call, update call, error handling, idempotency]
+keywords:
+  [ingress message, query call, update call, error handling, idempotency]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 
-# Message execution
+# Ejecución de mensajes
 
-<MarkdownChipRow labels={["Beginner", "Concept"]} />
+<MarkdownChipRow labels={["Principiante", "Concepto"]} />
 
-Ingress messages are requests to ICP <GlossaryTooltip>canisters</GlossaryTooltip> that are sent by external entities, such as users, usually through an [agent](/docs/building-apps/developer-tools/dev-tools-overview/#agents), like the [ICP JavaScript agent](https://github.com/dfinity/agent-js/tree/main) that runs within a web application, or the [ICP Rust agent](https://github.com/dfinity/agent-rs/tree/main) in a Rust application.
+Los mensajes de entrada (ingress) son solicitudes a los
+<GlossaryTooltip>canisters</GlossaryTooltip> de ICP enviadas por entidades
+externas como usuarios, generalmente a través de un
+[agente](/docs/building-apps/developer-tools/dev-tools-overview/#agents), como
+el [agente JavaScript de ICP](https://github.com/dfinity/agent-js/tree/main) que
+se ejecuta en una aplicación web, o el
+[agente Rust de ICP](https://github.com/dfinity/agent-rs/tree/main) en una
+aplicación Rust.
 
-For example, you can browse what ingress messages can be sent to the ckBTC ledger by browsing through its [API using the dashboard](https://dashboard.internetcomputer.org/canister/mxzaz-hqaaa-aaaar-qaada-cai). The tool also allows you to send messages, using agent-js behind the scenes.
+Por ejemplo, puedes explorar qué mensajes de entrada se pueden enviar al ledger
+de ckBTC navegando por su
+[API usando el dashboard](https://dashboard.internetcomputer.org/canister/mxzaz-hqaaa-aaaar-qaada-cai).
+La herramienta también te permite enviar mensajes, usando agent-js detrás de
+escena.
 
-This page discusses ICP's ingress message APIs. While these APIs are defined in detail within the [HTTPS interface specification](/docs/references/ic-interface-spec#http-interface), this page provides a more high-level and intuitive  with a special focus on error handling. That aspect is particularly important, as it can be tricky to determine if an ingress message has actually been successfully executed. Misinterpreting errors could lead to bugs such as double spending.
+Esta página cubre las APIs de mensajes de entrada de ICP. Si bien estas APIs
+están definidas en detalle en la
+[especificación de interfaz HTTPS](/docs/references/ic-interface-spec#http-interface),
+aquí se ofrece una visión más general e intuitiva con especial enfoque en el
+manejo de errores. Este aspecto es particularmente importante, ya que puede ser
+complicado determinar si un mensaje de entrada se ha ejecutado correctamente.
+Malinterpretar errores podría llevar a bugs como doble gasto.
 
-ICP supports several types of calls, as defined in the [HTTPS interface specification](/docs/references/ic-interface-spec#http-interface). These include query and update calls.
+ICP soporta varios tipos de llamadas, definidos en la
+[especificación de interfaz HTTPS](/docs/references/ic-interface-spec#http-interface),
+incluyendo llamadas de consulta (query) y actualización (update).
 
-Learn more about [query](/docs/building-apps/interact-with-canisters/query-calls), [update](/docs/building-apps/interact-with-canisters/update-calls), and [advanced types of calls](/docs/building-apps/interact-with-canisters/advanced-calls) for more information.
+Más información sobre:
 
-## Query calls
+- [Llamadas de consulta](/docs/building-apps/interact-with-canisters/query-calls)
+- [Llamadas de actualización](/docs/building-apps/interact-with-canisters/update-calls)
+- [Tipos avanzados de llamadas](/docs/building-apps/interact-with-canisters/advanced-calls)
 
-Queries don't modify a canister's state and are answered and signed by a single replica. Responses can be obtained within milliseconds, but they are typically not signed by the subnet, meaning a malicious replica or boundary node could arbitrarily modify the response.
+## Llamadas de consulta (Query)
 
-Some applications may have higher authenticity requirements for query responses. For example, if a dapp queries a proposal description that the user then votes on, it may not be acceptable that the result could be tampered with, as it could trick users to vote in the attacker's favor. As an alternative, you can issue query calls as update calls instead. While that's easy to implement, it makes the calls significantly slower.
+Las consultas no modifican el estado de un canister y son respondidas y firmadas
+por una sola réplica. Las respuestas se obtienen en milisegundos, pero
+típicamente no están firmadas por la subred, lo que significa que una réplica o
+nodo límite malicioso podría modificar arbitrariamente la respuesta.
 
-Another alternative approach is to sign the data beforehand and provide [*certified variables*](/docs/tutorials/developer-liftoff/level-3/3.3-certified-data/) in query responses. While this approach has better performance than sending query calls as update calls, it can be complex to implement depending on the specific use case. An example where certified variables are used is within the [HTTP asset certification](/docs/building-apps/security/data-integrity-and-authenticity#use-http-asset-certification-and-avoid-serving-your-dapp-through-rawicp0io). It is also recommended to view the [security best practices](/docs/building-apps/security/data-integrity-and-authenticity#certified-variables) for certified variables.
+Algunas aplicaciones pueden requerir mayor autenticidad en las respuestas. Por
+ejemplo, si un dapp consulta la descripción de una propuesta sobre la cual el
+usuario votará, podría no ser aceptable que el resultado pueda ser alterado, ya
+que podría engañar a los usuarios para votar a favor del atacante. Como
+alternativa, puedes realizar consultas como llamadas de actualización. Aunque es
+fácil de implementar, esto hace las llamadas significativamente más lentas.
 
-Error handling for queries is typically simple: on error, one can simply retry until a successful response is received.
+Otra alternativa es firmar los datos previamente y proveer
+[_variables certificadas_](/docs/tutorials/developer-liftoff/level-3/3.3-certified-data/)
+en las respuestas. Aunque este enfoque tiene mejor rendimiento que convertir
+consultas en actualizaciones, puede ser complejo de implementar dependiendo del
+caso de uso. Un ejemplo donde se usan variables certificadas es en la
+[certificación de assets HTTP](/docs/building-apps/security/data-integrity-and-authenticity#use-http-asset-certification-and-avoid-serving-your-dapp-through-rawicp0io).
+También se recomienda ver las
+[mejores prácticas de seguridad](/docs/building-apps/security/data-integrity-and-authenticity#certified-variables)
+para variables certificadas.
 
-[Learn more about query calls](/docs/building-apps/interact-with-canisters/query-calls).
+El manejo de errores en consultas es típicamente simple: ante un error, se puede
+reintentar hasta recibir una respuesta exitosa.
 
-## Update calls
+[Más sobre llamadas de consulta](/docs/building-apps/interact-with-canisters/query-calls).
 
-Updates can modify a canister's state and thus must go through consensus, typically taking 1-3 seconds. They return certified responses (signed by the subnet), providing authenticity within the subnet's corruption bounds.
+## Llamadas de actualización (Update)
 
-Update calls can be [synchronous](/docs/references/ic-interface-spec#http-sync-call-overview) or [asynchronous](/docs/references/ic-interface-spec#http-async-call-overview).
+Las actualizaciones pueden modificar el estado de un canister y por tanto deben
+pasar por consenso, típicamente tomando 1-3 segundos. Devuelven respuestas
+certificadas (firmadas por la subred), proporcionando autenticidad dentro de los
+límites de corrupción de la subred.
 
-A [synchronous `call`](/docs/references/ic-interface-spec#http-call) follows the "call and await" pattern. In the success case, it maintains the HTTPS connection until a certified response is produced, as illustrated below.
+Las llamadas de actualización pueden ser:
 
-![Ingress sync calls](_attachments/ingress_sync_call.png)
+- [Síncronas](/docs/references/ic-interface-spec#http-sync-call-overview)
+- [Asíncronas](/docs/references/ic-interface-spec#http-async-call-overview)
 
-Compared to the [asynchronous `call`](/docs/references/ic-interface-spec#http-async-call) endpoint, where the [`read_state`](/docs/references/ic-interface-spec#http-read-state) endpoint is used to poll for the request status and obtain the reply, the synchronous endpoint removes the need to poll for the response in the success case.
+Una [llamada síncrona](/docs/references/ic-interface-spec#http-call) sigue el
+patrón "llamar y esperar". En caso de éxito, mantiene la conexión HTTPS hasta
+obtener una respuesta certificada, como se ilustra:
 
-However, a response may not be produced until some implementation-specific timeout is reached. In that case, the synchronous endpoint behaves like the asynchronous one: it returns a `202` response, and the client must poll [`read_state`](/docs/references/ic-interface-spec#http-read-state) to get the request status and eventually obtain the reply, as illustrated below.
+![Llamadas síncronas de entrada](_attachments/ingress_sync_call.png)
 
-![Ingress async calls](_attachments/ingress_async_call.png)
+Comparado con el endpoint
+[asíncrono](/docs/references/ic-interface-spec#http-async-call), donde se usa
+[`read_state`](/docs/references/ic-interface-spec#http-read-state) para
+consultar el estado de la solicitud y obtener la respuesta, el endpoint síncrono
+elimina la necesidad de sondear la respuesta en caso de éxito.
 
-[Learn more about update calls](/docs/building-apps/interact-with-canisters/update-calls).
+Sin embargo, si no se produce una respuesta antes de un timeout específico, el
+endpoint síncrono se comporta como el asíncrono: devuelve un código `202` y el
+cliente debe usar
+[`read_state`](/docs/references/ic-interface-spec#http-read-state) para obtener
+el estado de la solicitud y eventualmente la respuesta, como se ilustra:
+
+![Llamadas asíncronas de entrada](_attachments/ingress_async_call.png)
+
+[Más sobre llamadas de actualización](/docs/building-apps/interact-with-canisters/update-calls).

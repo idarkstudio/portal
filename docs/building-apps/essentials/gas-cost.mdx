@@ -1,244 +1,382 @@
 ---
-keywords: [beginner, concept, gas cost, cycles cost, cycles gas, what is the cost, pricing, gas]
+keywords:
+  [
+    beginner,
+    concept,
+    gas cost,
+    cycles cost,
+    cycles gas,
+    what is the cost,
+    pricing,
+    gas,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 
-# Fee breakdown
+# Desglose de tarifas (fee)
+
+<MarkdownChipRow labels={["Principiante", "Concepto"]} />
 
-<MarkdownChipRow labels={["Beginner", "Concept"]} />
+Los canisters (contratos inteligentes) pagan por los recursos consumidos
+(almacenamiento, mensajería, ejecución y características especiales) quemando
+**cycles**. Los desarrolladores pueden obtener cycles convirtiendo tokens ICP en
+cycles usando [`dfx`](/docs/building-apps/getting-started/tokens-and-cycles).
 
-Canister smart contracts pay for consumed resources (storage, messaging, execution, and special features) by burning **cycles**. Developers can obtain cycles by converting ICP tokens into cycles using [`dfx`](/docs/building-apps/getting-started/tokens-and-cycles).
+Para estimaciones de precios, puedes usar la
+[calculadora de precios](/docs/building-apps/essentials/cost-estimations-and-examples).
 
-For pricing estimations, you can use the [pricing calculator](/docs/building-apps/essentials/cost-estimations-and-examples).
+Esta página proporcionará detalles sobre cómo se calculan los costos.
+
+## El modelo inverso de gas
 
-This page will provide details about how costs are calculated.
+ICP cobra a cada canister por los recursos que consume. Es responsabilidad del
+desarrollador cargar cada uno de sus canisters con cycles suficientes para pagar
+estos recursos. Este modelo de costos se conoce como **modelo inverso de gas**
+de ICP.
 
-## The reverse gas model
+El modelo inverso de gas permite que los desarrolladores de dapps brinden a sus
+usuarios una experiencia fluida, ya que los usuarios finales no necesitan
+obtener tokens, configurar wallets o firmar y aprobar cada transacción que
+realizan al interactuar con una dapp en ICP.
 
-ICP charges each canister smart contract for the resources that it consumes. It's the developer's responsibility to load each of their canisters with adequate cycles to pay for these resources. This cost model is known as ICP's **reverse gas model**.
+Puedes aprender más sobre el
+[modelo inverso de gas](https://internetcomputer.org/capabilities/reverse-gas).
 
-The reverse gas model allows dapp developers to provide their users a smooth experience, since end users don't need to obtain tokens, configure wallets, or sign and approve every transaction they perform when interacting with a dapp on ICP.
+Una desventaja del modelo inverso de gas de ICP es que requiere pasos previos y
+mantenimiento continuo para los desarrolladores. Los canisters deben tener sus
+balances de cycles mantenidos y recargados regularmente a medida que usan
+recursos continuamente. El canister será eliminado de la red si se queda sin
+cycles.
 
-You can learn more about the [reverse gas model](https://internetcomputer.org/capabilities/reverse-gas).
+Aprende cómo consultar el
+[balance de cycles de un canister](/docs/building-apps/canister-management/topping-up#checking-the-cycles-balance-of-a-canister).
 
-One downside of the ICP reverse gas model is that it requires prerequisite steps and ongoing maintenance for developers. Canisters must have their cycles balances maintained and regularly topped up as they continuously use resources. The canister will be removed from the network if it runs out of cycles.
+Aprende cómo
+[recargar un canister](/docs/building-apps/canister-management/topping-up).
 
-Learn how to query a [canister's cycles balance](/docs/building-apps/canister-management/topping-up#checking-the-cycles-balance-of-a-canister).
+Se puede configurar un
+[umbral de congelación](/docs/building-apps/canister-management/settings/#freezing-threshold)
+que pausa las ejecuciones de un canister si se espera que la cantidad de cycles
+caiga por debajo de cierto monto. Existen varias herramientas comunitarias
+desarrolladas para automatizar la gestión de cycles de un canister, como
+[CycleOps](https://cycleops.dev/).
 
-Learn how to [top up a canister](/docs/building-apps/canister-management/topping-up).
+## Unidades y valor en moneda fiduciaria
 
-A [freezing threshold](/docs/building-apps/canister-management/settings/#freezing-threshold) can be set that pauses a canister's executions if the cycles amount is expected to fall below a certain amount. There are several community tools that have been developed to automate managing a canister's cycles, such as [CycleOps](https://cycleops.dev/).
+El precio de los cycles está fijado contra el precio de
+[XDR](/docs/references/glossary#x), donde **1 billón (trillón) de cycles
+equivale a 1 XDR**. Al 18 de diciembre de 2023, la tasa de cambio para 1 XDR =
+$1.336610 USD. La tasa de cambio USD/XDR puede variar. Más información sobre
+[tasas de cambio XDR](https://www.imf.org/external/np/fin/data/rms_sdrv.aspx).
 
-## Units and fiat value
+La siguiente tabla muestra unidades de cycles y sus respectivos valores
+fiduciarios:
 
-The price of cycles is fixed against the price of [XDR](/docs/references/glossary#x), where **1 trillion cycles equals 1 XDR**. As of December 18, 2023, the exchange rate for 1 XDR = $1.336610. The exchange rate for USD/XDR may vary. Learn more about [XDR exchange rates](https://www.imf.org/external/np/fin/data/rms_sdrv.aspx).
+| Abreviatura | Nombre           | En números        | Valor XDR   | Valor USD         |
+| ----------- | ---------------- | ----------------- | ----------- | ----------------- |
+| T           | Billón (Trillón) | 1_000_000_000_000 | 1           | 1.336610          |
+| B           | Mil millones     | 1_000_000_000     | 0.001       | 0.001336610       |
+| M           | Millón           | 1_000_000         | 0.000001    | 0.000001336610    |
+| k           | Mil              | 1_000             | 0.000000001 | 0.000000001336610 |
 
-The following table shows units of cycles and the respective fiat values:
+## Replicación
 
-| Abbreviation  | Name      | In numbers   | Cycles XDR value  | Cycles USD value |
-|-------------- | --------- | ------------ | ----------------- | ---------------- |
-| T             | Trillion  | 1_000_000_000_000 | 1            | 1.336610         |
-| B             | Billion   | 1_000_000_000| 0.001             | 0.001336610      |
-| M             | Million   | 1_000_000    | 0.000001          | 0.000001336610   |
-| k             | Thousand  | 1_000        | 0.000000001       | 0.000000001336610 |
+Cuando un canister se despliega en una subred, se replica automáticamente en
+cada nodo dentro de esa subred. La cantidad de cycles que se cobran a un
+canister variará según la cantidad de veces que se replique el canister:
 
+- Canisters desplegados **localmente** se implementan en un solo nodo y, por lo
+  tanto, se replican una vez. Los cycles cobrados a canisters locales tienen un
+  costo que es `1 / 13` del costo cuando se despliegan en una subred de 13
+  nodos. En entornos de desarrollo local, los cycles pueden fabricarse usando
+  `dfx`.
 
-## Replication
+- Canisters desplegados en una **subred de 13 nodos** se replican 13 veces. Los
+  montos de costos de cycles se basan en una subred de 13 nodos, es decir, no se
+  necesita cálculo para determinar el costo basado en el factor de replicación
+  de la subred.
 
-When a canister is deployed to a subnet, it is automatically replicated on every node within that subnet. The amount of cycles that a canister is charged will vary based on the amount of times the canister is replicated:
+- Canisters desplegados en una **subred de 34 nodos** se replican 34 veces. Si
+  planeas desplegar canisters en subredes de alta replicación (más de 13 nodos),
+  tu canister debe estar preparado para un aumento en los precios de cycles. Las
+  llamadas a subredes de alta replicación también requerirán más cycles. Los
+  costos de cycles en subredes de 34 nodos se pueden calcular como
+  `costo / 13 * 34`.
 
-- Canisters deployed **locally** are deployed on a single node and therefore are replicated once. Cycles charged to locally deployed canisters have a cost that is `1 / 13` the cost when deployed to a 13-node subnet. In local development environments, cycles can be fabricated using `dfx`.
+## Detalles de costos: operaciones y recursos del canister
 
-- Canisters deployed to a **13-node subnet** are replicated 13 times. Cycle cost amounts are based on a 13-node subnet, i.e., there is no calculation needed to determine the cost based on the subnet's replication factor.
+Los canisters son cobrados por los recursos que consumen y cualquier operación
+que realicen usando características como llamadas externas HTTPS, firmas de
+umbral y la API de integración de Bitcoin. A alto nivel, esto se puede
+visualizar con el siguiente diagrama:
 
-- Canisters deployed to a **34-node subnet** are replicated 34 times. If you intend to deploy canisters on high-replication subnets (greater than 13 nodes), your canister should be prepared for an increase in cycles prices. Calls made to high-replication subnets will also require more cycles. Cycles costs on 34-node subnets can be calculated as `cost / 13 * 34`.
+![Resumen de llamadas a canisters](./_attachments/transaction-overview.svg)
 
-## Cost details: canister operations and resources
+Cada tipo de operación y recurso del canister tiene un costo diferente de cycles
+asociado. El canister responsable de pagar los cycles varía según el tipo de
+operación.
 
-Canisters are charged for the resources they consume and any operations they perform using features such as HTTPS outcalls, threshold signatures, and the Bitcoin integration API. At a high level this can be visualized using the following diagram:
+Las siguientes subsecciones explican los precios para los diferentes tipos de
+operaciones y recursos para un canister desplegado en una subred de 13 nodos.
+Las mismas operaciones y recursos cuestan linealmente más en subredes con más
+nodos.
 
-![Canister calls overview](./_attachments/transaction-overview.svg)
+### Creación de canisters
 
-Each type of canister operation and resource has a different cycles cost associated with it. The canister responsible for paying the cycles varies based on the type of operation.
+La creación de un canister cuesta 500B cycles (500 mil millones) o
+aproximadamente $0.65 USD. Los canisters pueden ser creados por usuarios u otros
+canisters.
 
-The following subsections explain the pricing for the different operation and resource types for a canister deployed on a 13-node subnet. The same operations and resources cost linearly more on subnets with more nodes.
+### Mensajería
 
-### Canister creation
+Un canister puede recibir mensajes de usuarios y otros canisters. En los
+mensajes entre canisters, el canister emisor paga los costos de transmisión del
+mensaje. En los mensajes de usuario a canister, el canister receptor cubre los
+costos de transmisión. Los mensajes de usuario a canister también se denominan
+**mensajes de entrada (ingress)**.
 
-Canister creation costs 500B cycles or approximately $0.65 USD. Canisters can be created by users or other canisters.
+Las tarifas actuales son:
 
-### Messaging
+| Tipo de mensaje              | Tarifa base | Tarifa por byte |
+| ---------------------------- | ----------- | --------------- |
+| Llamada de consulta (query)  | 0           | 0               |
+| Canister a canister          | 260K        | 1K              |
+| Usuario a canister (ingress) | 1.2M        | 2K              |
 
-A canister can receive messages from users and other canisters. In canister-to-canister messages, the sending canister pays the message transmission costs. In user-to-canister messages, the receiving canister covers the message transmission costs. User-to-canister messages are also referred to as **ingress messages**.
+[Ver la fórmula de cálculo de costos para más información sobre cómo se calculan](#cost-calculation-formulas).
 
-The current fees are:
+:::info Nota: los mensajes de consulta (query) actualmente son gratuitos, pero
+esto podría cambiar en el futuro. :::
 
-| Message type | Base fee | Per byte fee |
-|--------------|----------|--------------|
-| Query call    | 0       |  0           |
-| Canister-to-canister | 260K | 1K |
-| User-to-canister (ingress) | 1.2M | 2K |
+### Ejecución y asignación de computación
 
-[View the cost calculation formula for more information about how costs are calculated](#cost-calculation-formulas).
+Para manejar un mensaje entrante o tarea como un temporizador o latido
+(heartbeat), el canister ejecuta la función especificada en el mensaje.
 
-:::info
-Note that query messages are currently free, but this may change in the future.
-:::
+ICP reserva cycles para ejecutar la respuesta de callback o limpieza del
+mensaje. El monto reservado equivale a lo que se necesitaría para la ejecución
+máxima. Por ejemplo, una ejecución DTS de 40B instrucciones en una subred de 13
+nodos reservaría 16B cycles. De esta reserva, se reserva un 5% para el callback
+de limpieza. El callback de limpieza puede alcanzar el límite del 5%, aunque no
+se espera que lo haga.
 
-### Execution and compute allocation
+Por defecto, los canisters se programan para ejecución de manera "mejor
+esfuerzo" (best-effort). Los canisters que requieren ejecución garantizada
+pueden obtener una parte de la capacidad de computación configurando
+`compute_allocation` en sus ajustes. La asignación de computación se expresa en
+porcentajes y denota el porcentaje de un núcleo de ejecución reservado para el
+canister.
 
-To handle an incoming message or task such as a timer or heartbeat, the canister executes the function specified in the message.
+Configurar incluso un 1% de asignación de computación proporciona una ventaja
+significativa sobre los canisters que usan la programación "mejor esfuerzo":
 
-ICP reserves cycles to execute the message's response callback or cleanup. The amount reserved is equivalent to the amount that would be needed for maximum execution. For example, a DTS execution of 40B instructions on a 13-node subnet would reserve 16B cycles. From this reservation, 5% is reserved for the cleanup callback. The cleanup callback can hit the 5% limit, though it is not expected.
+- Para 1% de asignación: el canister recibirá 1% de un núcleo de ejecución y se
+  garantiza que se programará cada 100 rondas (asumiendo que solo ejecuta
+  mensajes no-DTS).
 
-By default, canisters are scheduled for execution in a "best-effort" manner. Canisters that require guaranteed execution can get a share of compute capacity by setting `compute_allocation` in their canister settings. Compute allocation is expressed in percents and denotes the percentage of an execution core reserved for the canister.
+- Para 2% de asignación: el canister recibirá 2% de un núcleo y se garantiza que
+  se programará cada 50 rondas.
 
-Setting even 1% compute allocation provides a significant advantage over canisters that use the "best-effort" scheduling:
+- Para 50% de asignación: el canister recibirá 50% de un núcleo y se garantiza
+  que se programará cada dos rondas.
 
-- For 1% compute allocation, the canister will receive 1% of an execution core and is guaranteed to be scheduled every 100 rounds (assuming it executes only non-DTS messages).
+- Para 100% de asignación: el canister recibirá un núcleo completo y se
+  garantiza que se programará cada ronda.
 
-- For 2% compute allocation, the canister will receive 2% of an execution core and is guaranteed to be scheduled every 50 rounds.
+La capacidad de computación asignable es del 299% **por subred**. La asignación
+de computación está garantizada si está configurada.
 
-- For 50% compute allocation, the canister will receive 50% of an execution core and is guaranteed to be scheduled every other round.
+La computación es un recurso finito y tiene un precio acorde. La tarifa actual
+por 1% de asignación de computación por segundo es 10M cycles (o $0.0000133661
+USD). Por lo tanto, un canister que solicite 100% de asignación sería cobrado
+10M \* 100 cycles por segundo.
 
-- For 100% compute allocation, the canister will receive 100% of an execution core and is guaranteed to be scheduled every round.
+[Ver la fórmula de cálculo de costos para más información sobre cómo se calculan](#cost-calculation-formulas).
 
-The allocatable compute capacity is 299% **per subnet**. Compute allocation is guaranteed if it is configured.
+### Almacenamiento
 
-Compute is a finite resource and is priced as such. The current fee for 1% compute allocation per second is 10M cycles (or $0.0000133661 USD). Therefore, a canister that requests 100% compute allocation would be charged 10M * 100 cycles per second.
+Los canisters pagan por el almacenamiento consumido por su
+[memoria Wasm](/docs/building-apps/canister-management/storage#heap-memory) y
+[memoria estable (stable memory)](/docs/building-apps/canister-management/storage#stable-memory)
+por tiempo. Almacenar 1 GiB por 1 segundo cuesta 127k cycles, lo que equivale a
+~4T cycles (o $5.35 USD) por almacenar 1 GiB durante 1 año.
 
-[View the cost calculation formula for more information about how costs are calculated](#cost-calculation-formulas).
+Los canisters pueden reservar almacenamiento en una subred mediante el ajuste
+`memory_allocation`. Sin embargo, al canister se le cobrará como si estuviera
+usando la totalidad del almacenamiento asignado.
 
-### Storage
-Canisters pay for storage consumed by their [Wasm memory](/docs/building-apps/canister-management/storage#heap-memory) and [stable memory](/docs/building-apps/canister-management/storage#stable-memory) per time. Storing 1 GiB for 1 second costs 127k cycles, which amounts to ~4T cycles (or $5.35 USD) for storing 1 GiB for 1 year.
+#### Mecanismo de reserva de recursos
 
-Canisters can reserve storage on a subnet through the `memory_allocation` setting. However, the canister will be charged as if the entire amount of allocated storage is being used.
+Para fomentar el uso a largo plazo y desalentar patrones de uso irregulares,
+Internet Computer utiliza un _mecanismo de reserva de recursos_ adoptado por la
+comunidad en la
+[Propuesta NNS 12604](https://dashboard.internetcomputer.org/proposal/126094).
 
-#### Resource reservation mechanism
+Cuando un canister asigna nuevos bytes de almacenamiento, el sistema aparta
+cierta cantidad de cycles del balance principal del canister para cubrir pagos
+futuros por los bytes recién asignados. Estos cycles reservados no son
+transferibles, y su cantidad depende de qué tan llena esté la subred. Pueden
+cubrir días, meses o incluso años de pagos.
 
-In order to encourage long-term usage and discourage spiky usage patterns, the Internet Computer uses a *resource reservation mechanism* that was adopted by the community in [NNS proposal 12604](https://dashboard.internetcomputer.org/proposal/126094).
+Las operaciones que asignan nuevos bytes son:
 
-When a canister allocates new storage bytes, the system sets aside some number of cycles from the main balance of the canister that are used to cover future payments for the newly allocated bytes. The reserved cycles are not transferable, and the number of reserved cycles depends on how full the subnet is. It may cover days, months, or even years of payments.
+- Instrucción Wasm: `memory.grow`
+- Llamadas al System API: `ic0.stable_grow()`, `ic0.stable64_grow()`
+- Incrementar el `memory_allocation` en los ajustes del canister
 
-The operations that allocate new bytes are:
+Estas operaciones reservan cycles moviéndolos del balance principal del canister
+al balance de cycles reservados. La cantidad de cycles reservados depende de
+cuántos bytes se asignen y del uso actual de la subred:
 
-- Wasm instruction: `memory.grow`.
-- System API calls: `ic0.stable_grow()` `ic0.stable64_grow()`.
-- Increasing the `memory_allocation` in canister settings.
+- Si el uso de la subred está por debajo de `450GiB`, la cantidad de cycles
+  reservados por byte asignado es `0`
+- Si el uso de la subred supera `450GiB`, la cantidad de cycles reservados por
+  byte asignado crece linealmente según el uso de la subred, desde `0` hasta el
+  equivalente a `10` años de pagos de almacenamiento a capacidad máxima
+  (actualmente `1TiB`)
 
-These operations reserve some cycles by moving them from the main balance of the canister to the reserved cycles balance.
-The amount of reserved cycles depends on how many bytes are allocated and on the current subnet usage.
+Un controlador de canister puede desactivar la reserva de recursos configurando
+`reserved_cycles_limit=0` en los ajustes del canister. Estos canisters que optan
+por no participar no podrán asignar memoria si el uso de la subred supera
+`450GiB`.
 
-- If subnet usage is below `450GiB`, then the amount of reserved cycles per allocated byte is `0`.
-- If subnet usage is above `450GiB`, then the amount of reserved cycles per allocated byte grows linearly depending on the subnet usage, from `0` to `10` years worth of storage payments at the subnet capacity (which is currently `1TiB`).
+### Características especiales
 
-A controller of a canister can disable resource reservation by setting the `reserved_cycles_limit=0` in canister settings.
-Such opted-out canisters would not be able to allocate if the subnet usage is above `450GiB`.
+Las características especiales tienen costos diferentes ya que utilizan
+infraestructura específica para proporcionar su funcionalidad. Estas incluyen:
 
-### Special features
+- **Llamadas externas HTTPS**: Estos costos se incluyen en la tabla más abajo.
+  [Ver fórmula de cálculo para más detalles](#cost-calculation-formulas)
 
-Special features have different costs since they use special infrastructure to provide the feature's functionality. These special features include:
+- **API Bitcoin**: Los precios están disponibles en la
+  [documentación de la API Bitcoin](/docs/references/bitcoin-how-it-works)
 
-- **HTTPS outcalls**: These costs are included in the chart found below. [View the cost calculation formula for more information about how this cost is calculated](#cost-calculation-formulas).
+- **API de firmas threshold**: Los precios para firmas umbral como ECDSA y
+  Schnorr están en la
+  [documentación de firmas threshold](/docs/references/t-sigs-how-it-works/)
 
-- **Bitcoin API**: Pricing for the **Bitcoin API** is available in the [Bitcoin API documentation](/docs/references/bitcoin-how-it-works).
+- **EVM RPC**: Los precios para el canister EVM RPC están en su
+  [documentación](/docs/building-apps/chain-fusion/ethereum/overview)
 
-- **Chain-key signing API**: Pricing for the **threshold signatures**, such as threshold ECDSA and threshold Schnorr, is available in the [threshold signatures documentation](/docs/references/t-sigs-how-it-works/).
+## ¿Quién es responsable de pagar los cycles?
 
-- **EVM RPC** Pricing for the **EVM RPC** canister is available in the [EVM RPC canister documentation](/docs/building-apps/chain-fusion/ethereum/overview).
+Los canisters son responsables de pagar cycles por:
 
-## Who is responsible for paying cycles?
+- Su propia creación
+- Recursos de computación
+- Recursos de almacenamiento
+- Recursos de ejecución
 
-Canisters are responsible for paying cycles for their own canister creation, compute resources, storage resources, and execution resources. For certain canister calls, the canister responsible for paying the cycles may vary.
+Para ciertas llamadas, la responsabilidad varía:
 
-- **Ingress messages**: The receiving canister is responsible for paying.
-- **Inter-canister calls**: Each canister pays for the calls that it sends.
-- **Local processing**: Each canister pays for local processing.
-- **Child canisters**: Responsible for paying for themselves.
+- **Mensajes de entrada (ingress)**: El canister receptor paga
+- **Llamadas entre canisters**: Cada canister paga por las llamadas que envía
+- **Procesamiento local**: Cada canister paga por su procesamiento local
+- **Canisters hijos**: Son responsables de pagar por sí mismos
 
-## Cycles price breakdown
+## Desglose de precios de cycles
 
-The table below details the cost of compute, storage transmissions, and canister calls.
+La siguiente tabla detalla los costos de computación, transmisiones y llamadas
+de canisters. Puedes usar la
+[calculadora de precios](https://3d5wy-5aaaa-aaaag-qkhsq-cai.icp0.io/) para
+estimar costos.
 
-You can use the [pricing calculator](https://3d5wy-5aaaa-aaaag-qkhsq-cai.icp0.io/) to estimate the cost for your dapp.
+| Transmisión de canister        | Descripción                                                       | Responsable del pago | Costo (13-nodos) | USD (13-nodos) | Costo (34-nodos) | USD (34-nodos) |
+| ------------------------------ | ----------------------------------------------------------------- | -------------------- | ---------------- | -------------- | ---------------- | -------------- |
+| Llamada de consulta (query)    | Consultar información de un canister                              | N/A                  | Gratis           | Gratis         | Gratis           | Gratis         |
+| Creación de canister           | Crear canisters en una subred                                     | Canister creado      | 500B             | $0.668305      | 500B / 13 \* 34  | $1.747875      |
+| % computación por segundo      | Por cada % de asignación de computación (recurso escaso)          | Canister             | 10M              | $0.000013366   | 10M / 13 \* 34   | $0.000034957   |
+| Ejecución mensaje update       | Por cada mensaje update ejecutado                                 | Canister destino     | 5M               | $0.000006683   | 5M / 13 \* 34    | $0.000017478   |
+| 1B instrucciones ejecutadas    | Por cada 1B instrucciones ejecutadas en mensajes tipo update      | Canister ejecutor    | 1B               | $0.001336610   | 1B / 13 \* 34    | $0.003495749   |
+| Llamada Xnet                   | Por cada llamada entre canisters (incluye solicitud y respuesta)  | Canister emisor      | 260K             | $0.000000347   | 260K / 13 \* 34  | $0.000000908   |
+| Transmisión byte Xnet          | Por cada byte en llamadas entre canisters (solicitud y respuesta) | Canister emisor      | 1K               | $0.000000001   | 1K / 13 \* 34    | $0.000000003   |
+| Recepción mensaje ingress      | Por cada mensaje de entrada recibido                              | Canister receptor    | 1.2M             | $0.000001603   | 1.2M / 13 \* 34  | $0.000004194   |
+| Recepción byte ingress         | Por cada byte recibido en mensajes de entrada                     | Canister receptor    | 2K               | $0.000000002   | 2K / 13 \* 34    | $0.000000006   |
+| Almacenamiento GiB por segundo | Por almacenar 1 GiB de datos por segundo                          | Canister             | 127K             | $0.000000169   | 127K / 13 \* 34  | $0.000000443   |
 
-| Canister transmission | Description | Who is responsible for paying the cycles fee? | 13-node subnets cycles cost | 13-node subnets USD cost | 34-node subnets | 34-node subnets USD cost |
-| ----------------- | ------------------------------- | -------------------------------------------------- | ----------------------------------------------- | --------------------------------------- | ------------------------------------- | --------------------------- | ------------------------------------ |
-| Query call | Query information from a canister. | N/A | Free |  Free | Free | Free |
-| Canister creation | For creating canisters on a subnet. | Created canister | 500B | $0.668305000000 | 500B / 13 * 34 | $1.74787461538 |
-| Compute percent allocated per second | For each percent of the reserved compute allocation (a scarce resource). | Canister with allocation | 10M | $0.000013366100 | 10M / 13 * 34 | $0.000034957492 |
-| Update message execution | For every update message executed. | Target canister | 5M | $0.000006683050 | 5M / 13 * 34 | $0.000017478740 |
-| 1B executed instructions | For every 1B instructions executed when executing update type messages. | Canister executing instructions | 1B | $0.001336610000 | 1B / 13 * 34 | $0.003495749230 |
-| Xnet call | For every inter-canister call performed (includes the cost for sending the request and receiving the response). | Sending canister | 260K | $0.000000347519 | 260K / 13 * 34 | $0.000000908895 |
-| Xnet byte transmission | For every byte sent in an inter-canister call (for bytes sent in the request and response). | Sending canister | 1K | $0.000000001337 | 1K / 13 * 34 | $0.000000003496 |
-| Ingress message reception | For every ingress message received. | Receiving canister | 1.2M | $0.000001603932 | 1.2M / 13 * 34 | $0.000004194899 |
-| Ingress byte reception | For every byte received in an ingress message. | Receiving canister | 2K | $0.000000002673 | 2K / 13 * 34 | $0.000000006991 |
-| GiB storage per second | For storing a GiB of data per second. | Canister with storage | 127K | $0.000000169749 | 127K / 13 * 34 | $0.000000443960 |
-| | | | | | | | |
-| _HTTPS outcalls_ | | | | | | | |
-| HTTPS outcall (per call) | For sending an HTTPS outcall to a server outside the IC, per message (`http_request`). | Sending canister | 49_140_000 | $0.000065681015 | 171_360_000 | $0.000229041490 |
-| HTTPS outcall request message size (per byte) | For sending an HTTPS outcall to a server outside the IC, per request byte (`http_request`). | Sending canister | 5_200 | $0.000000006950 | 13_600 | $0.000000018178 |
-| HTTPS outcall response message size (per byte) | For sending an HTTPS outcall to a server outside the IC, per reserved response byte (`http_request`). | Sending canister | 10_400 | $0.000000013901 | 27_200 | $0.000000036356 |
+| _Llamadas externas HTTPS_ | | | | | | | | Llamada HTTPS (por llamada) | Por
+enviar una llamada HTTPS externa (`http_request`) | Canister emisor | 49,140,000
+| $0.000065681 | 171,360,000 | $0.000229041 | | Tamaño solicitud HTTPS (por
+byte)| Por byte enviado en solicitud HTTPS (`http_request`) | Canister emisor |
+5,200 | $0.000000006 | 13,600 | $0.000000018 | | Tamaño respuesta HTTPS (por
+byte)| Por byte reservado en respuesta HTTPS (`http_request`) | Canister emisor
+| 10,400 | $0.000000013 | 27,200 | $0.000000036 |
 
-The following table shows the calculated storage cost per GiB for a 30-day month:
+Costos mensuales de almacenamiento por GiB (30 días):
 
-| | | 13-node subnets | 34-node subnets |
-|----------------------|------------------------------------|-----------------------------|-----------------------------|
-| GiB Storage Per Month | For storing a GiB of data per month | $0.446150495 | $1.70 |
+|                            | 13-nodos | 34-nodos |
+| -------------------------- | -------- | -------- |
+| Almacenamiento GiB por mes | $0.446   | $1.70    |
 
-## Cost calculation formulas
+## Fórmulas de cálculo de costos
 
-A detailed, mathematical example of how the cost of running a canister on a 13-node subnet is computed can be found [on the wiki](https://wiki.internetcomputer.org/wiki/Comparing_Canister_Cycles_vs_Performance_Counter).
+Un ejemplo matemático detallado de cómo se calcula el costo de ejecutar un
+canister en una subred de 13 nodos se puede encontrar
+[en el wiki](https://wiki.internetcomputer.org/wiki/Comparing_Canister_Cycles_vs_Performance_Counter).
 
-Specific mathematical formulas used for different types of costs can be found below for reference.
+A continuación se presentan las fórmulas matemáticas específicas utilizadas para
+diferentes tipos de costos como referencia.
 
-### Message transmissions
+### Transmisiones de mensajes
 
-A fixed baseline fee and per-byte fee are charged for each byte of the message: `base-fee` + `per-byte-fee` * `size-in-bytes`.
+Se cobra una tarifa base fija y una tarifa por byte por cada byte del mensaje:
+`tarifa-base` + `tarifa-por-byte` \* `tamaño-en-bytes`.
 
-### Execution
+### Ejecución
 
-The execution cost consists of a fixed execution fee and a per-instruction fee (on application subnets (13 nodes), 10 instructions cost 4 cycles) that is charged for each executed WebAssembly instruction:
+El costo de ejecución consiste en una tarifa fija de ejecución y una tarifa por
+instrucción (en subredes de aplicación (13 nodos), 10 instrucciones cuestan 4
+cycles) que se cobra por cada instrucción WebAssembly ejecutada:
 
-`base-fee` + `per-instruction-fee` * `number-of-instructions`
+`tarifa-base` + `tarifa-por-instrucción` \* `número-de-instrucciones`
 
-The current values of fees are `base-fee` = 5M cycles (or $0.00000668305 USD), `per-instruction-fee` = 1 cycle (or $0.01325 USD for 1B instructions).
+Los valores actuales de las tarifas son `tarifa-base` = 5M cycles (o
+$0.00000668305 USD), `tarifa-por-instrucción` = 1 cycle (o $0.01325 USD por 1B
+instrucciones).
 
-### HTTPS outcalls
+### Llamadas externas HTTPS
 
-The cost for an HTTPS outcall is calculated using the formula `(3_000_000 + 60_000 * n) * n` for the base fee and `400 * n` each request byte and `800 * n` for each response byte, where `n` is the number of nodes in the subnet.
+El costo de una llamada externa HTTPS se calcula usando la fórmula
+`(3_000_000 + 60_000 * n) * n` para la tarifa base y `400 * n` por cada byte de
+solicitud y `800 * n` por cada byte de respuesta, donde `n` es el número de
+nodos en la subred.
 
-## Errors related to cycles
+## Errores relacionados con cycles
 
-Common errors related to cycles include:
+Los errores comunes relacionados con cycles incluyen:
 
-- [Insufficient cycles in memory grow](/docs/references/execution-errors#insufficient-cycles-in-memory-grow).
-- [Reserved cycles limit exceeded in memory grow](/docs/references/execution-errors#reserved-cycles-limit-exceeded-in-memory-grow).
-- [Insufficient cycles in message memory grow](/docs/references/execution-errors#insufficient-cycles-in-message-memory-grow).
-- [Insufficient cycles in compute allocation](/docs/references/execution-errors#insufficient-cycles-in-compute-allocation).
-- [Insufficient cycles in memory allocation](/docs/references/execution-errors#insufficient-cycles-in-memory-allocation).
-- [Insufficient cycles in memory grow](/docs/references/execution-errors#insufficient-cycles-in-memory-grow-1).
-- [Reserved cycles limit exceeded in memory allocation](/docs/references/execution-errors#reserved-cycles-limit-exceeded-in-memory-allocation).
-- [Install code not enough cycles](/docs/references/execution-errors#install-code-not-enough-cycles).
-- [Create canister not enough cycles](/docs/references/execution-errors#create-canister-not-enough-cycles).
+- [Cycles insuficientes en memory grow](/docs/references/execution-errors#insufficient-cycles-in-memory-grow)
+- [Límite de cycles reservados excedido en memory grow](/docs/references/execution-errors#reserved-cycles-limit-exceeded-in-memory-grow)
+- [Cycles insuficientes en message memory grow](/docs/references/execution-errors#insufficient-cycles-in-message-memory-grow)
+- [Cycles insuficientes en compute allocation](/docs/references/execution-errors#insufficient-cycles-in-compute-allocation)
+- [Cycles insuficientes en memory allocation](/docs/references/execution-errors#insufficient-cycles-in-memory-allocation)
+- [Cycles insuficientes en memory grow](/docs/references/execution-errors#insufficient-cycles-in-memory-grow-1)
+- [Límite de cycles reservados excedido en memory allocation](/docs/references/execution-errors#reserved-cycles-limit-exceeded-in-memory-allocation)
+- [Instalar código sin cycles suficientes](/docs/references/execution-errors#install-code-not-enough-cycles)
+- [Crear canister sin cycles suficientes](/docs/references/execution-errors#create-canister-not-enough-cycles)
 
-## Further readings
+## Lecturas adicionales
 
-### Monitoring cycles usage
-- [Check your canister's cycles balance](/docs/building-apps/canister-management/topping-up#check-the-cycle-balance).
-- [Monitor your canister's cycles usage](/docs/building-apps/canister-management/topping-up).
-- [Motoko cycles management library](https://github.com/CycleOperators/cycles-manager).
+### Monitoreo del uso de cycles
 
-### Getting cycles back from a canister
-- To withdraw cycles from a canister, the [canister must be deleted](/docs/tutorials/developer-liftoff/level-1/1.6-managing-canisters#getting-cycles-back-from-a-canister).
+- [Verificar el balance de cycles de tu canister](/docs/building-apps/canister-management/topping-up#check-the-cycle-balance)
+- [Monitorear el uso de cycles de tu canister](/docs/building-apps/canister-management/topping-up)
+- [Biblioteca de gestión de cycles para Motoko](https://github.com/CycleOperators/cycles-manager)
 
-### Topping up canisters
-- [Top up your canisters](/docs/building-apps/canister-management/topping-up).
-- [Cycles management services](/docs/building-apps/canister-management/topping-up).
-- [Cycle.express](https://cycle.express/).
+### Recuperar cycles de un canister
 
-### Counting instructions
-- [Motoko function `countInstructions`](/docs/motoko/main/base/ExperimentalInternetComputer#function-countinstructions).
-- [IC interface specification](/docs/references/ic-interface-spec#system-api-performance-counter).
+- Para retirar cycles de un canister,
+  [el canister debe ser eliminado](/docs/tutorials/developer-liftoff/level-1/1.6-managing-canisters#getting-cycles-back-from-a-canister)
+
+### Recarga de canisters
+
+- [Recargar tus canisters](/docs/building-apps/canister-management/topping-up)
+- [Servicios de gestión de cycles](/docs/building-apps/canister-management/topping-up)
+- [Cycle.express](https://cycle.express/)
+
+### Conteo de instrucciones
+
+- [Función Motoko `countInstructions`](/docs/motoko/main/base/ExperimentalInternetComputer#function-countinstructions)
+- [Especificación de interfaz de IC](/docs/references/ic-interface-spec#system-api-performance-counter)

@@ -1,65 +1,98 @@
 ---
-keywords: [beginner, concept, cycles, cycles costs, cycles cost estimations, pricing, pricing calculations, calculator]
+keywords:
+  [
+    beginner,
+    concept,
+    cycles,
+    cycles costs,
+    cycles cost estimations,
+    pricing,
+    pricing calculations,
+    calculator,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 
-# Pricing calculator
+# Calculadora de precios
 
-<MarkdownChipRow labels={["Beginner", "Concept"]} />
+<MarkdownChipRow labels={["Principiante", "Concepto"]} />
 
-To get a rough estimate of how much your project may cost, below is a pricing calculator that can be used to estimate the cost of a dapp deployed on ICP. Costs are charged to a canister in cycles, which are fixed against the price of [XDR](/docs/references/glossary#x), where **1 trillion cycles equals 1 XDR**.
-Cycles costs are calculated based on:
+Para obtener una estimación aproximada del costo de tu proyecto, a continuación
+encontrarás una calculadora de precios que puede usarse para estimar el costo de
+una dapp desplegada en ICP. Los costos se cargan a un canister en cycles, los
+cuales tienen un precio fijo contra el valor de
+[XDR](/docs/references/glossary#x), donde **1 billón (trillón) de cycles
+equivale a 1 XDR**. Los costos en cycles se calculan basados en:
 
-- **Messaging**: Calls that are made to a canister's methods. Costs depend on the type of call being sent (query, update, inter-canister, etc.), the size of the message's request and response bytes, and the total number of messages a canister sends and receives.
+- **Mensajería**: Llamadas a métodos de un canister. Los costos dependen del
+  tipo de llamada (query, update, entre canisters, etc.), el tamaño de los bytes
+  de solicitud y respuesta, y el número total de mensajes que un canister envía
+  y recibe.
 
-:::info
-Note that query calls are currently free and do not incur a cost.
-:::
+:::info Nota: Actualmente las llamadas de consulta (query) son gratuitas y no
+generan costo. :::
 
-- **Execution**: Cycles are charged during the execution of messages and tasks. There is a fixed fee for starting execution and a fee per executed instruction.
+- **Ejecución**: Los cycles se cobran durante la ejecución de mensajes y tareas.
+  Existe una tarifa fija por iniciar la ejecución y una tarifa por instrucción
+  ejecutada.
 
-- **Storage**: Cycles charged for canister storage, both Wasm memory and stable memory.
+- **Almacenamiento**: Cycles cobrados por el almacenamiento del canister, tanto
+  en memoria Wasm como en memoria estable (stable memory).
 
-- **Special features**: Include HTTPS outcalls, transmissions using the [Bitcoin API](/docs/references/bitcoin-how-it-works), and transmissions using the [chain-key signing API](/docs/references/t-sigs-how-it-works/).
+- **Características especiales**: Incluyen llamadas externas HTTPS,
+  transmisiones usando la [API Bitcoin](/docs/references/bitcoin-how-it-works) y
+  transmisiones usando la
+  [API de firmas chain-key](/docs/references/t-sigs-how-it-works/).
 
-## ICP pricing calculator
+## Calculadora de precios de ICP
 
-The calculator below estimates costs in USD, though your project will be charged in [cycles](gas-cost.mdx). Cycles have a fixed cost, where **1 trillion cycles equals 1 [XDR](/docs/references/glossary#x)**. [Learn more about how to obtain cycles](/docs/building-apps/getting-started/tokens-and-cycles).
+La siguiente calculadora estima costos en USD, aunque tu proyecto será cobrado
+en [cycles](gas-cost.mdx). Los cycles tienen un costo fijo, donde **1 billón
+(trillón) de cycles equivale a 1 [XDR](/docs/references/glossary#x)**.
+[Aprende más sobre cómo obtener cycles](/docs/building-apps/getting-started/tokens-and-cycles).
 
 <iframe
-  id="frame-src"
-  src="https://3d5wy-5aaaa-aaaag-qkhsq-cai.icp0.io/"
-  frameborder="0"
-  width="100%"
-  height="500px"
-  overflow="auto"
-  allow="accelerometer; autoplay; encrypted-media; gyroscope; fullscreen"
-  allowfullscreen
+  id="frame-src"
+  src="https://3d5wy-5aaaa-aaaag-qkhsq-cai.icp0.io/"
+  frameborder="0"
+  width="100%"
+  height="500px"
+  overflow="auto"
+  allow="accelerometer; autoplay; encrypted-media; gyroscope; fullscreen"
+  allowfullscreen
 ></iframe>
 
+## ¿Cómo se estima el número de cycles cobrados a un canister?
 
-## How is the number of cycles charged to a canister estimated?
+El número de cycles cobrados al canister puede estimarse usando los siguientes
+parámetros:
 
-The number of cycles charged to the canister can be estimated using the following parameters:
+- Nodos en la subred donde se despliega el canister: 1 si es local, 13 o 34 en
+  mainnet
+- Cantidad total de usuarios que interactúan con el canister
+- Usuarios activos diarios: Número de usuarios que interactúan diariamente
+- Mensajes diarios por usuario activo: Mensajes enviados al canister por cada
+  usuario activo
+- Bytes de solicitud/respuesta por mensaje: Tamaño de los datos por mensaje
+- Instrucciones ejecutadas por mensaje: Número de instrucciones WebAssembly
+  ejecutadas
+- Llamadas generadas por mensaje: Llamadas secundarias que dispara cada mensaje
+- Bytes de solicitud/respuesta por llamada: Tamaño de datos por llamada
+  secundaria
+- Instrucciones por llamada: Instrucciones ejecutadas por llamada secundaria
+- Tareas diarias: Número de tareas programadas que ejecuta el canister
+- Instrucciones por tarea: Instrucciones ejecutadas por cada tarea programada
+- Llamadas HTTPS diarias: Número de llamadas externas HTTPS realizadas
+- Bytes de solicitud/respuesta por llamada HTTPS: Tamaño de datos en llamadas
+  externas
+- Almacenamiento por usuario: Datos almacenados por cada usuario
+- Almacenamiento independiente de usuarios: Datos generales del canister
 
-- Nodes in the subnet the canister is deployed to: If deployed locally, this number is 1. If deployed on the mainnet, this number is either 13 or 34.
-- Amount of users: The total number of users that interact with the canister.
-- Daily active users: The total number of users that interact with the canister daily.
-- Daily messages per active user: The total number of messages sent to the canister that each active user generates.
-- Request and response bytes per message: The size of the request and response bytes per message.
-- Instructions executed per message: The number of instructions that are executed in response to each message.
-- Calls per message: The number of calls that are triggered per message.
-- Request and response bytes per call: The size of the request and response bytes per call.
-- Instructions per call: The number of instructions that are executed per call.
-- Daily tasks: The number of daily tasks that the canister executes.
-- Instructions executed per task: The number of instructions that are executed per daily task.
-- Daily HTTPS outcalls: The number of daily HTTPS outcalls the canister makes.
-- Request bytes per HTTPS outcall: The size of the request bytes per HTTPS outcall.
-- Response bytes per HTTPS outcall: The size of the response bytes per HTTPS outcall.
-- Storage bytes per user: The amount of data that is stored for each user.
-- User-independent storage bytes: The amount of data the canister stores, independent of the storage used per user.
-
-HTTPS outcalls are a special feature that is calculated differently than the other resources. Additionally, if a canister uses the [Bitcoin API](/docs/references/bitcoin-how-it-works) or makes transmissions using the [chain-key signing API](/docs/references/t-sigs-how-it-works/), there are additional cycle costs for these special feature transmissions.
+Las llamadas HTTPS son una característica especial con cálculo diferente.
+Adicionalmente, si un canister usa la
+[API Bitcoin](/docs/references/bitcoin-how-it-works) o la
+[API de firmas chain-key](/docs/references/t-sigs-how-it-works/), habrá costos
+adicionales por estas transmisiones especiales.
