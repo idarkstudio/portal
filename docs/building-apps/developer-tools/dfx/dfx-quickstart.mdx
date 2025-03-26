@@ -2,43 +2,45 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
 # dfx quickstart
 
-<MarkdownChipRow labels={["Reference"]} />
+<MarkdownChipRow labels={["Referencia"]} />
 
-Use the `dfx quickstart` command to perform initial one time setup for your identity and/or wallet. This command
-can be run anytime to repeat the setup process or to be used as an informational command, printing
-information about
-your ICP balance, current ICP to XDR conversion rate, and more.
+Utiliza el comando `dfx quickstart` para realizar la configuración inicial única
+para tu identidad y/o billetera. Este comando se puede ejecutar en cualquier
+momento para repetir el proceso de configuración o para utilizarlo como un
+comando informativo, que muestra información sobre el saldo de tu ICP, la tasa
+de conversión actual de ICP a XDR y más.
 
-## Basic usage
+## Uso básico
 
-``` bash
+```bash
 dfx quickstart
 ```
 
 ## Flags
 
-You can use the following optional flags with the `dfx quickstart` command.
+Puedes usar las siguientes flags opcionales con el comando `dfx quickstart`:
 
-| Flag              | Description                                                                                                                            |
-|-------------------|----------------------------------------------------------------------------------------------------------------------------------------|
-| `--identity`      | The user identity to run this command as. It contains your principal as well as some things DFX associates with it such as the wallet. |
+| Flag         | Descripción                                                                                                                                 |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--identity` | La identidad de usuario con la que ejecutar este comando. Contiene tu principal y otros elementos que DFX asocia con él, como la billetera. |
 
-## Options
+## Opciones
 
-You can specify the following options for the `dfx quickstart` command.
+Puedes especificar las siguientes opciones para el comando `dfx quickstart`:
 
-| Option                | Description                                                                                                             |
-|-----------------------|-------------------------------------------------------------------------------------------------------------------------|
-| `--log <LOGMODE>`     | The logging mode to use. You can log to stderr, a file, or both [default: stderr] [possible values: stderr, tee, file]. |
-| `--logfile <LOGFILE>` | The file to log to, if logging to a file (see --logmode).                                                               |
+| Opción                | Descripción                                                                                                                                               |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--log <LOGMODE>`     | El modo de registro a utilizar. Puedes registrar en `stderr`, en un archivo o en ambos. [Por defecto: stderr]. Valores posibles: `stderr`, `tee`, `file`. |
+| `--logfile <LOGFILE>` | El archivo en el que registrar los logs, si se elige la opción de registrar en un archivo (ver `--log`).                                                  |
 
-## Examples
+## Ejemplos
 
-To run a guided setup, run `dfx quickstart`
+Para ejecutar una configuración guiada, usa el siguiente comando:
 
-``` bash
+```bash
 dfx quickstart
 ```
+
 ```shell
 Your DFX user principal: xxxxx-xxxxx-xxxxx-xxxxx-xxxxx-xxxxx-xxxxx-xxxxx-xxxxx-xxxxx-xxx
 Your ledger account address: xxxxx
