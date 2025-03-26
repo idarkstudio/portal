@@ -2,61 +2,79 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
 # dfx generate
 
-<MarkdownChipRow labels={["Reference"]} />
+<MarkdownChipRow labels={["Referencia"]} />
 
-Use the `dfx generate` command to generate canister type declarations for supported programming languages. Currently, `dfx generate` supports four languages: Motoko, Candid, JavaScript, and TypeScript.
+Utiliza el comando `dfx generate` para generar declaraciones de tipo de canister
+para los lenguajes de programación admitidos. Actualmente, `dfx generate` admite
+cuatro lenguajes: Motoko, Candid, JavaScript y TypeScript.
 
-You can use this command to generate type declarations for all canisters that are defined for a project in the project’s `dfx.json` configuration file or a specific canister.
+Puedes utilizar este comando para generar declaraciones de tipo para todos los
+canisters que están definidos en el archivo de configuración `dfx.json` del
+proyecto o para un canister específico.
 
-Note that you can only run this command from within the project directory structure. For example, if your project name is `hello_world`, your current working directory must be the `hello_world` top-level project directory or one of its subdirectories.
+Ten en cuenta que solo puedes ejecutar este comando desde el directorio del
+proyecto. Por ejemplo, si el nombre de tu proyecto es `hello_world`, tu
+directorio de trabajo actual debe ser el directorio principal del proyecto
+`hello_world` o uno de sus subdirectorios.
 
-The `dfx generate` command looks for the configuration under the `declarations` section of a canister in the `dfx.json` configuration file.
+El comando `dfx generate` busca la configuración en la sección `declarations` de
+un canister en el archivo de configuración `dfx.json`.
 
-## Basic usage
+## Uso básico
 
-``` bash
+```bash
 dfx generate [canister_name]
 ```
 
-## Arguments
+## Argumentos
 
-You can specify the following arguments for the `dfx generate` command.
+Puedes especificar los siguientes argumentos para el comando `dfx generate`.
 
-| Argument        | Description                                                                                                                                                                                                                                                                                                                                                        |
-|-----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `canister_name` | Specifies the name of the canister for which to generate type declarations. The canister name must match at least one name that you have configured in the `canisters` section of the `dfx.json` configuration file for your project. If you don’t specify this argument, `dfx generate` will generate type declarations for all canisters declared in `dfx.json`. |
+| Argumento       | Descripción                                                                                                                                                                                                                                                                                                                                                                                   |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `canister_name` | Especifica el nombre del canister para el cual generar las declaraciones de tipo. El nombre del canister debe coincidir con al menos un nombre que hayas configurado en la sección `canisters` del archivo de configuración `dfx.json` de tu proyecto. Si no especificas este argumento, `dfx generate` generará las declaraciones de tipo para todos los canisters declarados en `dfx.json`. |
 
-## Configuration
+## Configuración
 
-The behavior of `dfx generate` is controlled by the `dfx.json` configuration file. Under `dfx.json` → `canisters` → `<canister_name>`, you can add a `declarations` section. In this section, you can specify the following fields:
+El comportamiento de `dfx generate` está controlado por el archivo de
+configuración `dfx.json`. Bajo `dfx.json` → `canisters` → `<canister_name>`,
+puedes agregar una sección `declarations`. En esta sección, puedes especificar
+los siguientes campos:
 
-| Field          | Description                                                                                                                                  |
-|----------------|----------------------------------------------------------------------------------------------------------------------------------------------|
-| `output`       | Directory to place declarations for the canister. Default is `src/declarations/<canister_name>`.                                             |
-| `bindings`     | List of languages to generate type declarations. Options are `"js", "ts", "did", "mo"`. Default is `["js", "ts", "did"]`.                    |
-| `env_override` | String that will replace `process.env.CANISTER_ID_{canister_name_uppercase}` in the `src/dfx/assets/language_bindings/canister.js` template. |
+| Campo          | Descripción                                                                                                                                                  |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `output`       | Directorio donde colocar las declaraciones para el canister. El valor por defecto es `src/declarations/<canister_name>`.                                     |
+| `bindings`     | Lista de lenguajes para los cuales generar declaraciones de tipo. Las opciones son `"js", "ts", "did", "mo"`. El valor por defecto es `["js", "ts", "did"]`. |
+| `env_override` | Cadena que reemplazará `process.env.CANISTER_ID_{canister_name_uppercase}` en la plantilla `src/dfx/assets/language_bindings/canister.js`.                   |
 
-Outputs from `dfx generate`:
+Salidas de `dfx generate`:
 
-| Language         | File                                     |
-|------------------|------------------------------------------|
-| `JavaScript(js)` | `index.js` and `<canister_name>.did.js`  |
-| `TypeScript(ts)` | `index.d.ts` and `<canister_name>.did.ts`|
-| `Candid(did)`    | `<canister_name>.did`                    |
-| `Motoko(mo)`     | `<canister_name>.mo`                     |
+| Lenguaje         | Archivo                                 |
+| ---------------- | --------------------------------------- |
+| `JavaScript(js)` | `index.js` y `<canister_name>.did.js`   |
+| `TypeScript(ts)` | `index.d.ts` y `<canister_name>.did.ts` |
+| `Candid(did)`    | `<canister_name>.did`                   |
+| `Motoko(mo)`     | `<canister_name>.mo`                    |
 
-## Examples
+## Ejemplos
 
-Note that the file name and path to the programs on your file system must match the information specified in the `dfx.json` configuration file.
+Ten en cuenta que el nombre del archivo y la ruta a los programas en tu sistema
+de archivos deben coincidir con la información especificada en el archivo de
+configuración `dfx.json`.
 
-In this example, the `hello_world` canister itself is written in Motoko. The `declarations` section specifies that type declarations for all four languages will be generated and stored at `src/declarations/`.
+En este ejemplo, el canister `hello_world` está escrito en Motoko. La sección
+`declarations` especifica que se generarán declaraciones de tipo para los cuatro
+lenguajes y se almacenarán en `src/declarations/`.
 
-``` bash
+```bash
 dfx generate hello_world
 ```
 
-Since there is only one canister in `dfx.json`, calling `dfx generate` without an argument will have the same effect as the above command. If there were multiple canisters defined in `dfx.json`, this would generate type declarations for all defined canisters.
+Dado que solo hay un canister en `dfx.json`, llamar a `dfx generate` sin un
+argumento tendrá el mismo efecto que el comando anterior. Si hubiera múltiples
+canisters definidos en `dfx.json`, esto generaría declaraciones de tipo para
+todos los canisters definidos.
 
-``` bash
+```bash
 dfx generate
 ```

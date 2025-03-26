@@ -2,11 +2,16 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
 # dfx deploy
 
-<MarkdownChipRow labels={["Reference"]}/>
+<MarkdownChipRow labels={["Referencia"]} />
 
-Use the `dfx deploy` command to register, build, and deploy a dapp on the local canister execution environment, on the IC or on a specified testnet. By default, all canisters defined in the project `dfx.json` configuration file are deployed.
+Usa el comando `dfx deploy` para registrar, construir y desplegar una dapp en el
+entorno de ejecución local de canisters, en la IC o en una testnet especificada.
+De forma predeterminada, se despliegan todos los canisters definidos en el
+archivo de configuración `dfx.json` del proyecto.
 
-This command simplifies the developer workflow by enabling you to run one command instead of running the following commands as separate steps:
+Este comando simplifica el flujo de trabajo del desarrollador al permitirte
+ejecutar un solo comando en lugar de ejecutar los siguientes comandos como pasos
+separados:
 
 ```shell
 dfx canister create --all
@@ -14,68 +19,90 @@ dfx build
 dfx canister install --all
 ```
 
-Note that you can only run this command from within the project directory structure. For example, if your project name is `hello_world`, your current working directory must be the `hello_world` top-level project directory or one of its subdirectories.
+Note que solo puede ejecutar este comando desde el directorio del proyecto. Por
+ejemplo, si el nombre de su proyecto es `hello_world`, su directorio de trabajo
+actual debe ser el directorio principal del proyecto `hello_world` o uno de sus
+subdirectorios.
 
-## Basic usage
+## Uso básico
 
-``` bash
+```bash
 dfx deploy [options] [canister_name]
 ```
 
-## Options
+## Opciones
 
-You can use the following options with the `dfx deploy` command.
+Puedes usar las siguientes opciones con el comando `dfx deploy`.
 
-| Option                             | Description                                                                                                                                                                                                                                                        |
-|------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `--network <network>`              | Overrides the environment to connect to. By default, the local canister execution environment is used.                                                                                                                                                             |
-| `--playground       `              | Alias for `--network playground`. By default, canisters on this network are borrowed from the Motoko Playground.                                                                                                                                                   |
-| `--ic               `              | Alias for `--network ic`.                                                                                                                                                                                                                                          |
-| `--argument <argument>`            | Specifies an argument to pass to the canister during installation.                                                                                                                                                                                                 |
-| `--argument-type <argument-type>`  | Specifies the data type for the argument when making the call using an argument [possible values: idl, raw]                                                                                                                                                        |
-| `--argument-file <argument-file>`  | Specifies the file from which to read the argument to pass to the init method.  Stdin may be referred to as `-`.                                                                                                                                                   |
-| `--created-at-time <timestamp>`    |  Transaction timestamp, in nanoseconds, for use in controlling transaction deduplication, default is system time. https://internetcomputer.org/docs/developer-docs/integrations/icrc-1/#transaction-deduplication-                                         |
-| `--from-subaccount <subaccount>`   | Subaccount of the selected identity to spend cycles from.                                                                                                                                                                                                          |
-| `-m`, `--mode <mode>`              | Specifies whether you want to `install`, `reinstall`, or `upgrade` canisters. Defaults to `auto`. For more information about installation modes and canister management, see [managing canisters](/docs/building-apps/canister-management/settings). |
-| `--with-cycles <number-of-cycles>` | Enables you to specify the initial number of cycles for a canister in a project.                                                                                                                                                                                   |
-| `--specified-id <PRINCIPAL>`       | Attempts to create the canister with this Canister ID                                                                                                                                                                                                              |
-| `--by-proposal`                    | Upload proposed changed assets, but do not commit them.  Follow up by calling either commit_proposed_batch() or delete_batch().                                                                                                                                    |
-| `--compute-evidence`               | Build a frontend canister, determine batch operations required to synchronize asset canister contents, and compute a hash over those operations.  Displays this hash ("evidence"), which should match the evidence displayed by `dfx deploy --by-proposal`.        |
-| `--subnet-type <subnet-type>`      | Specify the subnet type to create the canister on. If no subnet type is provided, the canister will be created on a random default application subnet.                                                                                                             |
-| `--subnet <subnet-principal>`      | Specify the subnet to create the canister on. If no subnet is provided, the canister will be created on a random default application subnet.                                                                                                                       |
-| `--next-to <canister-principal>`   | Create canisters on the same subnet as this canister.                                                                                                                                                                                                              |
-| `--skip-pre-upgrade`               | Skip the pre_upgrade hook on upgrade. This requires the upgrade/auto mode.                                                                                                                                                                                         |
-| `--wasm-memory-persistence <mode>` | Keep or replace the Wasm main memory on upgrade. Possible values: keep, replace. This requires the upgrade/auto mode.                                                                                                                                              |
+| Opción                             | Descripción                                                                                                                                                                                                                                                                                     |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--network <network>`              | Sobrescribe el entorno al que conectarse. De forma predeterminada, se usa el entorno local de ejecución de canisters.                                                                                                                                                                           |
+| `--playground`                     | Alias para `--network playground`. De forma predeterminada, los canisters en esta red se toman del Motoko Playground.                                                                                                                                                                           |
+| `--ic`                             | Alias para `--network ic`.                                                                                                                                                                                                                                                                      |
+| `--argument <argument>`            | Especifica un argumento para pasar al canister durante la instalación.                                                                                                                                                                                                                          |
+| `--argument-type <argument-type>`  | Especifica el tipo de dato para el argumento al hacer la llamada utilizando un argumento [valores posibles: idl, raw]                                                                                                                                                                           |
+| `--argument-file <argument-file>`  | Especifica el archivo desde el cual leer el argumento para pasar al método de inicialización. Stdin puede referirse como `-`.                                                                                                                                                                   |
+| `--created-at-time <timestamp>`    | Marca temporal de la transacción, en nanosegundos, para su uso en el control de deduplicación de transacciones. El valor predeterminado es la hora del sistema. https://internetcomputer.org/docs/developer-docs/integrations/icrc-1/#transaction-deduplication                                 |
+| `--from-subaccount <subaccount>`   | Subcuenta de la identidad seleccionada para gastar ciclos.                                                                                                                                                                                                                                      |
+| `-m`, `--mode <mode>`              | Especifica si deseas `instalar`, `reinstalar` o `actualizar` canisters. El valor predeterminado es `auto`. Para más información sobre modos de instalación y gestión de canisters, consulta [gestión de canisters](/docs/building-apps/canister-management/settings).                           |
+| `--with-cycles <number-of-cycles>` | Te permite especificar el número inicial de ciclos para un canister en un proyecto.                                                                                                                                                                                                             |
+| `--specified-id <PRINCIPAL>`       | Intenta crear el canister con este Canister ID.                                                                                                                                                                                                                                                 |
+| `--by-proposal`                    | Sube los activos propuestos cambiados, pero no los confirma. Luego, haz un seguimiento llamando a `commit_proposed_batch()` o `delete_batch()`.                                                                                                                                                 |
+| `--compute-evidence`               | Construye un canister de frontend, determina las operaciones por lotes necesarias para sincronizar los contenidos del canister de activos y calcula un hash sobre esas operaciones. Muestra este hash ("evidence"), que debe coincidir con el evidence mostrado por `dfx deploy --by-proposal`. |
+| `--subnet-type <subnet-type>`      | Especifica el tipo de subnet para crear el canister. Si no se proporciona un tipo de subnet, el canister se creará en una subnet predeterminada aleatoria.                                                                                                                                      |
+| `--subnet <subnet-principal>`      | Especifica la subnet para crear el canister. Si no se proporciona una subnet, el canister se creará en una subnet predeterminada aleatoria.                                                                                                                                                     |
+| `--next-to <canister-principal>`   | Crea los canisters en la misma subnet que este canister.                                                                                                                                                                                                                                        |
+| `--skip-pre-upgrade`               | Omite el hook de `pre_upgrade` en la actualización. Esto requiere el modo de actualización/auto.                                                                                                                                                                                                |
+| `--wasm-memory-persistence <mode>` | Mantén o reemplaza la memoria principal Wasm en la actualización. Valores posibles: `keep`, `replace`. Esto requiere el modo de actualización/auto.                                                                                                                                             |
 
-### Specifies the argument to pass to the init entrypoint
+### Especifica el argumento a pasar al punto de entrada de inicialización
 
-With `--argument-type`, you can specify the data format for the argument when you install using the `--argument` option. The valid values are `idl` and `raw`. By default, you can specify arguments using the [Candid](/docs/building-apps/interact-with-canisters/candid/candid-concepts) (`idl`) syntax for data values. For information about using Candid and its supported types, see [Interact with a service in a terminal](/docs/building-apps/interact-with-canisters/candid/using-candid#idl-syntax) and [Supported types](/docs/references/candid-ref). You can use `raw` as the argument type if you want to pass raw bytes to a canister.
+Con `--argument-type`, puedes especificar el formato de datos para el argumento
+al instalar usando la opción `--argument`. Los valores válidos son `idl` y
+`raw`. De forma predeterminada, puedes especificar los argumentos utilizando la
+sintaxis de
+[Candid](/docs/building-apps/interact-with-canisters/candid/candid-concepts)
+(`idl`) para valores de datos. Para obtener información sobre el uso de Candid y
+sus tipos admitidos, consulta
+[Interactuar con un servicio en la terminal](/docs/building-apps/interact-with-canisters/candid/using-candid#idl-syntax)
+y [Tipos admitidos](/docs/references/candid-ref). Puedes usar `raw` como el tipo
+de argumento si deseas pasar bytes crudos a un canister.
 
-## Arguments
+## Argumentos
 
-You can specify the following arguments for the `dfx deploy` command.
+Puedes especificar los siguientes argumentos para el comando `dfx deploy`.
 
-| Argument        | Description                                                                                                                                                                                                                                                                                                                                    |
-|-----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `canister_name` | Specifies the name of the canister you want to register, build, and deploy. Note that the canister name you specify must match at least one name in the `canisters` section of the `dfx.json` configuration file for the project. If you don’t specify a canister name, `dfx deploy` will deploy all canisters defined in the `dfx.json` file. |
+| Argumento       | Descripción                                                                                                                                                                                                                                                                                                                                                                                 |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `canister_name` | Especifica el nombre del canister que deseas registrar, construir y desplegar. Ten en cuenta que el nombre del canister que especifiques debe coincidir con al menos un nombre en la sección `canisters` del archivo de configuración `dfx.json` para el proyecto. Si no especificas un nombre de canister, `dfx deploy` desplegará todos los canisters definidos en el archivo `dfx.json`. |
 
-## Examples
+## Ejemplos
 
-You can use the `dfx deploy` command to deploy all or specific canisters on the local canister execution environment, on the IC or on a specified testnet.
+Puedes usar el comando `dfx deploy` para desplegar todos o canisters específicos
+en el entorno local de ejecución de canisters, en la IC o en una testnet
+especificada.
 
-For example, to deploy the `hello` project on the hypothetical `ic-pubs` testnet configured in the `dfx.json` configuration file, you can run the following command:
+Por ejemplo, para desplegar el proyecto `hello` en la testnet hipotética
+`ic-pubs` configurada en el archivo de configuración `dfx.json`, puedes ejecutar
+el siguiente comando:
 
-``` bash
+```bash
 dfx deploy hello_backend --network ic-pubs
 ```
 
-To deploy a project on the local canister execution environment and pass a single argument to the installation step, you can run a command similar to the following:
+Para desplegar un proyecto en el entorno local de ejecución de canisters y pasar
+un solo argumento al paso de instalación, puedes ejecutar un comando similar al
+siguiente:
 
-``` bash
+```bash
 dfx deploy hello_actor_class --argument '("from DFINITY")'
 ```
 
-Note that currently you must use an actor class in your Motoko dapp. In this example, the `dfx deploy` command specifies an argument to pass to the `hello_actor_class` canister. The main program for the `hello_actor_class` canister looks like this:
+Nota que actualmente debes usar una clase de actor en tu dapp de Motoko. En este
+ejemplo, el comando `dfx deploy` especifica un argumento para pasar al canister
+`hello_actor_class`. El programa principal para el canister `hello_actor_class`
+se ve así:
+
 ```motoko
 actor class Greet(name: Text) {
     public query func greet() : async Text {
@@ -84,8 +111,14 @@ actor class Greet(name: Text) {
 };
 ```
 
-You can use the `dfx deploy` command with the `--with-cycles` option to specify the initial balance of a canister created by your wallet. If you don’t specify a canister, the number of cycles you specify will be added to all canisters by default. To avoid this, specify a specific canister by name. For example, to add an initial balance of 8000000000000 cycles to a canister called "hello-assets", run the following command:
+Puedes usar el comando `dfx deploy` con la opción `--with-cycles` para
+especificar el saldo inicial de un canister creado por tu wallet. Si no
+especificas un canister, el número de ciclos que especifiques se agregará a
+todos los canisters de forma predeterminada. Para evitar esto, especifica un
+canister específico por nombre. Por ejemplo, para agregar un saldo inicial de
+8000000000000 ciclos a un canister llamado "hello-assets", ejecuta el siguiente
+comando:
 
-``` bash
+```bash
 dfx deploy --with-cycles 8000000000000 hello-assets
 ```

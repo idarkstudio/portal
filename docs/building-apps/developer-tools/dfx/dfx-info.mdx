@@ -2,47 +2,47 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
 # dfx info
 
-<MarkdownChipRow labels={["Reference"]} />
+<MarkdownChipRow labels={["Referencia"]} />
 
-## Basic usage
+## Uso básico
 
-``` bash
+```bash
 dfx info [type] [flag]
 ```
 
-## Information Types
+## Tipos de Información
 
-These are the types of information that the `dfx info` command can display.
+Estos son los tipos de información que el comando `dfx info` puede mostrar.
 
-| Information        | Description                                                                                                        |
-|--------------------|--------------------------------------------------------------------------------------------------------------------|
-| candid-ui-url      | The URL of the Candid UI canister.                                                                                 |
-| networks-json-path | Path to network definition file networks.json.                                                                     |
-| replica-port       | The listening port of the replica.                                                                                 |
-| replica-rev        | The revision of the bundled replica.                                                                               |
-| security-policy    | Show the headers that gets applied to assets in .ic-assets.json5 if "security_policy" is "standard" or "hardened". |
-| webserver-port     | The local webserver port.                                                                                          |
+| Información        | Descripción                                                                                                                 |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| candid-ui-url      | La URL del canister de Candid UI.                                                                                           |
+| networks-json-path | Ruta al archivo de definición de redes `networks.json`.                                                                     |
+| replica-port       | El puerto de escucha del replicador.                                                                                        |
+| replica-rev        | La revisión del replicador empaquetado.                                                                                     |
+| security-policy    | Muestra los encabezados que se aplican a los activos en `.ic-assets.json5` si "security_policy" es "standard" o "hardened". |
+| webserver-port     | El puerto del servidor web local.                                                                                           |
 
-## Options
+## Opciones
 
-You can use the following options with the `dfx info` command.
+Puedes usar las siguientes opciones con el comando `dfx info`.
 
-| Option                | Description                                                                                            |
-|-----------------------|--------------------------------------------------------------------------------------------------------|
-| `--network <network>` | Overrides the environment to connect to. By default, the local canister execution environment is used. |
+| Opción                | Descripción                                                                                                   |
+| --------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `--network <network>` | Sobrescribe el entorno al que conectarse. Por defecto, se utiliza el entorno de ejecución de canisters local. |
 
-## Examples
+## Ejemplos
 
-You can display the webserver port by running the following command:
+Puedes mostrar el puerto del servidor web ejecutando el siguiente comando:
 
-``` bash
+```bash
 $ dfx info webserver-port
 4943
 ```
 
-You can display the URL of Candid UI on mainnet by running the following command:
+Puedes mostrar la URL de Candid UI en mainnet ejecutando el siguiente comando:
 
-``` bash
+```bash
 $ dfx info candid-ui-url --network ic
 https://a4gq6-oaaaa-aaaab-qaa4q-cai.raw.icp0.io
 ```

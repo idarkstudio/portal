@@ -2,66 +2,92 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
 # dfx build
 
-<MarkdownChipRow labels={["Reference"]} />
+<MarkdownChipRow labels={["Referencia"]} />
 
-Use the `dfx build` command to compile your program into a WebAssembly module that can be deployed on the IC. You can use this command to compile all of the programs that are defined for a project in the project’s `dfx.json` configuration file or a specific canister.
+Utiliza el comando `dfx build` para compilar tu programa en un módulo de
+WebAssembly que se puede implementar en el IC. Puedes utilizar este comando para
+compilar todos los programas que están definidos para un proyecto en el archivo
+de configuración `dfx.json` del proyecto o un canister específico.
 
-Note that you can only run this command from within the project directory structure. For example, if your project name is `hello_world`, your current working directory must be the `hello_world` top-level project directory or one of its subdirectories.
+Ten en cuenta que solo puedes ejecutar este comando desde el directorio de
+estructura del proyecto. Por ejemplo, si el nombre de tu proyecto es
+`hello_world`, tu directorio de trabajo actual debe ser el directorio principal
+del proyecto `hello_world` o uno de sus subdirectorios.
 
-The `dfx build` command looks for the source code to compile using the information you have configured under the `canisters` section in the `dfx.json` configuration file.
+El comando `dfx build` busca el código fuente para compilar utilizando la
+información que has configurado en la sección `canisters` en el archivo de
+configuración `dfx.json`.
 
-## Basic usage
+## Uso básico
 
-``` bash
+```bash
 dfx build [flag] [option] [--all | canister_name]
 ```
 
-## Flags
+## Flags (banderas)
 
-You can use the following optional flags with the `dfx build` command.
+Puedes usar las siguientes flags opcionales con el comando `dfx build`.
 
-| Flag      | Description                                                                                                                                              |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--check` | Builds canisters using a temporary, hard-coded, locally-defined canister identifier for testing that your program compiles without connecting to the IC. |
+| Bandera   | Descripción                                                                                                                                                              |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `--check` | Compila los canisters utilizando un identificador de canister temporal, predefinido y local, para probar que tu programa se compila sin necesidad de conectarse a la IC. |
 
-## Options
+## Opciones
 
-You can specify the following options for the `dfx build` command.
+Puedes especificar las siguientes opciones para el comando `dfx build`.
 
-| Option                | Description                                                                                                                                                |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--network <network>` | Specifies the network alias or URL you want to connect to. You can use this option to override the network specified in the `dfx.json` configuration file. |
-| `--output-env-file`   | Writes dfx environment variables to a provided path. Overrides the `output_env_file` configuration from `dfx.json` if passed.                              |
+| Opción                | Descripción                                                                                                                                                              |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `--network <network>` | Especifica el alias de red o la URL a la que deseas conectarte. Puedes usar esta opción para sobrescribir la red especificada en el archivo de configuración `dfx.json`. |
+| `--output-env-file`   | Escribe las variables de entorno de `dfx` en la ruta proporcionada. Sobrescribe la configuración `output_env_file` en `dfx.json` si se proporciona.                      |
 
-## Arguments
+## Argumentos
 
-You can specify the following arguments for the `dfx build` command.
+Puedes especificar los siguientes argumentos para el comando `dfx build`.
 
-| Argument        | Description                                                                                                                                                                                                                                                                                                                              |
-| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--all`         | Builds all of the canisters configured in the project’s `dfx.json` file.                                                                                                                                                                                                                                                                 |
-| `canister_name` | Specifies the name of the canister you want to build. If you are not using the `--all` option, you can continue to use `dfx build` or provide a canister name as an argument (the canister name must match at least one name that you have configured in the `canisters` section of the `dfx.json` configuration file for your project.) |
+| Argumento       | Descripción                                                                                                                                                                                                                                                           |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--all`         | Compila todos los canisters configurados en el archivo `dfx.json` del proyecto.                                                                                                                                                                                       |
+| `canister_name` | Especifica el nombre del canister que deseas compilar. Si no usas la opción `--all`, puedes seguir ejecutando `dfx build` o proporcionar un nombre de canister como argumento (el nombre debe coincidir con uno configurado en la sección `canisters` de `dfx.json`). |
 
-## Examples
+## Ejemplos
 
-You can use the `dfx build` command to build one or more WebAssembly modules from the programs specified in the `dfx.json` configuration file under the `canisters` key. For example, if your `dfx.json` configuration file defines one `hello_world_backend` canister and one `hello_world_frontend` canister, then running `dfx build` compiles two WebAssembly modules.
+Puedes usar el comando `dfx build` para compilar uno o más módulos WebAssembly a
+partir de los programas especificados en el archivo de configuración `dfx.json`,
+bajo la clave `canisters`.  
+Por ejemplo, si tu archivo `dfx.json` define un canister `hello_world_backend` y
+un canister `hello_world_frontend`, al ejecutar `dfx build` se compilan dos
+módulos WebAssembly.
 
-Note that the file name and path to the programs on your file system must match the information specified in the `dfx.json` configuration file.
+Ten en cuenta que el nombre del archivo y la ruta de los programas en tu sistema
+de archivos deben coincidir con la información especificada en el archivo de
+configuración `dfx.json`.
 
-In this example, the `hello_world_backend` canister contains the main program code and the `hello_world_frontend` canister store frontend code and assets. If you want to keep the `hello_world_frontend` canister defined in the `dfx.json` file, but only build the backend program, you could run the following command:
+En este ejemplo, el canister `hello_world_backend` contiene el código principal
+del programa y el canister `hello_world_frontend` almacena el código del
+frontend y los activos.  
+Si deseas mantener el canister `hello_world_frontend` definido en el archivo
+`dfx.json`, pero solo compilar el programa backend, puedes ejecutar el siguiente
+comando:
 
-``` bash
+```bash
 dfx build hello_world_backend
 ```
 
-Building a specific canister is useful when you have multiple canisters defined in the dfx.json file, but want to test and debug operations for canisters independently.
+Compilar un canister específico es útil cuando tienes múltiples canisters
+definidos en el archivo dfx.json, pero deseas probar y depurar operaciones para
+canisters de forma independiente.
 
-To test whether a canister compiles without connecting to the IC or the local canister execution environment, you would run the following command:
+Para probar si un canister se compila sin conectarse al IC o al entorno de
+ejecución local del canister, debes ejecutar el siguiente comando:
 
-``` bash
+```bash
 dfx build --check
 ```
 
-## Management canister
+## Canister de gestión (management)
 
-If `dfx` detects that your Motoko project is importing the Management Canister (e.g. `import Management "ic:aaaaa-aa";`) it will automatically provide the Candid interface for the Management Canister during the build.
+Si `dfx` detecta que tu proyecto de Motoko está importando el Canister de
+Gestión (por ejemplo, `import Management "ic:aaaaa-aa";`) automáticamente
+proporcionará la interfaz Candid para el Canister de Gestión durante la
+compilación.

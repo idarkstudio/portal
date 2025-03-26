@@ -2,192 +2,237 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
 # dfx canister
 
-<MarkdownChipRow labels={["Reference"]} />
+<MarkdownChipRow labels={["Referencia"]} />
 
-Use the `dfx canister` command with options and subcommands to manage canister operations and interaction with the
-Internet Computer or the local canister execution environment. In most cases, you use `dfx canister` subcommands after
-you compile a program to manage the canister lifecycle and to perform key tasks such as calling program functions.
+Utiliza el comando `dfx canister` con opciones y subcomandos para gestionar las
+operaciones de los canisters y la interacción con el Internet Computer o el
+entorno de ejecución de canisters local. En la mayoría de los casos, utilizas
+los subcomandos de `dfx canister` después de compilar un programa para gestionar
+el ciclo de vida del canister y realizar tareas clave como llamar a las
+funciones del programa.
 
-The basic syntax for running `dfx canister` commands is:
+La sintaxis básica para ejecutar los comandos de `dfx canister` es:
 
-``` bash
+```bash
 dfx canister <subcommand> [options]
 ```
 
-Depending on the `dfx canister` subcommand you specify, additional arguments and options might apply or be
-required. To view usage information for a specific `dfx canister` subcommand, specify the subcommand and the `--help`
-flag. For example, to see usage information for `dfx canister call`, you can run the following command:
+Dependiendo del subcomando `dfx canister` que especifiques, podrían aplicarse o
+ser requeridos argumentos y opciones adicionales. Para ver información de uso de
+un subcomando específico de `dfx canister`, especifica el subcomando y la
+bandera `--help`. Por ejemplo, para ver información de uso de
+`dfx canister call`, puedes ejecutar el siguiente comando:
 
-``` bash
+```bash
 dfx canister call --help
 ```
 
-For reference information and examples that illustrate using `dfx canister` commands, select an appropriate command.
+## Comandos de `dfx canister`
 
-| Command                                            | Description                                                                                                                                            |
-|----------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`call`](#dfx-canister-call)                       | Calls a specified method on a deployed canister.                                                                                                       |
-| [`create`](#dfx-canister-create)                   | Creates an empty canister and associates the assigned Canister ID to the canister name.                                                                |
-| [`delete`](#dfx-canister-delete)                   | Deletes a currently stopped canister.                                                                                                                  |
-| [`deposit-cycles`](#dfx-canister-deposit-cycles)   | Deposit cycles into the specified canister.                                                                                                            |
-| `help`                                             | Displays usage information message for a specified subcommand.                                                                                         |
-| [`id`](#dfx-canister-id)                           | Displays the identifier of a canister.                                                                                                                 |
-| [`info`](#dfx-canister-info)                       | Get the hash of a canister’s Wasm module and its current controller.                                                                                   |
-| [`install`](#dfx-canister-install)                 | Installs compiled code in a canister.                                                                                                                  |
-| [`logs`](#dfx-canister-logs)                       | Returns the logs from a canister.                                                                                                                      |
-| [`metadata`](#dfx-canister-metadata)               | Displays metadata in a canister.                                                                                                                       |
-| [`request-status`](#dfx-canister-request-status)   | Requests the status of a call to a canister.                                                                                                           |
-| [`send`](#dfx-canister-send)                       | Send a previously-signed message.                                                                                                                      |
-| [`sign`](#dfx-canister-send)                       | Sign a canister call and generate message file.                                                                                                        |
-| [`start`](#dfx-canister-start)                     | Starts a stopped canister.                                                                                                                             |
-| [`status`](#dfx-canister-status)                   | Returns the current status of a canister as defined [here](/docs/references/ic-interface-spec#ic-canister_status). |
-| [`stop`](#dfx-canister-stop)                       | Stops a currently running canister.                                                                                                                    |
-| [`uninstall-code`](#dfx-canister-uninstall-code)   | Uninstalls a canister, removing its code and state. Does not delete the canister.                                                                      |
-| [`update-settings`](#dfx-canister-update-settings) | Update one or more of a canister's settings (i.e its controller, compute allocation, or memory allocation.).                                           |
-| [`url`](#dfx-canister-url)                         | Displays the url of a canister.                                                                                                                        |
+Para obtener información de referencia y ejemplos sobre cómo utilizar los
+comandos de `dfx canister`, selecciona el comando adecuado.
 
-## Overriding the default deployment environment
+| Comando                                            | Descripción                                                                                                                 |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| [`call`](#dfx-canister-call)                       | Llama a un método específico en un canister desplegado.                                                                     |
+| [`create`](#dfx-canister-create)                   | Crea un canister vacío y asocia el ID de canister asignado con el nombre del canister.                                      |
+| [`delete`](#dfx-canister-delete)                   | Elimina un canister que está detenido.                                                                                      |
+| [`deposit-cycles`](#dfx-canister-deposit-cycles)   | Deposita ciclos en el canister especificado.                                                                                |
+| `help`                                             | Muestra un mensaje de información sobre el uso de un subcomando específico.                                                 |
+| [`id`](#dfx-canister-id)                           | Muestra el identificador de un canister.                                                                                    |
+| [`info`](#dfx-canister-info)                       | Obtiene el hash del módulo Wasm de un canister y su controlador actual.                                                     |
+| [`install`](#dfx-canister-install)                 | Instala el código compilado en un canister.                                                                                 |
+| [`logs`](#dfx-canister-logs)                       | Devuelve los registros (logs) de un canister.                                                                               |
+| [`metadata`](#dfx-canister-metadata)               | Muestra los metadatos de un canister.                                                                                       |
+| [`request-status`](#dfx-canister-request-status)   | Solicita el estado de una llamada a un canister.                                                                            |
+| [`send`](#dfx-canister-send)                       | Envía un mensaje previamente firmado.                                                                                       |
+| [`sign`](#dfx-canister-send)                       | Firma una llamada a un canister y genera un archivo de mensaje.                                                             |
+| [`start`](#dfx-canister-start)                     | Inicia un canister que estaba detenido.                                                                                     |
+| [`status`](#dfx-canister-status)                   | Devuelve el estado actual de un canister según la definición [aquí](/docs/references/ic-interface-spec#ic-canister_status). |
+| [`stop`](#dfx-canister-stop)                       | Detiene un canister en ejecución.                                                                                           |
+| [`uninstall-code`](#dfx-canister-uninstall-code)   | Desinstala un canister, eliminando su código y estado, pero sin borrar el canister.                                         |
+| [`update-settings`](#dfx-canister-update-settings) | Actualiza una o más configuraciones de un canister (por ejemplo, su controlador, asignación de cómputo o memoria).          |
+| [`url`](#dfx-canister-url)                         | Muestra la URL de un canister.                                                                                              |
 
-By default, `dfx canister` commands run on the local canister execution environment specified in the `dfx.json` file. If
-you want to send a `dfx canister` subcommand to the Internet Computer or a testnet without changing the settings in
-your `dfx.json` configuration file, you can explicitly specify the URL to connect to using the `--network` option.
+---
 
-For example, to register unique canister identifiers for a project on the local canister execution environment, you can
-run the following command:
+## Sobrescribir el entorno de despliegue predeterminado
 
-``` bash
+Por defecto, los comandos `dfx canister` se ejecutan en el entorno local
+definido en el archivo `dfx.json`.  
+Si deseas enviar un subcomando de `dfx canister` a Internet Computer o a una red
+de prueba sin modificar la configuración en tu archivo `dfx.json`, puedes
+especificar explícitamente la URL de conexión utilizando la opción `--network`.
+
+Por ejemplo, para registrar identificadores de canister únicos para un proyecto
+en el entorno de ejecución local, puedes ejecutar el siguiente comando:
+
+```bash
 dfx canister create --all
 ```
 
-If you want to register unique canister identifiers for the same project on the Internet Computer, you can run the
-following command:
+Si quieres registrar identificadores de canister únicos para el mismo proyecto
+en el Internet Computer, puedes ejecutar el siguiente comando:
 
-``` bash
+```bash
 dfx canister create --all --network ic
 ```
 
-The SDK comes with an alias of `ic`, which is configured to point to the Internet Computer. You can also pass a URL as a
-network option, or you can configure additional aliases in `dfx.json` under the `networks` configuration, or
-in `$HOME/.config/dfx/networks.json`.
+El SDK viene con un alias de `ic`, que está configurado para apuntar al Internet
+Computer. También puedes pasar una URL como opción de red, o puedes configurar
+alias adicionales en `dfx.json` bajo la configuración de `networks`, o en
+`$HOME/.config/dfx/networks.json`.
 
-To illustrate, you can call a canister and function running on a testnet using a command similar to the following:
+Para ilustrar, puedes llamar a un canister y función que se ejecuta en una red
+de prueba utilizando un comando similar al siguiente:
 
-``` bash
+```bash
 dfx canister call counter get --network http://192.168.3.1:5678
 ```
 
-## Performing a call through the wallet
+## Realizando una llamada a través de la wallet
 
-By default, most `dfx canister` commands to the Internet Computer are signed by and sent from your own principal. (
-Exceptions are commands that require cycles: `dfx canister create` and `dfx canister deposit-cycles`. Those
-automatically go through the wallet.) Occasionally, you may want to make a call from your wallet, e.g. when only your
-wallet is allowed to call a certain function. To send a call through your wallet, you can use the `--wallet` option.
-You will either specify the wallet's principal, or the name of an identity associated with a wallet.
+Por defecto, la mayoría de los comandos `dfx canister` hacia Internet Computer
+están firmados y enviados desde tu propio principal. (Las excepciones son los
+comandos que requieren ciclos: `dfx canister create` y
+`dfx canister deposit-cycles`. Esos automáticamente pasan a través de la
+wallet). Ocasionalmente, es posible que desees realizar una llamada desde tu
+wallet, por ejemplo, cuando solo tu wallet tiene permitido llamar a una función
+específica. Para enviar una llamada a través de tu wallet, puedes usar la opción
+`--wallet`. Deberás especificar el principal de la wallet o el nombre de una
+identidad asociada a una wallet.
 
-### Specifying a wallet by principal
+### Especificando una wallet por principal
 
-To specify a wallet by principal, pass the principal directly.
+Para especificar una wallet por principal, pasa el principal directamente.
 
-``` bash
+```bash
 dfx canister status <canister name> --wallet <wallet id>
 ```
 
-As a concrete example, if you want to request the status of a canister on the ic that is only controlled by your wallet,
-you would do the following:
+Como ejemplo concreto, si deseas solicitar el estado de un canister en el IC que
+solo está controlado por tu wallet, debes hacer lo siguiente:
 
-``` bash
+```bash
 dfx identity get-wallet --network ic
 ```
 
-This command outputs your wallet's principal (e.g. `22ayq-aiaaa-aaaai-qgmma-cai`) on the `ic` network. Using this id,
-you can then query the status of the canister (let's assume the canister is called `my_canister_name`) as follows:
+Este comando muestra el principal de tu wallet (por ejemplo,
+`22ayq-aiaaa-aaaai-qgmma-cai`) en la red `ic`. Usando este id, puedes consultar
+el estado del canister (asumiendo que el canister se llama `my_canister_name`)
+de la siguiente manera:
 
-``` bash
+```bash
 dfx canister status --network ic --wallet 22ayq-aiaaa-aaaai-qgmma-cai
 ```
 
-### Specifying a wallet by identity name
+### Especificando una wallet por nombre de identidad
 
-In the previous example, we first looked up the principal of the currently
-selected wallet. We can avoid this step by specifying the name of an identity,
-in which case dfx will look up the wallet's principal for us.
+En el ejemplo anterior, primero buscamos el principal de la billetera
+seleccionada actualmente. Podemos evitar este paso especificando el nombre de
+una identidad, en cuyo caso dfx buscará el principal de la billetera por
+nosotros.
 
-For example, the following command will query the status of a canister,
-using the wallet associated with the default identity on the ic network:
+Por ejemplo, el siguiente comando consultará el estado de un canister,
+utilizando la billetera asociada con la identidad predeterminada en la red ic:
 
-``` bash
+```bash
 dfx canister status --network ic --wallet default
 ```
 
-As another example, the following commands are equivalent:
+Como otro ejemplo, los siguientes comandos son equivalentes:
 
-``` bash
+```bash
 dfx canister status --network ic --wallet $(dfx identity get-wallet --network ic --identity alice)
 dfx canister status --network ic --wallet alice
 ```
 
 ## dfx canister call
 
-Use the `dfx canister call` command to call a specified method on a deployed canister.
+Usa el comando `dfx canister call` para llamar a un método específico en un
+canister desplegado.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx canister call [options] <canister_name> <method_name> [argument]
 ```
 
-### Options
+## Opciones de `dfx canister call`
 
-You can use the following options with the `dfx canister call` command.
+Puedes utilizar las siguientes opciones con el comando `dfx canister call`:
 
-| Option                            | Description                                                                                                                                                                                                                    |
-|-----------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `--argument-file <argument-file>` | Specifies the file from which to read the argument to pass to the method.  Stdin may be referred to as `-`.                                                                                                                    |
-| `--async`                         | Specifies not to wait for the result of the call to be returned by polling the replica. Instead return a response ID.                                                                                                          |
-| `--candid <file.did>`             | Provide the .did file with which to decode the response. Overrides value from dfx.json for project canisters.                                                                                                                  |
-| `--output <output>`               | Specifies the output format to use when displaying a method’s return result. The valid values are `idl`, 'json', `pp` and `raw`. The `pp` option is equivalent to `idl`, but is pretty-printed.                                |
-| `--query`                         | Sends a query request instead of an update request. For information about the difference between query and update calls, see [Canisters include both program and state](/docs/building-apps/essentials/canisters#canister-state). |
-| `--random <random>`               | Specifies the config for generating random arguments.                                                                                                                                                                          |
-| `--type <type>`                   | Specifies the data format for the argument when making the call using an argument. The valid values are `idl` and `raw`.                                                                                                       |
-| `--update`                        | Sends an update request to a canister. This is the default if the method is not a query method.                                                                                                                                |
-| `--with-cycles <amount>`          | Specifies the amount of cycles to send on the call. Deducted from the wallet. Requires `--wallet` as an option to `dfx canister`.                                                                                              |
+| Opción                            | Descripción                                                                                                                                                                                                                                 |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--argument-file <argument-file>` | Especifica el archivo desde el cual leer el argumento que se pasará al método. Se puede utilizar `-` para referirse a la entrada estándar (stdin).                                                                                          |
+| `--async`                         | No espera el resultado de la llamada. En su lugar, devuelve un ID de respuesta.                                                                                                                                                             |
+| `--candid <file.did>`             | Proporciona un archivo `.did` para decodificar la respuesta. Sobrescribe el valor de `dfx.json` para canisters en el proyecto.                                                                                                              |
+| `--output <output>`               | Especifica el formato de salida al mostrar el resultado del método. Valores válidos: `idl`, `json`, `pp`, `raw`. La opción `pp` es equivalente a `idl`, pero con formato mejorado.                                                          |
+| `--query`                         | Envía una solicitud de consulta en lugar de una solicitud de actualización. Para más información sobre la diferencia entre llamadas `query` y `update`, consulta [Canister State](/docs/building-apps/essentials/canisters#canister-state). |
+| `--random <random>`               | Especifica la configuración para generar argumentos aleatorios.                                                                                                                                                                             |
+| `--type <type>`                   | Especifica el formato de datos para el argumento al realizar la llamada. Valores válidos: `idl` y `raw`.                                                                                                                                    |
+| `--update`                        | Envía una solicitud de actualización a un canister. Este es el comportamiento predeterminado si el método no es de tipo `query`.                                                                                                            |
+| `--with-cycles <amount>`          | Especifica la cantidad de ciclos a enviar con la llamada. Se deduce del wallet y requiere la opción `--wallet` en `dfx canister`.                                                                                                           |
 
-### Arguments
+---
 
-You can specify the following arguments for the `dfx canister call` command.
+## Argumentos de `dfx canister call`
 
-| Argument        | Description                                                                                                                                                                                                       |
-|-----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `canister_name` | Specifies the name of the canister to call. The canister name is a required argument and should match the name you have configured for a project in the `canisters` section of the `dfx.json` configuration file. |
-| `method_name`   | Specifies the method name to call on the canister. The canister method is a required argument.                                                                                                                    |
-| `argument`      | Specifies the argument to pass to the method                                                                                                                                                                      |
+Puedes especificar los siguientes argumentos al usar `dfx canister call`:
 
-#### Specifies the argument to pass to the method
+| Argumento       | Descripción                                                                                                                                     |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `canister_name` | Especifica el nombre del canister al que se llamará. Debe coincidir con el nombre configurado en la sección `canisters` del archivo `dfx.json`. |
+| `method_name`   | Especifica el nombre del método a llamar en el canister. Este argumento es obligatorio.                                                         |
+| `argument`      | Especifica el argumento que se pasará al método.                                                                                                |
 
-Depending on your program logic, the argument can be a required or optional argument. You can specify a data format type using the `--type` option if you pass an argument to the canister. By default, you can specify arguments using the [Candid](/docs/references/candid-ref) (`idl`) syntax for data values. For information about using Candid and its supported types, see [Interact with a service in a terminal](/docs/building-apps/interact-with-canisters/candid/using-candid#idl-syntax) and [supported types](/docs/references/candid-ref#supported-types). You can use `raw` as the argument type if you want to pass raw bytes.
+### Especificar el argumento a pasar al método
 
-### Examples
+Dependiendo de la lógica del programa, el argumento puede ser obligatorio u
+opcional.  
+Si pasas un argumento al canister, puedes especificar un tipo de formato de
+datos usando la opción `--type`.  
+Por defecto, puedes especificar argumentos utilizando la sintaxis
+[Candid](/docs/references/candid-ref) (`idl`).
 
-You can use the `dfx canister call` command to invoke specific methods—with or without arguments—after you have deployed
-the canister using the `dfx canister install` command. For example, to invoke the `get` method for a canister with
-a `canister_name` of `counter`, you can run the following command:
+Para más información sobre cómo usar Candid y sus tipos compatibles, consulta:
 
-``` bash
+- [Interactuar con un servicio en terminal](/docs/building-apps/interact-with-canisters/candid/using-candid#idl-syntax)
+- [Tipos compatibles](/docs/references/candid-ref#supported-types)
+
+Si deseas pasar bytes sin procesar, puedes usar `raw` como tipo de argumento.
+
+---
+
+## Ejemplos
+
+Puedes usar el comando `dfx canister call` para invocar métodos específicos, con
+o sin argumentos, después de haber desplegado el canister con
+`dfx canister install`.
+
+Por ejemplo, para invocar el método `get` de un canister con el nombre
+`counter`, puedes ejecutar el siguiente comando:
+
+```bash
 dfx canister call counter get --async
 ```
 
-In this example, the command includes the `--async` option to indicate that you want to make a separate `request-status`
-call rather than waiting to poll the local canister execution environment or the Internet Computer for the result.
-The `--async` option is useful when processing an operation might take some time to complete. The option enables you to
-continue performing other operations then check for the result using a separate `dfx canister request-status` command.
-The returned result will be displayed as the IDL textual format.
+En este ejemplo, el comando incluye la opción `--async` para indicar que deseas
+realizar una llamada separada a `request-status` en lugar de esperar a que se
+complete el entorno de ejecución local del canister o el Internet Computer para
+obtener el resultado. La opción `--async` es útil cuando el procesamiento de una
+operación puede llevar tiempo en completarse. La opción te permite continuar
+realizando otras operaciones y luego verificar el resultado utilizando un
+comando separado `dfx canister request-status`. El resultado devuelto se
+mostrará en formato textual IDL.
 
-#### Using the IDL syntax
+#### Usando la sintaxis IDL
 
-You can explicitly specify that you are passing arguments using the IDL syntax by running commands similar to the
-following for a Text data type:
+Puedes especificar explícitamente que estás pasando argumentos utilizando la
+sintaxis IDL ejecutando comandos similares a los siguientes para un tipo de
+datos Text:
 
-``` bash
+```bash
 dfx canister call hello greet --type idl '("Lisa")'
 ("Hello, Lisa!")
 
@@ -195,325 +240,371 @@ dfx canister call hello greet '("Lisa")' --type idl
 ("Hello, Lisa!")
 ```
 
-You can also implicitly use the IDL by running a command similar to the following:
+También puedes usar implícitamente el IDL ejecutando un comando similar al
+siguiente:
 
-``` bash
+```bash
 dfx canister call hello greet '("Lisa")'
 ("Hello, Lisa!")
 ```
 
-To specify multiple arguments using the IDL syntax, use commas between the arguments. For example:
+Para especificar varios argumentos utilizando la sintaxis IDL, utiliza comas
+entre los argumentos. Por ejemplo:
 
-``` bash
+```bash
 dfx canister call contacts insert '("Amy Lu","01 916-335-2042")'
 
 dfx canister call hotel guestroom '("Deluxe Suite",42,true)'
 ```
 
-You can pass raw data in bytes by running a command similar to the following:
+Puedes pasar datos en bruto en bytes ejecutando un comando similar al siguiente:
 
-``` bash
+```bash
 dfx canister call hello greet --type raw '4449444c00017103e29883'
 ```
 
-This example uses the raw data type to pass a hexadecimal to the `greet` function of the `hello` canister.
+Este ejemplo utiliza el tipo de datos raw para pasar un hexadecimal a la función
+`greet` del canister `hello`.
 
-### JSON output
+## Salida en formato JSON
 
-The `--output json` option formats the output as JSON.
+La opción `--output json` formatea la salida como JSON.
 
-Candid types don't map 1:1 to JSON types.
+Los tipos de datos de Candid no tienen una correspondencia 1:1 con los tipos de
+JSON.  
+Notablemente, los siguientes tipos de Candid se representan como cadenas en
+lugar de números: `nat`, `nat64`, `int`, `int64`.
 
-Notably, the following Candid types map to strings rather than numbers: nat, nat64, int, int64.
+### Mapeo de tipos de Candid a JSON:
 
-These are the mappings:
+| Tipo Candid | Tipo JSON                 |
+| ----------- | ------------------------- |
+| `null`      | `null`                    |
+| `bool`      | `boolean`                 |
+| `nat`       | `string`                  |
+| `nat8`      | `number`                  |
+| `nat16`     | `number`                  |
+| `nat32`     | `number`                  |
+| `nat64`     | `string`                  |
+| `int`       | `string`                  |
+| `int8`      | `number`                  |
+| `int16`     | `number`                  |
+| `int32`     | `number`                  |
+| `int64`     | `string`                  |
+| `float32`   | `float` o `"NaN"`         |
+| `float64`   | `float` o `"NaN"`         |
+| `text`      | `string`                  |
+| `opt`       | array con 0 o 1 elementos |
+| `vec`       | array                     |
+| `record`    | objeto                    |
+| `variant`   | objeto                    |
+| `blob`      | array de números          |
 
-| Candid type | JSON type                  |
-|-------------|----------------------------|
-| `null`      | `null`                     |
-| `bool`      | `boolean`                  |
-| `nat`       | `string`                   |
-| `nat8`      | `number`                   |
-| `nat16`     | `number`                   |
-| `nat32`     | `number`                   |
-| `nat64`     | `string`                   |
-| `int`       | `string`                   |
-| `int8`      | `number`                   |
-| `int16`     | `number`                   |
-| `int32`     | `number`                   |
-| `int64`     | `string`                   |
-| `float32`   | float or "NaN"             |
-| `float64`   | float or "NaN"             |
-| `text`      | `string`                   |
-| `opt`       | array with 0 or 1 elements |
-| `vec`       | array                      |
-| `record`    | object                     |
-| `variant`   | object                     |
-| `blob`      | array of numbers           |
+---
 
-## dfx canister create
+## `dfx canister create`
 
-Use the `dfx canister create` command to register one or more canister identifiers without compiled code. The new
-canister principals are then recorded in `canister_ids.json` for non-local networks. You must be connected to the local
-canister execution environment or the Internet Computer to run this command.
+El comando `dfx canister create` registra uno o más identificadores de canister
+sin código compilado.  
+Los nuevos identificadores de canister se almacenan en `canister_ids.json` para
+redes no locales.  
+Para ejecutar este comando, debes estar conectado a un entorno de ejecución
+local o a la Internet Computer.
 
-Note that you can only run this command from within the project directory structure. For example, if your project name
-is `hello_world`, your current working directory must be the `hello_world` top-level project directory or one of its
-subdirectories.
+Nota que solo puedes ejecutar este comando dentro de la estructura del
+directorio del proyecto.  
+Por ejemplo, si el nombre de tu proyecto es `hello_world`, tu directorio de
+trabajo actual debe ser  
+el directorio raíz `hello_world` o una de sus subcarpetas.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx canister create [options] [--all | canister_name]
 ```
 
-### Options
+## Opciones
 
-You can use the following options with the `dfx canister create` command.
+Puedes utilizar las siguientes opciones con el comando `dfx canister create`:
 
-| Option                                    | Description                                                                                                                                                                                                                                                                                                                                                                              |
-|-------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `-c`, `--compute-allocation <allocation>` | Specifies the canister's compute allocation. This should be a percent in the range [0..100].                                                                                                                                                                                                                                                                                             |
-| `--controller <principal>`                | Specifies the identity name or the principal of the new controller.                                                                                                                                                                                                                                                                                                                      |
-| `--created-at-time <timestamp>`           | Transaction timestamp, in nanoseconds, for use in controlling transaction deduplication, default is system time. https://internetcomputer.org/docs/developer-docs/integrations/icrc-1/#transaction-deduplication-                                                                                                                                                                |
-| `--from-subaccount <subaccount>`          | Subaccount of the selected identity to spend cycles from.                                                                                                                                                                                                                                                                                                                                |
-| `--memory-allocation <memory>`            | Specifies how much memory the canister is allowed to use in total. This should be a value in the range [0..12 GiB]. A setting of 0 means the canister will have access to memory on a “best-effort” basis: It will only be charged for the memory it uses, but at any point in time may stop running if it tries to allocate more memory when there isn’t space available on the subnet. |
-| `--reserved-cycles-limit <limit>`         | Specifies the upper limit for the canister's reserved cycles.                                                                                                                                                                                                                                                                                                                            |
-| `--wasm-memory-limit <limit>`             | Specifies a soft upper limit for the canister's heap memory.                                                                                                                                                                                                                                                                                                                             |
-| `--log-viewer <principal>`                | Specifies the principal as an allowed viewers. Can be specified more than once. Cannot be used with `--log-visibility`.                                                                                                                                                                                                                                                                  |
-| `--log-visibility <visibility>`           | Specifies who can read the canister's logs: "controllers" or "public". For custom allowed viewers, use `--log-viewer`.                                                                                                                                                                                                                                                                   |
-| `--no-wallet`                             | Performs the call with the user Identity as the Sender of messages. Bypasses the Wallet canister. Enabled by default.                                                                                                                                                                                                                                                                    |
-| `--with-cycles <number-of-cycles>`        | Specifies the initial cycle balance to deposit into the newly created canister. The specified amount needs to take the canister create fee into account. This amount is deducted from the wallet's cycle balance.                                                                                                                                                                        |
-| `--specified-id <PRINCIPAL>`              | Attempts to create the canister with this Canister ID                                                                                                                                                                                                                                                                                                                                    |
-| `--subnet-type <subnet-type>`             | Specify the subnet type to create the canister on. If no subnet type is provided, the canister will be created on a random default application subnet.                                                                                                                                                                                                                                   |
-| `--subnet <subnet-principal>`             | Specify the subnet to create the canister on. If no subnet is provided, the canister will be created on a random default application subnet.                                                                                                                                                                                                                                             |
-| `--next-to <canister-principal>`          | Create canisters on the same subnet as this canister.                                                                                                                                                                                                                                                                                                                                    |
+| Opción                                    | Descripción                                                                                                                                                                                                                                                                                                                                        |
+| ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `-c`, `--compute-allocation <allocation>` | Especifica la asignación de cómputo del canister. Debe ser un porcentaje en el rango [0..100].                                                                                                                                                                                                                                                     |
+| `--controller <principal>`                | Especifica el nombre de identidad o el principal del nuevo controlador.                                                                                                                                                                                                                                                                            |
+| `--created-at-time <timestamp>`           | Marca de tiempo de la transacción en nanosegundos, utilizada para el control de deduplicación de transacciones. El valor predeterminado es el tiempo del sistema. Más información: [Transaction Deduplication](https://internetcomputer.org/docs/developer-docs/integrations/icrc-1/#transaction-deduplication).                                   |
+| `--from-subaccount <subaccount>`          | Subcuenta de la identidad seleccionada desde donde se gastarán los ciclos.                                                                                                                                                                                                                                                                         |
+| `--memory-allocation <memory>`            | Especifica la cantidad de memoria total permitida para el canister. Debe estar en el rango [0..12 GiB]. Un valor de `0` significa que el canister tendrá acceso a la memoria según disponibilidad: solo se le cobrará por la memoria que use, pero puede dejar de funcionar si intenta asignar más memoria de la que está disponible en el subnet. |
+| `--reserved-cycles-limit <limit>`         | Especifica el límite superior para los ciclos reservados del canister.                                                                                                                                                                                                                                                                             |
+| `--wasm-memory-limit <limit>`             | Especifica un límite superior flexible para la memoria del heap del canister.                                                                                                                                                                                                                                                                      |
+| `--log-viewer <principal>`                | Especifica el principal como un visor permitido. Se puede especificar varias veces. No puede usarse con `--log-visibility`.                                                                                                                                                                                                                        |
+| `--log-visibility <visibility>`           | Especifica quién puede leer los logs del canister: `"controllers"` o `"public"`. Para configurar visores personalizados, usa `--log-viewer`.                                                                                                                                                                                                       |
+| `--no-wallet`                             | Ejecuta la llamada con la identidad del usuario como remitente de los mensajes, omitiendo el canister de Wallet. Habilitado por defecto.                                                                                                                                                                                                           |
+| `--with-cycles <number-of-cycles>`        | Especifica el saldo inicial de ciclos a depositar en el canister recién creado. La cantidad especificada debe tomar en cuenta la tarifa de creación del canister. Este monto se deduce del saldo de ciclos de la wallet.                                                                                                                           |
+| `--specified-id <PRINCIPAL>`              | Intenta crear el canister con este ID de Canister.                                                                                                                                                                                                                                                                                                 |
+| `--subnet-type <subnet-type>`             | Especifica el tipo de subnet donde se creará el canister. Si no se proporciona, se asignará automáticamente a una subnet de aplicación por defecto.                                                                                                                                                                                                |
+| `--subnet <subnet-principal>`             | Especifica la subnet en la que se creará el canister. Si no se proporciona, se asignará automáticamente a una subnet de aplicación por defecto.                                                                                                                                                                                                    |
+| `--next-to <canister-principal>`          | Crea el canister en la misma subnet que el canister especificado.                                                                                                                                                                                                                                                                                  |
 
-### Arguments
+---
 
-You can use the following argument with the `dfx canister create` command.
+## Argumentos
 
-| Argument        | Description                                                                                                                                                                                                                                                                                                    |
-|-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `--all`         | Enables you to create multiple canister identifiers at once if you have a project `dfx.json` file that defines multiple canisters. Note that you must specify `--all` or an individual canister name.                                                                                                          |
-| `canister_name` | Specifies the name of the canister for which you want to register an identifier. If you are not using the `--all` option, the canister name is a required argument and must match at least one name that you have configured in the `canisters` section of the `dfx.json` configuration file for your project. |
+Puedes utilizar el siguiente argumento con el comando `dfx canister create`:
 
-### Examples
+| Argumento       | Descripción                                                                                                                                                                                                                                                                      |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--all`         | Permite crear múltiples identificadores de canister a la vez si tienes un archivo `dfx.json` con múltiples canisters definidos. Nota que debes especificar `--all` o un nombre de canister individual.                                                                           |
+| `canister_name` | Especifica el nombre del canister para el cual deseas registrar un identificador. Si no usas la opción `--all`, este argumento es obligatorio y debe coincidir con al menos un nombre definido en la sección `canisters` del archivo de configuración `dfx.json` de tu proyecto. |
 
-You can use the `dfx canister create` command to register canister identifiers without first compiling any code. For
-example, if you want to create the canister identifier for the project `my_counter` before writing the program, you can
-run the following command:
+---
 
-``` bash
+## Ejemplos
+
+Puedes usar el comando `dfx canister create` para registrar identificadores de
+canister sin compilar código previamente.  
+Por ejemplo, si deseas crear el identificador del canister para el proyecto
+`my_counter` antes de escribir el programa,  
+puedes ejecutar el siguiente comando:
+
+```bash
 dfx canister create my_counter
 ```
 
-You can use the `dfx canister create` command with the `--with-cycles` option to specify the initial balance upon the
-creation of one canister or all canisters in a project. For example, to specify an initial balance of 8000000000000
-cycles for all canisters, run the following command:
+Puedes usar el comando `dfx canister create` con la opción `--with-cycles` para
+especificar el saldo inicial al crear un canister o todos los canisters en un
+proyecto. Por ejemplo, para especificar un saldo inicial de 8000000000000 ciclos
+para todos los canisters, ejecuta el siguiente comando:
 
-``` bash
+```bash
 dfx canister create --with-cycles 8000000000000 --all
 ```
 
-#### Allocating message processing
+#### Asignación de procesamiento de mensajes
 
-The `--compute-allocation` options allows you to allocate computing resources as a percentage in the range of 0 to 100
-to indicate how often your canister should be scheduled for execution.
+La opción `--compute-allocation` te permite asignar recursos informáticos como
+un porcentaje en el rango de 0 a 100 para indicar con qué frecuencia se
+programará la ejecución de tu canister.
 
-For example, assume you run the following command:
+Por ejemplo, supongamos que ejecutas el siguiente comando:
 
-``` bash
+```bash
 dfx canister create --all --compute-allocation 50
 ```
 
-With this setting, all of the canisters in the current projects are assigned a 50% allocation. When canisters in the
-project receive input messages to process, the messages are scheduled for execution. Over 100 execution cycles, each
-canister’s messages will be scheduled for processing at least 50 times.
+Con esta configuración, todos los canisters en los proyectos actuales reciben
+una asignación del 50%.  
+Cuando los canisters en el proyecto reciben mensajes de entrada para procesar,
+estos mensajes se programan para su ejecución.  
+A lo largo de 100 ciclos de ejecución, los mensajes de cada canister serán
+programados para su procesamiento al menos 50 veces.
 
-The default value for this option is 0—indicating that no specific allocation or scheduling is in effect. If all of your
-canisters use the default setting, processing occurs in a round-robin fashion.
+El valor predeterminado para esta opción es 0, lo que indica que no hay una
+asignación o programación específica en efecto.  
+Si todos tus canisters usan la configuración predeterminada, el procesamiento
+ocurre en un esquema de turnos (round-robin).
 
 ## dfx canister delete
 
-Use the `dfx canister delete` command to delete a stopped canister from the local canister execution environment or the
-Internet Computer. By default, this withdraws remaining cycles to your wallet before deleting the canister.
+Usa el comando `dfx canister delete` para eliminar un canister detenido del
+entorno de ejecución local de canisters o del Internet Computer.  
+Por defecto, este comando retira los ciclos restantes a tu wallet antes de
+eliminar el canister.
 
-Note that you can only run this command from within the project directory structure. For example, if your project name
-is `hello_world`, your current working directory must be the `hello_world` top-level project directory or one of its
-subdirectories.
+Es importante notar que solo puedes ejecutar este comando desde dentro de la
+estructura del directorio del proyecto.  
+Por ejemplo, si el nombre de tu proyecto es `hello_world`, tu directorio de
+trabajo actual debe ser el directorio principal `hello_world` o uno de sus
+subdirectorios.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx canister delete [options] [--all | canister_name]
 ```
 
-### Options
+### Opciones
 
-You can use the following options with the `dfx canister delete` command.
+Puedes usar las siguientes opciones con el comando `dfx canister delete`.
 
-| Option                                            | Description                                                                        |
-|---------------------------------------------------|------------------------------------------------------------------------------------|
-| `--no-withdrawal`                                 | Do not withdrawal cycles, just delete the canister.                                |
-| `--initial-margin <cycles>`                       | Leave this many cycles in the canister when withdrawing cycles.                    |
-| `--to-subaccount`                                 | Subaccount of the selected identity to deposit cycles to.                          |
-| `--withdraw-cycles-to-dank`                       | Withdraw cycles to dank with the current principal.                                |
-| `--withdraw-cycles-to-canister <principal>`       | Withdraw cycles from canister(s) to the specified canister/wallet before deleting. |
-| `--withdraw-cycles-to-dank-principal <principal>` | Withdraw cycles to dank with the given principal.                                  |
-| `-y, --yes`                                       | Auto-confirm deletion for a non-stopped canister                                   |
+| Opción                                            | Descripción                                                                             |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `--no-withdrawal`                                 | No retirar ciclos, solo eliminar el canister.                                           |
+| `--initial-margin <ciclos>`                       | Deja esta cantidad de ciclos en el canister al retirar ciclos.                          |
+| `--to-subaccount`                                 | Subcuenta de la identidad seleccionada para depositar los ciclos.                       |
+| `--withdraw-cycles-to-dank`                       | Retira ciclos a dank con el principal actual.                                           |
+| `--withdraw-cycles-to-canister <principal>`       | Retira ciclos de uno o más canisters al canister/wallet especificado antes de eliminar. |
+| `--withdraw-cycles-to-dank-principal <principal>` | Retira ciclos a dank con el principal dado.                                             |
+| `-y, --yes`                                       | Confirmación automática para eliminar un canister que no esté detenido.                 |
 
-### Arguments
+### Argumentos
 
-You can use the following arguments with the `dfx canister delete` command.
+Puedes usar los siguientes argumentos con el comando `dfx canister delete`.
 
-| Argument        | Description                                                                                                                        |
-|-----------------|------------------------------------------------------------------------------------------------------------------------------------|
-| `--all`         | Deletes all of the canisters configured in the `dfx.json` file. Note that you must specify `--all` or an individual canister name. |
-| `canister_name` | Specifies the name of the canister you want to delete. Note that you must specify either a canister name or the `--all` option.    |
+| Argumento       | Descripción                                                                                                                                  |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--all`         | Elimina todos los canisters configurados en el archivo `dfx.json`. Nota que debes especificar `--all` o el nombre de un canister individual. |
+| `canister_name` | Especifica el nombre del canister que deseas eliminar. Nota que debes especificar el nombre de un canister o la opción `--all`.              |
 
-### Examples
+### Ejemplos
 
-You can use the `dfx canister delete` command to delete a specific canister or all canisters.
+Puedes usar el comando `dfx canister delete` para eliminar un canister
+específico o todos los canisters.
 
-To delete the `hello_world` canister, you can run the following command:
+Para eliminar el canister `hello_world`, puedes ejecutar el siguiente comando:
 
-``` bash
+```bash
 dfx canister delete hello_world
 ```
 
-To delete all of the canisters you have deployed on the `ic` Internet Computer and configured in your `dfx.json`, you
-can run the following command:
+Para eliminar todos los canisters que has desplegado en el Internet Computer y
+configurados en tu `dfx.json`, puedes ejecutar el siguiente comando:
 
-``` bash
+```bash
 dfx canister delete --all --network=ic
 ```
 
 ## dfx canister deposit-cycles
 
-Use the `dfx canister deposit-cycles` command to deposit cycles from your configured wallet into a canister.
+Utiliza el comando `dfx canister deposit-cycles` para depositar ciclos desde tu
+billetera configurada en un canister.
 
-Note that you must have your cycles wallet configured for this to work.
+Ten en cuenta que debes tener tu billetera de ciclos configurada para que esto
+funcione.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx canister deposit-cycles <cycles> [--all | canister_name]
 ```
 
-### Arguments
+### Argumentos
 
-You can use the following arguments with the `dfx canister deposit-cycles` command.
+Puedes usar los siguientes argumentos con el comando
+`dfx canister deposit-cycles`.
 
-| Argument        | Description                                                                                                                                             |
-|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `--all`         | Deposits the specified amount of cycles into all canisters configured in `dfx.json`. Note that you must specify `--all` or an individual canister name. |
-| `canister_name` | Specifies the name of the canister you want to deposit cycles into. Note that you must specify either a canister name or the `--all` option.            |
+| Argumento       | Descripción                                                                                                                                                              |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `--all`         | Deposita la cantidad especificada de ciclos en todos los canisters configurados en `dfx.json`. Nota que debes especificar `--all` o el nombre de un canister individual. |
+| `canister_name` | Especifica el nombre del canister en el que deseas depositar ciclos. Nota que debes especificar el nombre de un canister o la opción `--all`.                            |
 
-### Options
+### Opciones
 
-You can use the following options with the `dfx canister deposit-cycles` command.
+Puedes usar las siguientes opciones con el comando
+`dfx canister deposit-cycles`.
 
-| Option                           | Description                                                                                                                                                                                                               |
-|----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `--created-at-time <timestamp>`  | Transaction timestamp, in nanoseconds, for use in controlling transaction deduplication, default is system time. https://internetcomputer.org/docs/developer-docs/integrations/icrc-1/#transaction-deduplication- |
-| `--from-subaccount <subaccount>` | Subaccount of the selected identity to spend cycles from.                                                                                                                                                                 |
+| Opción                           | Descripción                                                                                                                                                                                                                                        |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--created-at-time <timestamp>`  | Marca temporal de la transacción, en nanosegundos, para controlar la deduplicación de transacciones, el valor por defecto es la hora del sistema. https://internetcomputer.org/docs/developer-docs/integrations/icrc-1/#transaction-deduplication- |
+| `--from-subaccount <subaccount>` | Subcuenta de la identidad seleccionada de donde se retirarán los ciclos.                                                                                                                                                                           |
 
+### Ejemplos
 
-### Examples
+Puedes usar el comando `dfx canister deposit-cycles` para añadir ciclos a un
+canister específico o a todos los canisters.
 
-You can use the `dfx canister deposit-cycles` command to add cycles to a specific canister or all canisters.
+Para añadir 1T ciclos al canister llamado `hello`, puedes ejecutar el siguiente
+comando:
 
-To add 1T cycles to the canister called `hello`, you can run the following command:
-
-``` bash
+```bash
 dfx canister deposit-cycles 1000000000000 hello
 ```
 
-To add 2T cycles to each individual canister specified in `dfx.json`, you can run the following command:
+Para añadir 2T ciclos a cada canister individual especificado en `dfx.json`,
+puedes ejecutar el siguiente comando:
 
-``` bash
+```bash
 dfx canister deposit-cycles 2000000000000 --all
 ```
 
 ## dfx canister id
 
-Use the `dfx canister id` command to output the canister identifier/principal for a specific canister name.
+Usa el comando `dfx canister id` para mostrar el identificador/principal del
+canister para un nombre de canister específico.
 
-Note that you can only run this command from within the project directory structure. For example, if your project name
-is `hello_world`, your current working directory must be the `hello_world` top-level project directory or one of its
-subdirectories.
+Ten en cuenta que solo puedes ejecutar este comando desde dentro de la
+estructura del directorio del proyecto. Por ejemplo, si el nombre de tu proyecto
+es `hello_world`, tu directorio de trabajo actual debe ser el directorio
+principal del proyecto `hello_world` o uno de sus subdirectorios.
 
-If the canister has been deployed by the local user, the locally stored canister ID will be provided.
+Si el canister ha sido desplegado por el usuario local, se proporcionará el ID
+de canister almacenado localmente.
 
-If a canister has been deployed by a third party, the user may set the `.canisters[$CANISTER_NAME].remote[$NETWORK]`
-entry in `dfx.json` to the canister ID. In this case, the third party is responsible for maintaining the canister and
-the local user must ensure that they have the correct canister ID.  `dfx` will return the provided canister ID with no
-further checks.
+Si un canister ha sido desplegado por un tercero, el usuario puede configurar la
+entrada `.canisters[$CANISTER_NAME].remote[$NETWORK]` en `dfx.json` con el ID
+del canister. En este caso, el tercero es responsable de mantener el canister y
+el usuario local debe asegurarse de que tienen el ID correcto del canister.
+`dfx` devolverá el ID de canister proporcionado sin más verificaciones.
 
-If a canister is typically deployed to the same canister ID on mainnet and all testnets, the user may set a remote
-canister ID for the `__default` network. In this case, `dfx canister id $CANISTER_NAME` will return the default canister
-ID for all networks that don't have a dedicated entry.
+Si un canister típicamente se despliega con el mismo ID de canister en la red
+principal y todas las redes de prueba, el usuario puede configurar un ID de
+canister remoto para la red `__default`. En este caso,
+`dfx canister id $CANISTER_NAME` devolverá el ID de canister por defecto para
+todas las redes que no tengan una entrada dedicada.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx canister id <canister_name>
 ```
 
-### Arguments
+### Argumentos
 
-You can use the following argument with the `dfx canister id` command.
+Puedes usar el siguiente argumento con el comando `dfx canister id`.
 
-| Argument        | Description                                                                     |
-|-----------------|---------------------------------------------------------------------------------|
-| `canister_name` | Specifies the name of the canister for which you want to display an identifier. |
+| Argumento       | Descripción                                                                     |
+| --------------- | ------------------------------------------------------------------------------- |
+| `canister_name` | Especifica el nombre del canister para el cual deseas mostrar un identificador. |
 
-### Examples
+### Ejemplos
 
-You can use the `dfx canister id` command to display the canister identifier for a specific canister name.
+Puedes usar el comando `dfx canister id` para mostrar el identificador de un
+canister para un nombre de canister específico.
 
-To display the canister identifier for the `hello_world` canister, you can run the following command:
+Para mostrar el identificador del canister `hello_world`, puedes ejecutar el
+siguiente comando: :
 
-``` bash
+```bash
 dfx canister id hello_world
 ```
 
-The command displays output similar to the following:
+El comando muestra una salida similar a la siguiente:
 
-``` bash
+```bash
 75hes-oqbaa-aaaaa-aaaaa-aaaaa-aaaaa-aaaaa-q
 ```
 
 ## dfx canister info
 
-Use the `dfx canister info` command to output a canister's controller and installed Wasm module hash.
+Usa el comando `dfx canister info` para mostrar el controlador de un canister y
+el hash del módulo Wasm instalado.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx canister info <canister>
 ```
 
-### Arguments
+### Argumentos
 
-You can use the following argument with the `dfx canister info` command.
+Puedes usar el siguiente argumento con el comando `dfx canister info`.
 
-| Argument   | Description                                                                  |
-|------------|------------------------------------------------------------------------------|
-| `canister` | Specifies the name or id of the canister for which you want to display data. |
+| Argumento  | Descripción                                                               |
+| ---------- | ------------------------------------------------------------------------- |
+| `canister` | Especifica el nombre o id del canister para el cual deseas mostrar datos. |
 
-### Examples
+### Ejemplos
 
-You can use the `dfx canister info` command to display the canister controller and installed Wasm module.
+Puedes usar el comando `dfx canister info` para mostrar el controlador del
+canister y el módulo Wasm instalado.
 
-To the data about the `hello_world` canister, you can run the following command:
+Para obtener los datos del canister `hello_world`, puedes ejecutar el siguiente
+comando:
 
-``` bash
+```bash
 dfx canister info hello_world
 ```
 
-The command displays output similar to the following:
+El comando muestra una salida similar a la siguiente:
 
 ```
 Controllers: owdog-wiaaa-aaaad-qaaaq-cai
@@ -522,149 +613,171 @@ Module hash: 0x2cfb6f216fd6ab367364c02960afbbc5c444f5481225ee676992ac9058fd41e3
 
 ## dfx canister install
 
-Use the `dfx canister install` command to install compiled code as a canister on the Internet Computer or on the local
-canister execution environment.
+Utiliza el comando `dfx canister install` para instalar código compilado como un
+canister en el Internet Computer o en el entorno de ejecución de canisters
+local.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx canister install [option] [--all | canister_name]
 ```
 
-### Options
+### Opciones
 
-You can use the following options with the `dfx canister install` command.
+Puedes usar las siguientes opciones con el comando `dfx canister install`.
 
-| Option                             | Description                                                                                                                                                                                                                                                           |
-|------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `--argument <argument>`            | Specifies an argument to pass to the canister during installation.                                                                                                                                                                                                    |
-| `--argument-type <argument-type>`  | Specifies the data type for the argument when making the call using an argument [possible values: idl, raw]                                                                                                                                                           |
-| `--argument-file <argument-file>`  | Specifies the file from which to read the argument to pass to the init method.  Stdin may be referred to as `-`.                                                                                                                                                      |
-| `--async-call`                     | Enables you to continue without waiting for the result of the installation to be returned by polling the Internet Computer or the local canister execution environment.                                                                                               |
-| `-m`, `--mode <mode>`              | Specifies whether you want to `install`, `reinstall`, or `upgrade` canisters. Defaults to `install`. For more information about installation modes and canister management, see [managing canisters](/docs/building-apps/canister-management/settings). |
-| `--no-wallet`                      | Performs the call with the user Identity as the Sender of messages. Bypasses the Wallet canister. Enabled by default.                                                                                                                                                 |
-| `--no-asset-upgrade`               | Skips upgrading the asset canister, to only install the assets themselves.                                                                                                                                                                                            |
-| `--upgrade-unchanged`              | Upgrade the canister even if the .wasm did not change.                                                                                                                                                                                                                |
-| `--wasm <file.wasm>`               | Specifies a particular Wasm file to install, bypassing the dfx.json project settings.                                                                                                                                                                                 |
-| `--skip-pre-upgrade`               | Skip the pre_upgrade hook on upgrade. This requires the upgrade/auto mode.                                                                                                                                                                                            |
-| `--wasm-memory-persistence <mode>` | Keep or replace the Wasm main memory on upgrade. Possible values: keep, replace. This requires the upgrade/auto mode.                                                                                                                                                 |
+| Opción                             | Descripción                                                                                                                                                                                                                                                            |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--argument <argument>`            | Especifica un argumento para pasar al canister durante la instalación.                                                                                                                                                                                                 |
+| `--argument-type <argument-type>`  | Especifica el tipo de dato para el argumento al hacer la llamada usando un argumento [valores posibles: idl, raw]                                                                                                                                                      |
+| `--argument-file <argument-file>`  | Especifica el archivo desde el cual leer el argumento para pasar al método init. Se puede referir a la entrada estándar como `-`.                                                                                                                                      |
+| `--async-call`                     | Te permite continuar sin esperar el resultado de la instalación, que será devuelto mediante la comprobación en la red de Internet Computer o en el entorno de ejecución local del canister.                                                                            |
+| `-m`, `--mode <mode>`              | Especifica si deseas `instalar`, `reinstalar` o `actualizar` los canisters. Por defecto es `install`. Para más información sobre los modos de instalación y la gestión de canisters, consulta [gestionar canisters](/docs/building-apps/canister-management/settings). |
+| `--no-wallet`                      | Realiza la llamada con la identidad del usuario como remitente de los mensajes. Omite el canister de la cartera. Habilitado por defecto.                                                                                                                               |
+| `--no-asset-upgrade`               | Omite la actualización del canister de activos, solo instalando los propios activos.                                                                                                                                                                                   |
+| `--upgrade-unchanged`              | Actualiza el canister incluso si el .wasm no ha cambiado.                                                                                                                                                                                                              |
+| `--wasm <file.wasm>`               | Especifica un archivo Wasm particular para instalar, omitiendo la configuración del proyecto `dfx.json`.                                                                                                                                                               |
+| `--skip-pre-upgrade`               | Omite el hook de pre_upgrade durante la actualización. Esto requiere el modo upgrade/auto.                                                                                                                                                                             |
+| `--wasm-memory-persistence <mode>` | Mantiene o reemplaza la memoria principal del Wasm en la actualización. Valores posibles: keep, replace. Esto requiere el modo upgrade/auto.                                                                                                                           |
 
-#### Specifies the argument to pass to the init entrypoint
+#### Especifica el argumento para pasar al punto de entrada init
 
-With `--argument-type`, you can specify the data format for the argument when you install using the `--argument` option. The valid values are `idl` and `raw`. By default, you can specify arguments using the [Candid](/docs/building-apps/interact-with-canisters/candid/candid-concepts) (`idl`) syntax for data values. For information about using Candid and its supported types, see [Interact with a service in a terminal](/docs/building-apps/interact-with-canisters/candid/using-candid#idl-syntax) and [Supported types](/docs/references/candid-ref). You can use `raw` as the argument type if you want to pass raw bytes to a canister.
+Con `--argument-type`, puedes especificar el formato de datos para el argumento
+cuando instales utilizando la opción `--argument`. Los valores válidos son `idl`
+y `raw`. Por defecto, puedes especificar argumentos utilizando la
+[sintaxis de Candid](/docs/building-apps/interact-with-canisters/candid/candid-concepts)
+(`idl`) para los valores de datos. Para información sobre cómo usar Candid y sus
+tipos soportados, consulta
+[Interactuar con un servicio en un terminal](/docs/building-apps/interact-with-canisters/candid/using-candid#idl-syntax)
+y [Tipos soportados](/docs/references/candid-ref). Puedes usar `raw` como el
+tipo de argumento si deseas pasar bytes sin procesar a un canister.
 
-### Arguments
+### Argumentos
 
-You can use the following arguments with the `dfx canister install` command.
+Puedes usar los siguientes argumentos con el comando `dfx canister install`.
 
-| Argument        | Description                                                                                                                                                                                                                                                  |
-|-----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `--all`         | Enables you to install multiple canisters at once if you have a project `dfx.json` file that includes multiple canisters. Note that you must specify `--all` or an individual canister name.                                                                 |
-| `canister_name` | Specifies the name of the canister to deploy. If you are not using the `--all` option, the canister name is a required argument and should match the name you have configured for a project in the `canisters` section of the `dfx.json` configuration file. |
+| Argumento       | Descripción                                                                                                                                                                                                                                                                      |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--all`         | Te permite instalar varios canisters a la vez si tienes un archivo de proyecto `dfx.json` que incluye múltiples canisters. Ten en cuenta que debes especificar `--all` o el nombre de un canister individual.                                                                    |
+| `canister_name` | Especifica el nombre del canister a desplegar. Si no estás utilizando la opción `--all`, el nombre del canister es un argumento requerido y debe coincidir con el nombre que has configurado para un proyecto en la sección `canisters` del archivo de configuración `dfx.json`. |
 
-### Examples
+### Ejemplos
 
-You can use the `dfx canister install` command to deploy WebAssembly you have compiled using the `dfx build` command as
-a canister on the Internet Computer or on the local canister execution environment. The most common use case is to
-install all of the canisters by running the following command:
+Puedes usar el comando `dfx canister install` para desplegar el WebAssembly que
+has compilado utilizando el comando `dfx build` como un canister en la red de
+Internet Computer o en el entorno de ejecución local del canister. El caso de
+uso más común es instalar todos los canisters ejecutando el siguiente comando:
 
-``` bash
+```bash
 dfx canister install --all
 ```
 
-#### Installing a specific canister
+#### Instalando un canister específico
 
-You can also use the `dfx canister install` command to deploy a specific canister instead of all of the canisters in
-your project. For example, if you have a project with a `hello_world_backend` canister and a `hello_world_frontend`
-canister but only want to deploy the `hello_world_backend` canister, you can deploy just that the canister by running
-the following command:
+También puedes usar el comando `dfx canister install` para desplegar un canister
+específico en lugar de todos los canisters de tu proyecto. Por ejemplo, si
+tienes un proyecto con un canister `hello_world_backend` y un canister
+`hello_world_frontend` pero solo quieres desplegar el canister
+`hello_world_backend`, puedes desplegar solo ese canister ejecutando el
+siguiente comando:
 
-``` bash
+```bash
 dfx canister install hello_world_backend
 ```
 
-#### Sending an asynchronous request
+#### Enviando una solicitud asíncrona
 
-If you want to submit a request to install the canister and return a request identifier to check on the status of your
-request later instead of waiting for the command to complete, you can run a command similar to the following:
+Si deseas enviar una solicitud para instalar el canister y obtener un
+identificador de solicitud para verificar el estado de tu solicitud más tarde en
+lugar de esperar a que el comando se complete, puedes ejecutar un comando
+similar al siguiente:
 
-``` bash
+```bash
 dfx canister install hello_world_backend --async
 ```
 
-This command submits a request to install the canister and returns a request identifier similar to the following:
+Este comando envía una solicitud para instalar el canister y devuelve un
+identificador de solicitud similar al siguiente:
 
-``` bash
+```bash
 0x58d08e785445dcab4ff090463b9e8b12565a67bf436251d13e308b32b5058608
 ```
 
-You can then use the request identifier to check the status of the request at a later time, much like a tracking number
-if you were shipping a package.
+Puedes usar el identificador de solicitud para verificar el estado de la
+solicitud en un momento posterior, al igual que un número de seguimiento si
+estuvieras enviando un paquete.
 
-#### Overriding the default deployment options
+#### Anulando las opciones de implementación predeterminadas
 
-If you want to deploy a canister on a testnet without changing the settings in your `dfx.json` configuration file, you
-can explicitly specify the testnet you want to connect to by using the `--network` option.
+Si deseas implementar un canister en una red de prueba sin cambiar la
+configuración en tu archivo de configuración `dfx.json`, puedes especificar
+explícitamente la red de prueba a la que deseas conectarte utilizando la opción
+`--network`.
 
-For example, you can specify a testnet URL by running a command similar to the following:
+Por ejemplo, puedes especificar una URL de red de prueba ejecutando un comando
+similar al siguiente:
 
-``` bash
+```bash
 dfx canister install --all --network http://192.168.3.1:5678
 ```
 
 ## dfx canister logs
 
-Use the `dfx canister logs` command to display the logs from a canister.
+Usa el comando `dfx canister logs` para mostrar los logs de un canister.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx canister logs <canister-name>
 ```
 
-### Examples
+### Ejemplos
 
-To display the logs from the `hello_world` canister, you can run the following command:
+Para mostrar los logs del canister `hello_world`, puedes ejecutar el siguiente
+comando:
 
-``` bash
+```bash
 dfx canister logs hello_world
 ```
 
-The command displays output similar to the following:
+El comando muestra una salida similar a la siguiente:
 
-``` log
+```log
 [42. 2021-05-06T19:17:10.000000001Z]: Some text message
 [43. 2021-05-06T19:17:10.000000002Z]: (bytes) 0xc0ffee
 ```
 
 ## dfx canister metadata
 
-Use the `dfx canister metadata` command to display metadata stored in a canister's Wasm module.
+Usa el comando `dfx canister metadata` para mostrar metadatos almacenados en el
+módulo Wasm de un canister.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx canister metadata <canister-name> <metadata-name>
 ```
 
-### Arguments
+### Argumentos
 
-You can use the following argument with the `dfx canister metadata` command.
+Puedes usar los siguientes argumentos con el comando `dfx canister metadata`.
 
-| Argument        | Description                                                                      |
-|-----------------|----------------------------------------------------------------------------------|
-| `canister`      | Specifies the name or id of the canister for which you want to display metadata. |
-| `metadata-name` | Specifies the name of the metadata which you want to display.                    |
+| Argumento       | Descripción                                                                       |
+| --------------- | --------------------------------------------------------------------------------- |
+| `canister`      | Especifica el nombre o id del canister para el cual deseas mostrar los metadatos. |
+| `metadata-name` | Especifica el nombre de los metadatos que deseas mostrar.                         |
 
-### Examples
+### Ejemplos
 
-To display the candid service metadata for the `hello_world` canister, you can run the following command:
+Para mostrar los metadatos del servicio Candid del canister `hello_world`,
+puedes ejecutar el siguiente comando:
 
-``` bash
+```bash
 dfx canister metadata hello_world candid:service
 ```
 
-The command displays output similar to the following:
+El comando muestra una salida similar a la siguiente:
 
 ```
 service : {
@@ -674,177 +787,206 @@ service : {
 
 ## dfx canister request-status
 
-Use the `dfx canister request-status` command to request the status of a specified call to a canister. This command
-requires you to specify the request identifier you received after invoking a method on the canister. The request
-identifier is an hexadecimal string starting with `0x`.
+Use el comando `dfx canister request-status` para solicitar el estado de una
+llamada especificada a un canister. Este comando requiere que especifiques el
+identificador de solicitud que recibiste después de invocar un método en el
+canister. El identificador de solicitud es una cadena hexadecimal que comienza
+con `0x`.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx canister request-status [options] <request-id> <canister>
 ```
 
-### Options
+### Opciones
 
-You can use the following options with the `dfx canister request-status` command.
+Puedes usar las siguientes opciones con el comando
+`dfx canister request-status`.
 
-| Option              | Description                                                                                                                                                          |
-|---------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `--output <output>` | Specifies the format for displaying the method's return result. Possible values are `idl`, `raw` and `pp`, where `pp` is equivalent to `idl`, but is pretty-printed. |
+| Opción              | Descripción                                                                                                                                                                        |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--output <output>` | Especifica el formato para mostrar el resultado del método. Los valores posibles son `idl`, `raw` y `pp`, donde `pp` es equivalente a `idl`, pero con formato de impresión bonito. |
 
-### Arguments
+### Argumentos
 
-You can specify the following argument for the `dfx canister request-status` command.
+Puedes especificar el siguiente argumento para el comando
+`dfx canister request-status`.
 
-| Argument     | Description                                                                                                                                                                                                                                                                                                         |
-|--------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `request_id` | Specifies the hexadecimal string returned in response to a `dfx canister call` or `dfx canister install` command. This identifier is an hexadecimal string starting with 0x.                                                                                                                                        |
-| `canister`   | Specifies the name or id of the canister onto which the request was made. If the request was made to the Management canister, specify the id of the canister it is updating/querying. If the call was proxied by the wallet, i.e. a `dfx canister call --async --wallet=<ID>` flag, specify the wallet canister id. |
+| Argumento    | Descripción                                                                                                                                                                                                                                                                                                                                                  |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request_id` | Especifica la cadena hexadecimal devuelta como respuesta a un comando `dfx canister call` o `dfx canister install`. Este identificador es una cadena hexadecimal que comienza con 0x.                                                                                                                                                                        |
+| `canister`   | Especifica el nombre o id del canister al que se realizó la solicitud. Si la solicitud se realizó al canister de Gestión, especifica el id del canister que se está actualizando/consultando. Si la llamada fue proxied por la billetera, es decir, con la bandera `dfx canister call --async --wallet=<ID>`, especifica el id del canister de la billetera. |
 
-### Examples
+### Ejemplos
 
-You can use the `dfx canister request-status` command to check on the status of a canister state change or to verify
-that a call was not rejected by running a command similar to the following:
+Puedes usar el comando `dfx canister request-status` para verificar el estado de
+un cambio de estado del canister o para confirmar que una llamada no fue
+rechazada ejecutando un comando similar al siguiente:
 
-``` bash
+```bash
 dfx canister request-status 0x58d08e785445dcab4ff090463b9e8b12565a67bf436251d13e308b32b5058608 backend
 ```
 
-This command displays an error message if the request identifier is invalid or refused by the canister.
+Este comando muestra un mensaje de error si el identificador de solicitud es
+inválido o es rechazado por el canister.
 
 ## dfx canister send
 
-Use the `dfx canister send` command after signing a message with the `dfx canister sign` command when you want to
-separate these steps, rather than using the single `dfx canister call` command. Using separate calls can add security to
-the transaction.
+Utiliza el comando `dfx canister send` después de firmar un mensaje con el
+comando `dfx canister sign` cuando deseas separar estos pasos, en lugar de
+utilizar el único comando `dfx canister call`. Utilizar llamadas separadas puede
+agregar seguridad a la transacción.
 
-For example, when creating your neuron stake, you might want to use the `dfx canister sign` command to create a
-signed `message.json` file using an air-gapped computer, then use the `dfx canister send` command to deliver the signed
-message.
+Por ejemplo, al crear tu participación en un neuron, es posible que desees
+utilizar el comando `dfx canister sign` para crear un archivo `message.json`
+firmado utilizando una computadora sin conexión a Internet, y luego utilizar el
+comando `dfx canister send` para enviar el mensaje firmado.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx canister send [options] <file_name>
 ```
 
-### Options
+### Opciones
 
-You can use the following options with the `dfx canister request-status` command.
+Puedes usar las siguientes opciones con el comando
+`dfx canister request-status`.
 
-| Option     | Description                                         |
-|------------|-----------------------------------------------------|
-| `--status` | Send the signed request-status call in the message. |
+| Opción     | Descripción                                              |
+| ---------- | -------------------------------------------------------- |
+| `--status` | Envía la llamada `request-status` firmada en el mensaje. |
 
-### Arguments
+### Argumentos
 
-You can specify the following argument for the `dfx canister send` command.
+Puedes especificar el siguiente argumento para el comando `dfx canister send`.
 
-| Argument    | Description                             |
-|-------------|-----------------------------------------|
-| `file_name` | Specifies the file name of the message. |
+| Argumento   | Descripción                                   |
+| ----------- | --------------------------------------------- |
+| `file_name` | Especifica el nombre del archivo del mensaje. |
 
-### Examples
+### Ejemplos
 
-Use the `dfx canister send` command to send a signed message created using the `dfx canister sign` command to the
-genesis token canister (GTC) to create a neuron on your behalf by running the following command:
+Usa el comando `dfx canister send` para enviar un mensaje firmado creado con el
+comando `dfx canister sign` al canister de token génesis (GTC) para crear un
+neurón en tu nombre ejecutando el siguiente comando:
 
 `dfx canister send message.json`
 
 ## dfx canister sign
 
-Use the `dfx canister sign` command before sending a message with the `dfx canister send` command when you want to
-separate these steps, rather than using the single `dfx canister call` command. Using separate calls can add security to
-the transaction. For example, when creating your neuron stake, you might want to use the `dfx canister sign` command to
-create a signed `message.json` file using an air-gapped computer, then use the `dfx canister send` command to deliver
-the signed message from a computer connected to the Internet Computer.
+Usa el comando `dfx canister sign` antes de enviar un mensaje con el comando
+`dfx canister send` cuando quieras separar estos pasos, en lugar de usar el
+único comando `dfx canister call`. Usar llamadas separadas puede agregar
+seguridad a la transacción. Por ejemplo, cuando creas tu participación en
+neuronas, puedes querer usar el comando `dfx canister sign` para crear un
+archivo `message.json` firmado utilizando una computadora aislada, y luego usar
+el comando `dfx canister send` para entregar el mensaje firmado desde una
+computadora conectada a Internet Computer.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx canister sign [options] <canister-name> <method-name> [argument]
 ```
 
-### Options
+### Opciones
 
-You can specify the following options for the `dfx canister sign` command.
+Puedes especificar las siguientes opciones para el comando `dfx canister sign`.
 
-| Option                     | Description                                                                                                                                      |
-|----------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| `--argument-file <file>`   | Specifies the file from which to read the argument to pass to the method.  Stdin may be referred to as `-`.                                      |
-| `--expire-after <seconds>` | Specifies how long the message will be valid before it expires and cannot be sent. Specify in seconds. If not defined, the default is 300s (5m). |
-| `--file <output>`          | Specifies the output file name. The default is `message.json`.                                                                                   |
-| `--query`                  | Sends a query request to a canister.                                                                                                             |
-| `--random <random>`        | Specifies the configuration for generating random arguments.                                                                                     |
-| `--type <type>`            | Specifies the data type for the argument when making a call using an argument. Possible values are `idl` and `raw`.                              |
-| `--update`                 | Sends an update request to the canister. This is the default method if the `--query` method is not used.                                         |
+| Opción                     | Descripción                                                                                                                                                                      |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--argument-file <file>`   | Especifica el archivo desde el cual leer el argumento para pasar al método. Stdin puede ser referido como `-`.                                                                   |
+| `--expire-after <seconds>` | Especifica cuánto tiempo será válido el mensaje antes de que expire y no pueda ser enviado. Se debe especificar en segundos. Si no se define, el valor por defecto es 300s (5m). |
+| `--file <output>`          | Especifica el nombre del archivo de salida. El valor por defecto es `message.json`.                                                                                              |
+| `--query`                  | Envía una solicitud de consulta a un canister.                                                                                                                                   |
+| `--random <random>`        | Especifica la configuración para generar argumentos aleatorios.                                                                                                                  |
+| `--type <type>`            | Especifica el tipo de datos para el argumento al realizar una llamada usando un argumento. Los valores posibles son `idl` y `raw`.                                               |
+| `--update`                 | Envía una solicitud de actualización al canister. Este es el método por defecto si no se utiliza el método `--query`.                                                            |
 
+### Argumentos
 
-### Arguments
+Puedes especificar los siguientes argumentos para el comando
+`dfx canister sign`.
 
-You can specify the following arguments for the `dfx canister sign` command.
+| Argumento       | Descripción                                                                                                                                                                                                                          |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `canister_name` | Especifica el nombre del canister al que se llama. El nombre del canister es un argumento obligatorio y debe coincidir con el nombre configurado para un proyecto en la sección `canisters` del archivo de configuración `dfx.json`. |
+| `method_name`   | Especifica el nombre del método a llamar en el canister. El método del canister es un argumento obligatorio.                                                                                                                         |
+| `argument`      | Especifica el argumento a pasar al método                                                                                                                                                                                            |
 
-| Argument        | Description                                                                                                                                                                                                       |
-|-----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `canister_name` | Specifies the name of the canister to call. The canister name is a required argument and should match the name you have configured for a project in the `canisters` section of the `dfx.json` configuration file. |
-| `method_name`   | Specifies the method name to call on the canister. The canister method is a required argument.                                                                                                                    |
-| `argument`      | Specifies the argument to pass to the method                                                                                                                                                                      |
+#### Especifica el argumento a pasar al método
 
-#### Specifies the argument to pass to the method
+Dependiendo de la lógica de tu programa, el argumento puede ser obligatorio u
+opcional. Puedes especificar un tipo de formato de datos usando la opción
+`--type` si pasas un argumento al canister. De forma predeterminada, puedes
+especificar los argumentos usando la sintaxis de
+[Candid](/docs/references/candid-ref) (`idl`) para los valores de los datos.
+Para más información sobre cómo usar Candid y sus tipos soportados, consulta
+[Interactuar con un servicio en una terminal](/docs/building-apps/interact-with-canisters/candid/using-candid#idl-syntax)
+y [tipos soportados](/docs/references/candid-ref#supported-types). Puedes usar
+`raw` como tipo de argumento si deseas pasar bytes sin procesar.
 
-Depending on your program logic, the argument can be a required or optional argument. You can specify a data format type using the `--type` option if you pass an argument to the canister. By default, you can specify arguments using the [Candid](/docs/references/candid-ref) (`idl`) syntax for data values. For information about using Candid and its supported types, see [Interact with a service in a terminal](/docs/building-apps/interact-with-canisters/candid/using-candid#idl-syntax) and [supported types](/docs/references/candid-ref#supported-types). You can use `raw` as the argument type if you want to pass raw bytes.
+### Ejemplos
 
-### Examples
-
-Use the `dfx canister sign` command to create a signed `message.json` file using the selected identity by running a
-command similar to the following:
+Usa el comando `dfx canister sign` para crear un archivo firmado `message.json`
+usando la identidad seleccionada ejecutando un comando similar al siguiente:
 
 `dfx canister sign --network=ic --expire-after=1h rno2w-sqaaa-aaaaa-aaacq-cai create_neurons ‘(“PUBLIC_KEY”)’`
 
-This command illustrates how to creates a `message.json` file to create neurons on the Internet Computer specified by
-the `ic` alias, that is signed using your principal identifier as the message sender and with an expiration window that
-ends in one hour.
+Este comando muestra cómo crear un archivo `message.json` para crear neuronas en
+Internet Computer especificado por el alias `ic`, que está firmado utilizando tu
+identificador principal como el remitente del mensaje y con una ventana de
+expiración que termina en una hora.
 
-Note that the time allotted to send a signed message is a fixed 5-minute window. The `--expire-after` option enables you
-to specify the point in time when the 5-minute window for sending the signed message should end. For example, if you set
-the `--expire-after` option to one hour (`1h`), you must wait at least 55 minutes before you send the generated message
-and the signature for the message is only valid during the 5-minute window ending in the 60th minute.
+Nota que el tiempo permitido para enviar un mensaje firmado es una ventana fija
+de 5 minutos. La opción `--expire-after` te permite especificar el momento en
+que debe terminar la ventana de 5 minutos para enviar el mensaje firmado. Por
+ejemplo, si configuras la opción `--expire-after` a una hora (`1h`), debes
+esperar al menos 55 minutos antes de enviar el mensaje generado, y la firma del
+mensaje será válida solo durante la ventana de 5 minutos que termina en el
+minuto 60.
 
-In this example, therefore, you would need to send the message after 55 minutes and before 60 minutes for the message to
-be recognized as valid.
+En este ejemplo, por lo tanto, necesitarías enviar el mensaje después de 55
+minutos y antes de 60 minutos para que el mensaje sea reconocido como válido.
 
-If you don’t specify the `--expire-after` option, the default expiration is five minutes.
+Si no especificas la opción `--expire-after`, la expiración por defecto es de
+cinco minutos.
 
-Send the signed message to the genesis token canister (GTC) to create a neuron on your behalf by running the following
-command:
+Envía el mensaje firmado al canister de token génesis (GTC) para crear un neurón
+en tu nombre ejecutando el siguiente comando:
 
 `dfx canister send message.json`
 
 ## dfx canister snapshot create
 
-Use the `dfx canister snapshot create` command to create a snapshot of a stopped canister.
-It can later be applied with `dfx canister snapshot load` to reset the canister to that state.
+Usa el comando `dfx canister snapshot create` para crear una instantánea de un
+canister detenido. Luego, puede aplicarse con `dfx canister snapshot load` para
+restablecer el canister a ese estado.
 
-At both times, the canister must be stopped with `dfx canister stop`.
+En ambos casos, el canister debe estar detenido con `dfx canister stop`.
 
-### Basic usage
+### Uso básico
 
 ```bash
 dfx canister snapshot create <canister> [--replace <replace>]
 ```
 
-### Arguments
+### Argumentos
 
-You can use the following arguments with the `dfx canister snapshot create` command.
+Puedes usar los siguientes argumentos con el comando
+`dfx canister snapshot create`.
 
-| Argument              | Description                                                                    |
-|-----------------------|--------------------------------------------------------------------------------|
-| `<canister>`          | The canister to snapshot.                                                      |
-| `--replace <replace>` | If a snapshot ID is specified, this snapshot will replace it and reuse the ID. |
+| Argumento             | Descripción                                                                                 |
+| --------------------- | ------------------------------------------------------------------------------------------- |
+| `<canister>`          | El canister para hacer la instantánea.                                                      |
+| `--replace <replace>` | Si se especifica un ID de instantánea, esta instantánea lo reemplazará y reutilizará el ID. |
 
-### Examples
+### Ejemplos
 
-Use the `dfx canister snapshot create` command to take a snapshot of canister `hello`:
+Usa el comando `dfx canister snapshot create` para tomar una instantánea del
+canister `hello`:
 
 ```sh
 dfx canister stop hello
@@ -852,7 +994,7 @@ dfx canister snapshot create hello
 dfx canister start hello
 ```
 
-To replace an existing snapshot to save space:
+Para remplazar una instantánea existente para ahorrar espacio:
 
 ```sh
 dfx canister stop hello
@@ -862,28 +1004,32 @@ dfx canister start hello
 
 ## dfx canister snapshot load
 
-Use the `dfx canister snapshot load` command to load a canister snapshot previously taken with `dfx canister snapshot create`.
+Usa el comando `dfx canister snapshot load` para cargar una instantánea de un
+canister previamente tomada con `dfx canister snapshot create`.
 
-At both times, the canister must be stopped with `dfx canister stop`.
+En ambos casos, el canister debe estar detenido con `dfx canister stop`.
 
-### Basic usage
+### Uso básico
 
 ```sh
 dfx canister snapshot load <canister> <snapshot>
 ```
 
-### Arguments
+### Argumentos
 
-You can use the following arguments with the `dfx canister snapshot load` command.
+Puedes usar los siguientes argumentos con el comando
+`dfx canister snapshot load`.
 
-| Argument     | Description                           |
-|--------------|---------------------------------------|
-| `<canister>` | The canister to load the snapshot in. |
-| `<snapshot>` | The ID of the snapshot to load.       |
+| Argumento    | Descripción                                  |
+| ------------ | -------------------------------------------- |
+| `<canister>` | El canister en el que cargar la instantánea. |
+| `<snapshot>` | El ID de la instantánea a cargar.            |
 
-### Examples
+### Ejemplos
 
-Use the `dfx canister snapshot load` command to load a previously-taken snapshot in canister `hello`, deleting any data since the snapshot was taken:
+Usa el comando `dfx canister snapshot load` para cargar una instantánea
+previamente tomada en el canister `hello`, eliminando cualquier dato desde que
+se tomó la instantánea:
 
 ```sh
 dfx canister snapshot load hello 1a2b3c4d
@@ -891,26 +1037,29 @@ dfx canister snapshot load hello 1a2b3c4d
 
 ## dfx canister snapshot delete
 
-Use the `dfx canister snapshot delete` command to delete a canister snapshot previously taken with `dfx canister snapshot create`.
+Usa el comando `dfx canister snapshot delete` para eliminar una instantánea de
+un canister previamente tomada con `dfx canister snapshot create`.
 
-### Basic usage
+### Uso básico
 
 ```sh
 dfx canister snapshot delete <canister> <snapshot>
 ```
 
-### Arguments
+### Argumentos
 
-You can use the following arguments with the `dfx canister snapshot delete` command.
+Puedes usar los siguientes argumentos con el comando
+`dfx canister snapshot delete`.
 
-| Argument     | Description                               |
-|--------------|-------------------------------------------|
-| `<canister>` | The canister to delete the snapshot from. |
-| `<snapshot>` | The ID of the snapshot to delete.         |
+| Argumento    | Descripción                                  |
+| ------------ | -------------------------------------------- |
+| `<canister>` | El canister del que eliminar la instantánea. |
+| `<snapshot>` | El ID de la instantánea a eliminar.          |
 
-### Examples
+### Ejemplos
 
-Use the `dfx canister snapshot delete` command to delete a snapshot from canister `hello`:
+Usa el comando `dfx canister snapshot delete` para eliminar una instantánea del
+canister `hello`:
 
 ```sh
 dfx canister snapshot delete hello 1a2b3c4d
@@ -918,25 +1067,29 @@ dfx canister snapshot delete hello 1a2b3c4d
 
 ## dfx canister snapshot list
 
-Use the `dfx canister snapshot list` command to display all saved snapshots for a canister. They can be loaded with `dfx canister snapshot load` or deleted with `dfx canister snapshot delete`.
+Usa el comando `dfx canister snapshot list` para mostrar todas las instantáneas
+guardadas para un canister. Pueden cargarse con `dfx canister snapshot load` o
+eliminarse con `dfx canister snapshot delete`.
 
-### Basic usage
+### Uso básico
 
 ```sh
 dfx canister snapshot list <canister>
 ```
 
-### Arguments
+### Argumentos
 
-You can use the following arguments with the `dfx canister snapshot list` command.
+Puedes usar los siguientes argumentos con el comando
+`dfx canister snapshot list`.
 
-| Argument     | Description                          |
-|--------------|--------------------------------------|
-| `<canister>` | The canister to list snapshots from. |
+| Argumento    | Descripción                              |
+| ------------ | ---------------------------------------- |
+| `<canister>` | El canister del que listar instantáneas. |
 
-### Examples
+### Ejemplos
 
-Use the `dfx canister snapshot list` command to list the snapshots in canister `hello`:
+Usa el comando `dfx canister snapshot list` para listar las instantáneas en el
+canister `hello`:
 
 ```sh
 dfx canister snapshot list hello
@@ -944,290 +1097,325 @@ dfx canister snapshot list hello
 
 ## dfx canister start
 
-Use the `dfx canister start` command to restart a stopped canister on the Internet Computer or the local canister
-execution environment.
+Utiliza el comando `dfx canister start` para reiniciar un canister detenido en
+Internet Computer o en el entorno de ejecución de canister local.
 
-In most cases, you run this command after you have stopped a canister to properly terminate any pending requests as a
-prerequisite to upgrading the canister.
+En la mayoría de los casos, ejecutas este comando después de detener un canister
+para terminar correctamente cualquier solicitud pendiente como requisito previo
+para actualizar el canister.
 
-Note that you can only run this command from within the project directory structure. For example, if your project name
-is `hello_world`, your current working directory must be the `hello_world` top-level project directory or one of its
-subdirectories.
+Ten en cuenta que solo puedes ejecutar este comando desde el directorio del
+proyecto. Por ejemplo, si el nombre de tu proyecto es `hello_world`, tu
+directorio de trabajo actual debe ser el directorio principal del proyecto
+`hello_world` o uno de sus subdirectorios.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx canister start [--all | canister_name]
 ```
 
-### Arguments
+### Argumentos
 
-You can use the following arguments with the `dfx canister start` command.
+Puedes usar los siguientes argumentos con el comando `dfx canister start`.
 
-| Argument        | Description                                                                                                                       |
-|-----------------|-----------------------------------------------------------------------------------------------------------------------------------|
-| `--all`         | Starts all of the canisters configured in the `dfx.json` file. Note that you must specify `--all` or an individual canister name. |
-| `canister_name` | Specifies the name of the canister you want to start. Note that you must specify either a canister name or the `--all` option.    |
+| Argumento       | Descripción                                                                                                                                          |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--all`         | Inicia todos los canisters configurados en el archivo `dfx.json`. Ten en cuenta que debes especificar `--all` o el nombre de un canister individual. |
+| `canister_name` | Especifica el nombre del canister que deseas iniciar. Ten en cuenta que debes especificar un nombre de canister o la opción `--all`.                 |
 
-### Examples
+### Ejemplos
 
-You can use the `dfx canister start` command to start a specific canister or all canisters.
+Puedes usar el comando `dfx canister start` para iniciar un canister específico
+o todos los canisters.
 
-To start the `hello_world` canister, you can run the following command:
+Para iniciar el canister `hello_world`, puedes ejecutar el siguiente comando:
 
-``` bash
+```bash
 dfx canister start hello_world
 ```
 
-To start all of the canisters you have deployed on the `ic` Internet Computer, you can run the following command:
+Para iniciar todos los canisters que has desplegado en el Internet Computer
+`ic`, puedes ejecutar el siguiente comando:
 
-``` bash
+```bash
 dfx canister start --all --network=ic
 ```
 
 ## dfx canister status
 
-Use the `dfx canister status` command to check whether a canister is currently running, in the process of stopping, or
-currently stopped on the Internet Computer or on the local canister execution environment.
+Usa el comando `dfx canister status` para comprobar si un canister está
+actualmente en ejecución, en proceso de detención o actualmente detenido en el
+Internet Computer o en el entorno de ejecución local del canister.
 
-Note that you can only run this command from within the project directory structure. For example, if your project name
-is `hello_world`, your current working directory must be the `hello_world` top-level project directory or one of its
-subdirectories.
+Ten en cuenta que solo puedes ejecutar este comando desde dentro de la
+estructura del directorio del proyecto. Por ejemplo, si el nombre de tu proyecto
+es `hello_world`, tu directorio de trabajo actual debe ser el directorio de
+nivel superior del proyecto `hello_world` o uno de sus subdirectorios.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx canister status [--all | canister_name]
 ```
 
-### Arguments
+### Argumentos
 
-You can use the following arguments with the `dfx canister status` command.
+Puedes usar los siguientes argumentos con el comando `dfx canister status`.
 
-| Argument        | Description                                                                                                                                               |
-|-----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `--all`         | Returns status information for all of the canisters configured in the `dfx.json` file. Note that you must specify `--all` or an individual canister name. |
-| `canister_name` | Specifies the name of the canister you want to return information for. Note that you must specify either a canister name or the `--all` option.           |
+| Argumento       | Descripción                                                                                                                                                                       |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--all`         | Devuelve información de estado para todos los canisters configurados en el archivo `dfx.json`. Ten en cuenta que debes especificar `--all` o el nombre de un canister individual. |
+| `canister_name` | Especifica el nombre del canister del que deseas obtener información de estado. Ten en cuenta que debes especificar un nombre de canister o la opción `--all`.                    |
 
-### Examples
+### Ejemplos
 
-You can use the `dfx canister status` command to check the status of a specific canister or all canisters.
+Puedes usar el comando `dfx canister status` para verificar el estado de un
+canister específico o de todos los canisters.
 
-To check the status of the `hello_world` canister, you can run the following command:
+Para verificar el estado del canister `hello_world`, puedes ejecutar el
+siguiente comando:
 
-``` bash
+```bash
 dfx canister status hello_world
 ```
 
-To check the status for all of the canisters you have deployed on the `ic` Internet Computer, you can run the following
-command:
+Para verificar el estado de todos los canisters que has desplegado en el
+Internet Computer, puedes ejecutar el siguiente comando:
 
-``` bash
+```bash
 dfx canister status --all --network=ic
 ```
 
 ## dfx canister stop
 
-Use the `dfx canister stop` command to stop a canister that is currently running on the Internet Computer or on the
-local canister execution environment.
+Usa el comando `dfx canister stop` para detener un canister que se está
+ejecutando actualmente en Internet Computer o en el entorno de ejecución local
+del canister.
 
-In most cases, you run this command to properly terminate any pending requests as a prerequisite to upgrading the
-canister.
+En la mayoría de los casos, ejecutas este comando para terminar correctamente
+cualquier solicitud pendiente como requisito previo para actualizar el canister.
 
-Note that you can only run this command from within the project directory structure. For example, if your project name
-is `hello_world`, your current working directory must be the `hello_world` top-level project directory or one of its
-subdirectories.
+Ten en cuenta que solo puedes ejecutar este comando desde dentro de la
+estructura del directorio del proyecto. Por ejemplo, si el nombre de tu proyecto
+es `hello_world`, tu directorio de trabajo actual debe ser el directorio
+principal del proyecto `hello_world` o uno de sus subdirectorios.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx canister stop [--all | canister_name]
 ```
 
-### Arguments
+### Argumentos
 
-You can use the following arguments with the `dfx canister stop` command.
+Puedes usar los siguientes argumentos con el comando `dfx canister stop`.
 
-| Argument        | Description                                                                                                                      |
-|-----------------|----------------------------------------------------------------------------------------------------------------------------------|
-| `--all`         | Stops all of the canisters configured in the `dfx.json` file. Note that you must specify `--all` or an individual canister name. |
-| `canister_name` | Specifies the name of the canister you want to stop. Note that you must specify either a canister name or the `--all` option.    |
+| Argumento       | Descripción                                                                                                                                           |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--all`         | Detiene todos los canisters configurados en el archivo `dfx.json`. Ten en cuenta que debes especificar `--all` o el nombre de un canister individual. |
+| `canister_name` | Especifica el nombre del canister que deseas detener. Ten en cuenta que debes especificar un nombre de canister o la opción `--all`.                  |
 
-### Examples
+### Ejemplos
 
-You can use the `dfx canister stop` command to stop a specific canister or all canisters.
+Puedes usar el comando `dfx canister stop` para detener un canister específico o
+todos los canisters.
 
-To stop the `hello_world` canister, you can run the following command:
+Para detener el canister `hello_world`, puedes ejecutar el siguiente comando:
 
-``` bash
+```bash
 dfx canister stop hello_world
 ```
 
-To stop all of the canisters you have deployed on the `ic` Internet Computer, you can run the following command:
+Para detener todos los canisters que has desplegado en el Internet Computer
+`ic`, puedes ejecutar el siguiente comando:
 
-``` bash
+```bash
 dfx canister stop --all --network=ic
 ```
 
 ## dfx canister uninstall-code
 
-Use the `dfx canister uninstall-code` command to uninstall the code that a canister that is currently running on the
-Internet Computer or on the local canister execution environment.
+Usa el comando `dfx canister uninstall-code` para desinstalar el código de un
+canister que se está ejecutando actualmente en Internet Computer o en el entorno
+de ejecución local del canister.
 
-This method removes a canister’s code and state, making the canister empty again. Only the controller of the canister
-can uninstall code. Uninstalling a canister’s code will reject all calls that the canister has not yet responded to, and
-drop the canister’s code and state. Outstanding responses to the canister will not be processed, even if they arrive
-after code has been installed again. The canister is now empty.
+Este método elimina el código y el estado de un canister, dejándolo vacío
+nuevamente. Solo el controlador del canister puede desinstalar el código.
+Desinstalar el código de un canister rechazará todas las llamadas a las que el
+canister aún no haya respondido y eliminará el código y el estado del canister.
+Las respuestas pendientes al canister no se procesarán, incluso si llegan
+después de que se haya instalado el código nuevamente. El canister ahora está
+vacío.
 
-Note that you can only run this command from within the project directory structure. For example, if your project name
-is `hello_world`, your current working directory must be the `hello_world` top-level project directory or one of its
-subdirectories.
+Ten en cuenta que solo puedes ejecutar este comando desde dentro de la
+estructura del directorio del proyecto. Por ejemplo, si el nombre de tu proyecto
+es `hello_world`, tu directorio de trabajo actual debe ser el directorio
+principal del proyecto `hello_world` o uno de sus subdirectorios.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx canister uninstall-code [--all | canister_name]
 ```
 
-### Arguments
+### Argumentos
 
-You can use the following arguments with the `dfx canister uninstall-code` command.
+Puedes usar los siguientes argumentos con el comando
+`dfx canister uninstall-code`.
 
-| Argument        | Description                                                                                                                           |
-|-----------------|---------------------------------------------------------------------------------------------------------------------------------------|
-| `--all`         | Uninstalls all of the canisters configured in the `dfx.json` file. Note that you must specify `--all` or an individual canister name. |
-| `canister_name` | Specifies the name of the canister you want to uninstall. Note that you must specify either a canister name or the `--all` option.    |
+| Argumento       | Descripción                                                                                                                                              |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--all`         | Desinstala todos los canisters configurados en el archivo `dfx.json`. Ten en cuenta que debes especificar `--all` o el nombre de un canister individual. |
+| `canister_name` | Especifica el nombre del canister que deseas desinstalar. Ten en cuenta que debes especificar un nombre de canister o la opción `--all`.                 |
 
-### Examples
+### Ejemplos
 
-You can use the `dfx canister uninstall-code` command to uninstall a specific canister or all canisters.
+Puedes usar el comando `dfx canister uninstall-code` para desinstalar un
+canister específico o todos los canisters.
 
-To uninstall the `hello_world` canister, you can run the following command:
+Para desinstalar el canister `hello_world`, puedes ejecutar el siguiente
+comando:
 
-``` bash
+```bash
 dfx canister uninstall-code hello_world
 ```
 
-To uninstall all of the canisters you have deployed on the `ic` Internet Computer, you can run the following command:
+Para desinstalar todos los canisters que has desplegado en Internet Computer
+`ic`, puedes ejecutar el siguiente comando:
 
-``` bash
+```bash
 dfx canister uninstall-code --all --network=ic
 ```
 
 ## dfx canister update-settings
 
-Use the `dfx canister update-settings` command to update the settings of a canister running in the local execution
-environment.
+Usa el comando `dfx canister update-settings` para actualizar la configuración
+de un canister que se está ejecutando en el entorno de ejecución local.
 
-In most cases, you run this command to tune the amount of resources allocated to your canister.
+En la mayoría de los casos, ejecutas este comando para ajustar la cantidad de
+recursos asignados a tu canister.
 
-Note that you can only run this command from within the project directory structure. For example, if your project name
-is `hello_world`, your current working directory must be the `hello_world` top-level project directory or one of its
-subdirectories.
+Ten en cuenta que solo puedes ejecutar este comando desde dentro de la
+estructura del directorio del proyecto. Por ejemplo, si el nombre de tu proyecto
+es `hello_world`, tu directorio de trabajo actual debe ser el directorio
+principal del proyecto `hello_world` o uno de sus subdirectorios.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx canister update-settings [options] [canister_name | --all]
 ```
 
-### Options
+### Opciones
 
-You can specify the following options for the `dfx canister update-settings` command.
+Puedes especificar las siguientes opciones para el comando
+`dfx canister update-settings`.
 
-| Option                                    | Description                                                                                                                                                                                                                                                                                                                                                                              |
-|-------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `--add-controller <principal>`            | Add a principal to the list of controllers of the canister.                                                                                                                                                                                                                                                                                                                              |
-| `--add-log-viewer <principal>`            | Add a principal to the list of log viewers of the canister. Can be specified more than once to add multiple log viewers. If current log visibility is `public` or `controllers`, it will be changed to the custom allowed viewer list.                                                                                                                                                   |
-| `-c`, `--compute-allocation <allocation>` | Specifies the canister's compute allocation. This should be a percent in the range [0..100].                                                                                                                                                                                                                                                                                             |
-| `--confirm-very-long-freezing-threshold`  | Freezing thresholds above ~1.5 years require this option as confirmation.                                                                                                                                                                                                                                                                                                                |
-| `--set-controller <principal>`            | Specifies the identity name or the principal of the new controller. Can be specified more than once, indicating the canister will have multiple controllers. If any controllers are set with this parameter, any other controllers will be removed.                                                                                                                                      |
-| `--set-log-viewer <principal>`            | Specifies the the principal of the log viewer of the canister. Can be specified more than once, indicating the canister will have multiple log viewers. If any log viewers are set with this parameter, any other log viewers will be removed. If current log visibility is `public` or `controllers`, it will be changed to the custom allowed viewer list.                             |
-| `--memory-allocation <allocation>`        | Specifies how much memory the canister is allowed to use in total. This should be a value in the range [0..12 GiB]. A setting of 0 means the canister will have access to memory on a “best-effort” basis: It will only be charged for the memory it uses, but at any point in time may stop running if it tries to allocate more memory when there isn’t space available on the subnet. |
-| `--reserved-cycles-limit <limit>`         | Specifies the upper limit of the canister's reserved cycles.                                                                                                                                                                                                                                                                                                                             |
-| `--wasm-memory-limit <limit>`             | Specifies a soft upper limit for the canister's heap memory.                                                                                                                                                                                                                                                                                                                             |
-| `--log-visibility <visibility>`           | Specifies who is allowed to read the canister's logs. Can be either "controllers" or "public". For custom allowed viewers, use `--set-log-viewer` or `--add-log-viewer`.                                                                                                                                                                                                                 |
-| `--remove-controller <principal>`         | Removes a principal from the list of controllers of the canister.                                                                                                                                                                                                                                                                                                                        |
-| `--remove-log-viewer <principal>`         | Removes a principal from the list of log viewers of the canister. Can be specified more than once to remove multiple log viewers.                                                                                                                                                                                                                                                        |
-| `--freezing-threshold <seconds>`          | Set the [freezing threshold](/docs/references/ic-interface-spec/#ic-create_canister) in seconds for a canister. This should be a value in the range [0..2^64^-1]. Very long thresholds require the `--confirm-very-long-freezing-threshold` option.                                                                                                  |
-| `-y`, `--yes`                             | Skips yes/no checks by answering 'yes'. Such checks can result in loss of control, so this is not recommended outside of CI.                                                                                                                                                                                                                                                             |
+| Opción                                    | Descripción                                                                                                                                                                                                                                                                                                                                                                                |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `--add-controller <principal>`            | Agrega un principal a la lista de controladores del canister.                                                                                                                                                                                                                                                                                                                              |
+| `--add-log-viewer <principal>`            | Agrega un principal a la lista de visualizadores de registros del canister. Puede especificarse más de una vez para agregar varios visualizadores. Si la visibilidad actual de los registros es `public` o `controllers`, se cambiará a la lista personalizada de visualizadores permitidos.                                                                                               |
+| `-c`, `--compute-allocation <allocation>` | Especifica la asignación de cómputo del canister. Este valor debe estar en el rango [0..100].                                                                                                                                                                                                                                                                                              |
+| `--confirm-very-long-freezing-threshold`  | Los umbrales de congelación superiores a ~1.5 años requieren esta opción como confirmación.                                                                                                                                                                                                                                                                                                |
+| `--set-controller <principal>`            | Especifica el nombre de identidad o el principal del nuevo controlador. Puede especificarse más de una vez, lo que indica que el canister tendrá múltiples controladores. Si se establece algún controlador con este parámetro, se eliminarán los otros controladores.                                                                                                                     |
+| `--set-log-viewer <principal>`            | Especifica el principal del visualizador de registros del canister. Puede especificarse más de una vez, lo que indica que el canister tendrá varios visualizadores de registros. Si se establece algún visualizador de registros con este parámetro, se eliminarán otros visualizadores de registros.                                                                                      |
+| `--memory-allocation <allocation>`        | Especifica cuánta memoria se le permite usar al canister en total. Este valor debe estar en el rango [0..12 GiB]. Un valor de 0 significa que el canister tendrá acceso a la memoria de forma "por esfuerzo": solo se le cobrará por la memoria que use, pero en cualquier momento puede dejar de funcionar si intenta asignar más memoria cuando no haya espacio disponible en la subred. |
+| `--reserved-cycles-limit <limit>`         | Especifica el límite superior de ciclos reservados del canister.                                                                                                                                                                                                                                                                                                                           |
+| `--wasm-memory-limit <limit>`             | Especifica un límite superior suave para la memoria del montón del canister.                                                                                                                                                                                                                                                                                                               |
+| `--log-visibility <visibility>`           | Especifica quién puede leer los registros del canister. Puede ser "controllers" o "public". Para visualizadores personalizados, usa `--set-log-viewer` o `--add-log-viewer`.                                                                                                                                                                                                               |
+| `--remove-controller <principal>`         | Elimina un principal de la lista de controladores del canister.                                                                                                                                                                                                                                                                                                                            |
+| `--remove-log-viewer <principal>`         | Elimina un principal de la lista de visualizadores de registros del canister. Puede especificarse más de una vez para eliminar varios visualizadores de registros.                                                                                                                                                                                                                         |
+| `--freezing-threshold <seconds>`          | Establece el [umbral de congelación](/docs/references/ic-interface-spec/#ic-create_canister) en segundos para un canister. Este valor debe estar en el rango [0..2^64^-1]. Los umbrales muy largos requieren la opción `--confirm-very-long-freezing-threshold`.                                                                                                                           |
+| `-y`, `--yes`                             | Omite las comprobaciones de sí/no respondiendo 'sí'. No se recomienda fuera de CI, ya que tales comprobaciones pueden resultar en la pérdida de control.                                                                                                                                                                                                                                   |
 
-### Arguments
+### Argumentos
 
-You can use the following arguments with the `dfx canister update-settings` command.
+Puedes usar los siguientes argumentos con el comando
+`dfx canister update-settings`.
 
-| Argument        | Description                                                                                                           |
-|-----------------|-----------------------------------------------------------------------------------------------------------------------|
-| `--all`         | Updates all canisters you have specified in `dfx.json`. You must specify either canister name/id or the --all option. |
-| `canister_name` | Specifies the name of the canister you want to update. You must specify either canister name/id or the --all option.  |
+| Argumento       | Descripción                                                                                                               |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `--all`         | Actualiza todos los canisters especificados en `dfx.json`. Debes especificar el nombre/id del canister o la opción --all. |
+| `canister_name` | Especifica el nombre del canister que deseas actualizar. Debes especificar el nombre/id del canister o la opción --all.   |
 
-### Examples
+### Ejemplos
 
-You can use the `dfx canister update-settings` command to update settings of a specific canister.
+Puedes usar el comando `dfx canister update-settings` para actualizar la
+configuración de un canister específico.
 
-To update the settings of the `hello_world` canister, you can run the following command:
+Para actualizar la configuración del canister `hello_world`, puedes ejecutar el
+siguiente comando:
 
-``` bash
+```bash
 dfx canister update-settings --freezing-threshold 2592000 --compute-allocation 99 hello_world
 ```
 
 ## dfx canister url
 
-Use the `dfx canister url` command to output the canister url for a specific canister.
+Usa el comando `dfx canister url` para obtener la URL de un canister específico.
 
-Note that you can only run this command from within the project directory structure. For example, if your project name
-is `hello_world`, your current working directory must be the `hello_world` top-level project directory or one of its
-subdirectories.
+Ten en cuenta que solo puedes ejecutar este comando desde dentro de la
+estructura del directorio del proyecto. Por ejemplo, si el nombre de tu proyecto
+es `hello_world`, tu directorio de trabajo actual debe ser el directorio
+principal de `hello_world` o uno de sus subdirectorios.
 
-If the canister has been deployed by the local user, the locally stored canister ID will be provided within the url.
-You can check the `.dfx/local/canister_ids.json` file in the project directory for details.
+Si el canister ha sido desplegado por el usuario local, se proporcionará el ID
+del canister almacenado localmente dentro de la URL. Puedes consultar el archivo
+`.dfx/local/canister_ids.json` en el directorio del proyecto para obtener más
+detalles.
 
-If a canister has been deployed by a third party, the user may set the `.canisters[$CANISTER_NAME].remote[$NETWORK]`
-entry in `dfx.json` to the canister ID. In this case, the third party is responsible for maintaining the canister and
-the local user must ensure that they have the correct canister ID.  `dfx` will use the provided canister ID with no
-further checks.
+Si un canister ha sido desplegado por un tercero, el usuario puede configurar la
+entrada `.canisters[$CANISTER_NAME].remote[$NETWORK]` en el archivo `dfx.json`
+con el ID del canister. En este caso, el tercero es responsable de mantener el
+canister y el usuario local debe asegurarse de tener el ID correcto del
+canister. `dfx` usará el ID proporcionado sin realizar más comprobaciones.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx canister url <canister>
 ```
 
-### Arguments
+### Argumentos
 
-You can use the following argument with the `dfx canister url` command.
+Puedes usar el siguiente argumento con el comando `dfx canister url`.
 
-| Argument   | Description                                                                     |
-|------------|---------------------------------------------------------------------------------|
-| `canister` | Specifies the name or id of the canister for which you want to display the url. |
+| Argumento  | Descripción                                                                |
+| ---------- | -------------------------------------------------------------------------- |
+| `canister` | Especifica el nombre o id del canister para el cual deseas mostrar la URL. |
 
-### Examples
+### Ejemplos
 
-To display the canister url for the `hello_world_backend` canister, you can run the following command:
+Para mostrar la URL del canister `hello_world_backend`, puedes ejecutar el
+siguiente comando:
 
-``` bash
+```bash
 dfx canister url hello_world_backend
 ```
 
-The command displays output similar to the following:
+El comando muestra una salida similar a la siguiente:
 
-``` bash
+```bash
 http://127.0.0.1:4943/?canisterId=br5f7-7uaaa-aaaaa-qaaca-cai&id=bkyz2-fmaaa-aaaaa-qaaaq-cai
 ```
 
-The `br5f7-7uaaa-aaaaa-qaaca-cai` is the local canister id for `__Candid_UI` canister. You need to run `dfx deploy`
-to generate the local `__Candid_UI` entry in `.dfx/local/canister_ids.json` first.
+El `bkyz2-fmaaa-aaaaa-qaaaq-cai` es el id del canister para `__Candid_UI`
+canister en el entorno de ejecución local. Necesitas ejecutar `dfx deploy` para
+generar la entrada local `__Candid_UI` en `.dfx/local/canister_ids.json`
+primero.
 
-If you run:
+Si ejecutas:
 
-``` bash
+```bash
 dfx canister url hello_world_backend --network ic
 ```
 
-The command displays output similar to the following:
+El comando muestra una salida similar a la siguiente:
 
-``` bash
+```bash
 https://a4gq6-oaaaa-aaaab-qaa4q-cai.raw.icp0.io/?id=bkyz2-fmaaa-aaaaa-qaaaq-cai
 ```
 
-The `a4gq6-oaaaa-aaaab-qaa4q-cai` is the canister id for `__Candid_UI` canister on the IC mainnet.
+El `a4gq6-oaaaa-aaaab-qaa4q-cai` es el id del canister para `__Candid_UI` en la
+red principal de Internet Computer (mainnet).

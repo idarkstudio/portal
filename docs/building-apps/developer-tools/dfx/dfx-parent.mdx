@@ -2,123 +2,140 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
 # dfx
 
-<MarkdownChipRow labels={["Reference"]} />
+<MarkdownChipRow labels={["Referencia"]} />
 
-The DFINITY command-line execution environment (`dfx`) is the primary tool for creating, deploying, and managing the
-dapps you develop for the IC.
+El entorno de ejecución de línea de comandos de DFINITY (`dfx`) es la
+herramienta principal para crear, implementar y administrar las dapps que
+desarrollas para el IC.
 
-Use the `dfx` parent command with flags and subcommands to specify the operations you want to perform with or without
-optional arguments.
+Utiliza el comando principal `dfx` con banderas y subcomandos para especificar
+las operaciones que deseas realizar con o sin argumentos opcionales.
 
-## Basic usage
+## Uso básico
 
-``` bash
+```bash
 dfx [subcommand] [flag]
 ```
 
-## Flags
+## Flags (banderas)
 
-You can use the following optional flags with the `dfx` parent command or with any of the `dfx` subcommands.
+Puedes usar los siguientes flags opcionales con el comando principal `dfx` o con
+cualquiera de sus subcomandos.
 
-| Flag              | Description                                     |
-|-------------------|-------------------------------------------------|
-| `-h`, `--help`    | Displays usage information.                     |
-| `-q`, `--quiet`   | Suppresses informational messages.              |
-| `-v`, `--verbose` | Displays detailed information about operations. |
-| `-V`, `--version` | Displays version information.                   |
+| Bandera           | Descripción                                   |
+| ----------------- | --------------------------------------------- |
+| `-h`, `--help`    | Muestra información de uso.                   |
+| `-q`, `--quiet`   | Suprime mensajes informativos.                |
+| `-v`, `--verbose` | Muestra información detallada de operaciones. |
+| `-V`, `--version` | Muestra información de versión.               |
 
-## Options
+## Opciones
 
-You can use the following options with the `dfx` command.
+Puedes usar los siguientes opciones con el comando `dfx`.
 
-| Option                  | Description                                                                                                                                                                                                                                                                                                                                    |
-|-------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `--identity <identity>` | Specifies the user identity to use when running a command.                                                                                                                                                                                                                                                                                     |
-| `--logfile <logfile>`   | Writes log file messages to the specified log file name if you use the `--log file` logging option.                                                                                                                                                                                                                                            |
-| `--log <logmode>`       | Specifies the logging mode to use. + You can set the log mode to one of the following:<br />- `stderr` to log messages to the standard error facility.<br />- `tee` to write messages to both standard output and to a specified file name.<br />- `file` to write messages to a specified file name.<br />The default logging mode is stderr. |
+| Opción                  | Descripción                                                                                                                                                                                                                                                                                                        |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `--identity <identity>` | Especifica la identidad de usuario a usar al ejecutar un comando.                                                                                                                                                                                                                                                  |
+| `--logfile <logfile>`   | Escribe mensajes de registro en el archivo especificado si usas la opción `--log file`.                                                                                                                                                                                                                            |
+| `--log <logmode>`       | Especifica el modo de registro. Puedes configurarlo como:<br />- `stderr` para registrar mensajes en la salida de error estándar.<br />- `tee` para escribir mensajes tanto en salida estándar como en un archivo.<br />- `file` para escribir mensajes solo en un archivo.<br />El modo predeterminado es stderr. |
 
-## Subcommands
+## Subcomandos
 
-Use the following subcommands to specify the operation you want to perform or to view usage information for a specific
-command.
+Usa los siguientes subcomandos para especificar la operación que deseas realizar
+o para ver información de uso de un comando específico.
 
-For reference information and examples, select an appropriate subcommand.
+Para información de referencia y ejemplos, selecciona el subcomando apropiado.
 
-| Command                          | Description                                                                                                                                                                    |
-|----------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| bootstrap                        | Removed.  Use the `start` command instead.                                                                                                                                     |
-| [`build`](./dfx-build.mdx)       | Builds canister output from the source code in your project.                                                                                                                   |
-| [`cache`](./dfx-cache.mdx)       | Manages the `dfx` cache on the local computer.                                                                                                                                 |
-| [`canister`](./dfx-canister.mdx) | Manages deployed canisters .                                                                                                                                                   |
-| [`deploy`](./dfx-deploy.mdx)     | Deploys all or a specific canister from the code in your project. By default, all canisters are deployed.                                                                      |
-| diagnose                         | Detects known problems in the current environment caused by upgrading DFX, and suggests commands to fix them. These commands can be batch-run automatically via `dfx fix`      |
-| fix                              | Applies one-time fixes for known problems in the current environment caused by upgrading DFX. Makes no changes that would not have been suggested by `dfx diagnose`            |
-| generate                         | Generate type declarations for canisters from the code in your project                                                                                                         |
-| [`help`](./dfx-help.mdx)         | Displays usage information for a specified subcommand.                                                                                                                         |
-| [`identity`](./dfx-identity.mdx) | Enables you to create and manage the identities used to communicate with the IC.                                                                                               |
-| info                             | Displays information like port numbers and version numbers.                                                                                                                    |
-| [`killall`](./dfx-killall.mdx)   | Kills any dfx-related processes that have gotten stuck                                                                                                                         |
-| [`ledger`](./dfx-ledger.mdx)     | Enables you to interact with accounts in the ledger canister running on the Internet Computer.                                                                                 |
-| [`new`](./dfx-new.mdx)           | Creates a new project.                                                                                                                                                         |
-| [`ping`](./dfx-ping.mdx)         | Sends a response request to the IC or the local canister execution environment to determine network connectivity. If the connection is successful, a status reply is returned. |
-| quickstart                       | Perform initial one time setup for your identity and/or wallet.                                                                                                                |
-| remote                           | Commands used to work with remote canisters.                                                                                                                                   |
-| [`replica`](./dfx-replica.mdx)   | Removed.  Use the `start` command instead.                                                                                                                                     |
-| [`schema`](./dfx-schema.mdx)     | Prints the schema for `dfx.json`.                                                                                                                                              |
-| [`start`](./dfx-start.mdx)       | Starts the local canister execution environment a web server for the current project.                                                                                          |
-| [`stop`](./dfx-stop.mdx)         | Stops the local canister execution environment.                                                                                                                                |
-| [`upgrade`](./dfx-upgrade.mdx)   | Upgrades the version of `dfx` installed on the local computer to the latest version available.                                                                                 |
-| [`wallet`](./dfx-wallet.mdx)     | Enables you to manage cycles, controllers, custodians, and addresses for the default cycles wallet associated with the currently-selected identity.                            |
+| Comando                          | Descripción                                                                                                                                                                                  |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| bootstrap                        | Eliminado. Usa el comando `start` en su lugar.                                                                                                                                               |
+| [`build`](./dfx-build.mdx)       | Compila la salida de los canisters a partir del código fuente en tu proyecto.                                                                                                                |
+| [`cache`](./dfx-cache.mdx)       | Administra la caché de `dfx` en la computadora local.                                                                                                                                        |
+| [`canister`](./dfx-canister.mdx) | Administra los canisters desplegados.                                                                                                                                                        |
+| [`deploy`](./dfx-deploy.mdx)     | Despliega uno o todos los canisters desde el código en tu proyecto. Por defecto, se despliegan todos los canisters.                                                                          |
+| diagnose                         | Detecta problemas conocidos en el entorno actual causados por la actualización de DFX y sugiere comandos para solucionarlos. Estos comandos pueden ejecutarse automáticamente con `dfx fix`. |
+| fix                              | Aplica correcciones puntuales para problemas conocidos en el entorno actual causados por la actualización de DFX. No realiza cambios que no hayan sido sugeridos por `dfx diagnose`.         |
+| generate                         | Genera declaraciones de tipo para los canisters a partir del código en tu proyecto.                                                                                                          |
+| [`help`](./dfx-help.mdx)         | Muestra información de uso para un subcomando especificado.                                                                                                                                  |
+| [`identity`](./dfx-identity.mdx) | Permite crear y administrar las identidades utilizadas para comunicarse con el IC.                                                                                                           |
+| info                             | Muestra información como números de puerto y versiones.                                                                                                                                      |
+| [`killall`](./dfx-killall.mdx)   | Finaliza cualquier proceso relacionado con `dfx` que haya quedado atascado.                                                                                                                  |
+| [`ledger`](./dfx-ledger.mdx)     | Permite interactuar con cuentas en el canister de ledger que se ejecuta en Internet Computer.                                                                                                |
+| [`new`](./dfx-new.mdx)           | Crea un nuevo proyecto.                                                                                                                                                                      |
+| [`ping`](./dfx-ping.mdx)         | Envía una solicitud de respuesta al IC o al entorno de ejecución local de canisters para determinar la conectividad de red. Si la conexión es exitosa, se devuelve un estado de respuesta.   |
+| quickstart                       | Realiza la configuración inicial de una vez para tu identidad y/o wallet.                                                                                                                    |
+| remote                           | Comandos utilizados para trabajar con canisters remotos.                                                                                                                                     |
+| [`replica`](./dfx-replica.mdx)   | Eliminado. Usa el comando `start` en su lugar.                                                                                                                                               |
+| [`schema`](./dfx-schema.mdx)     | Imprime el esquema de `dfx.json`.                                                                                                                                                            |
+| [`start`](./dfx-start.mdx)       | Inicia el entorno de ejecución local de canisters y un servidor web para el proyecto actual.                                                                                                 |
+| [`stop`](./dfx-stop.mdx)         | Detiene el entorno de ejecución local de canisters.                                                                                                                                          |
+| [`upgrade`](./dfx-upgrade.mdx)   | Actualiza la versión de `dfx` instalada en la computadora local a la última versión disponible.                                                                                              |
+| [`wallet`](./dfx-wallet.mdx)     | Permite administrar ciclos, controladores, custodios y direcciones para la wallet de ciclos predeterminada asociada con la identidad actualmente seleccionada.                               |
 
-## Examples
+## Ejemplos
 
-You can use the `dfx` parent command to display usage information or version information. For example, to display
-information about the version of `dfx` you currently have installed, you can run the following command:
+Puedes usar el comando principal `dfx` para mostrar información sobre su uso o
+la versión instalada.  
+Por ejemplo, para mostrar la versión de `dfx` que tienes instalada actualmente,
+puedes ejecutar el siguiente comando:
 
-``` bash
+```bash
 dfx --version
 ```
 
-To view usage information for a specific subcommand, specify the subcommand and the `--help` flag. For example, to see
-usage information for `dfx build`, you can run the following command:
+Para ver información de uso para un subcomando específico, especifique el
+subcomando y el flag `--help`. Por ejemplo, para ver información de uso para
+`dfx build`, puedes ejecutar el siguiente comando:
 
-``` bash
+```bash
 dfx build --help
 ```
 
-### Using logging options
+### Uso de opciones de registro (logging)
 
-You can use the `--verbose` and `--quiet` flags to increment or decrement the logging level. If you don’t specify any
-logging level, CRITICAL, ERROR, WARNING, and INFO messages are logged by default. Specifying one verbose flag (`-v`)
-increases the log level to include DEBUG messages. Specifying two verbose flags (`-vv`)increases the logging level to
-include both DEBUG and TRACE messages.
+Puedes usar las opciones `--verbose` y `--quiet` para incrementar o reducir el
+nivel de registro.  
+Si no especificas ningún nivel de registro, por defecto se registran mensajes de
+nivel CRITICAL, ERROR, WARNING e INFO.
 
-Adding a `--quiet` flag decreases the logging level. For example, to remove all messages, you can run a command similar
-the following:
+Si especificas una bandera `-v`, el nivel de registro se incrementa para incluir
+mensajes DEBUG.  
+Si especificas dos banderas `-vv`, el nivel de registro se incrementa aún más
+para incluir mensajes DEBUG y TRACE.
 
-``` bash
+Agregar la opción `--quiet` reduce el nivel de registro.  
+Por ejemplo, para eliminar todos los mensajes, puedes ejecutar un comando
+similar al siguiente:
+
+```bash
 dfx build -qqqq
 ```
 
-Keep in mind that using TRACE level logging (`--vv`) generates a lot of log messages that can affect performance and
-should only be used when required for troubleshooting or analysis.
+Ten en cuenta que usar el nivel de registro TRACE (`--vv`) genera una gran
+cantidad de mensajes de registro, lo que puede afectar el rendimiento.  
+Se recomienda utilizarlo solo cuando sea necesario para la solución de problemas
+o análisis.
 
-To output log messages to a file named `newlog.txt` and display the messages on your terminal when creating a new
-project, you can run a command similar to the following:
+Para guardar los mensajes de registro en un archivo llamado `newlog.txt` y
+mostrarlos en la terminal al crear un nuevo proyecto, puedes ejecutar un comando
+similar al siguiente:
 
-``` bash
+```bash
 dfx new hello_world --log tee --logfile newlog.txt
 ```
 
-### Specifying a user identity
+### Especificar una identidad de usuario
 
-If you create user identities with the `dfx identity new` command, you can then use the `--identity` comment-line option
-to change the user context when running other `dfx` commands.
+Si creas identidades de usuario con el comando `dfx identity new`, puedes usar
+la opción de línea de comandos `--identity` para cambiar el contexto del usuario
+al ejecutar otros comandos de `dfx`.
 
-In the most common use case, you use the `--identity` option to call specific canister functions to test access controls
-for specific operations.
+El caso de uso más común es utilizar la opción `--identity` para llamar
+funciones específicas de un canister y probar los controles de acceso para
+ciertas operaciones.
 
-For example, you might want to test whether the `devops` user identity can call the `modify_profile` function for
-the `accounts` canister by running the following command:
+Por ejemplo, podrías querer probar si la identidad de usuario `devops` puede
+llamar a la función `modify_profile` en el canister `accounts` ejecutando el
+siguiente comando:
 
     dfx canister call accounts modify_profile '("Kris Smith")' --identity devops

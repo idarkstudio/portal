@@ -2,51 +2,53 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
 # dfx completion
 
-<MarkdownChipRow labels={["Reference"]} />
+<MarkdownChipRow labels={["Referencia"]} />
 
-Generate a shell completion script for `dfx`.
+Genera un script de completado de shell para `dfx`.
 
-## Basic usage
+## Uso básico
 
-``` bash
+```bash
 dfx completion [option] SHELL
 ```
 
-The command takes installed extensions into account when generating the
-completion script, so you should regenerate it after installing or removing
-extensions.
+El comando tiene en cuenta las extensiones instaladas al generar el script de
+completado, por lo que debes regenerarlo después de instalar o eliminar
+extensiones.
 
-The values supported for SHELL are `bash`, `elvish`, `fish`, `powershell`,
-and `zsh`. The default value is `bash`.
+Los valores admitidos para SHELL son `bash`, `elvish`, `fish`, `powershell` y
+`zsh`. El valor predeterminado es `bash`.
 
-## Options
+## Opciones
 
-You can use the following option with the `dfx completion` command.
+Puedes usar la siguiente opción con el comando `dfx completion`.
 
-| Option                | Description                        -|
-|-----------------------|-------------------------------------|
-| `--bin-name <name>`   | Name of the command. Only needed if referring to dfx by another name, such as with an alias. Default `dfx`. |
+| Opción              | Descripción                                                                                                          |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `--bin-name <name>` | Nombre del comando. Solo es necesario si te refieres a dfx con otro nombre, como con un alias. Predeterminado `dfx`. |
 
-## Examples
+## Ejemplos
 
-Generate a bash completion script:
+Generar un script de completado para bash:
 
-``` bash
+```bash
 dfx completion
 ```
 
-Generate a zsh completion script:
+Genera un script de completado para zsh:
 
-``` bash
+```bash
 dfx completion zsh
 ```
 
-Enable completion in zsh:
+Habilitar el completado en zsh:
+
 ```bash
 source <(dfx completion zsh)
 ```
 
-Enable completion in bash:
+Habilitar el completado en bash:
+
 ```bash
 source <(dfx completion)
 ```

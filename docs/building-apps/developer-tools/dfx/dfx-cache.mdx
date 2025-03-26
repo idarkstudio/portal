@@ -2,99 +2,117 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
 # dfx cache
 
-<MarkdownChipRow labels={["Reference"]} />
+<MarkdownChipRow labels={["Referencia"]} />
 
-Use the `dfx cache` command with flags and subcommands to manage the `dfx` version cache.
+Utiliza el comando `dfx cache` con banderas y subcomandos para gestionar la
+caché de versiones de `dfx`.
 
-The basic syntax for running `dfx cache` commands is:
+La sintaxis básica para ejecutar comandos `dfx cache` es:
 
-``` bash
+```bash
 dfx cache [subcommand] [flag]
 ```
 
-Depending on the `dfx cache` subcommand you specify, additional arguments, options, and flags might apply. For reference information and examples that illustrate using `dfx cache` commands, select an appropriate command.
+Dependiendo del subcomando `dfx cache` que especifiques, pueden aplicarse
+argumentos, opciones y banderas adicionales. Para obtener información de
+referencia y ejemplos que ilustren el uso de los comandos `dfx cache`,
+selecciona un comando apropiado.
 
-| Command                    | Description                                                                   |
-|----------------------------|-------------------------------------------------------------------------------|
-| [`delete`](#delete)        | Deletes the specified version of `dfx` from the local cache.                  |
-| `help`                     | Displays usage information message for a specified subcommand.                |
-| [`install`](#install)      | Installs the specified version of `dfx` from the local cache.                 |
-| [`list`](#_dfx_cache_list) | Lists the versions of `dfx` currently installed and used in current projects. |
-| [`show`](#_dfx_cache_show) | Show the path of the cache used by this version of the `dfx` executable.      |
+| Comando                    | Descripción                                                                             |
+| -------------------------- | --------------------------------------------------------------------------------------- |
+| [`delete`](#delete)        | Elimina la versión especificada de `dfx` de la caché local.                             |
+| `help`                     | Muestra un mensaje con información de uso para un subcomando especificado.              |
+| [`install`](#install)      | Instala la versión especificada de `dfx` desde la caché local.                          |
+| [`list`](#_dfx_cache_list) | Lista las versiones de `dfx` actualmente instaladas y utilizadas en proyectos actuales. |
+| [`show`](#_dfx_cache_show) | Muestra la ruta de la caché utilizada por esta versión del ejecutable `dfx`.            |
 
-To view usage information for a specific subcommand, specify the subcommand and the `--help` flag. For example, to see usage information for `dfx cache delete`, you can run the following command:
+Para ver información de uso de un subcomando específico, especifica el
+subcomando y la bandera `--help`. Por ejemplo, para ver información de uso de
+`dfx cache delete`, puedes ejecutar el siguiente comando:
 
-``` bash
+```bash
 dfx cache delete --help
 ```
 
 ## dfx cache delete
 
-Use the `dfx cache delete` command to delete a specified version of the IC SDK from the version cache on the local computer.
+Utiliza el comando `dfx cache delete` para eliminar una versión especificada del
+IC SDK de la caché de versiones en el equipo local.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx cache delete [version] [flag]
 ```
 
-### Arguments
+### Argumentos
 
-You can specify the following argument for the `dfx cache delete` command.
+Puedes especificar el siguiente argumento para el comando `dfx cache delete`.
 
-| Command   | Description                                                        |
-|-----------|--------------------------------------------------------------------|
-| `version` | Specifies the version of `dfx` you to delete from the local cache. |
+| Comando   | Descripción                                                           |
+| --------- | --------------------------------------------------------------------- |
+| `version` | Especifica la versión de `dfx` que deseas eliminar de la caché local. |
 
-### Examples
+### Ejemplos
 
-You can use the `dfx cache delete` command to permanently delete versions of the IC SDK that you no longer want to use. For example, you can run the following command to delete the IC SDK version `0.6.2`:
+Puedes utilizar el comando `dfx cache delete` para eliminar de forma permanente
+versiones del IC SDK que ya no deseas utilizar. Por ejemplo, puedes ejecutar el
+siguiente comando para eliminar la versión `0.6.2` del IC SDK:
 
-``` bash
+```bash
 dfx cache delete 0.6.2
 ```
 
 ## dfx cache install
 
-Use the `dfx cache install` command to install the IC SDK using the version currently found in the `dfx` cache.
+Utiliza el comando `dfx cache install` para instalar el IC SDK utilizando la
+versión actualmente encontrada en la caché de `dfx`.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx cache install [flag]
 ```
 
-### Examples
+### Ejemplos
 
-You can use the `dfx cache install` command to force the installation of `dfx` from the version in the cache. For example, you can run the following command to install `dfx`:
+Puedes utilizar el comando `dfx cache install` para forzar la instalación de
+`dfx` desde la versión en la caché. Por ejemplo, puedes ejecutar el siguiente
+comando para instalar `dfx`:
 
-``` bash
+```bash
 dfx cache install
 ```
 
 ## dfx cache list
 
-Use the `dfx cache list` command to list the IC SDK versions you have currently installed and used in projects.
+Utiliza el comando `dfx cache list` para listar las versiones del IC SDK que
+tienes actualmente instaladas y utilizadas en proyectos.
 
-If you have multiple versions of the IC SDK installed, the cache list displays an asterisk (\*) to indicate the currently active version.
+Si tienes múltiples versiones del IC SDK instaladas, la lista de caché muestra
+un asterisco (\*) para indicar la versión actualmente activa.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx cache list [flag]
 ```
 
-### Examples
+### Ejemplos
 
-You can use the `dfx cache list` command to list the IC SDK versions you have currently installed and used in projects. For example, you can run the following command to list versions of the IC SDK found in the cache:
+Puedes utilizar el comando `dfx cache list` para listar las versiones del IC SDK
+que tienes actualmente instaladas y utilizadas en proyectos. Por ejemplo, puedes
+ejecutar el siguiente comando para listar las versiones del IC SDK encontradas
+en la caché:
 
-``` bash
+```bash
 dfx cache list
 ```
 
-This command displays the list of the IC SDK versions found similar to the following:
+Este comano muestra la lista de versiones del IC SDK encontradas similar a la
+siguiente:
 
-``` bash
+```bash
 0.6.4 *
 0.6.3
 0.6.0
@@ -102,24 +120,27 @@ This command displays the list of the IC SDK versions found similar to the follo
 
 ## dfx cache show
 
-Use the `dfx cache show` command to display the full path to the cache used by the IC SDK version you are currently using.
+Utiliza el comando `dfx cache show` para mostrar la ruta completa de la caché
+utilizada por la versión del IC SDK que estás utilizando actualmente.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx cache show [flag]
 ```
 
-### Examples
+### Ejemplos
 
-You can use the `dfx cache show` command to display the path to the cache used by the IC SDK version you are currently using:
+Puedes utilizar el comando `dfx cache show` para mostrar la ruta completa de la
+caché utilizada por la versión del IC SDK que estás utilizando actualmente:
 
-``` bash
+```bash
 dfx cache show
 ```
 
-This command displays the path to the cache used by the IC SDK version you are currently using:
+Este comando muestra la ruta de la caché utilizada por la versión del IC SDK que
+estás utilizando actualmente:
 
-``` bash
+```bash
 /Users/pubs/.cache/dfinity/versions/0.6.4
 ```

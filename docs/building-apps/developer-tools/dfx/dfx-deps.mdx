@@ -2,59 +2,69 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
 # dfx deps
 
-<MarkdownChipRow labels={["Reference"]} />
+<MarkdownChipRow labels={["Referencia"]} />
 
-Use the `dfx deps` command with flags and subcommands to pull dependencies from the mainnet and deploy locally.
+Use el comando `dfx deps` con banderas y subcomandos para obtener dependencias
+de la red principal y desplegar localmente.
 
-[Learn how to configure a canister as `pullable`](/docs/building-apps/interact-with-canisters/using-third-party-canisterss/using-third-party-canisters).
+[Aprende cómo configurar un canister como `pullable`](/docs/building-apps/interact-with-canisters/using-third-party-canisterss/using-third-party-canisters).
 
-The basic syntax for running `dfx deps` commands is:
+La sintaxis básica para ejecutar comandos `dfx deps` es:
 
-``` bash
+```bash
 dfx deps [subcommand] [options]
 ```
 
-Depending on the `dfx deps` subcommand you specify, additional arguments, options, and flags might apply. For reference information and examples that illustrate using `dfx deps` commands, select an appropriate command.
+Dependiendo del subcomando `dfx deps` que especifiques, pueden aplicarse
+argumentos, opciones y banderas adicionales. Para obtener información de
+referencia y ejemplos que ilustren el uso de los comandos `dfx deps`, selecciona
+el comando adecuado.
 
-| Command                      | Description                                    |
-| ---------------------------- | ---------------------------------------------- |
-| [`pull`](#dfx-deps-pull)     | Pull canisters upon which the project depends. |
-| [`init`](#dfx-deps-init)     | Set init arguments for pulled dependencies.    |
-| [`deploy`](#dfx-deps-deploy) | Deploy pulled dependencies.                    |
+| Comando                      | Descripción                                                                   |
+| ---------------------------- | ----------------------------------------------------------------------------- |
+| [`pull`](#dfx-deps-pull)     | Descarga los canisters de los cuales depende el proyecto.                     |
+| [`init`](#dfx-deps-init)     | Establece los argumentos de inicialización para las dependencias descargadas. |
+| [`deploy`](#dfx-deps-deploy) | Despliega las dependencias descargadas.                                       |
 
-To view usage information for a specific subcommand, specify the subcommand and the `--help` flag. For example, to see usage information for `dfx deps pull`, you can run the following command:
+Para ver la información de uso de un subcomando específico, especifica el
+subcomando y la bandera `--help`. Por ejemplo, para ver la información de uso de
+`dfx deps pull`, puedes ejecutar el siguiente comando:
 
-``` bash
+```bash
 dfx deps pull --help
 ```
 
 ## dfx deps pull
 
-Use the `dfx deps pull` command to pull dependencies as defined in `dfx.json`.
+Use el comando `dfx deps pull` para obtener las dependencias definidas en
+`dfx.json`.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx deps pull [options]
 ```
 
-### Arguments
+### Argumentos
 
-You can specify the following argument for the `dfx deps delete` command.
+Puedes especificar el siguiente argumento para el comando `dfx deps delete`.
 
-| Command   | Description                                                     |
-| --------- | --------------------------------------------------------------- |
-| `network` | Specify the network to pull dependencies from, default is "ic". |
+| Comando   | Descripción                                                                                |
+| --------- | ------------------------------------------------------------------------------------------ |
+| `network` | Especifica la red desde la cual obtener las dependencias, el valor predeterminado es "ic". |
 
-### Examples
+### Ejemplos
 
-You can use the `dfx deps pull` command to pull the dependencies as defined in `dfx.json` from the mainnet. It will resolve all indirect dependencies.
+Puedes usar el comando `dfx deps pull` para obtener las dependencias definidas
+en `dfx.json` desde la red principal. Resolverá todas las dependencias
+indirectas.
 
-``` bash
+```bash
 dfx deps pull
 ```
 
-For testing, you may want to pull from local replica, then run:
+Para pruebas, es posible que desees obtener las dependencias de la réplica
+local,
 
 ```bash
 dfx deps pull --network local
@@ -62,41 +72,49 @@ dfx deps pull --network local
 
 ## dfx deps init
 
-Use the `dfx deps init` command to set init arguments for pulled dependencies.
+Use el comando `dfx deps init` para establecer argumentos de inicialización para
+las dependencias descargadas.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx deps init [options] [canister]
 ```
 
-### Examples
+### Ejemplos
 
-You can use the `dfx deps init` command to set empty init arguments for all pulled dependencies.
+Puedes usar el comando `dfx deps init` para establecer argumentos de
+inicialización vacíos para todas las dependencias descargadas.
 
-``` bash
+```bash
 dfx deps init
 ```
 
-If any of the dependencies require init arguments, the above command will alarm you with their canister ID and names if exist. Then you can specify canister ID or name to set init argument for individual dependency.
+Si alguna de las dependencias requiere argumentos de inicialización, el comando
+anterior te alertará con su ID y nombres de canister si existen. Luego puedes
+especificar el ID o nombre del canister para establecer el argumento de
+inicialización para cada dependencia individual.
 
 ```bash
 `dfx deps init <CANISTER_ID/NAME> --argument <ARGUMENT> [--argument-type <TYPE>]`
 ```
 
-The command below set number `1` for canister `dep_a` as the argument type is the default `idl` (candid).
+El comando a continuación establece el número `1` para el canister `dep_a` ya
+que el tipo de argumento es el predeterminado `idl` (candid).
 
 ```bash
 dfx deps init dep_a --argument 1
 ```
 
-The command below set the hex-encoded raw bytes for canister `dep_b`.
+El comando a continuación establece los bytes en bruto codificados en
+hexadecimal para el canister `dep_b`.
 
 ```bash
 dfx deps init dep_b --argument "4449444c00017103616263" --argument-type raw
 ```
 
-The command below set the init argument for canister `dep_c` with the content of file `init_c.txt`.
+El comando a continuación establece el argumento de inicialización para el
+canister `dep_c` con el contenido del archivo `init_c.txt`.
 
 ```bash
 dfx deps init dep_c --argument-file init_c.txt
@@ -104,20 +122,23 @@ dfx deps init dep_c --argument-file init_c.txt
 
 ## dfx deps deploy
 
-Use the `dfx deps deploy` command to deploy all dependencies.
+Use el comando `dfx deps deploy` para desplegar todas las dependencias.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx deps deploy [flag]
 ```
 
-### Examples
+### Ejemplos
 
-You can use the `dfx deps deploy` command to deploy dependencies on local replica.
+Puedes usar el comando `dfx deps deploy` para desplegar dependencias en la
+réplica local.
 
-``` bash
+```bash
 dfx deps deploy
 ```
 
-If some of the dependencies haven't been pulled or set init arguments, the command will fail. And the error message will help you to fix it.
+Si algunas de las dependencias no se han descargado o no se han establecido los
+argumentos de inicialización, el comando fallará. El mensaje de error te ayudará
+a solucionarlo.

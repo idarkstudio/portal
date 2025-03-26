@@ -2,74 +2,91 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
 # dfx nns
 
-<MarkdownChipRow labels={["Reference"]} />
+<MarkdownChipRow labels={["Referencia"]} />
 
 :::caution
-The `dfx nns` command is no longer part of dfx, and has now been turned into the dfx extension. In order to obtain it, please run `dfx extension install nns`.
+
+El comando `dfx nns` ya no forma parte de dfx y ahora se ha convertido en la
+extensión dfx. Para obtenerlo, ejecuta `dfx extension install nns`.
+
 :::
 
-Use the `dfx nns` subcommands to interact with the Network Nervous System.
+Utiliza los subcomandos `dfx nns` para interactuar con el Sistema Nervioso de la
+Red.
 
-The basic syntax for running `dfx nns` commands is:
+La sintaxis básica para ejecutar comandos `dfx nns` es:
 
-``` bash
+```bash
 dfx nns [subcommand] [flag]
 ```
 
-Depending on the `dfx nns` subcommand you specify, additional arguments, options, and flags might apply. For reference information and examples that illustrate using `dfx nns` commands, select an appropriate command.
+Dependiendo del subcomando `dfx nns` que especifiques, pueden aplicarse
+argumentos, opciones y banderas adicionales. Para obtener información de
+referencia y ejemplos que ilustren el uso de los comandos `dfx nns`, selecciona
+un comando apropiado.
 
-| Command                             | Description                                                                   |
-|-------------------------------------|-------------------------------------------------------------------------------|
-| [`import`](#_dfx_nns_import)        | Adds the NNS canisters to the local dfx.json as remote canisters.             |
-| [`install`](#_dfx_nns_install)      | Deploys NNS canisters to the local dfx server.                                 |
-| `help`                              | Displays usage information message for a specified subcommand.                |
+| Comando                        | Descripción                                                               |
+| ------------------------------ | ------------------------------------------------------------------------- |
+| [`import`](#_dfx_nns_import)   | Agrega los canisters NNS al dfx.json local como canisters remotos.        |
+| [`install`](#_dfx_nns_install) | Implementa los canisters NNS en el servidor dfx local.                    |
+| `help`                         | Muestra un mensaje de información de uso para un subcomando especificado. |
 
-To view usage information for a specific subcommand, specify the subcommand and the `--help` flag. For example, to see usage information for `dfx nns install`, you can run the following command:
+Para ver la información de uso de un subcomando específico, especifica el
+subcomando y la bandera `--help`. Por ejemplo, para ver la información de uso de
+`dfx nns install`, puedes ejecutar el siguiente comando:
 
-``` bash
+```bash
 $ dfx nns install --help
 ```
 
-
 ## dfx nns import
 
-Use the `dfx nns import` command to add the NNS canisters to the local `dfx.json`.  It also downloads the did files and sets the canister IDs of the NNS cansiters so that you can make API calls to NNS canisters.
+Usa el comando `dfx nns import` para agregar los canisters NNS al `dfx.json`
+local. También descarga los archivos did y establece los IDs de canister de los
+canisters NNS para que puedas hacer llamadas API a los canisters NNS.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 $ dfx nns import
 ```
 
 ### Flags
 
-You can use the following optional flags with the `dfx nns import` command.
+Puedes utilizar las siguientes flags opcionales con el comando `dfx nns import`.
 
-| Flag                | Description                                    |
-|---------------------|------------------------------------------------|
-| `--network-mapping` | Renames networks when installing canister IDs. |
+| Flags               | Descripción                                              |
+| ------------------- | -------------------------------------------------------- |
+| `--network-mapping` | Renombra las redes al instalar los IDs de los canisters. |
 
-### Examples
+### Ejemplos
 
-You can use the `dfx nns import` command to get did files and so query NNS canisters.
+Puedes utilizar el comando `dfx nns import` para obtener archivos did y así
+consultar los canisters NNS.
 
-``` bash
+```bash
 $ dfx nns import
 $ dfx canister call --network ic nns-governance get_pending_proposals '()'
 ```
 
-You can rename a network on import.  For example, if you have `test-ic` set up as an alias of the `ic` network then you can set NNS canister IDs for `test-ic` with:
+Puedes renombrar una red al importarla. Por ejemplo, si tienes `test-ic`
+configurado como un alias de la red `ic`, puedes establecer los IDs de los
+canisters NNS para `test-ic` con:
 
-``` bash
+```bash
 $ dfx nns import --network-mapping test-ic=ic
 ```
 
 ## dfx nns install
 
-Use the `dfx nns install` command to install a local NNS. This provides local ledger and governance canisters as well as the GUI canisters Internet Identity and NNS-Dapp.
+Utiliza el comando `dfx nns install` para instalar un NNS local. Esto
+proporciona los canisters de contabilidad y gobernanza locales, así como los
+canisters de GUI Internet Identity y NNS-Dapp.
 
-### Basic usage
-The local network needs to be set up with a very specific configuration:
+### Uso básico
+
+La red local debe configurarse con una configuración muy específica:
+
 ```
 $ cat ~/.config/dfx/networks.json
 {
@@ -83,27 +100,26 @@ $ cat ~/.config/dfx/networks.json
 }
 ```
 
-This is because:
+Esto es porque:
 
-* The NNS canisters need to run on a system subnet.
-* Some canisters are compiled to run on only very specific canister IDs and hostname/port pairs.
+- Los canisters NNS deben ejecutarse en una subnet del sistema.
+- Algunos canisters se compilan para ejecutarse solo en pares de ID de canister
+  y nombre de host/puerto muy específicos.
 
+Además, el servidor dfx local debe estar limpio:
 
-In addition, the local dfx server needs to be clean:
-
-``` bash
+```bash
 $ dfx start --clean --background
 $ dfx nns install
 ```
 
-This is because NNS canisters need to be installed before any others.
+Esto se debe a que los canisters NNS deben instalarse antes que cualquier otro.
 
+### Ejemplos
 
-### Examples
+#### Ejemplo: Hacer llamadas API al NNS local
 
-#### Example: Making API calls to the local NNS.
-
-``` bash
+```bash
 $ dfx stop
 $ dfx start --clean --background
 $ dfx nns install
@@ -111,17 +127,26 @@ $ dfx nns import
 $ dfx canister call --network ic nns-governance get_pending_proposals '()'
 ```
 
-You can view the API calls that can be made for each NNS canister by looking at the interface definition files installed by `dfx nns import` in `candid/*.did`.  The API methods are in the `service` section, which is usually located at the end of a `.did` file.  It is easiest to start experimenting with methods that take no arguments.
+Puedes ver las llamadas API que se pueden realizar para cada canister NNS al
+consultar los archivos de definición de interfaz instalados por `dfx nns import`
+en `candid/*.did`. Los métodos de la API se encuentran en la sección `service`,
+que generalmente se encuentra al final de un archivo `.did`. Lo más fácil es
+comenzar a experimentar con métodos que no requieran argumentos.
 
-#### Example: Accessing ICP on the command line
-Two accounts in the local ledger is initialized with ICP that can be used for testing.  One uses a secp256k1 key, which is convenient for command line usage, another uses an ed25519 key, which is more convenient in web applications.
+#### Ejemplo: Acceder a ICP en la línea de comandos
 
+Se inicializan dos cuentas en el libro mayor local con ICP que se pueden usar
+para pruebas. Una utiliza una clave secp256k1, que es conveniente para el uso en
+la línea de comandos, y otra utiliza una clave ed25519, que es más conveniente
+en aplicaciones web.
 
+Para usar ICP en la línea de comandos:
 
-To use ICP on the command line:
-* Start dfx and install the NNS, as described in [`install`](#_dfx_nns_install).
-* Put this secret key into a file called `ident-1.pem`:
-``` bash
+- Inicia dfx e instala el NNS, como se describe en
+  [`install`](#_dfx_nns_install).
+- Coloca esta clave secreta en un archivo llamado `ident-1.pem`:
+
+```bash
 $ cat <<EOF >ident-1.pem
 -----BEGIN EC PRIVATE KEY-----
 MHQCAQEEICJxApEbuZznKFpV+VKACRK30i6+7u5Z13/DOl18cIC+oAcGBSuBBAAK
@@ -130,22 +155,31 @@ oUQDQgAEPas6Iag4TUx+Uop+3NhE6s3FlayFtbwdhRVjvOar0kPTfE/N8N6btRnd
 -----END EC PRIVATE KEY-----
 EOF
 ```
-* Check the key: (optional)
+
+- Verifica la clave: (opcional)
+
 ```
 $ openssl ec -in ident-1.pem -noout -text
 ```
-* Create an identity with that secret key:
-``` bash
+
+- Crea una identidad con esa clave secreta:
+
+```bash
 $ dfx identity import ident-1 ident-1.pem
 ```
-* Now you can use the (toy) funds:
-``` bash
+
+- Ahora puedes usar los fondos (de testeo):
+
+```bash
 $ dfx ledger balance
 ```
 
-To use ICP in an existing web application:
-* Install the [@dfinity/agent npm module](https://www.npmjs.com/package/@dfinity/agent).
-* Create an identity with this key pair:
+Para usar ICP en una aplicación web existente:
+
+- Instala el módulo npm
+  [@dfinity/agent](https://www.npmjs.com/package/@dfinity/agent).
+- Crea una identidad con este par de claves:
+
 ```
   const publicKey = "Uu8wv55BKmk9ZErr6OIt5XR1kpEGXcOSOC1OYzrAwuk=";
   const privateKey =
@@ -164,4 +198,5 @@ To use ICP in an existing web application:
     return Uint8Array.from(window.atob(base64String), (c) => c.charCodeAt(0));
   };
 ```
-* That identity can now make API calls, including sending ICP.
+
+- Esa identidad ahora puede hacer llamadas API, incluido el envío de ICP.
