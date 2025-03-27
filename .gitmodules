@@ -1,9 +1,9 @@
 [submodule "submodules/sdk"]
 	path = submodules/sdk
-	url = https://github.com/dfinity/sdk.git
+	url = https://github.com/idarkstudio/sdk.git
 [submodule "submodules/motoko"]
 	path = submodules/motoko
-	url = https://github.com/idarkstudio/motoko
+	url = https://github.com/idarkstudio/motoko.git
 [submodule "submodules/internetidentity"]
 	path = submodules/internetidentity
 	url = https://github.com/dfinity/internet-identity.git
