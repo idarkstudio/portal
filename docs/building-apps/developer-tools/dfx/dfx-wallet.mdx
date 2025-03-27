@@ -2,108 +2,110 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
 # dfx wallet
 
-<MarkdownChipRow labels={["Reference"]} />
+<MarkdownChipRow labels={["Referencia"]} />
 
-Use the `dfx wallet` command with subcommands and flags to manage the cycles wallets of your identities and to send cycles to the wallets of other account cycles wallet canisters.
+Usa el comando `dfx wallet` con subcomandos y flags para gestionar las
+billeteras de cycles de tus identidades y enviar cycles a las billeteras de
+otros canisters de cuenta de cycles.
 
-The basic syntax for running the `dfx wallet` commands is:
-
+La sintaxis básica para ejecutar los comandos `dfx wallet` es:
 
 ```bash
 dfx wallet [option] <subcommand> [flag]
 ```
 
-Depending on the `dfx wallet` subcommand you specify, additional arguments, options, and flags might apply or be required.
-To view usage information for a specific `dfx wallet` subcommand, specify the subcommand and the `--help` flag.
-For example, to see usage information for `dfx wallet send`, you can run the following command:
+Dependiendo del subcomando de `dfx wallet` que especifiques, pueden aplicarse o
+requerirse argumentos, opciones y flags adicionales. Para ver la información de
+uso de un subcomando específico de `dfx wallet`, especifica el subcomando y el
+flag `--help`. Por ejemplo, para ver la información de uso de `dfx wallet send`,
+puedes ejecutar el siguiente comando:
 
 ```bash
 dfx wallet send --help
 ```
 
-For reference information and examples that illustrate using `dfx wallet` commands, select an appropriate command.
+Para obtener información de referencia y ejemplos que ilustren el uso de los
+comandos `dfx wallet`, selecciona un comando adecuado.
 
+| Comando                                              | Descripción                                                                                                     |
+| ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| [`add-controller`](#dfx-wallet-add-controller)       | Agrega un controlador utilizando el principal de la identidad seleccionada.                                     |
+| [`addresses`](#dfx-wallet-addresses)                 | Muestra el libro de direcciones de la wallet de cycles.                                                         |
+| [`authorize`](#dfx-wallet-authorize)                 | Autoriza a un custodio mediante su principal para la wallet de cycles de la identidad.                          |
+| [`balance`](#dfx-wallet-balance)                     | Muestra el saldo de la wallet de cycles de la identidad seleccionada.                                           |
+| [`controllers`](#dfx-wallet-controllers)             | Muestra una lista de los controladores de la wallet de cycles de la identidad seleccionada.                     |
+| [`custodians`](#dfx-wallet-custodians)               | Muestra una lista de los custodios de la wallet de cycles de la identidad seleccionada.                         |
+| [`deauthorize`](#dfx-wallet-deauthorize)             | Desautoriza a un custodio de la wallet de cycles utilizando su principal.                                       |
+| `help`                                               | Muestra un mensaje de uso y la ayuda del subcomando dado.                                                       |
+| [`name`](#dfx-wallet-name)                           | Devuelve el nombre de la wallet de cycles si se ha usado el comando `dfx wallet set-name`.                      |
+| [`redeem-faucet-coupon`](#redeem-faucet-coupon)      | Canjea un código en el faucet de cycles.                                                                        |
+| [`remove-controller`](#dfx-wallet-remove-controller) | Elimina un controlador especificado de la wallet de cycles de la identidad seleccionada.                        |
+| [`send`](#dfx-wallet-send)                           | Envía una cantidad específica de cycles desde la wallet de cycles de la identidad seleccionada a otro canister. |
+| [`set-name`](#dfx-wallet-set-name)                   | Especifica un nombre para tu wallet de cycles.                                                                  |
+| [`upgrade`](#dfx-wallet-upgrade)                     | Actualiza el módulo Wasm de la wallet de cycles al Wasm actual incluido en DFX.                                 |
 
-|Command |Description
----------|-----------------------------------
-|[`add-controller`](#dfx-wallet-add-controller) | Add a controller using the selected identity's principal. |
-|[`addresses`](#dfx-wallet-addresses)|Displays the address book of the cycles wallet.|
-|[`authorize`](#dfx-wallet-authorize)|Authorize a custodian by principal for the selected identity's cycles wallet|
-|[`balance`](#dfx-wallet-balance)|Displays the cycles wallet balance of the selected identity.
-|[`controllers`](#dfx-wallet-controllers) |Displays a list of the selected identity's cycles wallet controllers. 
-|[`custodians`](#dfx-wallet-custodians) |Displays a list of the selected identity's cycles wallet custodians.
-|[`deauthorize`](#dfx-wallet-deauthorize) | Deauthorize a cycles wallet custodian using the custodian's principal.
-|`help`|Displays a usage message and the help of the given subcommand(s).
-|[`name`](#dfx-wallet-name) |Returns the name of the cycles wallet if you've used the `dfx wallet set-name` command.
-|[`redeem-faucet-coupon`](#redeem-faucet-coupon) | Redeem a code at the cycles faucet. |
-|[`remove-controller`](#dfx-wallet-remove-controller) |Removes a specified controller from the selected identity's cycles wallet. 
-|[`send`](#dfx-wallet-send) |Sends a specified amount of cycles from the selected identity's cycles wallet to another canister.
-|[`set-name`](#dfx-wallet-set-name) |Specify a name for your cycles wallet. 
-|[`upgrade`](#dfx-wallet-upgrade) |Upgrade the cycles wallet's Wasm module to the current Wasm bundled with DFX.
+## Usando tu wallet
 
-
-## Using your wallet
-
-After you have used the `dfx identity deploy-wallet` command to create a cycles wallet canister tied to an identity, you can use `dfx wallet` commands to modify your cycles wallet settings, send cycles to other cycles wallets, and add or remove controllers and custodians. 
+Después de haber usado el comando `dfx identity deploy-wallet` para crear un
+canister de wallet de cycles vinculado a una identidad, puedes usar los comandos
+`dfx wallet` para modificar la configuración de tu wallet de cycles, enviar
+cycles a otras billeteras de cycles y agregar o eliminar controladores y
+custodios.
 
 ## dfx wallet add-controller
 
-Use the `dfx wallet add-controller` to add a controller to the wallet. An identity assigned the role of Controller has the most privileges and can perform the following actions on the selected identity's cycles wallet:
+Usa `dfx wallet add-controller` para agregar un controlador a la wallet. Una
+identidad asignada como Controlador tiene los privilegios más altos y puede
+realizar las siguientes acciones en la wallet de cycles de la identidad
+seleccionada:
 
-* Rename the cycles wallet.
+- Cambiar el nombre de la wallet de cycles.
+- Agregar entradas al libro de direcciones.
+- Agregar y eliminar controladores.
+- Autorizar y desautorizar custodios.
 
-* Add entries to the address book.
+Un controlador también es un custodio y puede realizar las siguientes acciones
+asociadas con ese rol:
 
-* Add and remove controllers.
+- Acceder a la información de la wallet.
+- Enviar cycles.
+- Reenviar llamadas.
+- Crear canisters.
 
-* Authorize and deauthorize custodians.
-
-A controller is also a custodian and can perform the following actions associated with that role:
-
-* Access wallet information.
-
-* Send cycles.
-
-* Forward calls.
-
-* Create canisters. 
-
-
-### Basic usage
-
+### Uso básico
 
 ```
 dfx wallet add-controller [option] <controller> [flag]
 ```
 
-### Options
+### Opciones
 
-You can use the following options with the `dfx canister call` command.
+Puedes usar las siguientes opciones con el comando `dfx canister call`.
 
+| Opción                | Descripción                                                                                          |
+| --------------------- | ---------------------------------------------------------------------------------------------------- |
+| `--network <network>` | Especifica el entorno (por ejemplo, Internet Computer o testnet) del controlador que deseas agregar. |
 
-|Option |Description|
---------|------------|
-|`--network <network>` |Specifies the environment (e.g., Internet Computer or testnet) of the controller you want to add.
+### Argumentos
 
-### Arguments
+Puedes especificar los siguientes argumentos para el comando
+`dfx wallet add-controller`.
 
-You can specify the following arguments for the `dfx wallet add-controller` command.
+| Argumento    | Descripción                                                    |
+| ------------ | -------------------------------------------------------------- |
+| `controller` | Especifica el principal del controlador a agregar a la wallet. |
 
+### Ejemplos
 
-|Argument |Description
-----------|-------------
-|`controller` |Specifies the principal of the controller to add to the wallet. 
-
-### Examples
-
-You can use the `dfx wallet add-controller` command to add a controller to your wallet. If the controller you want to add is on a different environment, specify it using the `--network` option. For example:
-
+Puedes usar el comando `dfx wallet add-controller` para agregar un controlador a
+tu wallet. Si el controlador que deseas agregar está en un entorno diferente,
+especifícalo usando la opción `--network`. Por ejemplo:
 
 ```
 dfx wallet add-controller b5quc-npdph-l6qp4-kur4u-oxljq-7uddl-vfdo6-x2uo5-6y4a6-4pt6v-7qe
 ```
 
-The command displays output similar to the following:
+El comando muestra una salida similar a la siguiente:
 
 ```
 Added b5quc-npdph-l6qp4-kur4u-oxljq-7uddl-vfdo6-x2uo5-6y4a6-4pt6v-7qe as a controller.
@@ -111,23 +113,28 @@ Added b5quc-npdph-l6qp4-kur4u-oxljq-7uddl-vfdo6-x2uo5-6y4a6-4pt6v-7qe as a contr
 
 ## dfx wallet addresses
 
-Use the `dfx wallet addresses` command to display the wallet's address book.The address entries contain the principal and `role` (`Contact`, `Custodian`, or `Controller`), and might contain a `name`, and `kind` (`Unknown`, `User`, or `Canister`) associated with the address.
+Usa el comando `dfx wallet addresses` para mostrar el libro de direcciones de la
+wallet. Las entradas de dirección contienen el principal y el `rol` (`Contact`,
+`Custodian` o `Controller`), y pueden incluir un `nombre` y `tipo` (`Unknown`,
+`User` o `Canister`) asociado con la dirección.
 
-### Basic usage
+### Uso básico
 
 ```
 dfx wallet addresses
 ```
 
-### Examples
+### Ejemplos
 
-You can use the `dfx wallet addresses` command to retrieve information on the addresses in your wallet's address book. For example:
+Puedes usar el comando `dfx wallet addresses` para obtener información sobre las
+direcciones en el libro de direcciones de tu wallet. Por ejemplo:
 
 ```
 dfx wallet addresses --network ic
 ```
 
-The command displays the controllers and custodians for the cycles wallet with output similar to the following:
+El comando muestra los controladores y custodios de la wallet de cycles con una
+salida similar a la siguiente:
 
 ```
 dfx wallet addresses
@@ -137,40 +144,39 @@ Id: e7ptl-4x43t-zxcvh-n6s6c-k2dre-doy7l-bbo6h-ok8ik-msiz3-eoxhl-6qe, Kind: Unkno
 
 ## dfx wallet authorize
 
-Use the `dfx wallet authorize` command to authorize a custodian for the wallet. An identity authorized as a custodian can perform the following actions on the cycles wallet:
+Usa el comando `dfx wallet authorize` para autorizar a un custodio en la wallet.
+Una identidad autorizada como custodio puede realizar las siguientes acciones en
+la wallet de cycles:
 
-* Access wallet information.
+- Acceder a la información de la wallet.
+- Enviar cycles.
+- Reenviar llamadas.
+- Crear canisters.
 
-* Send cycles.
-
-* Forward calls.
-
-* Create canisters. 
-
-### Basic usage
-
+### Uso básico
 
 ```
 dfx wallet authorize <custodian> [flag]
 ```
 
-### Arguments
+### Argumentos
 
-Use the following necessary argument with the `dfx wallet authorize` command.
+Usa el siguiente argumento necesario con el comando `dfx wallet authorize`.
 
-|Argument |Description
-----------|--------
-|`<custodian>` | Specify the principal of the identity you would like to add as a custodian to the selected identity's cycles wallet.
+| Argumento     | Descripción                                                                           |
+| ------------- | ------------------------------------------------------------------------------------- |
+| `<custodian>` | Especifica el principal de la identidad que deseas agregar como custodio a la wallet. |
 
-### Example
+### Ejemplo
 
-For example, to add alice_auth as a custodian, specify her principal in the following command:
+Por ejemplo, para agregar `alice_auth` como custodio, especifica su principal en
+el siguiente comando:
 
 ```
 dfx wallet authorize dheus-mqf6t-xafkj-d3tuo-gh4ng-7t2kn-7ikxy-vvwad-dfpgu-em25m-2ae
 ```
 
-This command outputs something similar to the following:
+Este comando muestra una salida similar a la siguiente:
 
 ```
 Authorized dheus-mqf6t-xafkj-d3tuo-gh4ng-7t2kn-7ikxy-vvwad-dfpgu-em25m-2ae as a custodian.
@@ -178,10 +184,10 @@ Authorized dheus-mqf6t-xafkj-d3tuo-gh4ng-7t2kn-7ikxy-vvwad-dfpgu-em25m-2ae as a 
 
 ## dfx wallet balance
 
-Use the `dfx wallet balance` command to display the balance of the cycles wallet of the selected identity. 
+Usa el comando `dfx wallet balance` para mostrar el saldo de la wallet de cycles
+de la identidad seleccionada.
 
-### Basic usage
-
+### Uso básico
 
 ```
 dfx wallet balance
@@ -189,21 +195,21 @@ dfx wallet balance
 
 ### Flags
 
-You can use the following optional flags with the `dfx wallet balance` command.
+Puedes usar las siguientes flags opcionales con el comando `dfx wallet balance`.
 
-|Flag |Description
--------|---------
-|`--precise` |Displays the exact balance, without scaling to trillions of cycles.
+| Flag        | Descripción                                                |
+| ----------- | ---------------------------------------------------------- |
+| `--precise` | Muestra el saldo exacto, sin escalar a billones de cycles. |
 
-### Examples
+### Ejemplos
 
-Check the balance of the selected identity's cycles wallet.
+Verifica el saldo de la wallet de cycles de la identidad seleccionada.
 
 ```
 dfx wallet balance
 ```
 
-This command displays the number of cycles in your cycles wallet. For example: 
+Este comando muestra la cantidad de cycles en tu wallet de cycles. Por ejemplo:
 
 ```
 89.000 TC (trillion cycles).
@@ -211,25 +217,26 @@ This command displays the number of cycles in your cycles wallet. For example:
 
 ## dfx wallet controllers
 
-Use the `dfx wallet controllers` command to list the principals of the identities that are controllers of the selected identity's cycles wallet. 
+Usa el comando `dfx wallet controllers` para listar los principales de las
+identidades que son controladores de la wallet de cycles de la identidad
+seleccionada.
 
-### Basic usage
-
-
-```
-dfx wallet controllers
-```
-
-### Examples
-
-List the controllers of your selected identity's cycles wallet. 
-
+### Uso básico
 
 ```
 dfx wallet controllers
 ```
 
-The information returned should look similar to the following if there are two controllers:
+### Ejemplos
+
+Lista los controladores de la wallet de cycles de tu identidad seleccionada.
+
+```
+dfx wallet controllers
+```
+
+La información devuelta debería ser similar a la siguiente si hay dos
+controladores:
 
 ```
 dheus-mqf6t-xafkj-d3tuo-gh4ng-7t2kn-7ikxy-vvwad-dfpgu-em25m-2ae
@@ -238,64 +245,65 @@ hpnmi-qgxsv-tgecj-hmjyn-gmfft-vbego-lpcax-ou4ld-oh7kr-l3nu2-yae
 
 ## dfx wallet custodians
 
-Use the `dfx wallet custodians` command to list the principals of the identities that are custodians of the selected identity's cycles wallet. Identities that are added as controllers are also listed as custodians.
+Usa el comando `dfx wallet custodians` para listar los principales de las
+identidades que son custodios de la wallet de cycles de la identidad
+seleccionada. Las identidades agregadas como controladores también se listan
+como custodios.
 
-### Basic usage
-
-
-```
-dfx wallet custodians
-```
-
-### Examples
-
-List the custodians of your selected identity's cycles wallet. 
-
+### Uso básico
 
 ```
 dfx wallet custodians
 ```
 
-The information returned should look similar to the following if there are two custodians:
+### Ejemplos
+
+Lista los custodios de la wallet de cycles de tu identidad seleccionada.
+
+```
+dfx wallet custodians
+```
+
+La información devuelta debería ser similar a la siguiente si hay dos custodios:
 
 ```
 dheus-mqf6t-xafkj-d3tuo-gh4ng-7t2kn-7ikxy-vvwad-dfpgu-em25m-2ae
 hpnmi-qgxsv-tgecj-hmjyn-gmfft-vbego-lpcax-ou4ld-oh7kr-l3nu2-yae
 ```
 
-
 ## dfx wallet deauthorize
 
-Use the `dfx wallet deauthorize` command to remove a custodian from the cycles wallet. 
+Usa el comando `dfx wallet deauthorize` para eliminar un custodio de la wallet
+de cycles.
 
-NOTE:  that this will also remove the role of controller if the custodian is also a controller.
+**NOTA:** Esto también eliminará el rol de controlador si el custodio también es
+un controlador.
 
-### Basic usage
-
+### Uso básico
 
 ```
 dfx wallet deauthorize <custodian> [flag]
 ```
 
-### Arguments
+### Argumentos
 
-Use the following necessary argument with the `dfx wallet deauthorize` command.
+Debes usar el siguiente argumento obligatorio con el comando
+`dfx wallet deauthorize`.
 
+| Argumento     | Descripción                                               |
+| ------------- | --------------------------------------------------------- |
+| `<custodian>` | Especifica el principal del custodio que deseas eliminar. |
 
-|Argument |Description
-----------|--------------
-|`<custodian>` | Specify the principal of the custodian you want to remove.
+### Ejemplo
 
-### Example
-
-For example, to remove "alice_auth" as a custodian, specify her principal in the following command:
-
+Por ejemplo, para eliminar a "alice_auth" como custodio, especifica su principal
+en el siguiente comando:
 
 ```
 dfx wallet deauthorize dheus-mqf6t-xafkj-d3tuo-gh4ng-7t2kn-7ikxy-vvwad-dfpgu-em25m-2ae
 ```
 
-This command will output something similar to:
+Este comando mostrará una salida similar a:
 
 ```
 Deauthorized dheus-mqf6t-xafkj-d3tuo-gh4ng-7t2kn-7ikxy-vvwad-dfpgu-em25m-2ae as a custodian.
@@ -303,18 +311,20 @@ Deauthorized dheus-mqf6t-xafkj-d3tuo-gh4ng-7t2kn-7ikxy-vvwad-dfpgu-em25m-2ae as 
 
 ## dfx wallet name
 
-Use the `dfx wallet name` command to display the name of the selected identity's cycles wallet if it has been set using the `dfx wallet set-name` command. 
+Usa el comando `dfx wallet name` para mostrar el nombre de la wallet de cycles
+de la identidad seleccionada si se ha establecido mediante el comando
+`dfx wallet set-name`.
 
-### Basic usage
-
+### Uso básico
 
 ```
-dfx wallet name [flag] 
+dfx wallet name [flag]
 ```
 
-### Example
+### Ejemplo
 
-If you have named your cycles wallet "Terrances_wallet", then the command would return the following:
+Si has nombrado tu wallet de cycles como "Terrances_wallet", el comando
+devolvería lo siguiente:
 
 ```
 Terrances_wallet
@@ -322,155 +332,169 @@ Terrances_wallet
 
 ## dfx wallet redeem-faucet-coupon
 
-Use the `dfx wallet redeem-faucet-coupon` command to redeem a cycles faucet coupon.
-If you have no wallet set, this will create a wallet for you.
-If you have a wallet set already, this will add the coupon's cycles to your existing wallet.
+Usa el comando `dfx wallet redeem-faucet-coupon` para canjear un cupón de la
+fuente de cycles. Si no tienes una wallet configurada, esto creará una para ti.
+Si ya tienes una wallet configurada, esto añadirá los cycles del cupón a tu
+wallet existente.
 
-### Basic usage
+### Uso básico
+
 ```
 dfx wallet redeem-faucet-coupon <your faucet coupon>
 ```
 
-### Arguments
+### Argumentos
 
-Use the following necessary argument with the `dfx wallet redeem-faucet-coupon` command.
+Debes usar el siguiente argumento obligatorio con el comando
+`dfx wallet redeem-faucet-coupon`.
 
-
-|Argument |Description
-----------|--------------
-|`<your faucet coupon>` | The coupon code to redeem at the faucet.|
-
+| Argumento              | Descripción                                           |
+| ---------------------- | ----------------------------------------------------- |
+| `<your faucet coupon>` | El código del cupón a canjear en la fuente de cycles. |
 
 ### Flags
 
-You can use the following optional flags with the `dfx wallet redeem-faucet-coupon` command.
+Puedes usar las siguientes flags opcionales con el comando
+`dfx wallet redeem-faucet-coupon`.
 
+| Flag       | Descripción                                                                                 |
+| ---------- | ------------------------------------------------------------------------------------------- |
+| `--faucet` | Dirección alternativa de la fuente de cycles. Si no se establece, usa la fuente de DFINITY. |
+| `--yes`    | Omite las comprobaciones de sí/no respondiendo 'sí'. No recomendado fuera de CI.            |
 
-|Flag |Description|
-|-----|-----------|
-|`--faucet`|Alternative faucet address. If not set, this uses the DFINITY faucet.|
-|`--yes`|Skips yes/no checks by answering 'yes'. Not recommended outside of CI.|
+### Ejemplo
 
-### Example
+Si aún no tienes una wallet y un código de cupón `ABCDE-ABCDE-ABCDE`, puedes
+canjearlo así:
 
-If you have no wallet yet and a coupon code `ABCDE-ABCDE-ABCDE`, you can redeem it like this:
-``` bash
+```bash
 dfx wallet redeem-faucet-coupon 'ABCDE-ABCDE-ABCDE'
 ```
 
-This will print something similar to this:
+Esto imprimirá algo similar a:
+
 ```
 Redeemed coupon ABCDE-ABCDE-ABCDE for a new wallet: rdmx6-jaaaa-aaaaa-aaadq-cai
 New wallet set.
 ```
 
-If you have a wallet already and a coupon code `ABCDE-ABCDE-ABCDE`, you can redeem it like this:
-``` bash
+Si ya tienes una wallet y un código de cupón `ABCDE-ABCDE-ABCDE`, puedes
+canjearlo así:
+
+```bash
 dfx wallet redeem-faucet-coupon 'ABCDE-ABCDE-ABCDE'
 ```
 
-This will print something similar to this:
+Esto imprimirá algo similar a:
+
 ```
 Redeemed coupon code ABCDE-ABCDE-ABCDE for 20.000 TC (trillion cycles).
 ```
 
 ## dfx wallet remove-controller
 
-Use the `dfx wallet remove-controller` command to remove a controller of your selected identity's cycles wallet.
+Utiliza el comando `dfx wallet remove-controller` para eliminar un controlador
+de la wallet de cycles de la identidad seleccionada.
 
-### Basic usage
-
+### Uso básico
 
 ```
 dfx wallet remove-controller <controller> [flag]
 ```
 
-### Arguments
+### Argumentos
 
-Use the following necessary argument with the `dfx wallet remove-controller` command.
+Debes especificar el siguiente argumento para el comando
+`dfx wallet remove-controller`.
 
-|Argument |Description
+| Argumento      | Descripción                                                  |
+| -------------- | ------------------------------------------------------------ |
+| `<controller>` | Especifica el principal del controlador que deseas eliminar. |
 
-|`<controller>` | Specify the principal of the controller you want to remove.
+### Ejemplo
 
-
-### Example
-
-For example, to remove alice_auth as a controller, specify her principal in the following command:
-
+Por ejemplo, para eliminar a `alice_auth` como controlador, especifica su
+principal en el siguiente comando:
 
 ```
-dfx wallet remove-controller dheus-mqf6t-xafkj-d3tuo-gh4ng-7t2kn-7ikxy-vvwad-dfpgu-em25m-2ae
+dfx wallet remove-controller
+dheus-mqf6t-xafkj-d3tuo-gh4ng-7t2kn-7ikxy-vvwad-dfpgu-em25m-2ae
 ```
-The command outputs something similar to the following:
+
+El comando mostrará una salida similar a la siguiente:
+
 ```
-Removed dheus-mqf6t-xafkj-d3tuo-gh4ng-7t2kn-7ikxy-vvwad-dfpgu-em25m-2ae as a controller.
+Removed dheus-mqf6t-xafkj-d3tuo-gh4ng-7t2kn-7ikxy-vvwad-dfpgu-em25m-2ae as a
+controller.
 ```
 
 ## dfx wallet send
 
-Use the `dfx wallet send` command to send cycles from the selected identity's cycles wallet to canister.
+Utiliza el comando `dfx wallet send` para enviar cycles desde la wallet de
+cycles de la identidad seleccionada a un canister.
 
-### Basic usage
-
+### Uso básico
 
 ```
-dfx wallet [network] send [flag] <destination> <amount> 
+dfx wallet [network] send [flag] <destination> <amount>
 ```
 
-### Options
+### Opciones
 
-You can use the following option with the `dfx wallet send` command.
+Puedes utilizar la siguiente opción con el comando `dfx wallet send`.
 
-|Option |Description
------------|----------
-|`--network` |Override the environment to connect to. By default, the local canister execution environment is used. A valid URL (starting with `http:` or `https:`) can be specified here. E.g. "http://localhost:12345/" is a valid network name.
+| Opción      | Descripción                                                                                                                                                                                                                                         |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--network` | Sobrescribe el entorno al que se conecta. Por defecto, se usa el entorno de ejecución local del canister. Se puede especificar una URL válida (que comience con `http:` o `https:`). Ejemplo: "http://localhost:12345/" es un nombre de red válido. |
 
-### Arguments
+### Argumentos
 
-You must specify the following arguments for the `dfx wallet send` command.
+Debes especificar los siguientes argumentos para el comando `dfx wallet send`.
 
-|Argument |Description
------------|----------
-|`<destination>` |Specify the destination canister using its Canister ID.
-|`<amount>` |Specify the number of cycles to send.
+| Argumento       | Descripción                                |
+| --------------- | ------------------------------------------ |
+| `<destination>` | Especifica el ID del canister de destino.  |
+| `<amount>`      | Especifica la cantidad de cycles a enviar. |
 
-### Examples
+### Ejemplo
 
-Send cycles from the selected identity's cycles wallet to another cycles wallet.
+Envía cycles desde la wallet de cycles de la identidad seleccionada a otra
+wallet de cycles.
 
-For example, to send 2,000,000,000 cycles from the cycles wallet of the selected identity, `<ic_admin>`, to the cycles wallet of the destination identity, `<buffy_standard>` with a wallet address `r7inp-6aaaa-aaaaa-aaabq-cai`, run the following command:
-
+Por ejemplo, para enviar 2,000,000,000 cycles desde la wallet de cycles de la
+identidad seleccionada, `<ic_admin>`, a la wallet de cycles de la identidad de
+destino, `<buffy_standard>`, con la dirección de wallet
+`r7inp-6aaaa-aaaaa-aaabq-cai`, ejecuta el siguiente comando:
 
 ```
 dfx wallet send r7inp-6aaaa-aaaaa-aaabq-cai 2000000000
 ```
 
-If the transfer is successful, the command does not displays any output.
+Si la transferencia es exitosa, el comando no mostrará ninguna salida.
 
 ## dfx wallet set-name
 
-Use the `dfx wallet set-name` command to assign a name to the selected identity's cycles wallet.
+Utiliza el comando `dfx wallet set-name` para asignar un nombre a la wallet de
+cycles de la identidad seleccionada.
 
-### Basic usage
+### Uso básico
 
 ```
-    dfx wallet set-name [flag] <name> 
+dfx wallet set-name [flag] <name>
 ```
 
-### Arguments
+### Argumentos
 
-You must specify the following arguments for the `dfx wallet set-name` command.
+Debes especificar el siguiente argumento para el comando `dfx wallet set-name`.
 
-|Argument |Description
---------|------------
-|`<name>` |Specify a name for the cycles wallet.
+| Argumento | Descripción                                    |
+| --------- | ---------------------------------------------- |
+| `<name>`  | Especifica un nombre para la wallet de cycles. |
 
+### Ejemplo
 
-### Example
-
-If you want to set the name of the current identity's cycles wallet to "Terrances_wallet" you can run the following command:
-
+Si deseas establecer el nombre de la wallet de cycles de la identidad actual
+como `"Terrances_wallet"`, puedes ejecutar el siguiente comando:
 
 ```
 dfx wallet set-name Terrances_wallet
@@ -478,17 +502,19 @@ dfx wallet set-name Terrances_wallet
 
 ## dfx wallet upgrade
 
-Use the `dfx wallet upgrade` command to upgrade the cycle wallet's Wasm module to the current Wasm bundled with DFX.
+Utiliza el comando `dfx wallet upgrade` para actualizar el módulo Wasm de la
+wallet de cycles a la versión actual incluida con DFX.
 
-### Basic usage
-
+### Uso básico
 
 ```
-    dfx wallet upgrade [flag] 
+dfx wallet upgrade [flag]
 ```
 
-### Example
-To upgrade the Wasm module to the latest version, run the following command:
+### Ejemplo
+
+Para actualizar el módulo Wasm a la última versión, ejecuta el siguiente
+comando:
 
 ```
 dfx wallet upgrade

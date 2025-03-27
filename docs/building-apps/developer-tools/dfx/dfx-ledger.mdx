@@ -2,386 +2,452 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
 # dfx ledger
 
-<MarkdownChipRow labels={["Reference"]} />
+<MarkdownChipRow labels={["Referencia"]} />
 
-Use the `dfx ledger` command to interact with the ledger canister.
+Usa el comando `dfx ledger` para interactuar con el canister del ledger.
 
-This command can be used to make ICP utility token transactions from one canister to another, or top up canisters with cycles from ICP.
+Este comando se puede usar para realizar transacciones de tokens de utilidad ICP
+de un canister a otro, o recargar canisters con cycles de ICP.
 
-The basic syntax for running `dfx ledger` commands is:
+La sintaxis básica para ejecutar los comandos `dfx ledger` es:
 
-``` bash
+```bash
 dfx ledger [subcommand] [options]
 ```
 
-Depending on the `dfx ledger` subcommand you specify, additional arguments, options, and flags might apply. For reference information and examples that illustrate using `dfx ledger` commands, select an appropriate command.
+Dependiendo del subcomando `dfx ledger` que especifiques, pueden aplicarse
+argumentos, opciones y flags adicionales. Para obtener información de referencia
+y ejemplos sobre cómo usar los comandos `dfx ledger`, selecciona el comando
+adecuado.
 
-| Command                               | Description                                                                          |
-|---------------------------------------|--------------------------------------------------------------------------------------|
-| [`account-id`](#dfx-ledger-account-id)           | Prints the selected identity’s Account Identifier.                                   |
-| [`balance`](#dfx-ledger-balance)                 | Prints the account balance of the user.                                              |
-| [`create-canister`](#dfx-ledger-create-canister) | Creates a canister from ICP.                                                         |
-| [`fabricate-cycles`](#dfx-ledger-fabricate-cycles) | Local development only: Fabricate cycles out of thin air and deposit them into the specified canister(s) |
-| `help`                                | Displays usage information message for a specified subcommand.                       |
-| [`notify`](#dfx-ledger-notify)                   | Notifies the ledger when there is a send transaction to the cycles minting canister. |
-| [`top-up`](#dfx-ledger-top-up)                   | Tops up a canister with cycles minted from ICP.                                      |
-| [`transfer`](#dfx-ledger-transfer)               | Transfers ICP from the user to the destination Account Identifier.                   |
+| Comando                                            | Descripción                                                                                            |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| [`account-id`](#dfx-ledger-account-id)             | Imprime el identificador de cuenta de la identidad seleccionada.                                       |
+| [`balance`](#dfx-ledger-balance)                   | Imprime el saldo de la cuenta del usuario.                                                             |
+| [`create-canister`](#dfx-ledger-create-canister)   | Crea un canister a partir de ICP.                                                                      |
+| [`fabricate-cycles`](#dfx-ledger-fabricate-cycles) | Solo para desarrollo local: Fabrica cycles de la nada y deposítalos en el/los canisters especificados. |
+| `help`                                             | Muestra el mensaje de información de uso para un subcomando específico.                                |
+| [`notify`](#dfx-ledger-notify)                     | Notifica al ledger cuando se realiza una transacción de envío al canister de creación de cycles.       |
+| [`top-up`](#dfx-ledger-top-up)                     | Recarga un canister con cycles emitidos a partir de ICP.                                               |
+| [`transfer`](#dfx-ledger-transfer)                 | Transfiere ICP desde el usuario hacia el identificador de cuenta de destino.                           |
 
-To view usage information for a specific subcommand, specify the subcommand and the `--help` flag. For example, to see usage information for `dfx ledger transfer`, you can run the following command:
+Para ver información de uso de un subcomando específico, especifica el
+subcomando y la flag `--help`. Por ejemplo, para ver la información de uso para
+`dfx ledger transfer`, puedes ejecutar el siguiente comando:
 
 `dfx ledger transfer --help`
 
 ## dfx ledger account-id
 
-Use the `dfx ledger account-id` command to display the account identifier associated with the currently-active identity. Like the textual representation of your developer identity principal, the account identifier is derived from your private key and used to represent your identity in the ledger canister. The command can also be used to compute and display the account ids of other principals, canister aliases and subaccounts of your account (also subaccounts derived from principals).
+Usa el comando `dfx ledger account-id` para mostrar el identificador de cuenta
+asociado con la identidad actualmente activa. Al igual que la representación
+textual de tu identidad de desarrollador, el identificador de cuenta se deriva
+de tu clave privada y se usa para representar tu identidad en el canister
+ledger. Este comando también se puede usar para calcular y mostrar los
+identificadores de cuenta de otros principios, alias de canisters y subcuentas
+de tu cuenta (también subcuentas derivadas de principios).
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx ledger account-id [flag]
 ```
 
 ### Flags
 
-You can use the following optional flags with the `dfx ledger account-id` command.
+Puedes usar las siguientes flags opcionales con el comando
+`dfx ledger account-id`:
 
-| Flag                         | Description                                            |
-|------------------------------|--------------------------------------------------------|
-| `-h`, `--help`               | Displays usage information.                            |
-| `-V`, `--version`            | Displays version information.                          |
-| `--of-canister <ALIAS>`      | Alias or principal of the canister controlling the account  |
-| `--of-principal <PRINCIPAL>` | Principal controlling the account                      |
-| `--subaccount <SUBACCOUNT>`   | Subaccount identifier (64 character long hex string)   |
-| `--subaccount-of-principal <PRINCIPAL>`   | Principal from which the subaccount identifier is derived.   |
+| Flag                                    | Descripción                                                 |
+| --------------------------------------- | ----------------------------------------------------------- |
+| `-h`, `--help`                          | Muestra la información de uso.                              |
+| `-V`, `--version`                       | Muestra la información de la versión.                       |
+| `--of-canister <ALIAS>`                 | Alias o principal del canister que controla la cuenta       |
+| `--of-principal <PRINCIPAL>`            | Principal que controla la cuenta                            |
+| `--subaccount <SUBACCOUNT>`             | Identificador de subcuenta (cadena hex de 64 caracteres)    |
+| `--subaccount-of-principal <PRINCIPAL>` | Principal del cual se deriva el identificador de subcuenta. |
 
-### Examples
+### Ejemplos
 
-If you have created more than one identity, check the identity you are currently using by running the `dfx identity whoami` command or the `dfx identity get-principal` command. You can then check the account identifier for your currently-selected developer identity by running the following command:
+Si has creado más de una identidad, verifica cuál estás utilizando actualmente
+ejecutando el comando `dfx identity whoami` o el comando
+`dfx identity get-principal`. Luego puedes verificar el identificador de cuenta
+para la identidad de desarrollador seleccionada ejecutando el siguiente comando:
 
-``` bash
+```bash
 dfx ledger account-id
 ```
 
-The following command computes the account identifier controlled by the Subnet Rental Canister and for the subaccount derived from Alice's principal:
+El siguiente comando calcula el identificador de cuenta controlado por el
+Canister de Alquiler de Subred y para la subcuenta derivada del principal de
+Alice:
 
-``` bash
+```bash
 dfx ledger account-id --of-canister qvhpv-4qaaa-aaaaa-aaagq-cai --subaccount-from-principal fdsgv-62ihb-nbiqv-xgic5-iefsv-3cscz-tmbzv-63qd5-vh43v-dqfrt-pae
 ```
 
-The commands display output similar to the following:
+Los comandos mostrarán una salida similar a la siguiente:
 
     03e3d86f29a069c6f2c5c48e01bc084e4ea18ad02b0eec8fccadf4487183c223
 
 ## dfx ledger balance
 
-Use the `dfx ledger balance` command to print your account balance or that of another user.
+Usa el comando `dfx ledger balance` para imprimir el saldo de tu cuenta o de la
+de otro usuario.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx ledger balance [of] [flag] --network ic
 ```
 
-### Arguments
+### Argumentos
 
-You can specify the following argument for the `dfx ledger balance` command.
+Puedes especificar el siguiente argumento para el comando `dfx ledger balance`:
 
-| Argument | Description                                                                                                                                                                 |
-|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `<of>`   | Specify an Account Identifier to get the balance. If this command is not specified, the command returns the balance of ICP tokens for the currently-selected user identity. |
+| Argumento | Descripción                                                                                                                                                                 |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `<of>`    | Especifica un Identificador de Cuenta para obtener el saldo. Si este comando no se especifica, se devuelve el saldo de los tokens ICP para la identidad del usuario actual. |
 
-### Examples
+### Ejemplos
 
-You can use the `dfx ledger balance` command to check the balance of another user. For example, you can run the following command to see the ICP utlity tokens associated with a known Account Identifier:
+Puedes usar el comando `dfx ledger balance` para revisar el saldo de otro
+usuario. Por ejemplo, puedes ejecutar el siguiente comando para ver los tokens
+de utilidad ICP asociados con un Identificador de Cuenta conocido:
 
-``` bash
+```bash
 dfx ledger balance 03e3d86f29a069c6f2c5c48e01bc084e4ea18ad02b0eec8fccadf4487183c223 --network ic
 ```
 
-This command displays an ICP amount similar to the following:
+Este comando mostrará una cantidad de ICP similar a la siguiente:
 
     2.49798000 ICP
 
 ## dfx ledger create-canister
 
-Use the `dfx ledger create-canister` command to convert ICP tokens to cycles and to register a new canister identifier on the IC.
+Usa el comando `dfx ledger create-canister` para convertir tokens ICP en cycles
+y registrar un nuevo identificador de canister en el IC.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx ledger create-canister <controller> [options]  [flag] --network ic
 ```
 
-### Arguments
+### Argumentos
 
-You can specify the following argument for the `dfx ledger create-canister` command.
+Puedes especificar el siguiente argumento para el comando
+`dfx ledger create-canister`:
 
-| Argument       | Description                                                                      |
-|----------------|----------------------------------------------------------------------------------|
-| `<controller>` | Specifies the principal identifier to set as the controller of the new canister. |
+| Argumento      | Descripción                                                                                     |
+| -------------- | ----------------------------------------------------------------------------------------------- |
+| `<controller>` | Especifica el identificador principal para establecerlo como el controlador del nuevo canister. |
 
-### Options
+### Opciones
 
-You can specify the following argument for the `dfx ledger create-canister` command.
+Puedes especificar los siguientes argumentos para el comando
+`dfx ledger create-canister`:
 
-| Option                | Description                                                                                                                                                                                                                                          |
-|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `--amount <amount>`           | Specify the number of ICP tokens to mint into cycles and deposit into destination canister. You can specify an amount as a number with up to eight (8) decimal places.                                                                               |
-| `--e8s <e8s>`                 | Specify ICP token fractional units—called e8s—as a whole number, where one e8 is smallest partition of an ICP token. For example, 1.05000000 is 1 ICP and 5000000 e8s. You can use this option on its own or in conjunction with the `--icp` option. |
-| `--fee <fee>`                 | Specify a transaction fee. The default is 10000 e8s.                                                                                                                                                                                                 |
-| `--icp <icp>`                 | Specify ICP tokens as a whole number. You can use this option on its own or in conjunction with `--e8s`.                                                                                                                                             |
-| `--max-fee <max-fee>`         | Specify a maximum transaction fee. The default is 10000 e8s.                                                                                                                                                                                         |
-| `--subnet-type <subnet-type>` | Specify the optional subnet type to create the canister on. If no subnet type is provided, the canister will be created on a random default application subnet.                                                                                      |
-| `--subnet <subnet-principal>` | Specify the optional subnet to create the canister on. If no subnet is provided, the canister will be created on a random default application subnet.                                                                                                |
-| `--next-to <canister-principal>` | Create canisters on the same subnet as this canister. |
-| `--created-at-time <timestamp>`| Specify the timestamp-nanoseconds for the `created_at_time` field on the ledger transfer request. Useful for controlling transaction-de-duplication. https://internetcomputer.org/docs/developer-docs/integrations/icrc-1/#transaction-deduplication-  |
+| Opción                           | Descripción                                                                                                                                                                 |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--amount <amount>`              | Especifica el número de tokens ICP para convertir en cycles y depositarlos en el canister de destino. Puedes especificar una cantidad con hasta ocho (8) decimales.         |
+| `--e8s <e8s>`                    | Especifica las unidades fraccionarias de los tokens ICP llamadas e8s como un número entero, donde un e8 es la partición más pequeña de un token ICP.                        |
+| `--fee <fee>`                    | Especifica una tarifa de transacción. El valor por defecto es 10000 e8s.                                                                                                    |
+| `--icp <icp>`                    | Especifica tokens ICP como un número entero. Puedes usar esta opción sola o junto con la opción `--e8s`.                                                                    |
+| `--max-fee <max-fee>`            | Especifica una tarifa máxima de transacción. El valor por defecto es 10000 e8s.                                                                                             |
+| `--subnet-type <subnet-types>`   | Especifica el tipo de subnet opcional para crear el canister. Si no se proporciona tipo de subnet, el canister se creará en un subnet de aplicación predeterminado.         |
+| `--subnet <subnet-principal>`    | Especifica la subnet opcional para crear el canister. Si no se proporciona subnet, el canister se creará en un subnet de aplicación predeterminado.                         |
+| `--next-to <canister-principal>` | Crea canisters en el mismo subnet que este canister.                                                                                                                        |
+| `--created-at-time <timestamp>`  | Especifica el timestamp en nanosegundos para el campo `created_at_time` en la solicitud de transferencia del ledger. Útil para controlar la deduplicación de transacciones. |
 
-### Examples
+### Ejemplos
 
-To create a new canister with cycles, transfer ICP tokens from your ledger account by running a command similar to the following:
+Para crear un nuevo canister con cycles, transfiere tokens ICP desde tu cuenta
+de ledger ejecutando un comando similar al siguiente:
 
-``` bash
+```bash
 dfx ledger create-canister tsqwz-udeik-5migd-ehrev-pvoqv-szx2g-akh5s-fkyqc-zy6q7-snav6-uqe --amount 1.25 --network ic
 ```
 
-This command converts the number of ICP tokens you specify for the `--amount` argument into cycles, and associates the cycles with a new canister identifier controlled by the principal you specify.
+Este comando convierte la cantidad de tokens ICP que especificaste en cycles y
+los asocia con un nuevo identificador de canister controlado por el principal
+que especificaste.
 
-In this example, the command converts 1.25 ICP tokens into cycles and specifies the principal identifier for the default identity as the controller of the new canister.
+Si la transacción tiene éxito, el ledger registra el evento y deberías ver una
+salida similar a la siguiente:
 
-If the transaction is successful, the ledger records the event and you should see output similar to the following:
+    Transferencia enviada en BlockHeight: 20
+    Canister creado con id: "53zcu-tiaaa-aaaaa-qaaba-cai"
 
-    Transfer sent at BlockHeight: 20
-    Canister created with id: "53zcu-tiaaa-aaaaa-qaaba-cai"
+Puedes crear un nuevo canister especificando valores separados para ICP y e8s
+ejecutando un comando similar al siguiente:
 
-You can create a new canister by specifying separate values for ICP tokens and e8s by running a command similar to the following:
-
-``` bash
+```bash
 dfx ledger create-canister tsqwz-udeik-5migd-ehrev-pvoqv-szx2g-akh5s-fkyqc-zy6q7-snav6-uqe --icp 3 --e8s 5000 --network ic
 ```
 
 ## dfx ledger fabricate-cycles
 
-Use the `dfx ledger fabricate-cycles` add cycles to a canister while developing locally. The cycles are created out of thin air and are not deducted from anywhere.
+Usa el comando `dfx ledger fabricate-cycles` para agregar cycles a un canister
+mientras desarrollas localmente. Los cycles se crean de la nada y no se deducen
+de ningún lado.
 
-### Basic usage
+### Uso básico
 
 ```
 dfx ledger fabricate-cycles [options]
 ```
 
-### Options
+### Opciones
 
-You can specify the following options for the `dfx ledger fabricate-cycles` command.
-If no amount is specified, 10T cycles are used by default.
+Puedes especificar las siguientes opciones para el comando
+`dfx ledger fabricate-cycles`. Si no se especifica una cantidad, se utilizarán
+10T cycles por defecto.
 
+| Opción                  | Descripción                                                                                                                                                              |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `--all`                 | Deposita cycles en todos los canisters configurados en el archivo `dfx.json`.                                                                                            |
+| `--amount <icp>`        | ICP a convertir en cycles y depositar en el canister de destino. Se puede especificar como un decimal con la parte fraccionaria hasta 8 decimales, por ejemplo, 100.012. |
+| `--canister <name/id>`  | Especifica el nombre o el id del canister que recibirá el depósito de cycles. Debes especificar un canister o la opción `--all`.                                         |
+| `--cycles <cycles>`     | Especifica la cantidad de cycles a fabricar.                                                                                                                             |
+| `--e8s <e8s>`           | Especifica los e8s como un número entero. Útil en combinación con `--icp`.                                                                                               |
+| `--icp`                 | Especifica ICP como un número entero. Útil en combinación con `--e8s`.                                                                                                   |
+| `--t <trillion cycles>` | Especifica la cantidad de cycles a fabricar en billones de cycles. Solo acepta números enteros.                                                                          |
 
-|Option |Description|
-|-------|-----------|
-|`--all` |Deposit cycles to all of the canisters configured in the dfx.json file. |
-|`--amount <icp>` |ICP to mint into cycles and deposit into destination canister Can be specified as a Decimal with the fractional portion up to 8 decimal places i.e. 100.012 |
-|`--canister <canister name/id>` |Specifies the name or id of the canister to receive the cycles deposit. You must specify either a canister name/id or the --all option. |
-|`--cycles <cycles>` | Specifies the amount of cycles to fabricate. |
-|`--e8s <e8s>` | Specify e8s as a whole number, helpful for use in conjunction with `--icp`|
-|`--icp`|  Specify ICP as a whole number, helpful for use in conjunction with `--e8s`|
-|`--t <trillion cycles>` |Specifies the amount of cycles to fabricate in trillion cycles. Only accepts whole numbers.|
+### Ejemplos
 
-### Examples
+Si estás desarrollando localmente y deseas agregar 8T cycles a todos tus
+canisters en tu proyecto, puedes hacerlo de la siguiente manera:
 
-If you are developing locally and want to add 8T cycles to all your canisters in your procject, you can do so like this:
-
-```
+```bash
 dfx ledger fabricate-cycles --all --cycles 8000000000000
 ```
 
-The command displays output similar to the following:
+El comando muestra una salida similar a la siguiente:
 
-```
+```bash
 Fabricating 8000000000000 cycles onto hello_backend
 Fabricated 8000000000000 cycles, updated balance: 11_899_662_119_932 cycles
 ```
 
-If you would rather only add the cycles to the canister called 'hello' and don't want to type all the zeros, you can do it like this:
+Si prefieres agregar los cycles solo al canister llamado 'hello' y no quieres
+escribir todos los ceros, puedes hacerlo así:
 
-```
+```bash
 dfx ledger fabricate-cycles --canister hello --t 8
 ```
 
-The command displays output similar to the following:
+El comando muestra una salida similar a la siguiente:
 
-```
+```bash
 Fabricating 8000000000000 cycles onto hello
 Fabricated 8000000000000 cycles, updated balance: 11_899_662_119_932 cycles
 ```
 
+## `dfx ledger notify`
 
-## dfx ledger notify
+Usa el comando `dfx ledger notify` para notificar al ledger sobre una
+transacción enviada al canister de creación de cycles. Este comando solo debe
+usarse si `dfx ledger create-canister`, `dfx ledger top-up`, o
+`dfx cycles convert` enviaron correctamente un mensaje al ledger y una
+transacción fue registrada en algún bloque, pero la posterior notificación falló
+por algún motivo.
 
-Use the `dfx ledger notify` command to notify the ledger about a transaction sent to the cycles minting canister. This command should only be used if `dfx ledger create-canister`, `dfx ledger top-up`, or `dfx cycles convert` successfully sent a message to the ledger, and a transaction was recorded at some block height, but for some reason the subsequent notify failed.
+### Uso básico
 
-### Basic usage
-
-``` bash
+```bash
 dfx ledger notify [options] _block-height_ _destination-principal_
 ```
 
-### Arguments
+### Argumentos
 
-You can specify the following argument for the `dfx ledger notify` command.
+Puedes especificar los siguientes argumentos para el comando
+`dfx ledger notify`.
 
-| Argument                  | Description                                                                                                                                                                                                                                                                                                     |
-|---------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `<block-height>`          | Specifies the block height at which the send transaction was recorded.                                                                                                                                                                                                                                          |
-| `<destination-principal>` | Specifies the principal of the destination, either a canister identifier or the textual representation of a user principal. If the send transaction was for the `create-canister` command, specify the `controller` principal. If the send transaction was for the `top-up` command, specify the `canister ID`. |
+| Argumento                 | Descripción                                                                                                                                                                                                                                                                                                               |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `<block-height>`          | Especifica la altura del bloque en la que la transacción de envío fue registrada.                                                                                                                                                                                                                                         |
+| `<destination-principal>` | Especifica el principal del destino, ya sea un identificador de canister o la representación textual de un principal de usuario. Si la transacción de envío fue para el comando `create-canister`, especifica el principal `controller`. Si la transacción fue para el comando `top-up`, especifica el `id` del canister. |
 
-### Examples
+### Ejemplos
 
-The following example illustrates sending a `notify` message to the ledger in response to a `_send+` transaction that was recorded at the block height `75948`.
+El siguiente ejemplo ilustra el envío de un mensaje `notify` al ledger en
+respuesta a una transacción `_send+` que fue registrada en la altura del bloque
+`75948`:
 
-``` bash
+```bash
 dfx ledger notify 75948 tsqwz-udeik-5migd-ehrev-pvoqv-szx2g-akh5s-fkyqc-zy6q7-snav6-uqe --network ic
 ```
 
+---
+
 ## dfx ledger show-subnet-types
 
-Use the `dfx ledger show-subnet-types` command to list the available subnet types that can be chosen to create a canister on.
+Usa el comando `dfx ledger show-subnet-types` para listar los tipos de subred
+disponibles que se pueden elegir para crear un canister.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx ledger show-subnet-types [options] [flag]
 ```
 
-### Options
+### Opciones
 
-You can specify the following options for the `dfx ledger show-subnet-types` command.
+Puedes especificar las siguientes opciones para el comando
+`dfx ledger show-subnet-types`.
 
-| Option                | Description                                                                                                                                                                                                                                                 |
-|-----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `--cycles-minting-canister-id <cycles-minting-canister-id>`   | Canister id of the cycles minting canister. Useful if you want to test locally with a different id for the cycles minting canister. |
+| Opción                                                      | Descripción                                                                                                              |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `--cycles-minting-canister-id <cycles-minting-canister-id>` | Identificador del canister de creación de cycles. Útil si deseas probar localmente con un id diferente para el canister. |
 
-### Examples
+### Ejemplos
 
-You can use the `dfx ledger show-subnet-types` command to list the available subnet types that can be chosen to create a canister on. If a specific cycles minting canister id is not provided, then the mainnet cycles minting canister id will be used.
+Puedes usar el comando `dfx ledger show-subnet-types` para listar los tipos de
+subred disponibles para crear un canister. Si no se proporciona un id específico
+del canister de creación de cycles, se usará el id del canister de creación de
+cycles de la red principal.
 
-For example, you can run the following command to get the subnet types available on mainnet:
+Por ejemplo, puedes ejecutar el siguiente comando para obtener los tipos de
+subred disponibles en la red principal:
 
-``` bash
+```bash
 dfx ledger show-subnet-types
 ```
 
-This command displays output similar to the following:
+Este comando muestra una salida similar a la siguiente:
 
-    ["Type1", "Type2", ..., "TypeN"]
+```bash
+["Type1", "Type2", ..., "TypeN"]
+```
 
 ## dfx ledger top-up
 
-Use the `dfx ledger top-up` command to top up a canister with cycles minted from ICP tokens.
+Usa el comando `dfx ledger top-up` para recargar un canister con cycles acuñados
+de tokens ICP.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx ledger top-up [options] canister [flag] --network ic
 ```
 
-### Arguments
+### Argumentos
 
-You can specify the following argument for the `dfx ledger top-up` command.
+Puedes especificar el siguiente argumento para el comando `dfx ledger top-up`.
 
-| Argument   | Description                                                              |
-|------------|--------------------------------------------------------------------------|
-| `canister` | Specifies the canister identifier or name that you would like to top up. |
+| Argumento  | Descripción                                                               |
+| ---------- | ------------------------------------------------------------------------- |
+| `canister` | Especifica el identificador o el nombre del canister que deseas recargar. |
 
-### Options
+### Opciones
 
-You can specify the following options for the `dfx ledger top-up` command.
+Puedes especificar las siguientes opciones para el comando `dfx ledger top-up`.
 
-| Option                | Description                                                                                                                                                                                                                                                 |
-|-----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `--amount <amount>`   | Specifies the number of ICP tokens to mint into cycles and deposit into the destination canister. You can specify the amount as a number with up to eight (8) decimal places.                                                                               |
-| `--e8s <e8s>`         | Specifies fractional units of an ICP token—called e8s—as a whole number, where one e8 is the smallest unit of an ICP token. For example, 1.05000000 is 1 ICP and 5000000 e8s. You can use this option on its own or in conjunction with the `--icp` option. |
-| `--fee <fee>`         | Specifies the transaction fee for the operation. The default is 10000 e8s.                                                                                                                                                                                  |
-| `--icp <icp>`         | Specifies ICP tokens as a whole number. You can use this option on its own or in conjunction with `--e8s`.                                                                                                                                                  |
-| `--max-fee <max-fee>` | Specifies a maximum transaction fee. The default is 10000 e8s.                                                                                                                                                                                              |
-| `--created-at-time <timestamp>`| Specify the timestamp-nanoseconds for the `created_at_time` field on the ledger transfer request. Useful for controlling transaction-de-duplication. https://internetcomputer.org/docs/developer-docs/integrations/icrc-1/#transaction-deduplication-  |
+| Opción                          | Descripción                                                                                                                                                                            |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--amount <amount>`             | Especifica la cantidad de tokens ICP a acuñar en cycles y depositar en el canister de destino. Puedes especificar la cantidad como un número con hasta ocho (8) decimales.             |
+| `--e8s <e8s>`                   | Especifica las unidades fraccionarias de un token ICP, llamadas e8s, como un número entero. Un e8 es la unidad más pequeña de un token ICP. Puedes usar esta opción junto con `--icp`. |
+| `--fee <fee>`                   | Especifica la tarifa de transacción para la operación. El valor por defecto es 10000 e8s.                                                                                              |
+| `--icp <icp>`                   | Especifica los tokens ICP como un número entero. Puedes usar esta opción sola o junto con `--e8s`.                                                                                     |
+| `--max-fee <max-fee>`           | Especifica una tarifa máxima para la transacción. El valor por defecto es 10000 e8s.                                                                                                   |
+| `--created-at-time <timestamp>` | Especifica el valor de `created_at_time` en nanosegundos en la solicitud de transferencia del ledger. Útil para controlar la deduplicación de transacciones.                           |
 
-### Examples
+### Ejemplos
 
-You can use the `dfx ledger top-up` command to top up the cycles of a specific canister from the balance of ICP tokens you control. The canister identifier must be associated with a cycles wallet canister that is able to receive cycles. Alternatively, you can modify a non-cycles wallet canister to implement a method to receive cycles using system APIs described in the [Internet Computer Interface Specification](/docs/references/ic-interface-spec).
+Puedes usar el comando `dfx ledger top-up` para recargar los cycles de un
+canister específico desde el saldo de tokens ICP que controlas. El identificador
+del canister debe estar asociado con un canister de wallet de cycles que pueda
+recibir cycles. Alternativamente, puedes modificar un canister que no sea de
+wallet de cycles para implementar un método que reciba cycles usando las APIs
+del sistema descritas en la
+[Especificación de la Interfaz de Internet Computer](/docs/references/ic-interface-spec).
 
-For example, you can run the following command to top-up a cycles wallet canister deployed on the Internet Computer with 1 ICP worth of cycles:
+Por ejemplo, puedes ejecutar el siguiente comando para recargar un canister de
+wallet de cycles desplegado en Internet Computer con 1 ICP en cycles:
 
-``` bash
+```bash
 dfx ledger top-up --icp 1 5a46r-jqaaa-aaaaa-qaadq-cai --network ic
 ```
 
-This command displays output similar to the following:
+Este comando muestra una salida similar a la siguiente:
 
-    Transfer sent at BlockHeight: 59482
-    Canister was topped up!
+```bash
+Transfer sent at BlockHeight: 59482
+Canister was topped up!
+```
 
 ## dfx ledger transfer
 
-Use the `dfx ledger transfer` command to transfer ICP tokens from your account address in the ledger canister to a destination address.
+Usa el comando `dfx ledger transfer` para transferir tokens ICP desde la
+dirección de tu cuenta en el canister ledger a una dirección de destino.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx ledger transfer [options] to --memo memo
 ```
 
-### Arguments
+### Argumentos
 
-You can specify the following argument for the `dfx ledger transfer` command.
+Puedes especificar el siguiente argumento para el comando `dfx ledger transfer`.
 
-| Argument            | Description                                                                         |
-|---------------------|-------------------------------------------------------------------------------------|
-| `<to>`              | Specify the Account Identifier or address to which you want to transfer ICP tokens. |
-| `--memo <memo>`     | Specifies a numeric memo for this transaction.                                      |
+| Argumento       | Descripción                                                                                     |
+| --------------- | ----------------------------------------------------------------------------------------------- |
+| `<to>`          | Especifica el identificador de cuenta o la dirección a la que deseas transferir los tokens ICP. |
+| `--memo <memo>` | Especifica un memo numérico para esta transacción.                                              |
 
-### Options
+### Opciones
 
-You can specify the following argument for the `dfx ledger transfer` command.
+Puedes especificar las siguientes opciones para el comando
+`dfx ledger transfer`.
 
-| Option              | Description                                                                                                                                                                                                     |
-|---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `--amount <amount>` | Specifies the number of ICP tokens to transfer. Can be specified as a number with up to eight (8) decimal places.                                                                                               |
-| `--e8s <e8s>`       | Specifies e8s as a whole number, where one e8 is smallest partition of an ICP token. For example, 1.05000000 is 1 ICP and 5000000 e8s. You can use this option alone or in conjunction with the `--icp` option. |
-| `--fee <fee>`       | Specifies a transaction fee. The default is 10000 e8s.                                                                                                                                                          |
-| `--icp <icp>`       | Specifies ICP as a whole number. You can use this option alone or in conjunction with `--e8s`.                                                                                                                  |
-| `--created-at-time <timestamp>`| Specify the timestamp-nanoseconds for the `created_at_time` field on the ledger transfer request. Useful for controlling transaction-de-duplication. https://internetcomputer.org/docs/developer-docs/integrations/icrc-1/#transaction-deduplication-  |
+| Opción                          | Descripción                                                                                                                                                                                                 |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--amount <amount>`             | Especifica la cantidad de tokens ICP a transferir. Se puede especificar como un número con hasta ocho (8) decimales.                                                                                        |
+| `--e8s <e8s>`                   | Especifica los e8s como un número entero, donde un e8 es la unidad más pequeña de un token ICP. Por ejemplo, 1.05000000 es 1 ICP y 5000000 e8s. Puedes usar esta opción sola o junto con la opción `--icp`. |
+| `--fee <fee>`                   | Especifica la tarifa de transacción. El valor por defecto es 10000 e8s.                                                                                                                                     |
+| `--icp <icp>`                   | Especifica ICP como un número entero. Puedes usar esta opción sola o junto con `--e8s`.                                                                                                                     |
+| `--created-at-time <timestamp>` | Especifica el valor de `created_at_time` en nanosegundos en la solicitud de transferencia del ledger. Útil para controlar la deduplicación de transacciones.                                                |
 
-### Examples
+### Ejemplos
 
-You can use the `dfx ledger transfer` command to send ICP to the Account Identifier of the destination.
+Puedes usar el comando `dfx ledger transfer` para enviar ICP al identificador de
+cuenta de un destino.
 
-For example, you can run the following command to check the account identifier associated with the principal you are currently using:
+Por ejemplo, puedes ejecutar el siguiente comando para verificar el
+identificador de cuenta asociado con el principal que estás utilizando:
 
-``` bash
+```bash
 dfx ledger account-id
 ```
 
-This command displays output similar to the following:
+Este comando muestra una salida similar a la siguiente:
 
-    30e596fd6c5ff5ad7b7d70bbbda1187c833e646c6251464da7f82bc217bba397
+```bash
+30e596fd6c5ff5ad7b7d70bbbda1187c833e646c6251464da7f82bc217bba397
+```
 
-You can check the balance of this account by running the following command:
+Puedes verificar el saldo de esta cuenta ejecutando el siguiente comando:
 
-``` bash
+```bash
 dfx ledger balance --network ic
 ```
 
-This command displays output similar to the following:
+Este comando muestra una salida similar a la siguiente:
 
     64.89580000 ICP
 
-Use the `dfx ledger transfer` command to send some of your ICP balance to another known destination using the following command:
+Usa el comando `dfx ledger transfer` para enviar parte de tu saldo ICP a otro
+destino conocido, utilizando el siguiente comando:
 
-``` bash
+```bash
 dfx ledger transfer dd81336dbfef5c5870e84b48405c7b229c07ad999fdcacb85b9b9850bd60766f --memo 12345 --icp 1 --network ic
 ```
 
-This command displays output similar to the following:
+Este comando muestra una salida similar a la siguiente:
 
     Transfer sent at BlockHeight: 59513
 
-You can then use the `dfx ledger balance --network ic` command to check that your account balance reflects the transaction you just made.
+Luego puedes usar el comando `dfx ledger balance --network ic` para verificar
+que el saldo de tu cuenta refleje la transacción que acabas de realizar.
