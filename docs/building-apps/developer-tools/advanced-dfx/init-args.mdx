@@ -1,24 +1,38 @@
 ---
-keywords: [advanced, dfx, init args, multi-canister init args, init arg file, init arg options]
+keywords:
+  [
+    advanced,
+    dfx,
+    init args,
+    multi-canister init args,
+    init arg file,
+    init arg options,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Canister init arguments
+# Argumentos de inicialización del canister
 
-<MarkdownChipRow labels={["Intermediate", "dfx workflow"]} />
+<MarkdownChipRow labels={["Intermedio", "Flujo de trabajo dfx"]} />
 
-When installing a canister's code, it may require Candid initialization arguments to be passed with the `dfx canister install` command. Initialization arguments are initial configuration parameters that the canister's installation expects in order to install the code correctly. One example of a canister that requires these Candid initialization arguments is the [ICP ledger canister](/docs/defi/token-ledgers/setup/icp_ledger_setup).
+Al instalar el código de un canister, es posible que se requieran argumentos de
+inicialización de Candid para pasar con el comando `dfx canister install`. Los
+argumentos de inicialización son parámetros de configuración iniciales que la
+instalación del canister espera para instalar el código correctamente. Un
+ejemplo de un canister que requiere estos argumentos de inicialización de Candid
+es el [canister de ICP ledger](/docs/defi/token-ledgers/setup/icp_ledger_setup).
 
-## Using `init_arg`
+## Usando `init_arg`
 
-You can pass Candid initialization arguments to a canister through the CLI command:
+Puedes pasar argumentos de inicialización de Candid a un canister a través del
+comando de la CLI:
 
 ```
 dfx canister install canister_name --argument (...)
 ```
 
-To use this command, you will need to construct the argument within the CLI, such as:
+Para usar este comando, deberás construir el argumento dentro de la CLI, como:
 
 ```
 dfx canister install icp_ledger_canister --argument
@@ -45,7 +59,8 @@ dfx canister install icp_ledger_canister --argument
 "
 ```
 
-Alternatively, you can pass these arguments to the canister directly in the `dfx.json` file:
+Alternativamente, puedes pasar estos argumentos al canister directamente en el
+archivo `dfx.json`:
 
 ```json
 {
@@ -73,18 +88,22 @@ Alternatively, you can pass these arguments to the canister directly in the `dfx
 }
 ```
 
-## Using an `init_arg_file`
+## Usando un `init_arg_file`
 
-To make managing init arguments easier for large, multi-canister projects, the `init_arg_file` option is supported. It can be used in both the CLI and the `dfx.json` file.
+Para facilitar la gestión de los argumentos de inicialización en proyectos
+grandes con múltiples canisters, se admite la opción `init_arg_file`. Se puede
+utilizar tanto en la CLI como en el archivo `dfx.json`.
 
-To use the CLI, simply pass the `--argument-file` flag, followed by the relative path to the file from the directory containing the `dfx.json` file:
-:
+Para utilizarlo en la CLI, simplemente pasa la bandera `--argument-file`,
+seguida de la ruta relativa al archivo desde el directorio que contiene el
+archivo `dfx.json`:
 
 ```
 dfx canister install canister_name --argument-file src/candid/icp_ledger_init.did
 ```
 
-An example initialization argument file can be found below:
+Un ejemplo de archivo de argumentos de inicialización se puede encontrar a
+continuación:
 
 ```did
 (variant {
@@ -108,7 +127,8 @@ An example initialization argument file can be found below:
 })
 ```
 
-You can also specify the `init_arg_file` for each canister in the `dfx.json` file:
+Puedes especificar el `init_arg_file` para cada canister en el archivo
+`dfx.json`:
 
 ```json
 "canisters": {
@@ -126,12 +146,17 @@ You can also specify the `init_arg_file` for each canister in the `dfx.json` fil
     ...
 ```
 
-### Important notes
+### Notas importantes
 
-- If the `--argument` or `--argument-file` flags are used on the CLI, any configuration for `init_args` in `dfx.json` will be ignored. The CLI configuration takes precedence.
+- Si se utilizan los flags `--argument` o `--argument-file` en la CLI, cualquier
+  configuración para `init_args` en `dfx.json` será ignorada. La configuración
+  de la CLI tiene prioridad.
 
-- Only one `init_arg` and `init_arg_file` can be defined at a time.
+- Solo se puede definir un `init_arg` y un `init_arg_file` a la vez.
 
-- Initialization arguments must be set individually for each canister, either through the CLI or `dfx.json`. To make this easier, `init_arg_file`s can be used, as detailed below.
+- Los argumentos de inicialización deben configurarse individualmente para cada
+  canister, ya sea a través de la CLI o de `dfx.json`. Para facilitar esto, se
+  pueden utilizar archivos `init_arg_file`, como se detalla a continuación.
 
-- When using `dfx.json` or an argument file, values referenced as environment variables within the file will not be passed to the canister.
+- Al usar `dfx.json` o un archivo de argumentos, los valores referenciados como
+  variables de entorno dentro del archivo no serán pasados al canister.

@@ -1,50 +1,69 @@
 ---
-keywords: [advanced, dfx, custom networks, networks.json, dfx custom network, networks-json, system-wide network, project-specific network]
+keywords:
+  [
+    advanced,
+    dfx,
+    custom networks,
+    networks.json,
+    dfx custom network,
+    networks-json,
+    system-wide network,
+    project-specific network,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Defining custom networks
+# Definir redes personalizadas
 
-<MarkdownChipRow labels={["Advanced", "dfx workflow"]} />
+<MarkdownChipRow labels={["Avanzado", "dfx workflow"]} />
 
-When developing multiple projects simultaneously, it can be beneficial to deploy each project to a different local network for simplicity or to support different development workflows. Custom networks can be configured with `dfx` at both the system-wide and project-specific levels.
+Cuando se desarrollan varios proyectos simultáneamente, puede ser beneficioso
+desplegar cada proyecto en una red local diferente para mayor simplicidad o para
+apoyar diferentes flujos de trabajo de desarrollo. Las redes personalizadas se
+pueden configurar con `dfx` tanto a nivel global del sistema como a nivel
+específico del proyecto.
 
-## Defining system-wide networks in `networks.json`
+## Definir redes globales del sistema en `networks.json`
 
-Canisters in any project can be deployed to system-wide networks. System-wide custom networks can be configured in the `networks.json` configuration file for `dfx`.
+Los canisters de cualquier proyecto pueden ser desplegados en redes globales del
+sistema. Las redes personalizadas globales se pueden configurar en el archivo de
+configuración `networks.json` para `dfx`.
 
-To locate this file on your local system, use the `dfx` command:
+Para localizar este archivo en tu sistema local, utiliza el comando `dfx`:
 
 ```
 dfx info networks-json-path
 ```
 
-This will return the file path where your system's `networks.json` file is located, such as:
+ESto devolverá la ruta del archivo donde se encuentra el archivo `networks.json`
+de tu sistema, como:
 
 ```
 /Users/developer/.config/dfx/networks.json
 ```
 
-### Default configuration
+### Configuración predeterminada
 
-By default, this file contains the following configuration:
+De manera predeterminada, este archivo contiene la siguiente configuración:
 
 ```json
 {
-    "local": {
-        "replica": {
-            "subnet_type": "application"
-        }
+  "local": {
+    "replica": {
+      "subnet_type": "application"
     }
+  }
 }
 ```
 
-Alternatively, if a `network.json` file is not defined locally, `dfx` will by default use the above configuration.
+Alternativamente, si no se define un archivo `network.json` localmente, `dfx`
+utilizará por defecto la configuración anterior.
 
-### Defining a custom network
+### Definir una red personalizada
 
-To define a custom network, you can define a binding address in your `networks.json` to be `localhost` or any other domain name, such as:
+Para definir una red personalizada, puedes definir una dirección de enlace en tu
+archivo `networks.json` como `localhost` u otro nombre de dominio, como:
 
 ```json
 {
@@ -57,7 +76,7 @@ To define a custom network, you can define a binding address in your `networks.j
 }
 ```
 
-To define multiple networks, use multiple definitions on different domain names:
+Para definir varias redes, utiliza múltiples definiciones en diferentes nombres
 
 ```json
 {
@@ -76,13 +95,15 @@ To define multiple networks, use multiple definitions on different domain names:
 }
 ```
 
-Then, to deploy to one of these networks, use the `--network` flag with `dfx deploy`, such as:
+Luego, para desplegar en una de estas redes, utiliza la bandera `--network` con
+`dfx deploy`, como:
 
 ```
 dfx deploy --network network_2
 ```
 
-`dfx deploy` will display URLs in the format `<canister>.localhost:port` or `<network>:port/?canisterId=<canister>`:
+`dfx deploy` mostrará URLs en el formato `<canister>.localhost:port` o
+`<network>:port/?canisterId=<canister>`:
 
 ```
   Frontend canister via browser
@@ -99,16 +120,24 @@ URLs:
     poll_backend: http://127.0.0.1:4943/?canisterId=be2us-64aaa-aaaaa-qaabq-cai&id=bkyz2-fmaaa-aaaaa-qaaaq-cai
 ```
 
-## Defining project-specific networks in `dfx.json`
+## Definir redes específicas del proyecto en `dfx.json`
 
-Networks can also be defined in a project's `dfx.json` file. Only canisters within the project can be deployed to the networks defined in `dfx.json`.
+Las redes también se pueden definir en el archivo `dfx.json` de un proyecto.
+Solo los canisters dentro del proyecto pueden ser desplegados en las redes
+definidas en `dfx.json`.
 
-Network definitions in the `dfx.json` file can have the following configuration components:
+Las definiciones de red en el archivo `dfx.json` pueden tener los siguientes
+componentes de configuración:
 
-- `providers`: The network provider; can be `localhost` or any other domain name. Domain names must be a full URL, such as `https://domain.com`.
-- `type`: The type of network, either `ephemeral` or `persistent`. Ephemeral networks do not retain the same IDs for canisters, while persistent networks will retain the same canister IDs.
+- `providers`: El proveedor de la red; puede ser `localhost` o cualquier otro
+  nombre de dominio. Los nombres de dominio deben ser una URL completa, como
+  `https://domain.com`.
+- `type`: El tipo de red, puede ser `ephemeral` o `persistent`. Las redes
+  efímeras no retienen los mismos IDs para los canisters, mientras que las redes
+  persistentes retendrán los mismos IDs para los canisters.
 
-To define a project-specific network, add a "networks" section to your `dfx.json` file such as:
+Para definir una red específica del proyecto, agrega una sección "networks" a tu
+archivo `dfx.json`, como:
 
 ```json
 "networks": {
@@ -121,13 +150,15 @@ To define a project-specific network, add a "networks" section to your `dfx.json
   }
 ```
 
-If you are using a [cycles wallet](/docs/building-apps/canister-management/topping-up), be sure to deploy your cycles wallet to this custom network.
+Si estás utilizando una
+[wallet de cycles](/docs/building-apps/canister-management/topping-up),
+asegúrate de desplegar tu wallet de ciclos en esta red personalizada.
 
 ```
 dfx identity --network dev set-wallet $(dfx identity --network ic get-wallet)
 ```
 
-Then, deploy to the network:
+Luego, despliega en la red:
 
 ```
 dfx deploy --network dev

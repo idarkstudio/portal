@@ -2,11 +2,15 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
 # Environment variables
 
-<MarkdownChipRow labels={["Reference"]} />
+<MarkdownChipRow labels={["Referencia"]} />
 
-You can configure certain properties for your SDK execution environment using environment variables.
+Puedes configurar ciertas propiedades para tu entorno de ejecución del SDK
+usando variables de entorno.
 
-This section lists the environment variables that are currently supported with examples of how to use them. In most cases, you can set environment variables for a session by executing an command in the terminal or by adding a line similar to the following to your `.profile` file:
+Esta sección lista las variables de entorno que son soportadas actualmente con
+ejemplos de cómo usarlas. En la mayoría de los casos, puedes establecer
+variables de entorno para una sesión ejecutando un comando en la terminal o
+añadiendo una línea similar a la siguiente en tu archivo `.profile`:
 
 ```shell
 export DFX_NETWORK=ic
@@ -14,52 +18,82 @@ export DFX_NETWORK=ic
 
 ## CANISTER_CANDID_PATH\_\{canister.name\}
 
-Use environment variables with the `CANISTER_CANDID_PATH` prefix to reference the path to the Candid description file for the canisters that are listed as dependencies in the `dfx.json` file for your project.
+Usa variables de entorno con el prefijo `CANISTER_CANDID_PATH` para hacer
+referencia a la ruta del archivo de descripción Candid de los canisters que
+están listados como dependencias en el archivo `dfx.json` de tu proyecto.
 
-For example, if you have a `whoami_frontend` canister that lists `whoami` under the `dependencies` key, you could use the `CANISTER_CANDID_PATH_whoami_frontend` environment variable to refer to the location of the `whoami.did` file, which for local development might be:
+Por ejemplo, si tienes un canister `whoami_frontend` que lista `whoami` bajo la
+clave `dependencies`, podrías usar la variable de entorno
+`CANISTER_CANDID_PATH_whoami_frontend` para referenciar la ubicación del archivo
+`whoami.did`, que para el desarrollo local podría ser:
 
     $PROJECT_ROOT/.dfx/local/canisters/whoami/whoami.did
 
 ## CANISTER_ID\_\{canister.name\}
 
-Use environment variables with the `CANISTER_ID` prefix to reference the canister identifier for each canister in the `dfx.json` file for your project. Hyphens are invalid in environment variables and are replaced by underscores.  Lowercase characters are replaced by uppercase characters.
+Usa variables de entorno con el prefijo `CANISTER_ID` para hacer referencia al
+identificador de canister de cada canister en el archivo `dfx.json` de tu
+proyecto. Los guiones (`-`) no son válidos en variables de entorno y se
+reemplazan por guiones bajos (`_`). Los caracteres en minúscula se convierten en
+mayúscula.
 
-For example, if you have a `linkedup` project that consists of the `linkedup` and `connect-d` canisters, you could use the `CANISTER_ID_LINKEDUP` and `CANISTER_ID_CONNECT_D` environment variables to refer to the canister identifiers—for example `ryjl3-tyaaa-aaaaa-aaaba-cai` and `rrkah-fqaaa-aaaaa-aaaaq-cai`—created for your project.
+Por ejemplo, si tienes un proyecto `linkedup` que consta de los canisters
+`linkedup` y `connect-d`, podrías usar las variables de entorno
+`CANISTER_ID_LINKEDUP` y `CANISTER_ID_CONNECT_D` para referenciar los
+identificadores de canister—por ejemplo, `ryjl3-tyaaa-aaaaa-aaaba-cai` y
+`rrkah-fqaaa-aaaaa-aaaaq-cai`—creados para tu proyecto.
 
 ## DFX_CONFIG_ROOT
 
-Use the `DFX_CONFIG_ROOT` environment variable to specify a different location for storing the `.cache` and `.config` subdirectories for `dfx`.
+Usa la variable de entorno `DFX_CONFIG_ROOT` para especificar una ubicación
+diferente para almacenar los subdirectorios `.cache` y `.config` de `dfx`.
 
-By default, the `.cache` and `.config` directories are located in the home directory for your development environment. For example, on macOS the default location is in the `/Users/<YOUR-USER-NAME>` directory. Use the `DFX_CONFIG_ROOT` environment variable to specify a different location for these directories.
+Por defecto, los directorios `.cache` y `.config` se encuentran en el directorio
+home de tu entorno de desarrollo. Por ejemplo, en macOS la ubicación
+predeterminada es el directorio `/Users/<YOUR-USER-NAME>`. Usa la variable de
+entorno `DFX_CONFIG_ROOT` para especificar una ubicación diferente para estos
+directorios.
 
     DFX_CONFIG_ROOT=~/ic-root
 
 ## DFX_INSTALLATION_ROOT
 
-Use the `DFX_INSTALLATION_ROOT` environment variable to specify a different location for the `dfx` binary if you are not using the default location for your operating system.
+Usa la variable de entorno `DFX_INSTALLATION_ROOT` para especificar una
+ubicación diferente para el binario de `dfx` si no estás usando la ubicación
+predeterminada para tu sistema operativo.
 
-The `.cache/dfinity/uninstall.sh` script uses this environment variable to identify the root directory for your SDK installation.
+El script `.cache/dfinity/uninstall.sh` usa esta variable de entorno para
+identificar el directorio raíz de la instalación de tu SDK.
 
 ## DFX_NETWORK
 
-Use the `DFX_NETWORK` environment variable to specify the network that you want to use when you run `dfx` commands.
-If you pass the `--network` option to a `dfx` command, the value of the `DFX_NETWORK` environment variable is ignored.
+Usa la variable de entorno `DFX_NETWORK` para especificar la red que deseas usar
+cuando ejecutas comandos `dfx`. Si pasas la opción `--network` a un comando
+`dfx`, el valor de la variable de entorno `DFX_NETWORK` se ignorará.
 
 ## DFX_VERSION
 
-Use the `DFX_VERSION` environment variable to identify a specific version of the SDK that you want to install.
+Usa la variable de entorno `DFX_VERSION` para identificar una versión específica
+del SDK que deseas instalar.
 
     DFX_VERSION=0.10.0 sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"
 
 ## DFX_MOC_PATH
 
-Use the `DFX_MOC_PATH` environment variable to use a different version of the Motoko compiler than the one bundled with a given dfx version.
+Usa la variable de entorno `DFX_MOC_PATH` para utilizar una versión diferente
+del compilador Motoko en lugar de la versión incluida con una versión específica
+de `dfx`.
 
 ## DFX_WARNING
 
-Use the `DFX_WARNING` environment variable to disable one or more warnings that dfx may display. The value is a comma-separated list of warning names, each prefixed with a "-" to disable. The following warning names are currently supported:
+Usa la variable de entorno `DFX_WARNING` para deshabilitar una o más
+advertencias que `dfx` pueda mostrar. El valor es una lista separada por comas
+de nombres de advertencias, cada uno con un prefijo `-` para deshabilitarlo.
+Actualmente, se admiten los siguientes nombres de advertencias:
 
-- `mainnet_plaintext_identity`: Disables the warning message that is displayed when you use an insecure identity on the Internet Computer mainnet.
+- `mainnet_plaintext_identity`: Deshabilita el mensaje de advertencia que se
+  muestra cuando usas una identidad no segura en la red principal de Internet
+  Computer.
 
 ```bash
 export DFX_WARNING="-mainnet_plaintext_identity"
@@ -72,12 +106,17 @@ DFX_VERSION=0.13.1 dfx deploy --network ic
 
 ## DFX_DISABLE_QUERY_VERIFICATION
 
-Set this to a non-empty value to disable verification of replica-signed queries.
+Establece esta variable con un valor no vacío para deshabilitar la verificación
+de consultas firmadas por la réplica.
 
 ## DFX_REPLICA_PATH
 
-Use the `DFX_REPLICA_PATH` environment variable to specify a file path to a local version of the replica. If this option is used, `canister_sandbox` and `sandbox_launcher` must be in the same directory with the desired replica version.
+Usa la variable de entorno `DFX_REPLICA_PATH` para especificar una ruta de
+archivo a una versión local de la réplica. Si se usa esta opción,
+`canister_sandbox` y `sandbox_launcher` deben estar en el mismo directorio que
+la versión deseada de la réplica.
 
 ## DFX_IC_STARTER_PATH
 
-Use the `DFX_IC_STARTER_PATH` environment variable to specify a file path to a local version of `ic-starter`. 
+Usa la variable de entorno `DFX_IC_STARTER_PATH` para especificar una ruta de
+archivo a una versión local de `ic-starter`.

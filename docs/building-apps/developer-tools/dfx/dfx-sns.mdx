@@ -2,102 +2,126 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
 # dfx sns
 
-<MarkdownChipRow labels={["Reference"]} />
+<MarkdownChipRow labels={["Referencia"]} />
+
 :::caution
-The `dfx sns` command is no longer part of dfx, and has now been turned into the dfx extension. In order to obtain it, please run `dfx extension install sns`.
+
+El comando `dfx sns` ya no es parte de dfx, y ahora se ha convertido en dfx
+extension. Para obtenerlo, ejecute `dfx extension install sns`.
+
 :::
 
-Use the `dfx sns` subcommands to simulate decentralizing a dapp.
+Usa el subcomando `dfx sns` para simular la descentralización de una dapp.
 
-The basic syntax for running `dfx sns` commands is:
+La sintaxis básica para ejecutar comandos `dfx sns` es:
 
-``` bash
+```bash
 dfx sns [subcommand] [flag]
 ```
 
-Depending on the `dfx sns` subcommand you specify, additional arguments, options, and flags might apply. For reference information and examples that illustrate using `dfx sns` commands, select an appropriate command.
+Dependiendo del subcomando `dfx sns` que especifiques, pueden aplicarse
+argumentos, opciones y flags adicionales. Para obtener información de referencia
+y ejemplos sobre cómo usar los comandos `dfx sns`, selecciona el comando
+adecuado.
 
-| Command                             | Description                                                                   |
-|-------------------------------------|-------------------------------------------------------------------------------|
-| [`create`](#_dfx_sns_create)        | Creates an SNS configuration template.                                        |
-| [`validate`](#_dfx_sns_validate)    | Checks whether the sns config file is valid.                                  |
-| [`deploy`](#_dfx_sns_deploy)        | Deploys SNS canisters according to the local config.                          |
-| `help`                              | Displays usage information message for a specified subcommand.                |
+| Comando                          | Descripción                                                                |
+| -------------------------------- | -------------------------------------------------------------------------- |
+| [`create`](#_dfx_sns_create)     | Crea una plantilla de configuración para SNS.                              |
+| [`validate`](#_dfx_sns_validate) | Verifica si el archivo de configuración de SNS es válido.                  |
+| [`deploy`](#_dfx_sns_deploy)     | Despliega los canisters de SNS según la configuración local.               |
+| `help`                           | Muestra un mensaje con información de uso para un subcomando especificado. |
 
-To view usage information for a specific subcommand, specify the subcommand and the `--help` flag. For example, to see usage information for `dfx sns validate`, you can run the following command:
+Para ver la información de uso de un subcomando específico, especifica el
+subcomando junto con el flag `--help`. Por ejemplo, para ver la información de
+uso de `dfx sns validate`, puedes ejecutar el siguiente comando:
 
-``` bash
+```bash
 dfx sns validate --help
 ```
 
-
 ## dfx sns create
 
-Use the `dfx sns create` command to create an SNS configuration file. The configuration file specifies important, legally and financially relevant details about dapp decentralization.  The file leaves blank parameters such as token name; you will need to fill these in.
+Utiliza el comando `dfx sns create` para crear un archivo de configuración de
+SNS. El archivo de configuración especifica detalles importantes, legales y
+financieramente relevantes sobre la descentralización de la dapp. El archivo
+deja parámetros en blanco, como el nombre del token; deberás completar estos.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx sns create
 ```
 
-### Examples
+### Ejemplos
 
-You can use the `dfx sns create` command to create and view a configuration file:
+Puedes usar el comando `dfx sns create` para crear y ver un archivo de
+configuración:
 
-``` bash
+```bash
 dfx sns create
 less sns.yml
 ```
 
 ## dfx sns validate
 
-Use the `dfx sns validate` command to verify that an SNS configuration file is well formed.
+Utiliza el comando `dfx sns validate` para verificar que un archivo de
+configuración de SNS esté bien formado.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx sns validate
 ```
 
-### Examples
+### Ejemplos
 
-You can use the `dfx sns validate` command to verify that a configuration template is valid.  It is not; it needs details such as token name:
+Puedes usar el comando `dfx sns validate` para verificar que una plantilla de
+configuración sea válida. No lo es; necesita detalles como el nombre del token:
 
-``` bash
+```bash
 dfx sns config create
 ```
-Fill in the blank fields, then:
-``` bash
+
+Completa los campos en blanco y luego:
+
+```bash
 dfx sns config validate
 ```
 
 ## dfx sns deploy
 
-Use the `dfx sns deploy` command to create SNS canisters according to the local configuration file.
+Usa el comando `dfx sns deploy` para crear los canisters de SNS según el archivo
+de configuración local.
 
-Note:  Deploying SNS canisters does not require a proposal, however there is a hefty fee.  Please don't create canisters on mainnet until you have tested your configuration locally and are sure that you are happy with it.
+Nota: Desplegar los canisters de SNS no requiere una propuesta, sin embargo
+tiene una tarifa considerable. Por favor, no crees canisters en la red principal
+hasta que hayas probado tu configuración local y estés seguro de que estás
+satisfecho con ella.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx sns deploy
 ```
 
-### Examples
+### Ejemplos
 
-Create an SNS on the local testnet:
-``` bash
+Crea un SNS en la red de prueba local:
+
+```bash
 dfx sns config create
 ```
-Fill in the blank fields, then:
-``` bash
+
+Completa los campos en blanco y luego:
+
+```bash
 dfx sns config validate
 dfx sns deploy
 ```
-You can now verify that the sns canisters have been created.  E.g.:
+
+Puedes verificar que los canisters de sns se hayan creado. Por ejemplo:
+
 ```
 dfx canister info sns_root
 dfx canister info sns_ledger
 ```
-

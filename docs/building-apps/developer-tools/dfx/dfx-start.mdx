@@ -2,75 +2,99 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
 # dfx start
 
-<MarkdownChipRow labels={["Reference"]} />
+<MarkdownChipRow labels={["Referencia"]} />
 
-Use the `dfx start` command to start a local canister execution environment and web server processes. This command enables you to deploy canisters to the local canister execution environment to test your dapps during development.
+Utiliza el comando `dfx start` para iniciar un entorno local de ejecución de
+canisters y procesos de servidor web. Este comando te permite implementar
+canisters en el entorno local de ejecución de canisters para probar tus dapps
+durante el desarrollo.
 
-By default, all local dfx projects will use this single local canister execution environment, and you can run `dfx start` and `dfx stop` from any directory.  See [Local Server Configuration](#local-server-configuration) and [Project-Specific Local Networks](#project-specific-local-networks) below for exceptions.
+Por defecto, todos los proyectos locales de dfx utilizarán este único entorno
+local de ejecución de canisters, y puedes ejecutar `dfx start` y `dfx stop`
+desde cualquier directorio. Consulta
+[Configuración del servidor local](#configuración-del-servidor-local) y
+[Redes locales específicas del proyecto](#redes-locales-específicas-del-proyecto)
+a continuación para conocer las excepciones.
 
-## Basic usage
+## Uso básico
 
-``` bash
+```bash
 dfx start [option] [flag]
 ```
 
 ## Flags
 
-You can use the following optional flags with the `dfx start` command.
+Puedes usar los siguientes flags opcionales con el comando `dfx start`.
 
-| Flag                     | Description                                                                                                                                                                                                                                             |
-|--------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `--background`           | Starts the local canister execution environment and web server processes in the background and waits for a reply before returning to the shell.                                                                                                         |
-| `--clean`                | Starts the local canister execution environment and web server processes in a clean state by removing checkpoints from your project cache. You can use this flag to set your project cache to a new state when troubleshooting or debugging.            |
-| `--enable-bitcoin`       | Enables bitcoin integration.                                                                                                                                                                                                                            |
-| `--enable-canister-http` | Enables canister HTTP requests. (deprecated: now enabled by default)                                                                                                                                                                                    |
-| `--pocketic`             | Runs [PocketIC](https://github.com/dfinity/pocketic) instead of the replica.                                                                                                                                                                            |
-| `--replica`              | Runs the replica instead of [PocketIC](https://github.com/dfinity/pocketic).                                                                                                                                                                            |
+| Flag                     | Descripción                                                                                                                                                                                             |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--background`           | Inicia el entorno de ejecución de canisters locales y los procesos del servidor web en segundo plano, esperando una respuesta antes de devolver el control al shell.                                    |
+| `--clean`                | Inicia el entorno de ejecución de canisters locales y los procesos del servidor web en un estado limpio eliminando los checkpoints del caché del proyecto. Útil para solucionar problemas o depuración. |
+| `--enable-bitcoin`       | Habilita la integración con Bitcoin.                                                                                                                                                                    |
+| `--enable-canister-http` | Habilita las solicitudes HTTP de canisters. (Deprecado: ahora está habilitado por defecto).                                                                                                             |
+| `--pocketic`             | Ejecuta [PocketIC](https://github.com/dfinity/pocketic) en lugar de la réplica.                                                                                                                         |
+| `--replica`              | Ejecuta la réplica en lugar de [PocketIC](https://github.com/dfinity/pocketic).                                                                                                                         |
 
-## Options
+## Opciones
 
-You can use the following option with the `dfx start` command.
+Puedes usar las siguientes opciones con el comando `dfx start`.
 
-| Option                            | Description                                                                                                                                                                                                          |
-|-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `--host host`                     | Specifies the host interface IP address and port number to bind the frontend to. The default for the local shared network is `127.0.0.1:4943`, while the default for a project-specific network is '127.0.0.1:8000'. |
-| `--bitcoin-node host:port`        | Specifies the address of a bitcoind node. Implies `--enable-bitcoin`.                                                                                                                                                |
-| `--artificial-delay milliseconds` | Specifies the delay that an update call should incur. Default: 600ms                                                                                                                                                 |
-| `--domain domain`                 | A domain that can be served. Can be specified more than once.  These are used for canister resolution [default: localhost]                                                                                           |
+| Opción                            | Descripción                                                                                                                                                                                              |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--host host`                     | Especifica la dirección IP y el puerto para enlazar el frontend. El valor predeterminado para la red compartida local es `127.0.0.1:4943`, mientras que para un proyecto específico es `127.0.0.1:8000`. |
+| `--bitcoin-node host:port`        | Especifica la dirección de un nodo `bitcoind`. Implica `--enable-bitcoin`.                                                                                                                               |
+| `--artificial-delay milliseconds` | Especifica el retraso que debe sufrir una llamada de actualización. Valor predeterminado: 600ms.                                                                                                         |
+| `--domain domain`                 | Un dominio que puede ser servido. Puede especificarse varias veces. Se usa para la resolución de canisters [valor predeterminado: localhost].                                                            |
 
-## Examples
+## Ejemplos
 
-You can start the local canister execution environment and web server processes in the current shell by running the following command:
+Puedes iniciar el entorno de ejecución de canisters locales y los procesos del
+servidor web en el shell actual ejecutando el siguiente comando:
 
-``` bash
+```bash
 dfx start
 ```
 
-If you start the local canister execution environment in the current shell, you need to open a new terminal shell to run additional commands. Alternatively, you can start the local canister execution environment in the background by running the following command:
+Si ejecutas el entorno de ejecución local de canisters en segundo plano, sin
+embargo, asegúrate de detener el entorno de ejecución local de canisters antes
+de desinstalar o volver a instalar el entorno de ejecución `dfx` ejecutando el
+siguiente comando:
 
-``` bash
+```bash
 dfx start --background
 ```
 
-If you run the local canister execution environment in the background, however, be sure to stop the local canister execution environment before uninstalling or reinstalling the `dfx` execution environment by running the following command:
+Si ejecutas el entorno de ejecución local de canisters en segundo plano,
+asegúrate de detener el entorno de ejecución local de canisters antes de
+desinstalar o reinstalar el entorno de ejecución `dfx` ejecutando el siguiente
+comando:
 
-``` bash
+```bash
 dfx stop
 ```
 
-You can view the current process identifier (`pid`) for the local canister execution environment process started by `dfx` by running the following command:
+Puedes ver el identificador de proceso (`pid`) actual para el proceso de entorno
+de ejecución de canisters local iniciado por `dfx` ejecutando el siguiente
+comando:
 
-``` bash
+```bash
 more .dfx/pid
 ```
 
-## Local Server Configuration
+## Configuración del Servidor Local
 
-### The Shared Local Network
+### La Red Local Compartida
 
-By default, `dfx start` manages a single replica that is independent of any given local project.  Running `dfx deploy` and other commands will manage canisters on this single local network, in the same way that `dfx deploy --network ic` deploys separate projects to mainnet.
+Por defecto, `dfx start` administra una única réplica independiente de cualquier
+proyecto local. Ejecutar `dfx deploy` y otros comandos gestionará los canisters
+en esta misma red local, de manera similar a como `dfx deploy --network ic`
+despliega proyectos en la mainnet.
 
-If run from outside any dfx project, or if dfx.json does not define the `local` network, then `dfx start` looks for the `local` network definition in `$HOME/.config/dfx/networks.json`. If this file does not exist or does not contain a definition for the `local` network, then dfx uses the following default definition:
+Si se ejecuta fuera de un proyecto de `dfx` o si `dfx.json` no define la red
+`local`, entonces `dfx start` buscará la definición de la red `local` en
+`$HOME/.config/dfx/networks.json`. Si este archivo no existe o no contiene una
+definición para la red `local`, `dfx` usará la siguiente definición
+predeterminada:
 
 ```
 {
@@ -81,12 +105,20 @@ If run from outside any dfx project, or if dfx.json does not define the `local` 
 }
 ```
 
-dfx stores data for the shared local network in one of the following locations, depending on your operating system:
+`dfx` almacena datos para la red local compartida en una de las siguientes
+ubicaciones, dependiendo de tu sistema operativo:
+
 - `$HOME/.local/share/dfx/network/local` (Linux)
-- `$HOME/Library/Application Support/org.dfinity.dfx/network/local` (Macos)
+- `$HOME/Library/Application Support/org.dfinity.dfx/network/local` (MacOS)
 
-### Project-Specific Local Networks
+### Redes Locales Específicas de un Proyecto
 
-If dfx.json defines the `local` network, then `dfx start` will use this definition and store network data files under `<project dir>/.dfx/network/local`.
+Si `dfx.json` define la red `local`, entonces `dfx start` usará esta definición
+y almacenará los archivos de datos de la red en
+`<project dir>/.dfx/network/local`.
 
-Note that for projects that define the `local` network in dfx.json, you can only run the `dfx start` and `dfx stop` commands from within the project directory structure. For example, if your project name is `hello_world`, your current working directory must be the `hello_world` top-level project directory or one of its subdirectories.
+Ten en cuenta que para los proyectos que definen la red `local` en `dfx.json`,
+solo puedes ejecutar los comandos `dfx start` y `dfx stop` desde dentro de la
+estructura de directorios del proyecto. Por ejemplo, si tu proyecto se llama
+`hello_world`, tu directorio de trabajo actual debe ser el directorio principal
+`hello_world` o uno de sus subdirectorios.

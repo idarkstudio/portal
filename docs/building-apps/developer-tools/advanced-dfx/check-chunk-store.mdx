@@ -1,26 +1,31 @@
 ---
-keywords: [advanced, dfx, checking chunk store, canister chunk store, chunk store]
+keywords:
+  [advanced, dfx, checking chunk store, canister chunk store, chunk store]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Checking a canister's chunk store
+# Verificación del almacenamiento de fragmentos de un canister
 
-<MarkdownChipRow labels={["Advanced", "dfx workflow"]} />
+<MarkdownChipRow labels={["Avanzado", "Flujo de trabajo dfx"]} />
 
-A canister's chunk store must be empty before a Wasm module can be installed in the canister.
+El almacenamiento de fragmentos de un canister debe estar vacío antes de que se
+pueda instalar un módulo Wasm en el canister.
 
-## Checking chunk store
+## Verificación del almacenamiento de fragmentos
 
-You can check if a canister’s chunk store is empty using the following command:
+Puedes verificar si el almacenamiento de fragmentos de un canister está vacío
+utilizando el siguiente comando:
 
 ```bash
 dfx canister call --ic aaaaa-aa stored_chunks '(record { canister_id = principal "PRINCIPAL_ID" })'
 ```
 
-Replace `PRINCIPAL_ID` with a canister ID such as `bkyz2-fmaaa-aaaaa-qaaaq-cai`.
+Reemplaza `PRINCIPAL_ID` con un ID de canister como
+`bkyz2-fmaaa-aaaaa-qaaaq-cai`.
 
-If the result returns a `vec` value, the chunk store is not empty.
+Si el resultado devuelve un valor `vec`, significa que el almacenamiento de
+fragmentos no está vacío.
 
 ```
 (
@@ -32,9 +37,10 @@ If the result returns a `vec` value, the chunk store is not empty.
 )
 ```
 
-## Resolving installation errors related to chunk store
+## Resolviendo errores de instalación relacionados con el almacenamiento de fragmentos
 
-If you try to install a Wasm module into a canister that has an existing chunk store, the installation will fail with an error such as:
+Si intentas instalar un módulo Wasm en un canister que tiene un almacenamiento
+de fragmentos existente, la instalación fallará con un error como:
 
 ```
 Failed during wasm installation call: Candid returned an error: input: 4449444c036d016c01cedfa0a804026d7b010003_204b7cb7e28621a6f1110913a33e11455d407f584d3cfe91edf6c12c75b6bd00a2204f7deaf907cea359eda7caa340b204e1558cf451da3fe7582a4cb010a57290d020f52735197797ef2a9e1d2b5d7ed8c13bcd1f41fc65a4731742c12b87f2346bc3
@@ -44,16 +50,19 @@ type table2 = vec nat8
 wire_type: record { 1_158_164_430 : table2 }, expect_type: vec nat8
 ```
 
-To verify that the chunk store is the cause of this error, verify the chunk store has an existing `vec` value by running the [command shown above](#checking-chunk-store).
+Para verificar que el almacenamiento de fragmentos es la causa de este error,
+verifica que el almacenamiento de fragmentos tenga un valor `vec` existente
+ejecutando el
+[comando mostrado arriba](#verificación-del-almacenamiento-de-fragmentos-de-un-canister).
 
-Then, clear the chunk store with the command:
+Luego, limpia el almacenamiento de fragmentos con el comando:
 
 ```
 dfx canister call --ic aaaaa-aa clear_chunk_store '(record { canister_id = principal "bkyz2-fmaaa-aaaaa-qaaaq-cai" })'
 ```
 
-Then re-run the canister installation command.
+Luego, vuelve a ejecutar el comando de instalación del canister.
 
-## Resources
+## Recursos
 
-- [Canister chunk store forum discussion](https://forum.dfinity.org/t/embedding-wasm-dfx-0-17-0-crashing-where-previous-version-works/27916/).
+- [Discusión en el foro sobre el almacenamiento de fragmentos de canister](https://forum.dfinity.org/t/embedding-wasm-dfx-0-17-0-crashing-where-previous-version-works/27916/).

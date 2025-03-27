@@ -1,18 +1,31 @@
 ---
-keywords: [advanced, dfx, migration guide, v0.17.0, use dfxvm to update dfx, update dfx, dfxvm]
+keywords:
+  [
+    advanced,
+    dfx,
+    migration guide,
+    v0.17.0,
+    use dfxvm to update dfx,
+    update dfx,
+    dfxvm,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# dfx v0.17.0 CI migration guide
+# dfx v0.17.0 CI guia de migración
 
-<MarkdownChipRow labels={["Advanced", "dfx workflow"]} />
+<MarkdownChipRow labels={["Avanzado", "dfx workflow"]} />
 
-`dfxvm` is a new tool used for installing and managing different versions of `dfx`. In `dfx` versions 0.17.0 and newer, `dfxvm` is used to install and update `dfx`. This means CI jobs that install `dfx` will need to update their workflow.
+`dfxvm` es una nueva herramienta utilizada para instalar y gestionar diferentes
+versiones de `dfx`. En las versiones 0.17.0 y posteriores de `dfx`, se utiliza
+`dfxvm` para instalar y actualizar `dfx`. Esto significa que los trabajos de CI
+que instalan `dfx` deberán actualizar su flujo de trabajo.
 
-## GitHub actions
+## Acciones de GitHub
 
-If your CI job uses GitHub actions, you can edit your `dfx` install job to use the following configuration:
+Si tu trabajo de CI utiliza acciones de GitHub, puedes editar tu trabajo de
+instalación de `dfx` para utilizar la siguiente configuración:
 
 ```
 jobs:
@@ -27,17 +40,18 @@ jobs:
       run: dfx --version
 ```
 
-## Manual CI job
+## Trabajo CI Manual
 
-If you use a manual CI job, you will need to follow these steps:
+Si usas un trabajo CI manual, necesitarás seguir estos pasos:
 
-1. Set `DFXVM_INIT_YES=true` so that the installer bypasses prompts:
+1. Establece `DFXVM_INIT_YES=true` para que el instalador omita los mensajes de
+   confirmación:
 
 ```
 DFXVM_INIT_YES=true sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"
 ```
 
-2. Add the path for `dfxvm bin` to your PATH variable:
+2. Agrega la ruta para `dfxvm bin` a tu variable PATH:
 
 ```
 # Linux:
@@ -47,7 +61,8 @@ DFXVM_INIT_YES=true sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"
 "$HOME/Library/Application Support/org.dfinity.dfx/bin"
 ```
 
-3. Depending on the setup of your CI script, you may need to source the `dfx/env` script as well:
+3. Dependiendo de la configuración de tu script CI, es posible que necesites
+   cargar el script `dfx/env` también:
 
 ```
 # Linux:
@@ -59,7 +74,8 @@ source "$HOME/Library/Application Support/org.dfinity.dfx/env"
 
 ## Docker
 
-For CI jobs that use Docker environments, the following Dockerfile configuration can be used:
+Para trabajos de CI que utilicen entornos Docker, se puede utilizar la siguiente
+configuración de Dockerfile:
 
 ```
 ARG DFX_VERSION
@@ -77,3 +93,13 @@ ENV PATH="/root/.local/share/dfx/bin:$PATH"
 - [`dfx` documentation](/docs/building-apps/developer-tools/dfx/).
 
 - [IC SDK GitHub repo](https://github.com/dfinity/sdk).
+
+## Recursos
+
+- [`dfxvm` documentación](/docs/building-apps/developer-tools/dfxvm/dfxvm-install).
+
+- [`dfxvm` repositorio de GitHub](https://github.com/dfinity/dfxvm).
+
+- [`dfx` documentación](/docs/building-apps/developer-tools/dfx/).
+
+- [IC SDK respositorio de GitHub](https://github.com/dfinity/sdk).

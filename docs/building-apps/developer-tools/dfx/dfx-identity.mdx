@@ -2,191 +2,250 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
 # dfx identity
 
-<MarkdownChipRow labels={["Reference"]} />
+<MarkdownChipRow labels={["Referencia"]} />
 
-Use the `dfx identity` command with subcommands and flags to manage the identities used to execute commands and communicate with the IC or the local canister execution environment. Creating multiple user identities enables you to test user-based access controls.
+Utiliza el comando `dfx identity` con subcomandos y flags para gestionar las
+identidades utilizadas para ejecutar comandos y comunicarte con el IC o el
+entorno de ejecución de canisters local. Crear múltiples identidades de usuario
+te permite probar controles de acceso basados en el usuario.
 
-The basic syntax for running `dfx identity` commands is:
+La sintaxis básica para ejecutar comandos `dfx identity` es:
 
-``` bash
+```bash
 dfx identity [subcommand] [flag]
 ```
 
-Depending on the `dfx identity` subcommand you specify, additional arguments, options, and flags might apply or be required. To view usage information for a specific `dfx identity` subcommand, specify the subcommand and the `--help` flag. For example, to see usage information for `dfx identity new`, you can run the following command:
+Dependiendo del subcomando `dfx identity` que especifiques, pueden aplicarse o
+ser requeridos argumentos, opciones y flags adicionales. Para ver información de
+uso para un subcomando específico de `dfx identity`, especifica el subcomando y
+la bandera `--help`. Por ejemplo, para ver la información de uso para
+`dfx identity new`, puedes ejecutar el siguiente comando:
 
-``` bash
+```bash
 dfx identity new --help
 ```
 
-For reference information and examples that illustrate using `dfx identity` commands, select an appropriate command.
+Para información de referencia y ejemplos que ilustren el uso de los comandos
+`dfx identity`, selecciona el comando apropiado.
 
-| Command                                         | Description                                                                                                               |
-|-------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
-| [`deploy-wallet`](#dfx-identity-deploy-wallet) | Installs the wallet Wasm to the provided canister id.                                                                     |
-| [`get-principal`](#dfx-identity-get-principal) | Shows the textual representation of the principal associated with the current identity.                                   |
-| [`get-wallet`](#dfx-identity-get-wallet)       | Shows the canister identifier for the wallet associated with your current identity principal.                             |
-| `help`                                          | Displays this usage message or the help of the given subcommand(s).                                                       |
-| [`export`](#dfx-identity-export)               | Exports the PEM definition for an identity. |
-| [`import`](#dfx-identity-import)               | Creates a new identity by importing a PEM file that contains the key information or security certificate for a principal. |
-| [`list`](#dfx-identity-list)                   | Lists existing identities.                                                                                                |
-| [`new`](#dfx-identity-new)                     | Creates a new identity.                                                                                                   |
-| [`remove`](#dfx-identity-remove)               | Removes an existing identity.                                                                                             |
-| [`rename`](#dfx-identity-rename)               | Renames an existing identity.                                                                                             |
-| [`set-wallet`](#dfx-identity-set-wallet)       | Sets the wallet canister identifier to use for your current identity principal.                                           |
-| [`use`](#dfx-identity-use)                     | Specifies the identity to use.                                                                                            |
-| [`whoami`](#dfx-identity-whoami)               | Displays the name of the current identity user context.                                                                   |
+| Comando                                        | Descripción                                                                                                                           |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| [`deploy-wallet`](#dfx-identity-deploy-wallet) | Instala el Wasm del wallet en el canister proporcionado.                                                                              |
+| [`get-principal`](#dfx-identity-get-principal) | Muestra la representación textual del principal asociado con la identidad actual.                                                     |
+| [`get-wallet`](#dfx-identity-get-wallet)       | Muestra el identificador del canister para el wallet asociado con el principal de tu identidad actual.                                |
+| `help`                                         | Muestra este mensaje de uso o la ayuda de los subcomandos dados.                                                                      |
+| [`export`](#dfx-identity-export)               | Exporta la definición PEM de una identidad.                                                                                           |
+| [`import`](#dfx-identity-import)               | Crea una nueva identidad importando un archivo PEM que contiene la información de clave o certificado de seguridad para un principal. |
+| [`list`](#dfx-identity-list)                   | Lista las identidades existentes.                                                                                                     |
+| [`new`](#dfx-identity-new)                     | Crea una nueva identidad.                                                                                                             |
+| [`remove`](#dfx-identity-remove)               | Elimina una identidad existente.                                                                                                      |
+| [`rename`](#dfx-identity-rename)               | Cambia el nombre de una identidad existente.                                                                                          |
+| [`set-wallet`](#dfx-identity-set-wallet)       | Establece el identificador del canister wallet para usar con el principal de tu identidad actual.                                     |
+| [`use`](#dfx-identity-use)                     | Especifica la identidad a utilizar.                                                                                                   |
+| [`whoami`](#dfx-identity-whoami)               | Muestra el nombre del contexto de usuario actual de la identidad.                                                                     |
 
-## Creating a default identity
+## Crear una identidad por defecto
 
-The first time you run the `dfx canister create` command to register an identifier, your public/private key pair credentials are used to create a `default` user identity. The credentials for the `default` user are migrated from `$HOME/.dfinity/identity/creds.pem` to `$HOME/.config/dfx/identity/default/identity.pem`.
+La primera vez que ejecutas el comando `dfx canister create` para registrar un
+identificador, se utilizan tus credenciales de clave pública/privada para crear
+una identidad de usuario `default`. Las credenciales de la identidad `default`
+se migran de `$HOME/.dfinity/identity/creds.pem` a
+`$HOME/.config/dfx/identity/default/identity.pem`.
 
-You can then use `dfx identity new` to create new user identities and store credentials for those identities in `$HOME/.config/dfx/identity/<identity_name>/identity.pem` files. For example, you can create an identity named `ic_admin` by running the following command:
+Luego puedes usar `dfx identity new` para crear nuevas identidades de usuario y
+guardar las credenciales de esas identidades en archivos
+`$HOME/.config/dfx/identity/<identity_name>/identity.pem`. Por ejemplo, puedes
+crear una identidad llamada `ic_admin` ejecutando el siguiente comando:
 
     dfx identity new ic_admin
 
-This command adds a private key for the `ic_admin` user identity in the `~/.config/dfx/identity/ic_admin/identity.pem` file.
+Este comando agrega una clave privada para la identidad de usuario `ic_admin` en
+el archivo `~/.config/dfx/identity/ic_admin/identity.pem`.
 
 ## dfx identity deploy-wallet
 
-Use the `dfx identity deploy-wallet` command to turn a canister into a wallet canister by installing the wallet Wasm to it.
+Usa el comando `dfx identity deploy-wallet` para convertir un canister en un
+wallet canister instalando el Wasm del wallet en él.
 
-Note that you must be connected to the IC or the local canister execution environment to run this command. In addition, you must be a controller of the canister you want to deploy the wallet to.
+Ten en cuenta que debes estar conectado al IC o al entorno de ejecución local de
+canisters para ejecutar este comando. Además, debes ser un controlador del
+canister al que deseas desplegar el wallet.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx identity deploy-wallet [flag] <canister id>
 ```
 
-### Arguments
+### Argumentos
 
-You must specify the following argument for the `dfx identity deploy-wallet` command.
+Debes especificar el siguiente argumento para el comando
+`dfx identity deploy-wallet`:
 
-| Argument        | Description                                                    |
-|-----------------|----------------------------------------------------------------|
-| `<canister id>` | The ID of the canister where the wallet Wasm will be deployed. |
+| Argumento       | Descripción                                                |
+| --------------- | ---------------------------------------------------------- |
+| `<canister id>` | El ID del canister donde se desplegará el Wasm del wallet. |
 
 ## dfx identity get-principal
 
-Use the `dfx identity get-principal` command to display the textual representation of a principal associated with the current user identity context.
+Usa el comando `dfx identity get-principal` para mostrar la representación
+textual de un principal asociado con el contexto de la identidad de usuario
+actual.
 
-If you haven’t created any user identities, you can use this command to display the principal for the `default` user. The textual representation of a principal can be useful for establishing and testing role-based authorization scenarios.
+Si no has creado ninguna identidad de usuario, puedes usar este comando para
+mostrar el principal de la identidad `default`. La representación textual de un
+principal puede ser útil para establecer y probar escenarios de autorización
+basados en roles.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx identity get-principal [flag]
 ```
 
-### Example
+### Ejemplo
 
-If you want to display the textual representation of a principal associated with a specific user identity context, you can run commands similar to the following:
+Si deseas mostrar la representación textual de un principal asociado con un
+contexto de identidad de usuario específico, puedes ejecutar comandos similares
+a los siguientes:
 
-``` bash
+```bash
 dfx identity use ic_admin
 dfx identity get-principal
 ```
 
-In this example, the first command sets the user context to use the `ic_admin` identity. The second command then returns the principal associated with the `ic_admin` identity.
+En este ejemplo, el primer comando establece el contexto de usuario para usar la
+identidad `ic_admin`. El segundo comando devuelve el principal asociado con la
+identidad `ic_admin`.
 
 ## dfx identity get-wallet
 
-Use the `dfx identity get-wallet` command to display the canister identifier for the wallet associated with your current identity principal.
+Usa el comando `dfx identity get-wallet` para mostrar el identificador del
+canister para el wallet asociado con tu principal de identidad actual.
 
-Note that you must be connected to the IC or the local canister execution environment to run this command. In addition, you must be in a project directory to run the command. For example, if your project name is `hello_world`, your current working directory must be the `hello_world` top-level project directory or one of its subdirectories to run the `dfx identity get-wallet` command.
+Ten en cuenta que debes estar conectado al IC o al entorno de ejecución local de
+canisters para ejecutar este comando. Además, debes estar en un directorio de
+proyecto para ejecutar el comando. Por ejemplo, si el nombre de tu proyecto es
+`hello_world`, tu directorio de trabajo actual debe ser el directorio principal
+de proyecto `hello_world` o uno de sus subdirectorios para ejecutar el comando
+`dfx identity get-wallet`.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx identity get-wallet [flag]
 ```
 
-### Example
+### Ejemplo
 
-If you want to display the canister identifier for the wallet canister associated with your identity, you can run the following command:
+Si deseas mostrar el identificador del canister para el wallet asociado con tu
+identidad, puedes ejecutar el siguiente comando:
 
-``` bash
+```bash
 dfx identity get-wallet
 ```
 
-To display the canister identifier for the wallet canister associated with your identity on a specific testnet, you might run a command similar to the following:
+Para mostrar el identificador del canister para el wallet asociado con tu
+identidad en una testnet específica, puedes ejecutar un comando similar al
+siguiente:
 
-``` bash
+```bash
 dfx identity get-wallet --network=https://192.168.74.4
 ```
 
 ## dfx identity export
 
-Use the `dfx identity export` command to export the PEM definition of an existing identity.  You can import this definition elsewhere using [`dfx identity import`](#dfx-identity-import).
+Usa el comando `dfx identity export` para exportar la definición PEM de una
+identidad existente. Puedes importar esta definición en otro lugar usando
+[`dfx identity import`](#dfx-identity-import).
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx identity export identity-name
 ```
 
-### Examples
+### Ejemplos
 
-The following will export a PEM file for an existing identity.  If you transferred this file to another computer, the
-example below for `dfx identity import` would import it.
+El siguiente comando exportará un archivo PEM para una identidad existente. Si
+trasladas este archivo a otra computadora, el siguiente ejemplo de
+`dfx identity import` lo importaría.
 
-``` bash
+```bash
 dfx identity export alice >generated-id.pem
 ```
 
 ## dfx identity import
 
-Use the `dfx identity import` command to create a user identity by importing the user’s key information or security certificate from a PEM file or seed phrase file.
+Usa el comando `dfx identity import` para crear una identidad de usuario
+importando la información de clave o certificado de seguridad desde un archivo
+PEM o un archivo de frase semilla.
 
-*Password policy*: If an identity is imported using `--storage-mode password-protected`, the following requirements apply to the password:
-- The password needs to be longer than 8 characters.
+_Política de contraseñas_: Si una identidad es importada usando
+`--storage-mode password-protected`, se aplican los siguientes requisitos a la
+contraseña:
 
-### Basic usage
+- La contraseña debe tener más de 8 caracteres.
 
-``` bash
+### Uso básico
+
+```bash
 dfx identity import [options] identity-name pem_file-name
 ```
 
-### Options
+### Opciones
 
-You can specify the following options for the `dfx identity import` command.
+Puedes especificar las siguientes opciones para el comando
+`dfx identity import`:
 
-|Argument|Description|
-|--------|-----------|
-|`--storage-mode` | By default, PEM files are stored in the OS-provided keyring. If that is not available, they are encrypted with a password when writing them to disk. Plaintext PEM files are still available (e.g. for use in non-interactive situations like CI), but not recommended for use since they put the keys at risk. To force the use of one specific storage mode, use the `--storage-mode` flag with either `--storage-mode password-protected` or `--storage-mode plaintext`.|
-|`--force` |If the identity already exists, remove and re-import it.|
+| Opción           | Descripción                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--storage-mode` | Por defecto, los archivos PEM se almacenan en el keyring proporcionado por el SO. Si no está disponible, se cifran con una contraseña al escribirlos en disco. Los archivos PEM en texto plano siguen estando disponibles (por ejemplo, para usarlos en situaciones no interactivas como CI), pero no se recomienda su uso ya que ponen en riesgo las claves. Para forzar el uso de un modo específico de almacenamiento, usa la bandera `--storage-mode` con `--storage-mode password-protected` o `--storage-mode plaintext`. |
+| `--force`        | Si la identidad ya existe, elimina y vuelve a importarla.                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 
-### Examples
+### Ejemplos
 
-You can use the `dfx identity import` command to import a PEM file that contains the security certificate to use for an identity. For example, you can run the following command to import the `generated-id.pem` file to create the user identity `alice`:
+Puedes usar el comando `dfx identity import` para importar un archivo PEM que
+contiene el certificado de seguridad para usarlo en una identidad. Por ejemplo,
+puedes ejecutar el siguiente comando para importar el archivo `generated-id.pem`
+para crear la identidad de usuario `alice`:
 
-``` bash
+```bash
 dfx identity import alice generated-id.pem
 ```
 
-The command adds the `generated-id.pem` file to the `~/.config/dfx/identity/alice` directory.
+El comando agrega el archivo `generated-id.pem` al directorio
+`~/.config/dfx/identity/alice`.
 
 ## dfx identity list
 
-Use the `dfx identity list` command to display the list of user identities available. When you run this command, the list displays an asterisk (\*) to indicate the currently active user context. You should note that identities are global. They are not confined to a specific project context. Therefore, you can use any identity listed by the `dfx identity list` command in any project.
+Usa el comando `dfx identity list` para mostrar la lista de identidades de
+usuario disponibles. Cuando ejecutes este comando, la lista mostrará un
+asterisco (\*) para indicar el contexto de usuario activo actualmente. Debes
+tener en cuenta que las identidades son globales. No están confinadas a un
+contexto de proyecto específico. Por lo tanto, puedes usar cualquier identidad
+listada por el comando `dfx identity list` en cualquier proyecto.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx identity list [flag]
 ```
 
-### Examples
+### Ejemplos
 
-You can use the `dfx identity list` command to list all of the identities you have currently available and to determine which identity is being used as the currently-active user context for running `dfx` commands. For example, you can run the following command to list the identities available:
+Puedes usar el comando `dfx identity list` para listar todas las identidades que
+tienes disponibles actualmente y determinar qué identidad está siendo usada como
+el contexto de usuario activo para ejecutar los comandos `dfx`. Por ejemplo,
+puedes ejecutar el siguiente comando para listar las identidades disponibles:
 
-``` bash
+```bash
 dfx identity list
 ```
 
-This command displays the list of identities found similar to the following:
+Este comando muestra la lista de identidades encontradas similar a lo siguiente:
 
-``` bash
+```bash
 alice_auth
 anonymous
 bob_standard *
@@ -194,149 +253,215 @@ default
 ic_admin
 ```
 
-In this example, the `bob_standard` identity is the currently-active user context. After you run this command to determine the active user, you know that any additional `dfx` commands you run are executed using the principal associated with the `bob_standard` identity.
+El comando muestra las identidades `alice_auth`, `anonymous`, `bob_standard`,
+`default` e `ic_admin` en un sistema con identidades configuradas. Un asterisco
+(`*`) marca la identidad activa actualmente para ejecutar comandos.
 
+Aquí tienes el texto adaptado a formato Markdown en español:
+
+````markdown
 ## dfx identity new
 
-Use the `dfx identity new` command to add new user identities. You should note that the identities you add are global. They are not confined to a specific project context. Therefore, you can use any identity you add using the `dfx identity new` command in any project.
-Only the characters `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.-_@0123456789` are valid in identity names.
+Usa el comando `dfx identity new` para agregar nuevas identidades de usuario. Es
+importante tener en cuenta que las identidades que agregues son globales. No
+están confinadas a un contexto de proyecto específico. Por lo tanto, puedes usar
+cualquier identidad que agregues usando el comando `dfx identity new` en
+cualquier proyecto.
 
-*Password policy*: If an identity is created using `--storage-mode password-protected`, the following requirements apply to the password:
-- The password needs to be longer than 8 characters.
+Solo los caracteres
+`ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.-_@0123456789` son válidos
+en los nombres de identidad.
 
-### Basic usage
+_Política de contraseñas_: Si se crea una identidad usando
+`--storage-mode password-protected`, se aplican los siguientes requisitos para
+la contraseña:
 
-``` bash
-dfx identity new [options] _identity-name_
+- La contraseña debe tener más de 8 caracteres.
+
+### Uso básico
+
+```bash
+dfx identity new [opciones] _nombre-de-identidad_
+```
+````
+
+### Argumentos
+
+Debes especificar el siguiente argumento para el comando `dfx identity new`:
+
+| Argumento         | Descripción                                                                                                                                     |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `<identity_name>` | Especifica el nombre de la identidad a crear. Este argumento es obligatorio. Los caracteres válidos son letras, números y estos símbolos: .-\_@ |
+
+### Opciones
+
+Puedes especificar las siguientes opciones para el comando `dfx identity new`:
+
+| Opción                                        | Descripción                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `--storage-mode`                              | Por defecto, los archivos PEM se almacenan en el almacén de claves proporcionado por el sistema operativo. Si no está disponible, se cifran con una contraseña al escribirlos en el disco. Los archivos PEM en texto plano siguen disponibles (por ejemplo, para su uso en situaciones no interactivas como CI), pero no se recomienda su uso ya que pone las claves en riesgo. Para forzar el uso de un modo de almacenamiento específico, usa la opción `--storage-mode` con `--storage-mode password-protected` o `--storage-mode plaintext`. |
+| `--force`                                     | Si la identidad ya existe, elimina e importa nuevamente.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `--hsm-key-id <hsm key id>`                   | Una secuencia de pares de dígitos hexadecimales.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `--hsm-pkcs11-lib-path <hsm pkcs11 lib path>` | La ruta del archivo de la biblioteca opensc-pkcs11, por ejemplo, "/usr/local/lib/opensc-pkcs11.so".                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+
+### Ejemplos
+
+Luego puedes usar `dfx identity new` para crear nuevas identidades de usuario y
+almacenar las credenciales para esas identidades en los archivos
+`$HOME/.config/dfx/identity/<identity_name>/identity.pem`. Por ejemplo, puedes
+crear una identidad llamada `ic_admin` ejecutando el siguiente comando:
+
+```bash
+dfx identity new ic_admin
 ```
 
-### Arguments
+Este comando agrega una clave privada para la identidad `ic_admin` en el archivo
+`~/.config/dfx/identity/ic_admin/identity.pem`.
 
-You must specify the following argument for the `dfx identity new` command.
+Después de agregar la clave privada para la nueva identidad, el comando muestra
+una confirmación de que la identidad ha sido creada:
 
-| Argument          | Description                                                                                                                             |
-|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| `<identity_name>` | Specifies the name of the identity to create. This argument is required. Valid characters are letters, numbers, and these symbols: .-_@ |
-
-### Options
-
-You can specify the following options for the `+dfx identity new+` command.
-
-|Argument|Description|
-|--------|-----------|
-|`--storage-mode` |By default, PEM files are stored in the OS-provided keyring. If that is not available, they are encrypted with a password when writing them to disk. Plaintext PEM files are still available (e.g. for use in non-interactive situations like CI), but not recommended for use since they put the keys at risk. To force the use of one specific storage mode, use the `--storage-mode` flag with either `--storage-mode password-protected` or `--storage-mode plaintext`.|
-|`--force` |If the identity already exists, remove and re-import it.|
-|`--hsm-key-id <hsm key id>` |A sequence of pairs of hex digits.|
-|`--hsm-pkcs11-lib-path <hsm pkcs11 lib path>` |The file path to the opensc-pkcs11 library e.g. "/usr/local/lib/opensc-pkcs11.so"|
-
-### Examples
-
-You can then use `dfx identity new` to create new user identities and store credentials for those identities in `$HOME/.config/dfx/identity/<identity_name>/identity.pem` files. For example, you can create an identity named `ic_admin` by running the following command:
-
-    dfx identity new ic_admin
-
-This command adds a private key for the `ic_admin` user identity in the `~/.config/dfx/identity/ic_admin/identity.pem` file.
-
-After adding the private key for the new identity, the command displays confirmation that the identity has been created:
-
-    Creating identity: "ic_admin".
-    Created identity: "ic_admin".
+```bash
+Creating identity: "ic_admin".
+Created identity: "ic_admin".
+```
 
 ## dfx identity remove
 
-Use the `dfx identity remove` command to remove an existing user identity. You should note that the identities you add are global. They are not confined to a specific project context. Therefore, any identity you remove using the `dfx identity remove` command will no longer be available in any project.
+Usa el comando `dfx identity remove` para eliminar una identidad de usuario
+existente. Debes tener en cuenta que las identidades que agregues son globales.
+No están confinadas a un contexto de proyecto específico. Por lo tanto,
+cualquier identidad que elimines usando el comando `dfx identity remove` ya no
+estará disponible en ningún proyecto.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx identity remove [flag] _identity-name_
 ```
 
 ### Flags
 
-You can use the following optional flags with the `dfx identity remove` command.
+Puedes usar las siguientes flags opcionales con el comando
+`dfx identity remove`:
 
-| Flag              | Description                   |
-|-------------------|-------------------------------|
-| `--drop-wallets`  | Required if the identity has wallets configured so that users do not accidentally lose access to wallets.   |
+| Flag             | Descripción                                                                                                          |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `--drop-wallets` | Requerida si la identidad tiene carteras configuradas para evitar que los usuarios pierdan el acceso a las carteras. |
 
-### Arguments
+### Argumentos
 
-You must specify the following argument for the `dfx identity remove` command.
+Debes especificar el siguiente argumento para el comando `dfx identity remove`:
 
-| Argument          | Description                                                              |
-|-------------------|--------------------------------------------------------------------------|
-| `<identity_name>` | Specifies the name of the identity to remove. This argument is required. |
+| Argumento         | Descripción                                                                     |
+| ----------------- | ------------------------------------------------------------------------------- |
+| `<identity_name>` | Especifica el nombre de la identidad a eliminar. Este argumento es obligatorio. |
 
-### Examples
+### Ejemplos
 
-You can use the `dfx identity remove` command to remove any previously-created identity, including the `default` user identity. For example, if you have added named user identities and want to remove the `default` user identity, you can run the following command:
+Puedes usar el comando `dfx identity remove` para eliminar cualquier identidad
+previamente creada, incluida la identidad `default`. Por ejemplo, si has
+agregado identidades de usuario con nombre y deseas eliminar la identidad
+`default`, puedes ejecutar el siguiente comando:
 
-    dfx identity remove default
+```bash
+dfx identity remove default
+```
 
-The command displays confirmation that the identity has been removed:
+El comando muestra una confirmación de que la identidad ha sido eliminada:
 
-    Removing identity "default".
-    Removed identity "default".
+```bash
+Removing identity "default".
+Removed identity "default".
+```
 
-Although you can delete the `default` identity if you have created other identities to replace it, you must always have at least one identity available. If you attempt to remove the last remaining user context, the `dfx identity remove` command displays an error similar to the following:
+Aunque puedes eliminar la identidad `default` si has creado otras identidades
+para reemplazarla, siempre debes tener al menos una identidad disponible. Si
+intentas eliminar la última identidad, el comando `dfx identity remove` mostrará
+un error similar al siguiente:
 
-    Identity error:
-      Cannot delete the default identity
+```bash
+Identity error:
+  Cannot delete the default identity
+```
 
-If you have an identity with one or more wallets configured, it will only be deleted if you call it with `--drop-wallets`. This is made so that users don't accidentally lose access to their cycles wallets. If you try to delete an identity with at least one wallet configured, it will display the attached wallets like this:
+Si tienes una identidad con una o más carteras configuradas, solo se eliminará
+si la llamas con `--drop-wallets`. Esto se hace para evitar que los usuarios
+pierdan accidentalmente el acceso a sus carteras de ciclos. Si intentas eliminar
+una identidad con al menos una cartera configurada, se mostrarán las carteras
+adjuntas de esta forma:
 
-    This identity is connected to the following wallets:
-        identity 'mainnet' on network 'ic' has wallet rwlgt-iiaaa-aaaaa-aaaaa-cai
+```bash
+This identity is connected to the following wallets:
+    identity 'mainnet' on network 'ic' has wallet rwlgt-iiaaa-aaaaa-aaaaa-cai
+```
 
 ## dfx identity rename
 
-Use the `dfx identity rename` command to rename an existing user identity. You should note that the identities you add are global. They are not confined to a specific project context. Therefore, any identity you rename using the `dfx identity rename` command is available using the new name in any project.
+Usa el comando `dfx identity rename` para cambiar el nombre de una identidad de
+usuario existente. Debes tener en cuenta que las identidades que agregues son
+globales. No están confinadas a un contexto de proyecto específico. Por lo
+tanto, cualquier identidad que renombres usando el comando `dfx identity rename`
+estará disponible con el nuevo nombre en cualquier proyecto.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx identity rename [flag] _from_identity-name_ _to_identity-name_
 ```
 
-### Arguments
+### Argumentos
 
-You must specify the following arguments for the `dfx identity rename` command.
+Debes especificar los siguientes argumentos para el comando
+`dfx identity rename`:
 
-| Argument               | Description                                                                               |
-|------------------------|-------------------------------------------------------------------------------------------|
-| `<from_identity_name>` | Specifies the current name of the identity you want to rename. This argument is required. |
-| `<to_identity_name>`   | Specifies the new name of the identity you want to rename. This argument is required.     |
+| Argumento              | Descripción                                                                                      |
+| ---------------------- | ------------------------------------------------------------------------------------------------ |
+| `<from_identity_name>` | Especifica el nombre actual de la identidad que deseas renombrar. Este argumento es obligatorio. |
+| `<to_identity_name>`   | Especifica el nuevo nombre que deseas asignar a la identidad. Este argumento es obligatorio.     |
 
-### Example
+### Ejemplo
 
-You can rename the `default` user or any identity you have previously created using the `dfx identity rename` command. For example, if you want to rename a `test_admin` identity that you previously created, you would specify the current identity name you want to change **from** and the new name you want to change **to** by running a command similar to the following:
+Puedes cambiar el nombre de la identidad `default` o de cualquier otra identidad
+que hayas creado previamente usando el comando `dfx identity rename`. Por
+ejemplo, si deseas renombrar una identidad `test_admin` que creaste
+anteriormente, debes especificar el nombre de la identidad actual (de donde) y
+el nuevo nombre (a donde) ejecutando un comando similar al siguiente:
 
-    dfx identity rename test_admin devops
+```bash
+dfx identity rename test_admin devops
+```
 
 ## dfx identity set-wallet
 
-Use the `dfx identity set-wallet` command to specify the wallet canister identifier to use for your identity.
+Usa el comando `dfx identity set-wallet` para especificar el identificador de la
+cartera canister que usarás para tu identidad.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx identity set-wallet [flag] [--canister-name canister-name]
 ```
 
 ### Flags
 
-You can use the following optional flags with the `dfx identity set-wallet` command.
+Puedes usar las siguientes flags opcionales con el comando
+`dfx identity set-wallet`:
 
-| Flag              | Description                                                                                                                                                |
-|-------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `--force`           | Skips verification that the canister you specify is a valid wallet canister. This option is only useful if you are connecting to the IC running locally. |
+| Flag      | Descripción                                                                                                                                             |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--force` | Omite la verificación de que el canister que especificas es un canister de cartera válido. Esta opción solo es útil si te conectas a IC de forma local. |
 
-### Example
+### Ejemplo
 
-If you use more than one principal for your identity, you might have access to more than one wallet canister identifier. You can use the `dfx identity set-wallet` command to specify the wallet canister identifier to use for a given identity.
+Si usas más de un principal para tu identidad, podrías tener acceso a más de un
+identificador de cartera canister. Puedes usar el comando
+`dfx identity set-wallet` para especificar qué identificador de cartera usar
+para una identidad dada.
 
-For example, you might store the wallet canister identifier in an environment variable, then invoke the `dfx identity set-wallet` command to use that wallet canister for additional operations by running the following:
+Por ejemplo, puedes almacenar el identificador de la cartera canister en una
+variable de entorno y luego invocar el comando `dfx identity set-wallet` para
+usar esa cartera canister en operaciones adicionales ejecutando lo siguiente:
 
 ```shell
 export WALLET_CANISTER_ID=$(dfx identity get-wallet)
@@ -345,53 +470,70 @@ dfx identity set-wallet --canister-name ${WALLET_CANISTER_ID} --network=https://
 
 ## dfx identity use
 
-Use the `dfx identity use` command to specify the user identity you want to active. You should note that the identities you have available to use are global. They are not confined to a specific project context. Therefore, you can use any identity you have previously created in any project.
+Usa el comando `dfx identity use` para especificar la identidad de usuario que
+deseas activar. Debes tener en cuenta que las identidades que tienes disponibles
+son globales. No están confinadas a un contexto de proyecto específico. Por lo
+tanto, puedes usar cualquier identidad que hayas creado previamente en cualquier
+proyecto.
 
-The identity used by a command is:
-- the identity specified in the command with `--identity <NAME>`, if defined
-- else the identity specified by the environment variable `export DFX_IDENTITY=<NAME>`, if defined
-- the identity specified by `dfx identity use <NAME>`.
+La identidad utilizada por un comando es:
 
-### Basic usage
+- La identidad especificada en el comando con `--identity <NOMBRE>`, si está
+  definida.
+- Si no, la identidad especificada por la variable de entorno
+  `export DFX_IDENTITY=<NAME>`, si está definida.
+- La identidad especificada por `dfx identity use <NAME>`.
 
-``` bash
+### Uso básico
+
+```bash
 dfx identity use [flag] _identity-name_
 ```
 
-### Arguments
+### Argumentos
 
-You must specify the following argument for the `dfx identity use` command.
+Debes especificar el siguiente argumento para el comando `dfx identity use`:
 
-| Argument          | Description                                                                                                    |
-|-------------------|----------------------------------------------------------------------------------------------------------------|
-| `<identity_name>` | Specifies the name of the identity you want to make active for subsequent commands. This argument is required. |
+| Argumento         | Descripción                                                                                                           |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `<identity_name>` | Especifica el nombre de la identidad que deseas activar para los comandos posteriores. Este argumento es obligatorio. |
 
-### Examples
+### Ejemplos
 
-If you want to run multiple commands with the same user identity context, you can run a command similar to the following:
+Si deseas ejecutar múltiples comandos con el mismo contexto de identidad de
+usuario, puedes ejecutar un comando similar al siguiente:
 
-    dfx identity use ops
+```bash
+dfx identity use ops
+```
 
-After running this command, subsequent commands use the credentials and access controls associated with the `ops` user.
+Después de ejecutar este comando, los comandos posteriores utilizarán las
+credenciales y controles de acceso asociados con la identidad `ops`.
 
 ## dfx identity whoami
 
-Use the `dfx identity whoami` command to display the name of the currently-active user identity context.
+Usa el comando `dfx identity whoami` para mostrar el nombre de la identidad de
+usuario activa actualmente.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx identity whoami [flag]
 ```
 
-### Example
+### Ejemplo
 
-If you want to display the name of the currently-active user identity, you can run the following command:
+Si deseas mostrar el nombre de la identidad de usuario activa actualmente,
+puedes ejecutar el siguiente comando:
 
-``` bash
+```bash
 dfx identity whoami
 ```
 
-The command displays the name of the user identity. For example, you had previously run the command `dfx identity use bob_standard`, the command would display:
+El comando muestra el nombre de la identidad de usuario. Por ejemplo, si
+ejecutaste previamente el comando `dfx identity use bob_standard`, el comando
+mostraría:
 
-    bob_standard
+```
+bob_standard
+```

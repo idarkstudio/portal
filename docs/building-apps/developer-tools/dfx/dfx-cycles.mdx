@@ -2,152 +2,166 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
 # dfx cycles
 
-<MarkdownChipRow labels={["Reference"]} />
+<MarkdownChipRow labels={["Referencia"]} />
 
-Use the `dfx cycles` command to manage cycles associated with an identity's principal.
+Usa el comando `dfx cycles` para administrar los cycles asociados con el
+principal de una identity.
 
-The basic syntax for running `dfx cycles` commands is:
+La sintaxis básica para ejecutar comandos `dfx cycles` es:
 
-``` bash
+```bash
 dfx cycles [subcommand] [options]
 ```
 
-The following subcommands are available:
+Los siguientes subcomandos están disponibles:
 
-| Command                               | Description                                                                          |
-|---------------------------------------|--------------------------------------------------------------------------------------|
-| [`approve`](#dfx-cycles-approve)      | Approves a principal to spend cycles on your behalf.                                 |
-| [`balance`](#dfx-cycles-balance)      | Prints the account balance of the user.                                              |
-| [`convert`](#dfx-cycles-convert)      | Convert some of the user's ICP balance into cycles.                                  |
-| [`top-up`](#dfx-cycles-top-up)        | Deposit cycles into a canister.                                                      |
-| [`transfer`](#dfx-cycles-transfer)    | Send cycles to another account.                                                      |
-| `help`                                | Displays usage information message for a specified subcommand.                       |
+| Comando                            | Descripción                                                               |
+| ---------------------------------- | ------------------------------------------------------------------------- |
+| [`approve`](#dfx-cycles-approve)   | Aprueba un principal para gastar cycles en tu nombre.                     |
+| [`balance`](#dfx-cycles-balance)   | Muestra el saldo de la cuenta del usuario.                                |
+| [`convert`](#dfx-cycles-convert)   | Convierte parte del saldo ICP del usuario en cycles.                      |
+| [`top-up`](#dfx-cycles-top-up)     | Deposita cycles en un canister.                                           |
+| [`transfer`](#dfx-cycles-transfer) | Envía cycles a otra cuenta.                                               |
+| `help`                             | Muestra el mensaje de información de uso para un subcomando especificado. |
 
-To view usage information for a specific subcommand, specify the subcommand and the `--help` flag. For example, to see usage information for `dfx cycles balance`, you can run the following command:
+Para ver la información de uso de un subcomando específico, especifica el
+subcomando y el flag `--help`. Por ejemplo, para ver la información de uso para
+`dfx cycles balance`, puedes ejecutar el siguiente comando:
 
 `dfx cycles balance --help`
 
 ## dfx cycles approve
 
-Use the `dfx cycles approve` command to approve a principal to spend cycles on your behalf.
+Usa el comando `dfx cycles approve` para aprobar un principal para gastar cycles
+en tu nombre.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx cycles approve [options] <spender> <amount>
 ```
 
-### Arguments
+### Argumentos
 
-You must specify the following arguments for the `dfx cycles approve` command.
+Debes especificar los siguientes argumentos para el comando
+`dfx cycles approve`:
 
-| Argument   | Description                           |
-|------------|---------------------------------------|
-| `<spender>`| Allow this principal to spend cycles. |
-| `<amount>` | The number of cycles to approve.      |
+| Argumento   | Descripción                             |
+| ----------- | --------------------------------------- |
+| `<spender>` | Permite a este principal gastar cycles. |
+| `<amount>`  | El número de cycles que se aprueban.    |
 
-### Options
+### Opciones
 
-You can specify the following options for the `dfx cycles approve` command.
+Puedes especificar las siguientes opciones para el comando `dfx cycles approve`:
 
-| Option                              | Description                                                                            |
-|-------------------------------------|----------------------------------------------------------------------------------------|
-| `--created-at-time <timestamp>`     | Specify the timestamp-nanoseconds for the `created_at_time` field on the transfer request. Useful for controlling [transaction-de-duplication.](https://internetcomputer.org/docs/developer-docs/integrations/icrc-1/#transaction-deduplication) |
-| `--expected-allowance <cycles>`     | The number of previously approved cycles. See [ICRC-2 specification](https://github.com/dfinity/ICRC-1/blob/main/standards/ICRC-2/README.md) for details. |
-| `--expires-at <timestamp>`        | Timestamp-nanoseconds until which the approval is valid. None means that the approval is valid indefinitely. |
-| `--from-subaccount <subaccount>`    | Approve cycles to be spent from this subaccount.                                       |
-| `--memo <memo>`                     | Specifies a numeric memo for this transaction. |
-| `--spender-subaccount <subaccount>` | Allow this subaccount to spend cycles.                                                 |
+| Opción                              | Descripción                                                                                                                                                                                                                                                      |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--created-at-time <timestamp>`     | Especifica el timestamp-en-nanosegundos para el campo `created_at_time` en la solicitud de transferencia. Útil para controlar [deduplicación de transacciones.](https://internetcomputer.org/docs/developer-docs/integrations/icrc-1/#transaction-deduplication) |
+| `--expected-allowance <cycles>`     | El número de cycles previamente aprobados. Consulta la [especificación de ICRC-2](https://github.com/dfinity/ICRC-1/blob/main/standards/ICRC-2/README.md) para más detalles.                                                                                     |
+| `--expires-at <timestamp>`          | Timestamp-en-nanosegundos hasta el cual la aprobación es válida. Ninguno significa que la aprobación es válida indefinidamente.                                                                                                                                  |
+| `--from-subaccount <subaccount>`    | Aprobar cycles para ser gastados desde esta subcuenta.                                                                                                                                                                                                           |
+| `--memo <memo>`                     | Especifica un memo numérico para esta transacción.                                                                                                                                                                                                               |
+| `--spender-subaccount <subaccount>` | Permite a esta subcuenta gastar cycles.                                                                                                                                                                                                                          |
 
-### Examples
+### Ejemplos
 
-Approve the principal `raxcz-bidhr-evrzj-qyivt-nht5a-eltcc-24qfc-o6cvi-hfw7j-dcecz-kae` to spend 1 billion cycles:
+Aprueba al principal
+`raxcz-bidhr-evrzj-qyivt-nht5a-eltcc-24qfc-o6cvi-hfw7j-dcecz-kae` para gastar 1
+mil millones de cycles:
 
-``` bash
+```bash
 dfx cycles approve raxcz-bidhr-evrzj-qyivt-nht5a-eltcc-24qfc-o6cvi-hfw7j-dcecz-kae 1000000000 --network ic
 ```
 
-Approve from a subaccount:
+Aprueba desde una subaccount:
 
-``` bash
+```bash
 dfx cycles approve raxcz-bidhr-evrzj-qyivt-nht5a-eltcc-24qfc-o6cvi-hfw7j-dcecz-kae 1000000000 --from-subaccount 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f --network ic
 ```
 
 ## dfx cycles balance
 
-Use the `dfx cycles balance` command to print your account balance or that of another user.
+Usa el comando `dfx cycles balance` para imprimir el saldo de tu cuenta o la de
+otro usuario.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx cycles balance [flag] --network ic
 ```
 
-### Options
+### Opciones
 
-You can specify the following arguments for the `dfx cycles balance` command.
+Puedes especificar los siguientes argumentos para el comando
+`dfx cycles balance`.
 
-| Option                                      | Description                                                         |
-|---------------------------------------------|---------------------------------------------------------------------|
-| `--owner <principal>`                       | Display the balance of this principal                               |
-| `--subaccount <subaccount>`                 | Display the balance of this subaccount                              |
-| `--precise`                                 | Displays the exact balance, without scaling to trillions of cycles. |
+| Opción                      | Descripción                                                |
+| --------------------------- | ---------------------------------------------------------- |
+| `--owner <principal>`       | Muestra el saldo de este principal                         |
+| `--subaccount <subaccount>` | Muestra el saldo de esta subcuenta                         |
+| `--precise`                 | Muestra el saldo exacto, sin escalar a billones de cycles. |
 
-### Examples
+### Ejemplos
 
-Check the cycles balance of the selected identity.
+Verifica el saldo de cycles de la identidad seleccionada.
 
 ```
 $ dfx cycles balance --network ic
 89.000 TC (trillion cycles).
 ```
 
-To see the exact amount of cycles, you can use the `--precise` option:
+Para ver la cantidad exacta de cycles, puedes usar la opción `--precise`:
+
 ```
 $ dfx cycles balance --network ic --precise
 89000000000000 cycles.
 ```
 
-You can use the `dfx cycles balance` command to check the balance of another principal:
+Puedes usar el comando `dfx cycles balance` para verificar el saldo de otro
+principal:
 
-``` bash
+```bash
 dfx cycles balance --owner raxcz-bidhr-evrzj-qyivt-nht5a-eltcc-24qfc-o6cvi-hfw7j-dcecz-kae --network ic
 ```
 
 ## dfx cycles convert
 
-Use the `dfx cycles convert` command to convert ICP into cycles that are stored on the cycles ledger.
+Usa el comando `dfx cycles convert` para convertir ICP en cycles que se
+almacenan en el ledger de cycles.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx cycles convert [flag] --network ic
 ```
 
-### Options
+### Opciones
 
-You can specify the following arguments for the `dfx cycles convert` command.
+Puedes especificar los siguientes argumentos para el comando
+`dfx cycles convert`:
 
-| Option                                      | Description |
-|---------------------------------------------|-------------|
-| `--amount <amount>`            | Specify the number of ICP tokens to convert to cycles and deposit into your cycles ledger account. You can specify an amount as a number with up to eight (8) decimal places. |
-| `--created-at-time <timestamp>`| Specify the timestamp-nanoseconds for the `created_at_time` field on the ledger transfer request. Useful for transaction deduplication. https://internetcomputer.org/docs/developer-docs/integrations/icrc-1/#transaction-deduplication-  |
-| `--e8s <e8s>`                  | Specify ICP token fractional units—called e8s—as a whole number, where one e8 is the smallest fraction of an ICP token. For example, 1.05000000 is 1 ICP and 5000000 e8s. You can use this option on its own or in conjunction with the `--icp` option. |
-| `--fee <fee>`                  | Specify a transaction fee. The default is 10000 e8s. |
-| `--icp <icp>`                  | Specify ICP tokens as a whole number. You can use this option on its own or in conjunction with `--e8s`. |
-| `--deposit-memo <memo>`        | Memo used when depositing the minted cycles. |
-| `--to-subaccount <subaccount>` | Subaccount where the cycles are deposited. |
+| Opción                          | Descripción                                                                                                                                                                                                                                                               |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--amount <amount>`             | Especifica el número de tokens ICP para convertir a cycles y depositar en tu cuenta de cycles. Puedes especificar una cantidad como un número con hasta ocho (8) decimales.                                                                                               |
+| `--created-at-time <timestamp>` | Especifica el timestamp-en-nanosegundos para el campo `created_at_time` en la solicitud de transferencia en el libro mayor. Útil para la deduplicación de transacciones. https://internetcomputer.org/docs/developer-docs/integrations/icrc-1/#transaction-deduplication- |
+| `--e8s <e8s>`                   | Especifica las unidades fraccionarias del token ICP, llamadas e8s, como un número entero, donde un e8 es la fracción más pequeña de un token ICP. Por ejemplo, 1.05000000 es 1 ICP y 5000000 e8s. Puedes usar esta opción por sí sola o junto con la opción `--icp`.      |
+| `--fee <fee>`                   | Especifica una tarifa de transacción. El valor predeterminado es 10000 e8s.                                                                                                                                                                                               |
+| `--icp <icp>`                   | Especifica los tokens ICP como un número entero. Puedes usar esta opción por sí sola o junto con `--e8s`.                                                                                                                                                                 |
+| `--deposit-memo <memo>`         | Memo utilizado al depositar los cycles generados.                                                                                                                                                                                                                         |
+| `--to-subaccount <subaccount>`  | Subcuenta en la que se depositan los cycles.                                                                                                                                                                                                                              |
 
-### Examples
+### Ejemplos
 
-Convert 10 ICP into cycles.
+Convierte 10 ICP en cycles:
 
 ```
 $ dfx cycles convert --network ic --amount 10
 Account was topped up with 1_234_567_000_000_000 cycles! New balance is 1_234_567_000_000_000 cycles.
 ```
 
-To have the cycles deposited into a different subaccount, use the `--to-subaccount` option.
+Para depositar los cycles en una subcuenta diferente, usa la opción
+`--to-subaccount`.
 
 ```
 $ dfx cycles convert --network ic --amount 10 --to-subaccount 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f
@@ -156,88 +170,92 @@ Account was topped up with 1_234_567_000_000_000 cycles! New balance is 1_234_56
 
 ## dfx cycles transfer
 
-Use the `dfx cycles transfer` command to transfer cycles from your account to another account.
+Usa el comando `dfx cycles transfer` para transferir cycles de tu cuenta a otra
+cuenta.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx cycles transfer [options] <to> <amount>
 ```
 
-### Arguments
+### Argumentos
 
-You must specify the following arguments for the `dfx cycles transfer` command.
+Debes especificar los siguientes argumentos para el comando
+`dfx cycles transfer`:
 
-| Argument   | Description                       |
-|------------|-----------------------------------|
-| `<to>`     | The principal of the account to which you want to transfer cycles. |
-| `<amount>` | The number of cycles to transfer. |
+| Argumento  | Descripción                                                  |
+| ---------- | ------------------------------------------------------------ |
+| `<to>`     | El principal de la cuenta a la que deseas transferir ciclos. |
+| `<amount>` | El número de ciclos a transferir.                            |
 
-### Options
+### Opciones
 
-You can specify the following options for the `dfx cycles transfer` command.
+Puedes especificar las siguientes opciones para el comando
+`dfx cycles transfer`:
 
-| Option                              | Description                                                                            |
-|-------------------------------------|----------------------------------------------------------------------------------------|
-| `--from <principal>`                |  Transfer cycles from this principal. Requires that principal's approval.              |
-| `--to-subaccount <subaccount>`      | The subaccount to which you want to transfer cycles.                                   |
-| `--from-subaccount <subaccount>`    | The subaccount from which you want to transfer cycles.                                 |
-| `--spender-subaccount <subaccount>` | Deduct allowance from this subaccount. Requires `--from` to be specified.              |
-| `--memo <memo>`                     | Specifies a numeric memo for this transaction. |
-| `--created-at-time <timestamp>`     | Specify the timestamp-nanoseconds for the `created_at_time` field on the transfer request. Useful for controlling transaction-de-duplication. https://internetcomputer.org/docs/developer-docs/integrations/icrc-1/#transaction-deduplication- |
+| Opción                              | Descripción                                                                                                                                                                                                                                                       |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--from <principal>`                | Transfiere ciclos desde este principal. Requiere la aprobación de ese principal.                                                                                                                                                                                  |
+| `--to-subaccount <subaccount>`      | La subcuenta a la que deseas transferir ciclos.                                                                                                                                                                                                                   |
+| `--from-subaccount <subaccount>`    | La subcuenta desde la que deseas transferir ciclos.                                                                                                                                                                                                               |
+| `--spender-subaccount <subaccount>` | Deduce la asignación de esta subcuenta. Requiere que se especifique `--from`.                                                                                                                                                                                     |
+| `--memo <memo>`                     | Especifica un memo numérico para esta transacción.                                                                                                                                                                                                                |
+| `--created-at-time <timestamp>`     | Especifica el timestamp-en-nanosegundos para el campo `created_at_time` en la solicitud de transferencia. Útil para controlar la deduplicación de transacciones. https://internetcomputer.org/docs/developer-docs/integrations/icrc-1/#transaction-deduplication- |
 
-### Examples
+### Ejemplos
 
-Transfer 1 billion cycles to another account:
+Transfiere 1 billón de ciclos a otra cuenta:
 
-``` bash
+```bash
 dfx cycles transfer raxcz-bidhr-evrzj-qyivt-nht5a-eltcc-24qfc-o6cvi-hfw7j-dcecz-kae 1000000000 --network ic
 ```
 
-Transfer from a subaccount:
+Transfiere desde una subaccount:
 
-``` bash
+```bash
 dfx cycles transfer raxcz-bidhr-evrzj-qyivt-nht5a-eltcc-24qfc-o6cvi-hfw7j-dcecz-kae 1000000000 --from-subaccount 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f --network ic
 ```
 
 ## dfx cycles top-up
 
-Use the `dfx cycles top-up` command to send cycles from your account to a canister.
+Usa el comando `dfx cycles top-up` para enviar ciclos a un canister.
 
-### Basic usage
+### Uso básico
 
-``` bash
+```bash
 dfx cycles top-up [options] <to> <amount>
 ```
 
-### Arguments
+### Argumentos
 
-You must specify the following arguments for the `dfx cycles transfer` command.
+Debes especificar los siguientes argumentos para el comando
+`dfx cycles transfer`:
 
-| Argument   | Description                                                             |
-|------------|-------------------------------------------------------------------------|
-| `<to>`     | The name of a canister in the current project, or a canister principal. |
-| `<amount>` | The number of cycles to transfer.                                       |
+| Argumento  | Descripción                                                                 |
+| ---------- | --------------------------------------------------------------------------- |
+| `<to>`     | El nombre de un canister en el proyecto actual, o un principal de canister. |
+| `<amount>` | El número de ciclos a transferir.                                           |
 
-### Options
+### Opciones
 
-You can specify the following options for the `dfx cycles top-up` command.
+Puedes especificar las siguientes opciones para el comando `dfx cycles top-up`:
 
-| Option                           | Description                                                                            |
-|----------------------------------|----------------------------------------------------------------------------------------|
-| `--from-subaccount <subaccount>` | The subaccount from which you want to transfer cycles.                                 |
-| `--created-at-time <timestamp>`  | Specify the timestamp-nanoseconds for the `created_at_time` field on the transfer request. Useful for controlling transaction deduplication. https://internetcomputer.org/docs/developer-docs/integrations/icrc-1/#transaction-deduplication- |
+| Opción                           | Descripción                                                                                                                                                                                                                                                       |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--from-subaccount <subaccount>` | La subcuenta desde la que deseas transferir ciclos.                                                                                                                                                                                                               |
+| `--created-at-time <timestamp>`  | Especifica el timestamp-en-nanosegundos para el campo `created_at_time` en la solicitud de transferencia. Útil para controlar la deduplicación de transacciones. https://internetcomputer.org/docs/developer-docs/integrations/icrc-1/#transaction-deduplication- |
 
-### Examples
+### Ejemplos
 
-Send cycles to a canister in your project:
+Envía ciclos a un canister en tu proyecto:
 
-``` bash
+```bash
 dfx cycles top-up my_backend 1000000000 --network ic
 ```
 
-Send cycles to a canister by principal:
+Envía ciclos a un canister por principal:
 
-``` bash
+```bash
 dfx cycles top-up bkyz2-fmaaa-aaaaa-qaaaq-cai 1000000000 --network ic
 ```

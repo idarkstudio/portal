@@ -4,15 +4,24 @@ keywords: [reference, dfx, dfx.json schema]
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# dfx.json configuration options
+# dfx.json opciones de configuración
 
-<MarkdownChipRow labels={["dfx", "Reference"]} />
+<MarkdownChipRow labels={["dfx", "Referencia"]} />
 
-Every project created and deployed with `dfx` requires a `dfx.json` file to be present in the project's root directory. The `dfx.json` file configures the project's settings, such as the canisters in the project, their name, type, and source file, default project build settings, and other configuration parameters such as Wasm optimizations. This page will detail some of the most common configuration options. For a full list of the possible configuration settings in `dfx.json`, view the [`dfx.json` schema](/docs/building-apps/developer-tools/dfx-json-reference).
+Cada proyecto creado y desplegado con `dfx` requiere un archivo `dfx.json`
+presente en el directorio raíz del proyecto. El archivo `dfx.json` configura los
+ajustes del proyecto, como los canisters en el proyecto, su nombre, tipo y
+archivo fuente, la configuración de compilación predeterminada del proyecto y
+otros parámetros de configuración como las optimizaciones de Wasm. Esta página
+detallará algunas de las opciones de configuración más comunes. Para obtener una
+lista completa de las posibles configuraciones en `dfx.json`, consulta el
+[esquema `dfx.json`](/docs/building-apps/developer-tools/dfx-json-reference).
 
-## Default `dfx.json` file
+## Archivo `dfx.json` predeterminado
 
-By default, when a project is created with `dfx new <project-name>`, and the options `Motoko` and `No frontend canister` are selected, the default `dfx.json` generated for the project will contain the following:
+Por defecto, cuando se crea un proyecto con `dfx new <nombre-del-proyecto>` y se
+seleccionan las opciones `Motoko` y `Sin canister de frontend`, el `dfx.json`
+predeterminado generado para el proyecto contendrá lo siguiente:
 
 ```json
 {
@@ -33,31 +42,47 @@ By default, when a project is created with `dfx new <project-name>`, and the opt
 }%
 ```
 
-This configuration contains the following components:
+Esta configuración contiene los siguientes componentes:
 
-- `canisters`: Defines the canister names and settings for the project. In this default example, a single canister called `example_backend` is defined.
+- `canisters`: Define los nombres y configuraciones de los canisters para el
+  proyecto. En este ejemplo predeterminado, se define un único canister llamado
+  `example_backend`.
 
-- `example_backend`: Defines the name of the canister in this project.
+- `example_backend`: Define el nombre del canister en este proyecto.
 
-- `main`: The primary source code file for the canister that serves as the canister's entrypoint. By default, for Motoko canisters this file is `main.mo`. For Rust canisters, the `candid' keyword is used in place of the `main` keyword to define the entrypoint of a canister.
+- `main`: El archivo de código fuente principal del canister que sirve como
+  punto de entrada del mismo. Por defecto, para los canisters en Motoko, este
+  archivo es `main.mo`. Para los canisters en Rust, se usa la palabra clave
+  `candid` en lugar de `main` para definir el punto de entrada de un canister.
 
-- `type`: Defines the type of the canister. Supported types are `motoko`, `rust`, `assets`, `pull` and `custom`. The Motoko and Rust languages are supported through the IC SDK by default. `custom` type refers to canisters written in languages other than Motoko or Rust. `assets` type refers to [frontend canisters](#asset-canisters). `pull` type refers to [third party canisters](#pullable-canisters). 
+- `type`: Define el tipo de canister. Los tipos admitidos son `motoko`, `rust`,
+  `assets`, `pull` y `custom`. Los lenguajes Motoko y Rust son compatibles de
+  forma predeterminada a través del IC SDK. El tipo `custom` se refiere a
+  canisters escritos en otros lenguajes distintos de Motoko o Rust. El tipo
+  `assets` se refiere a [canisters de frontend](#asset-canisters). El tipo
+  `pull` se refiere a [canisters de terceros](#pullable-canisters).
 
-- `defaults`: Default settings for the project's build.
+- `defaults`: Configuraciones predeterminadas para la compilación del proyecto.
 
-- `build`: Build process configuration.
+- `build`: Configuración del proceso de compilación.
 
-- `args`: Arguments for the `packtool` setting.
+- `args`: Argumentos para la configuración de `packtool`.
 
-- `packtool`: Configures a package management tool for your canister's dependencies. Examples include `mops` and `vessel` for Motoko.
+- `packtool`: Configura una herramienta de gestión de paquetes para las
+  dependencias de tu canister. Algunos ejemplos incluyen `mops` y `vessel` para
+  Motoko.
 
-- `output_env_file`: Environment variables will be written to this file without overwriting any user-defined variables if the file already exists.
+- `output_env_file`: Las variables de entorno se escribirán en este archivo sin
+  sobrescribir ninguna variable definida por el usuario si el archivo ya existe.
 
-- `version`: Refers to the iteration version for this `dfx.json` file. By default, versions of `dfx.json` start at `version: 1`.
+- `version`: Se refiere a la versión de iteración de este archivo `dfx.json`.
+  Por defecto, las versiones de `dfx.json` comienzan en `version: 1`.
 
-## Custom canister definitions
+## Definiciones de canisters personalizados
 
-To define a canister to use a language other than `Motoko` or `Rust`, or to use a custom Wasm file, you can set the canister as `"type": "custom"` with the following additional arguments:
+Para definir un canister que use un lenguaje distinto de `Motoko` o `Rust`, o
+para usar un archivo Wasm personalizado, puedes establecer el canister como
+`"type": "custom"` con los siguientes argumentos adicionales:
 
 ```json
 "canisters": {
@@ -72,22 +97,27 @@ To define a canister to use a language other than `Motoko` or `Rust`, or to use 
 }
 ```
 
-- `build`: The command that will build the canister.
+- `build`: El comando que construirá el canister.
 
-- `candid`: The file path to the canister's Candid interface definition file.
+- `candid`: La ruta al archivo de definición de la interfaz Candid del canister.
 
-- `gzip`: `true` or `false` if Wasm gzip should be used.
+- `gzip`: `true` o `false`, si se debe usar la compresión gzip para el archivo
+  Wasm.
 
-- `main`: The primary source code file for the canister that serves as the canister's entry point.
+- `main`: El archivo de código fuente principal del canister que sirve como
+  punto de entrada del canister.
 
-- `type`: Defines the canister as `custom`.
+- `type`: Define el canister como `custom`.
 
-- `wasm`: The file path to the canister's Wasm file.
+- `wasm`: La ruta al archivo Wasm del canister.
 
+## Canisters de assets
 
-## Asset canisters
-
-An asset canister is a type of canister that contains a project's frontend user interface and asset files. For projects created with the `dfx new <projectname>` command with 'Vanilla JS' chosen as the frontend framework, the project's `dfx.json` file will contain the following asset canister definition:
+Un canister de assets es un tipo de canister que contiene la interfaz de usuario
+del frontend y los archivos de assets de un proyecto. Para los proyectos creados
+con el comando `dfx new <nombre_proyecto>` y con 'Vanilla JS' seleccionado como
+el framework del frontend, el archivo `dfx.json` del proyecto contendrá la
+siguiente definición para el canister de assets:
 
 ```json
   "canisters": {
@@ -104,50 +134,57 @@ An asset canister is a type of canister that contains a project's frontend user 
   },
 ```
 
-- `dependencies`: Defines what canister the asset canister is dependent on to communicate with.
+- `dependencies`: Define qué canister depende el canister de assets para
+  comunicarse.
 
-- `source`: The project directory containing the asset canister's source files.
+- `source`: El directorio del proyecto que contiene los archivos fuente del
+  canister de assets.
 
-- `type`: Defines the canister as type `assets`.
+- `type`: Define el canister como tipo `assets`.
 
-- `workspace`: The project directory containing this canister's `package.json` file.
+- `workspace`: El directorio del proyecto que contiene el archivo `package.json`
+  de este canister.
 
+## Canisters Pullables
 
-## Pullable canisters
+Los canisters que proporcionan un servicio público con un ID de canister
+estático pueden ser integrados en tu proyecto definiendo `"type": "pull"`. Esto
+indica que el archivo Wasm y Candid del canister serán descargados desde el ID
+del canister especificado en la mainnet.
 
-Canisters that provide a public service at a static canister ID can be pulled into your project by defining `"type": "pull"`. This indicates that the canister's Wasm and Candid file will be pulled from the specified canister ID on the mainnet.
-
-Below is an example project that defines three canisters: `dapp`, which is dependent on `dep_b` and `dep_c`, both of which are pullable canisters:
+A continuación se muestra un ejemplo de proyecto que define tres canisters:
+`dapp`, que depende de `dep_b` y `dep_c`, ambos son canisters pullables:
 
 ```json
 {
-    "canisters": {
-        "dapp": {
-            "type": "motoko",
-            "main": "src/main.mo",
-            "dependencies": [
-                "dep_b", "dep_c"
-            ]
-        },
-        "dep_b": {
-            "type": "pull",
-            "id": "yhgn4-myaaa-aaaaa-aabta-cai"
-        },
-        "dep_c": {
-            "type": "pull",
-            "id": "yahli-baaaa-aaaaa-aabtq-cai"
-        }
-    }
+  "canisters": {
+    "dapp": {
+      "type": "motoko",
+      "main": "src/main.mo",
+      "dependencies": ["dep_b", "dep_c"]
+    },
+    "dep_b": {
+      "type": "pull",
+      "id": "yhgn4-myaaa-aaaaa-aabta-cai"
+    },
+    "dep_c": {
+      "type": "pull",
+      "id": "yahli-baaaa-aaaaa-aabtq-cai"
+    }
+  }
 }
 ```
 
-- `type`: Defines the canister as type `pull`, meaning the canister's Wasm and Candid files will be retrieved from the mainnet.
+- `type`: Define el canister como tipo `pull`, lo que significa que los archivos
+  Wasm y Candid del canister se obtendrán de la mainnet.
 
-- `id`: Specifies the canister's ID on the mainnet that should be used to obtain the Wasm and Candid files.
+- `id`: Especifica el ID del canister en la mainnet que se debe utilizar para
+  obtener los archivos Wasm y Candid.
 
-## Network settings
+## Configuración de la red
 
-Local development network settings can be configured in `dfx.json`, such as:
+Se pueden configurar los ajustes de la red de desarrollo local en `dfx.json`,
+como:
 
 ```json
 "networks": {
@@ -160,32 +197,42 @@ Local development network settings can be configured in `dfx.json`, such as:
   }
 ```
 
-Network definitions can have the following configuration components:
+Las definiciones de red pueden tener los siguientes componentes de
+configuración:
 
-- `providers`: Defines the network provider, which can be localhost or any other domain name. Domain names must be a full URL, such as `https://domain.com`.
+- `providers`: Define el proveedor de red, que puede ser localhost o cualquier
+  otro nombre de dominio. Los nombres de dominio deben ser una URL completa,
+  como `https://dominio.com`.
 
-- `type`: Defines the network type, which can be either ephemeral (do not retain the same canister IDs) or persistent (retain the same canister IDs).
+- `type`: Define el tipo de red, que puede ser efímera (no conserva los mismos
+  IDs de canister) o persistente (conserva los mismos IDs de canister).
 
-[Learn more about custom network definitions and configurations](/docs/building-apps/developer-tools/advanced-dfx/networks-json).
+[Aprende más sobre definiciones y configuraciones de red personalizadas](/docs/building-apps/developer-tools/advanced-dfx/networks-json).
 
-## Wasm optimization options
+## Opciones de optimización de Wasm
 
-Canisters can be optimized using [`wasm-opt`](https://github.com/WebAssembly/binaryen), which exposes a few different optimization options using the `optimize` configuration:
-
+Los canisters se pueden optimizar utilizando
+[`wasm-opt`](https://github.com/WebAssembly/binaryen), que expone algunas
+opciones de optimización diferentes utilizando la configuración `optimize`:
 
 ```json
 {
-  "canisters": {
-    "my_canister": {
-      "optimize": "cycles"
-    }
-  }
+  "canisters": {
+    "my_canister": {
+      "optimize": "cycles"
+    }
+  }
 }
 ```
 
-- `optimize`: Possible values are `cycles` and `size`. The value `cycles` optimizes your canister at a `level 3` in `wasm-opt`, which is the recommended default value. `size` provides an aggressive optimization of the binary size. Learn more in the [`wasm-opt`](https://github.com/WebAssembly/binaryen) documentation.
+- `optimize`: Los valores posibles son `cycles` y `size`. El valor `cycles`
+  optimiza tu canister en un `nivel 3` en `wasm-opt`, que es el valor
+  recomendado por defecto. `size` proporciona una optimización agresiva del
+  tamaño binario. Obtén más información en la documentación de
+  [`wasm-opt`](https://github.com/WebAssembly/binaryen).
 
-## Further reading
+## Lectura adicional
 
-There are several workflow-specific `dfx.json` configuration options detailed in the full [`dfx.json` schema](/docs/building-apps/developer-tools/dfx-json-reference).
-
+Existen varias opciones de configuración de `dfx.json` específicas del flujo de
+trabajo que se detallan en el esquema completo de
+[`dfx.json`](/docs/building-apps/developer-tools/dfx-json-reference).

@@ -2,53 +2,74 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
 # dfx stop
 
-<MarkdownChipRow labels={["Reference"]} />
+<MarkdownChipRow labels={["Referencia"]} />
 
-Use the `dfx stop` command to stop the local canister execution environment processes that you currently have running on your computer. In most cases, you run the canister execution environment locally so that you can deploy canisters and test your dapps during development. To simulate the connection to the IC, these processes run continuously either in a terminal shell where you started them or the in the background until you stop or kill them.
+Utiliza el comando `dfx stop` para detener los procesos del entorno de ejecución
+local de los canisters que actualmente tienes en ejecución en tu computadora. En
+la mayoría de los casos, ejecutas el entorno de ejecución de los canisters
+localmente para poder implementar canisters y probar tus dapps durante el
+desarrollo. Para simular la conexión a la IC, estos procesos se ejecutan
+continuamente ya sea en una terminal donde los iniciaste o en segundo plano
+hasta que los detengas o los termines.
 
-You can run this command from any directory unless you are working with a dfx.json project that defines a project-specific local network.  See [Local Server Configuration](dfx-start.mdx#local-server-configuration) for details.
+Puedes ejecutar este comando desde cualquier directorio a menos que estés
+trabajando con un proyecto dfx.json que define una red local específica del
+proyecto. Consulta
+[Configuración del servidor local](dfx-start.mdx#configuración-del-servidor-local)
+para obtener más detalles.
 
-## Basic usage
+## Uso básico
 
-``` bash
+```bash
 dfx stop [flag]
 ```
 
-## Examples
+## Ejemplos
 
-You can stop the local canister execution environment processes that are running in the background by changing to a project directory then running the following command:
+Puedes detener los procesos del entorno de ejecución local de los canisters que
+están en ejecución en segundo plano cambiando al directorio del proyecto y luego
+ejecutando el siguiente comando:
 
-``` bash
+```bash
 dfx stop
 ```
 
-If the local canister execution environment is running in a current shell rather than in the background, open a new terminal shell, change to a project directory, then run the `dfx stop` command.
+Si el entorno de ejecución de canisters local se está ejecutando en la shell
+actual en lugar de en segundo plano, abre una nueva terminal, cambia al
+directorio del proyecto y ejecuta el comando `dfx stop`.
 
-The current process identifier (`pid`) for the canister execution environment process started by `dfx` is recorded in a file named `pid`. You can view the process identifier before running the `dfx stop` command by running one of the following commands:
+El identificador de proceso actual (`pid`) para el proceso del entorno de
+ejecución de canisters iniciado por `dfx` se registra en un archivo llamado
+`pid`. Puedes ver el identificador de proceso antes de ejecutar el comando
+`dfx stop` ejecutando uno de los siguientes comandos:
 
-For a project-specific local network:
-``` bash
+Para una red local específica de un proyecto:
+
+```bash
 cat .dfx/network/local/pid
 ```
 
-For the shared local network, on Linux:
-``` bash
+Para la red local compartida, en Linux:
+
+```bash
 cat $HOME/.local/share/dfx/network/local/pid
 ```
 
-For the shared local network, on MacOS:
-``` bash
+Para la red local compartida, en MacOS:
+
+```bash
 cat '$HOME/Library/Application Support/org.dfinity.dfx/network/local/pid'
 ```
 
-This command displays a process identifier similar to the following:
+Este comando muestra un identificador de proceso similar al siguiente:
 
-``` bash
+```bash
 1896
 ```
 
-If you are still having trouble with a persistent service running after attempting to stop, you can terminate all running jobs with:
+Si sigues teniendo problemas con un servicio persistente que se ejecuta después
+de intentar detenerlo, puedes terminar todos los trabajos en ejecución con:
 
-``` bash
+```bash
 dfx killall
 ```
