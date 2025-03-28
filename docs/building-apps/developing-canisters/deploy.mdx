@@ -1,95 +1,121 @@
 ---
-keywords: [beginner, tutorial, deploy, deploy canisters, local deployment, local dev, mainnet deployment, mainnet, playground, deploy playground, deploy to playground]
+keywords:
+  [
+    beginner,
+    tutorial,
+    deploy,
+    deploy canisters,
+    local deployment,
+    local dev,
+    mainnet deployment,
+    mainnet,
+    playground,
+    deploy playground,
+    deploy to playground,
+  ]
 ---
 
 import TabItem from "@theme/TabItem";
-import Tabs from '@theme/Tabs';
+import Tabs from "@theme/Tabs";
 import { AdornedTabs } from "/src/components/Tabs/AdornedTabs";
 import { AdornedTab } from "/src/components/Tabs/AdornedTab";
 import { BetaChip } from "/src/components/Chip/BetaChip";
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 
-# Deploy
+# Despliegue
 
-<MarkdownChipRow labels={["Beginner", "Developing canisters"]} />
+<MarkdownChipRow labels={["Principiante", "Desarrollando canisters"]} />
 
-After you have [created](/docs/building-apps/developing-canisters/what-are-canisters) a <GlossaryTooltip>canister</GlossaryTooltip>, you can deploy it to:
+Después de haber
+[creado](/docs/building-apps/developing-canisters/what-are-canisters) un
 
-- The local network created by `dfx` where cycles are fabricated.
+<GlossaryTooltip>canister</GlossaryTooltip>, puedes desplegarlo en:
 
-- The playground on the mainnet, which is a testnet-like sandbox environment. No cycles are required to deploy and run your canisters on the playground, but they will be removed after 20 minutes.
-
-- A custom [local or playground network](/docs/building-apps/developing-canisters/create).
-
-- The mainnet, designed for production use. This deployment method will cost [cycles](/docs/building-apps/essentials/gas-cost).
+- La red local creada por `dfx`, donde se fabrican los ciclos.
+- El playground en la mainnet, que es un entorno similar a una testnet. No se
+  requieren ciclos para desplegar y ejecutar tus canisters en el playground,
+  pero se eliminarán después de 20 minutos.
+- Una
+  [red local o playground personalizada](/docs/building-apps/developing-canisters/create).
+- La mainnet, diseñada para uso en producción. Este método de despliegue tendrá
+  un costo en [ciclos](/docs/building-apps/essentials/gas-cost).
 
 <Tabs>
-<TabItem value="prereq" label="Prerequisites" default>
+<TabItem value="prereq" label="Requisitos previos" default>
 
-<input type="checkbox"/> <a href="/docs/building-apps/getting-started/install">Install the IC SDK.</a>
+<input type="checkbox" />
+<a href="/docs/building-apps/getting-started/install">Instalar el SDK de IC.</a>
 <div>
 </div>
-<input type="checkbox"/> <a href="/docs/building-apps/developing-canisters/write">Write code.</a>
+<input type="checkbox"/> <a href="/docs/building-apps/developing-canisters/write">Escribir el código.</a>
 <div>
 </div>
-<input type="checkbox"/> <a href="/docs/building-apps/developing-canisters/creates">Create your canister.</a> Optional: <code>dfx deploy</code> will execute this step if not already complete.
+<input type="checkbox"/> <a href="/docs/building-apps/developing-canisters/creates">Crear tu canister.</a> Opcional: <code>dfx deploy</code> ejecutará este paso si aún no se ha completado.
 <div>
 </div>
-<input type="checkbox"/> <a href="/docs/building-apps/developing-canisters/compile">Compile your canister code into Wasm.</a> Optional: <code>dfx deploy</code> will execute this step if not already complete.
+<input type="checkbox"/> <a href="/docs/building-apps/developing-canisters/compile">Compilar el código de tu canister en Wasm.</a> Opcional: <code>dfx deploy</code> ejecutará este paso si aún no se ha completado.
 <div>
 </div>
-<input type="checkbox"/> <a href="/docs/building-apps/developing-canisters/install">Install the Wasm module into your canister.</a> Optional: <code>dfx deploy</code> will execute this step if not already complete.
+<input type="checkbox"/> <a href="/docs/building-apps/developing-canisters/install">Instalar el módulo Wasm en tu canister.</a> Opcional: <code>dfx deploy</code> ejecutará este paso si aún no se ha completado.
 </TabItem>
 </Tabs>
 
-Verify you are in your project's directory and the canisters you'd like to deploy are configured in the project's `dfx.json` file. , Then deploy your canisters using the `dfx deploy` command:
+Verifica que estés en el directorio de tu proyecto y que los canisters que
+deseas desplegar estén configurados en el archivo `dfx.json` de tu proyecto.
+Luego, despliega tus canisters utilizando el comando `dfx deploy`:
 
 ```
 dfx deploy <canister-name> --network=<NETWORK>
 ```
 
-## Sharing links to canisters
+## Compartir enlaces a canisters
 
-Once a dapp has been deployed to the mainnet, each canister can be accessed via a public URL. This URL can be shared with anyone, allowing them to view and interact with your dapp without you needing to configure domain names, DNS records, or other networking configurations.
+Una vez que un dapp ha sido desplegado en la mainnet, cada canister puede ser
+accesado a través de una URL pública. Esta URL puede ser compartida con
+cualquiera, permitiéndoles ver e interactuar con tu dapp sin necesidad de
+configurar nombres de dominio, registros DNS u otras configuraciones de red.
 
-You can use the following URL format to access a canister in the web browser:
+Puedes usar el siguiente formato de URL para acceder a un canister desde el
+navegador web:
 
 ```
 https://<canister_id>.icp0.io
 ```
 
-If you are sharing a link to a frontend canister, the frontend of the dapp will be displayed.
+Si compartes un enlace a un canister frontend, se mostrará el frontend del dapp.
 
-If you are sharing a link to a backend canister, the [Candid UI](/docs/building-apps/interact-with-canisters/candid/candid-concepts) will be displayed.
+Si compartes un enlace a un canister backend, se mostrará la
+[UI Candid](/docs/building-apps/interact-with-canisters/candid/candid-concepts).
 
-## Use a custom Motoko version with `dfx deploy`
+## Usar una versión personalizada de Motoko con `dfx deploy`
 
-To use a custom Motoko version with `dfx deploy`, export the following
-environment variable that indicates which Motoko base version you'd like `dfx`
-to use:
+Para usar una versión personalizada de Motoko con `dfx deploy`, exporta la
+siguiente variable de entorno que indica qué versión base de Motoko deseas que
+`dfx` utilice:
 
 ```bash
 DFX_MOC_PATH="$(vessel bin)/moc" dfx deploy
 ```
 
-## Setting a canister's init arguments
+## Configurar los argumentos de inicialización de un canister
 
-You can set a canister's init arguments when the canister is deployed by passing
-the `--argument` flag:
+Puedes configurar los argumentos de inicialización de un canister cuando el
+canister es desplegado pasando la opción `--argument`:
 
 ```bash
 dfx deploy <canister-name> --argument "(arg in candid)"
 ```
 
-If several arguments should be used, an argument file can be defined with the
-`--argument-file` flag instead:
+Si se deben usar varios argumentos, se puede definir un archivo de argumentos
+con la opción `--argument-file`:
 
 ```bash
 dfx deploy <canister-name> --argument-file file.txt
 ```
 
-Alternatively, init arguments can be set in `dfx.json` in `dfx` versions `v0.17.0` and newer:
+Alternativamente, los argumentos de inicialización pueden configurarse en
+`dfx.json` en versiones de `dfx` `v0.17.0` y superiores:
 
 ```json title="dfx.json"
 "canisters": {
@@ -102,19 +128,36 @@ Alternatively, init arguments can be set in `dfx.json` in `dfx` versions `v0.17.
  }
 ```
 
-If an init argument is set in `dfx.json` and set with the CLI command, the argument set in the CLI command is used.
+Si se configura un argumento de inicialización en `dfx.json` y también se
+configura mediante el comando CLI, se usará el argumento configurado en el
+comando CLI.
 
-## Testnets
+## Testnets (redes de prueba)
 
-Most blockchain networks have separate testnets that allow developers to test their projects in a production-like environment at a significantly lower cost than on the mainnet. Because the execution of canisters on ICP is fairly cheap and canisters can be upgraded once deployed, there is no testnet for ICP.
+La mayoría de las redes blockchain tienen testnets separadas que permiten a los
+desarrolladores probar sus proyectos en un entorno similar al de producción a un
+costo significativamente menor que en la mainnet. Debido a que la ejecución de
+canisters en ICP es bastante barata y los canisters pueden ser actualizados una
+vez desplegados, no existe una testnet para ICP.
 
-Developers are encouraged to test their canisters locally or directly on the mainnet.
+Se anima a los desarrolladores a probar sus canisters localmente o directamente
+en la mainnet.
 
-However, tools such as [ICP Ninja](https://icp.ninja) (a web IDE) and the playground environment (available from the CLI) can be used as testnet-like deployment options. They do not require cycles to deploy and operate a canister, but they do have limitations, and canisters will be automatically removed after 20 minutes.
+Sin embargo, herramientas como [ICP Ninja](https://icp.ninja) (un IDE web) y el
+entorno de playground (disponible desde la CLI) pueden usarse como opciones de
+despliegue similares a testnets. No requieren ciclos para desplegar y operar un
+canister, pero tienen limitaciones y los canisters serán eliminados
+automáticamente después de 20 minutos.
 
-For most developers, the playground option can be used. For more advanced developers and use cases, there are two possible options for a testnet-like environment:
+Para la mayoría de los desarrolladores, la opción del playground puede ser
+utilizada. Para desarrolladores más avanzados y casos de uso más específicos,
+existen dos opciones posibles para un entorno similar a testnet:
 
-- [Custom playgrounds](/docs/building-apps/developing-canisters/custom-networks): Developers can deploy their own custom instance of the playground on the mainnet, allowing for full customization of the playground's parameters.
-
-- [Custom `dfx` networks](/docs/building-apps/developing-canisters/custom-networks): The `dfx` named network feature can be used to create custom networks that can be used for testing segmented from other projects deployed locally.
-
+- [Playgrounds personalizados](/docs/building-apps/developing-canisters/custom-networks):
+  Los desarrolladores pueden desplegar su propia instancia personalizada del
+  playground en la mainnet, permitiendo una personalización total de los
+  parámetros del playground.
+- [Redes personalizadas de `dfx`](/docs/building-apps/developing-canisters/custom-networks):
+  La característica de red nombrada de `dfx` puede usarse para crear redes
+  personalizadas que se pueden utilizar para pruebas separadas de otros
+  proyectos desplegados localmente.

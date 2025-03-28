@@ -1,5 +1,16 @@
 ---
-keywords: [beginner, getting started, tutorial, hello world, writing code, writing smart contracts, write, smart contracts, write code]
+keywords:
+  [
+    beginner,
+    getting started,
+    tutorial,
+    hello world,
+    writing code,
+    writing smart contracts,
+    write,
+    smart contracts,
+    write code,
+  ]
 ---
 
 import TabItem from "@theme/TabItem";
@@ -11,147 +22,225 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 import Tabs from "@theme/Tabs";
 
-# Write
+# Escribir
 
-<MarkdownChipRow labels={["Beginner", "Developing canisters"]} />
+<MarkdownChipRow labels={["Principiante", "Desarrollo de canisters"]} />
 
-ICP supports a wide range of applications and architecture types. They can range from a single canister to complex, multi-<GlossaryTooltip>canister</GlossaryTooltip> projects and everything in between.
+ICP admite una amplia gama de aplicaciones y tipos de arquitecturas. Estas
+pueden ir desde un solo canister hasta proyectos complejos y
+multi-<GlossaryTooltip>canister</GlossaryTooltip>, y todo lo que hay entre
+ellos.
 
-You can begin writing and structuring your application using one of two primary workflows:
+Puedes comenzar a escribir y estructurar tu aplicación utilizando uno de los dos
+principales flujos de trabajo:
 
-- **Standard workflow**: The developer writes both the frontend and backend code, then deploys both to ICP as canisters.
+- **Flujo de trabajo estándar**: El desarrollador escribe tanto el código del
+  frontend como del backend, y luego despliega ambos en ICP como canisters.
 
-- **Framework-based workflow**: An external framework is used to help facilitate creating and deploying canisters. [Learn more about frameworks](#framework-based-workflow).
+- **Flujo de trabajo basado en frameworks**: Se utiliza un framework externo
+  para facilitar la creación y el despliegue de canisters.  
+  [Más información sobre frameworks](#framework-based-workflow).
 
-### Standard workflow
+### Flujo de trabajo estándar
 
-#### Choosing the programming language for the backend
+#### Elección del lenguaje de programación para el backend
 
-The backend stores the application’s data and contains the core logic.
-Several languages are supported, such as:
+El backend almacena los datos de la aplicación y contiene la lógica central. Se
+admiten varios lenguajes, como:
 
-- **[Motoko](/docs/motoko/main/getting-started/motoko-introduction)**: Supported by [DFINITY](https://github.com/dfinity/motoko). Motoko is production-ready and was specifically designed to onboard developers onto ICP and leverage the actor-based programming model of ICP. It is a high-level language with a garbage collector and syntax that is similar to TypeScript.
-Examples of production canisters that use Motoko include [ICDex](https://github.com/iclighthouse/ICDex) and [CycleOps](https://github.com/CycleOperators/cycles-manager). [Learn more about using Motoko](/docs/motoko/main/getting-started/motoko-introduction).
+- **[Motoko](/docs/motoko/main/getting-started/motoko-introduction)**:
+  Compatible con [DFINITY](https://github.com/dfinity/motoko). Motoko está listo
+  para producción y fue diseñado específicamente para facilitar la incorporación
+  de desarrolladores a ICP y aprovechar el modelo de programación basado en
+  actores de ICP. Es un lenguaje de alto nivel con un recolector de basura y una
+  sintaxis similar a TypeScript. Algunos ejemplos de canisters en producción que
+  usan Motoko incluyen [ICDex](https://github.com/iclighthouse/ICDex) y
+  [CycleOps](https://github.com/CycleOperators/cycles-manager).  
+  [Más información sobre el uso de Motoko](/docs/motoko/main/getting-started/motoko-introduction).
 
-- **[Rust](/docs/building-apps/developer-tools/cdks/rust/intro-to-rust)**: Supported by [DFINITY](https://github.com/dfinity/cdk-rs). Currently, Rust is the language with the most production coverage for ICP applications.
-All system canisters, such as [the DAO governing ICP](https://github.com/dfinity/ic/tree/master/rs/nns), [the ICP ledger](https://github.com/dfinity/ic/tree/master/rs/ledger_suite/icp), and the [Bitcoin](https://github.com/dfinity/bitcoin-canister) and [Ethereum](https://github.com/dfinity/ic/tree/master/rs/ethereum) integration canisters, are written in Rust. This language gives the developer full control over all aspects of the canister, starting from performance to memory management.
-The only disadvantage of Rust is that it is lower-level compared to other languages and requires more expert programming skills to write safe and secure code.
-[Learn more about using Rust](/docs/building-apps/developer-tools/cdks/rust/intro-to-rust).
+- **[Rust](/docs/building-apps/developer-tools/cdks/rust/intro-to-rust)**:
+  Compatible con [DFINITY](https://github.com/dfinity/cdk-rs). Actualmente, Rust
+  es el lenguaje con mayor cobertura en producción para aplicaciones en ICP.
+  Todos los canisters del sistema, como
+  [el DAO que gobierna ICP](https://github.com/dfinity/ic/tree/master/rs/nns),
+  [el ledger de ICP](https://github.com/dfinity/ic/tree/master/rs/ledger_suite/icp),
+  y los canisters de integración con
+  [Bitcoin](https://github.com/dfinity/bitcoin-canister) y
+  [Ethereum](https://github.com/dfinity/ic/tree/master/rs/ethereum), están
+  escritos en Rust. Este lenguaje brinda al desarrollador un control total sobre
+  todos los aspectos del canister, desde el rendimiento hasta la gestión de
+  memoria. La única desventaja de Rust es que es un lenguaje de más bajo nivel
+  en comparación con otros y requiere habilidades avanzadas para escribir código
+  seguro.  
+  [Más información sobre el uso de Rust](/docs/building-apps/developer-tools/cdks/rust/intro-to-rust).
 
-- **TypeScript (beta)**: Supported by [Demergent Labs](https://github.com/demergent-labs) under the name Azle. Azle is in beta. Please check [the Azle website](https://demergent-labs.github.io/azle/) for more information.
+- **TypeScript (beta)**: Compatible con
+  [Demergent Labs](https://github.com/demergent-labs) bajo el nombre Azle. Azle
+  está en fase beta. Consulta
+  [el sitio web de Azle](https://demergent-labs.github.io/azle/) para más
+  información.
 
-- **Python (beta)**: Supported by [Demergent Labs](https://github.com/demergent-labs) under the name Kybra. Kybra is in beta. Please check [the Kybra website](https://demergent-labs.github.io/kybra/kybra.html) for more information.
+- **Python (beta)**: Compatible con
+  [Demergent Labs](https://github.com/demergent-labs) bajo el nombre Kybra.
+  Kybra está en fase beta. Consulta
+  [el sitio web de Kybra](https://demergent-labs.github.io/kybra/kybra.html)
+  para más información.
 
-- **[C++](https://docs.icpp.world/)**: Supported through the [C++ CDK](https://docs.icpp.world/).
+- **[C++](https://docs.icpp.world/)**: Compatible a través del
+  [CDK de C++](https://docs.icpp.world/).
 
-#### Choosing a web framework for the frontend
+#### Elección de un framework web para el frontend
 
-The [HTTP Gateway protocol](/docs/references/http-gateway-protocol-spec) of ICP allows browsers to load web assets such as JS, HTML, and CSS from a canister via HTTP.
-This means that [web assets can be stored fully onchain](/docs/building-apps/frontends/using-an-asset-canister) and developers don’t need to use traditional centralized web hosting to serve the UI of their application.
+El [protocolo HTTP Gateway](/docs/references/http-gateway-protocol-spec) de ICP
+permite que los navegadores carguen activos web como JS, HTML y CSS desde un
+canister a través de HTTP. Esto significa que
+[los activos web pueden almacenarse completamente en la blockchain](/docs/building-apps/frontends/using-an-asset-canister)
+y que los desarrolladores no necesitan usar servicios de alojamiento web
+centralizados para servir la interfaz de usuario de su aplicación.
 
-[Svelte](https://svelte.dev/), [React](https://react.dev/), and [Vue](https://vuejs.org/) have been used successfully in production. `dfx v0.17.0` and newer can be used to generate project templates that include one of these frameworks.
+[Svelte](https://svelte.dev/), [React](https://react.dev/) y
+[Vue](https://vuejs.org/) han sido utilizados con éxito en producción.  
+`dfx v0.17.0` y versiones posteriores pueden generar plantillas de proyectos que
+incluyen uno de estos frameworks.
 
-Having no frontend at all is also a valid option for canisters that don’t have a UI and are callable only by users or other canisters. [Learn more](/docs/building-apps/frontends/using-an-asset-canister).
+No tener frontend también es una opción válida para canisters sin interfaz de
+usuario, que solo pueden ser llamados por usuarios u otros canisters.  
+[Más información](/docs/building-apps/frontends/using-an-asset-canister).
 
-#### Using an existing sample project
+#### Uso de un proyecto de ejemplo existente
 
-You can also obtain projects from other sources, such as [ICP Ninja](https://icp.ninja) or the [sample repository](https://github.com/dfinity/examples). If you are obtaining a project from a source other than the `dfx new` command, confirm that the project's root directory contains a `dfx.json` file that defines the project's canisters.
+También puedes obtener proyectos de otras fuentes, como
+[ICP Ninja](https://icp.ninja) o el
+[repositorio de ejemplos](https://github.com/dfinity/examples).  
+Si obtienes un proyecto de una fuente distinta al comando `dfx new`, asegúrate
+de que el directorio raíz del proyecto contenga un archivo `dfx.json` que defina
+los canisters del proyecto.
 
-### Framework-based workflow
+### Flujo de trabajo basado en frameworks
 
 #### Juno
-[Juno](https://juno.build/docs/intro) is a community project that is tailored for Web2 developers. It takes care of hosting code and data in canisters such that developers can write Web3 applications using familiar Web2 concepts and patterns. For more details, please follow [the official Juno documentation](https://juno.build/docs/intro).
+
+[Juno](https://juno.build/docs/intro) es un proyecto comunitario diseñado para
+desarrolladores Web2. Se encarga del alojamiento de código y datos en canisters,
+permitiendo a los desarrolladores escribir aplicaciones Web3 utilizando
+conceptos y patrones familiares de Web2.  
+Para más detalles, consulta
+[la documentación oficial de Juno](https://juno.build/docs/intro).
 
 #### Bitfinity EVM
 
-[Bitfinity EVM](https://docs.bitfinity.network/) is tailored for Solidity developers. It is a canister that runs an instance of the Ethereum virtual machine and allows developers to upload and execute canisters written in Solidity. For more details, please follow [the official Bitfinity documentation](https://docs.bitfinity.network/).
+[Bitfinity EVM](https://docs.bitfinity.network/) está diseñado para
+desarrolladores de Solidity. Es un canister que ejecuta una instancia de la
+Ethereum Virtual Machine y permite a los desarrolladores subir y ejecutar
+canisters escritos en Solidity.  
+Para más detalles, consulta
+[la documentación oficial de Bitfinity](https://docs.bitfinity.network/).
 
-## Creating a project
+## Creación de un proyecto
 
-Before writing canister code, you need to create a project by running the command:
+Antes de escribir código para canisters, debes crear un proyecto ejecutando el
+siguiente comando:
 
-```
+```bash
 dfx new PROJECT_NAME --type=motoko
 cd PROJECT_NAME
 ```
 
-Options for the `--type` flag are `motoko`, `rust`, `azle`, and `kybra`. Using [Rust](/docs/building-apps/developer-tools/cdks/rust/intro-to-rust), [Azle](https://demergent-labs.github.io/azle//), or [Kybra](https://demergent-labs.github.io/kybra/) may require additional dependencies to be installed if you have not developed with those languages in your environment before. View their corresponding documentation for more information.
+Las opciones para la flag `--type` son `motoko`, `rust`, `azle` y `kybra`.  
+Usar [Rust](/docs/building-apps/developer-tools/cdks/rust/intro-to-rust),
+[Azle](https://demergent-labs.github.io/azle//) o
+[Kybra](https://demergent-labs.github.io/kybra/) puede requerir la instalación
+de dependencias adicionales si aún no has desarrollado con esos lenguajes en tu
+entorno. Consulta su documentación correspondiente para más información.
 
-You should be in a directory that contains a file called `dfx.json`. This file is used to configure your project's settings. It includes the project's canister definitions, such as the canister's type, source code file, and dependencies.
+Debes estar en un directorio que contenga un archivo llamado `dfx.json`. Este
+archivo se usa para configurar la configuración de tu proyecto. Incluye las
+definiciones de los canisters del proyecto, como el tipo de canister, el archivo
+del código fuente y las dependencias.
 
 ```json title=dfx.json
 {
-  "canisters": {
-    "PROJECT_NAME_backend": { // Backend canister name
-      "main": "src/PROJECT_NAME_backend/main.mo", // Backend canister source code
-      "type": "motoko" // Canister language
-    },
-    "PROJECT_NAME_frontend": { // Frontend canister name
-      "dependencies": [
-        "PROJECT_NAME_backend"
-      ],
-      "source": [
-        "src/PROJECT_NAME_frontend/dist" // Frontend canister source code
-      ],
-      "type": "assets", // All frontend canisters will have type 'assets' regardless of the frontend framework used
-      "workspace": "PROJECT_NAME_frontend"
-    }
-  },
-  "defaults": {
-    "build": {
-      "args": "",
-      "packtool": ""
-    }
-  },
-  "output_env_file": ".env",
-  "version": 1
+  "canisters": {
+    "PROJECT_NAME_backend": {
+      // Nombre del canister de backend
+      "main": "src/PROJECT_NAME_backend/main.mo", // Código fuente del canister de backend
+      "type": "motoko" // Lenguaje del canister
+    },
+    "PROJECT_NAME_frontend": {
+      // Nombre del canister de frontend
+      "dependencies": ["PROJECT_NAME_backend"],
+      "source": [
+        "src/PROJECT_NAME_frontend/dist" // Código fuente del canister de frontend
+      ],
+      "type": "assets", // Todos los canisters de frontend tendrán el tipo 'assets' sin importar el framework usado
+      "workspace": "PROJECT_NAME_frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
 }
 ```
 
-## Default project architecture
+## Arquitectura de proyecto por defecto
 
-The `backend` canister stores the dapp's functions and core logic.
+El canister `backend` almacena las funciones y la lógica central de la dapp.
 
-The `frontend` canister stores the app's frontend assets, including files such as HTML, CSS, JavaScript, React, images, and videos.
+El canister `frontend` almacena los activos del frontend de la aplicación,
+incluyendo archivos como HTML, CSS, JavaScript, React, imágenes y videos.
 
 <div class="text--center">
-  <img
-    src={useBaseUrl("/img/docs/app-arch.png")}
-    alt="Application architecture"
-    width="800"
-  />
+  <img
+    src={useBaseUrl("/img/docs/app-arch.png")}
+    alt="Arquitectura de la aplicación"
+    width="800"
+  />
 </div>
 
-## Writing canister code
+## Escribir código para canisters
 
-This section will focus on writing backend canister code. If you want to explore some examples with application frontends, [view the ICP Ninja projects](https://icp.ninja).
+Esta sección se enfocará en escribir código para el canister de backend.  
+Si deseas explorar algunos ejemplos con frontends de aplicaciones,
+[consulta los proyectos de ICP Ninja](https://icp.ninja).
 
 <Tabs>
-<TabItem value="prereq" label="Prerequisites" default>
+<TabItem value="prereq" label="Requisitos previos" default>
 
-<input type="checkbox"/> Download and install an IDE or code editor. <a href="https://code.visualstudio.com/">VS Code is recommended.</a>
+<input type="checkbox" /> Descarga e instala un IDE o editor de código.
+<a href="https://code.visualstudio.com/">Se recomienda VS Code.</a>
 
 </TabItem>
 </Tabs>
 
-### Step 1: Open the backend canister source code file in your code editor.
+### Paso 1: Abre el archivo de código fuente del canister backend en tu editor de código.
 
-For Motoko projects, this file will be `src/PROJECT_NAME_backend/main.mo`. For writing Motoko code, the [Motoko VS Code extension](https://marketplace.visualstudio.com/items?itemName=dfinity-foundation.vscode-motoko) is highly recommended for syntax highlighting.
+Para proyectos en Motoko, este archivo será `src/PROJECT_NAME_backend/main.mo`.
+Para escribir código en Motoko, se recomienda la  
+[extensión de Motoko para VS Code](https://marketplace.visualstudio.com/items?itemName=dfinity-foundation.vscode-motoko)
+para resaltar la sintaxis.
 
-For Rust projects, this file will be `src/PROJECT_NAME_backend/src/lib.rs`.
+Para proyectos en Rust, este archivo será `src/PROJECT_NAME_backend/src/lib.rs`.
 
-For [Azle](https://demergent-labs.github.io/azle/get_started.html) or [Kybra](https://demergent-labs.github.io/kybra/) projects, please refer to their respective documentation for details about their default code files.
+Para proyectos en [Azle](https://demergent-labs.github.io/azle/get_started.html)
+o  
+[Kybra](https://demergent-labs.github.io/kybra/), consulta su documentación
+respectiva para más detalles sobre sus archivos de código predeterminados.
 
-If you are using the default template created by `dfx`, you will see the following default "Hello, world!" code:
+Si usas la plantilla por defecto creada por `dfx`, verás el siguiente código
+"Hello, world!":
 
 <AdornedTabs groupId="language">
 <TabItem value="motoko" label="Motoko" default>
-
 ```motoko title="src/PROJECT_NAME_backend/main.mo" no-repl
 actor {
 public query func greet(name : Text) : async Text {
-    return "Hello, " # name # "!";
-  };
+    return "Hello, " # name # "!";
+  };
 };
 ```
 
@@ -161,33 +250,45 @@ public query func greet(name : Text) : async Text {
 ```rust title="src/PROJECT_NAME_backend/src/lib.rs"
 #[ic_cdk::query]
 fn greet(name: String) -> String {
-    format!("Hello, {}!", name)
+    format!("Hello, {}!", name)
 }
 ```
 
 </TabItem>
 <AdornedTab value={"typescript"} label="TypeScript" endAdornment={<BetaChip />}>
 
-[View the Azle documentation](https://demergent-labs.github.io/azle/get_started.html).
+[Ver la documentación de Azle](https://demergent-labs.github.io/azle/get_started.html).
 
 </AdornedTab>
 
 <AdornedTab value={"python"} label="Python" endAdornment={<BetaChip />}>
 
-[View the Kybra documentation](https://demergent-labs.github.io/kybra/).
+[Ver la documentación de Kybra](https://demergent-labs.github.io/kybra/).
 
 </AdornedTab>
 </AdornedTabs>
 
-### Step 2: Add randomness.
+### Paso 2: Agrega aleatoriedad.
 
-A key feature of ICP is its ability to generate [onchain randomness](/docs/building-apps/network-features/randomness) using a verifiable random function (VRF) and [chain-key cryptography](https://internetcomputer.org/how-it-works/chain-key-technology). In each round of consensus on a subnet, the VRF is evaluated using the number of the round as input, producing a fresh set of random bytes. Then, the bytes are used as the seed for a pseudorandom number generator (PRNG), called random tape, which uses chain-key cryptography to create a random, unique value for each canister that requests it. Through this process, it is impossible to predict future outputs.
+Una característica clave de ICP es su capacidad de generar
+[aleatoriedad en la blockchain](/docs/building-apps/network-features/randomness)
+usando una función aleatoria verificable (VRF) y
+[criptografía de clave en cadena](https://internetcomputer.org/how-it-works/chain-key-technology).
+En cada ronda de consenso en un subnet, la VRF se evalúa con el número de la
+ronda como entrada, produciendo un nuevo conjunto de bytes aleatorios. Estos
+bytes se utilizan como semilla para un generador de números pseudoaleatorios
+(PRNG), llamado _random tape_, el cual usa criptografía de clave en cadena para
+crear un valor único y aleatorio para cada canister que lo solicite. A través de
+este proceso, es imposible predecir los resultados futuros.
 
-To use randomness in your canister, you need to make a call to the `raw_rand` method of the [management canister](/docs/references/system-canisters/management-canister).
+Para utilizar la aleatoriedad en tu canister, debes hacer una llamada al método
+`raw_rand` del
+[canister de gestión](/docs/references/system-canisters/management-canister).
 
-To demonstrate how to use randomness, you will create a simple app that generates a random number.
+Para demostrar cómo usar la aleatoriedad, crearemos una aplicación simple que
+genera un número aleatorio.
 
-Remove the existing code in your backend source code file. Then, insert the following:
+Elimina el código existente en tu archivo backend y agrega el siguiente:
 
 <AdornedTabs groupId="language">
 <TabItem value="motoko" label="Motoko" default>
@@ -197,28 +298,21 @@ import Nat8 "mo:base/Nat8";
 import Debug "mo:base/Debug";
 import Blob "mo:base/Blob";
 import Nat "mo:base/Nat";
-// The management canister's principal ID is "aaaaa-aa".
+// El ID principal del canister de gestión es "aaaaa-aa".
 import IC "ic:aaaaa-aa";
 
 actor {
-  // Create a stable variable to store the current random number.
-  // Stable variables persist across canister upgrades.
   stable var currentRandomNumber : Nat = 0;
 
-  // Create a function to generate a new random number.
-  // This function calls the raw_rand method of the management canister.
-  // Then it uses the random bytes returned to generate a random number.
   private func generateNewNumber() : async () {
       let randomBytes = await IC.raw_rand();
       if (randomBytes.size() > 0) {
-          // Use the first byte to generate a number between 0 and 255
           let bytes : [Nat8] = Blob.toArray(randomBytes);
           currentRandomNumber := Nat8.toNat(bytes[0]);
           Debug.print("Generated new random number: " # Nat.toText(currentRandomNumber));
       };
   };
 
-  // Use a query call to get current random number.
   public query func getCurrentNumber() : async Nat {
       currentRandomNumber
   };
@@ -267,28 +361,28 @@ fn get_current_number() -> Nat {
 </TabItem>
 <AdornedTab value={"typescript"} label="TypeScript" endAdornment={<BetaChip />}>
 
-
-
-[Learn more about Azle](https://demergent-labs.github.io/azle/).
+[Aprender más sobre Azle](https://demergent-labs.github.io/azle/).
 
 </AdornedTab>
 <AdornedTab value={"python"} label="Python" endAdornment={<BetaChip />}>
 
-
-
-[Learn more about Kybra](https://demergent-labs.github.io/kybra/).
+[Aprender más sobre Kybra](https://demergent-labs.github.io/kybra/).
 
 </AdornedTab>
 </AdornedTabs>
 
+### Paso 3: Agregar un temporizador.
 
-### Step 3: Add a timer.
+Hasta ahora, el código del canister genera un número aleatorio y lo almacena en
+una variable. Puedes recuperar este valor con una función de consulta (_query
+function_). Para demostrar otra función de ICP, agregaremos un temporizador que
+generará un nuevo número aleatorio cada 5 segundos.
 
-At this point, the canister code generates a random number and stores it in a variable. You can retrieve that value with a query function. To demonstrate another feature of ICP, let's add a timer that generates a new random number every 5 seconds.
+Los temporizadores permiten ejecutar acciones automáticamente después de un
+intervalo o retraso especificado, permitiendo que los canisters realicen tareas
+autónomas.
 
-Timers are used to automatically execute actions after a specified interval or delay, enabling canisters to perform autonomous tasks.
-
-Add the following highlighted line to your backend code:
+Añade la siguiente línea a tu código backend:
 
 <AdornedTabs groupId="language">
 <TabItem value="motoko" label="Motoko" default>
@@ -388,23 +482,32 @@ fn get_current_number() -> Nat {
 </TabItem>
 <AdornedTab value={"typescript"} label="TypeScript" endAdornment={<BetaChip />}>
 
-[Learn more about Azle](https://demergent-labs.github.io/azle/).
+[Aprender más sobre Azle](https://demergent-labs.github.io/azle/).
 
 </AdornedTab>
 <AdornedTab value={"python"} label="Python" endAdornment={<BetaChip />}>
 
-[Learn more about Kybra](https://demergent-labs.github.io/kybra/).
+[Aprender más sobre Kybra](https://demergent-labs.github.io/kybra/).
 
 </AdornedTab>
 </AdornedTabs>
 
-### Step 4: Retrieve external data.
+### Paso 4: Obtener datos externos.
 
-HTTPS outcalls can obtain data from any external source, including other blockchains, traditional Web2 APIs, and other web services. When HTTPS outcalls are used locally, the returned result is not validated since the local replica is only a single node. HTTPS outcalls used on the mainnet validate the returned result through the subnet's consensus, providing security that the data obtained has not been maliciously tampered with during transport.
+Las llamadas HTTPS pueden obtener datos de cualquier fuente externa, incluyendo
+otras blockchains, APIs Web2 tradicionales y otros servicios web. Cuando se
+utilizan llamadas HTTPS localmente, el resultado devuelto no se valida ya que la
+réplica local es solo un nodo. Las llamadas HTTPS utilizadas en la mainnet
+validan el resultado devuelto a través del consenso del subnet, proporcionando
+seguridad de que los datos obtenidos no han sido manipulados maliciosamente
+durante el transporte.
 
-HTTPS outcalls currently support `GET` and `POST` HTTPS methods.
+Las llamadas HTTPS actualmente admiten los métodos `GET` y `POST` de HTTPS.
 
-To demonstrate how to create and send HTTPS outcalls, let's add an HTTPS outcall GET request that returns information about ICP's daily stats from the ICP API. Insert the following highlighted code into your backend source code file:
+Para demostrar cómo crear y enviar llamadas HTTPS, agreguemos una llamada HTTPS
+GET que devuelve información sobre las estadísticas diarias de ICP desde la API
+de ICP. Inserta el siguiente código resaltado en tu archivo de código fuente
+backend:
 
 <AdornedTabs groupId="language">
 <TabItem value="motoko" label="Motoko" default>
@@ -497,9 +600,16 @@ actor {
 }
 ```
 
-This HTTP outcalls code references custom types, as indicated by the import statement `import Types "Types";` and code statements like `Types.TransformContext`. Custom type definitions can be created from within the `main.mo` file, but for types that may be used in several different source code files, it can be beneficial to define them in a single `Types.mo` file, and then import them as needed.
+Este código de llamadas HTTP externas hace referencia a tipos personalizados,
+como se indica en la declaración de importación `import Types "Types";` y en
+declaraciones de código como `Types.TransformContext`. Las definiciones de tipos
+personalizados pueden crearse dentro del archivo `main.mo`, pero para tipos que
+pueden usarse en varios archivos de código fuente, puede ser beneficioso
+definirlos en un solo archivo `Types.mo` y luego importarlos según sea
+necesario.
 
-Create a new file called `src/PROJECT_NAME_backend/Types.mo` that contains the following:
+Crea un nuevo archivo llamado `src/PROJECT_NAME_backend/Types.mo` que contenga
+lo siguiente:
 
 ```motoko title="src/PROJECT_NAME_backend/Types.mo" no-repl
 import IC "ic:aaaaa-aa";
@@ -644,30 +754,41 @@ fn transform(raw: TransformArgs) -> HttpResponse {
 }
 // highlight-end
 ```
+
 </TabItem>
 <AdornedTab value={"typescript"} label="TypeScript" endAdornment={<BetaChip />}>
 
-[Learn more about Azle](https://demergent-labs.github.io/azle/).
+[Leer mas sobre Azle](https://demergent-labs.github.io/azle/).
 
 </AdornedTab>
 <AdornedTab value={"python"} label="Python" endAdornment={<BetaChip />}>
 
-[Learn more about Kybra](https://demergent-labs.github.io/kybra/).
+[Leer mas sobre Kybra](https://demergent-labs.github.io/kybra/).
 
 </AdornedTab>
 </AdornedTabs>
 
-### Step 5: Putting it all together.
+### Paso 5: Combinándolo todo.
 
-At this point, we have three functions in this code that demonstrate three different ICP features: **onchain randomness**, **timers** for autonomous execution, and **HTTPS outcalls** to obtain data. Let's edit the code to use them in conjunction with one another rather than separately:
+En este punto, tenemos tres funciones en este código que demuestran tres
+características diferentes de ICP: **aleatoriedad en la cadena (onchain
+randomness)**, **temporizadores (timers)** para ejecución autónoma y **llamadas
+HTTP externas (HTTPS outcalls)** para obtener datos. Vamos a editar el código
+para usarlas en conjunto en lugar de por separado:
 
-1. Onchain randomness will be used to generate a number between 133000 and 133255. This number will be used to select a recent [NNS proposal]((/docs/building-apps/governing-apps/nns/overview) at random.
+1. La aleatoriedad en la cadena se utilizará para generar un número entre 133000
+   y 133255. Este número se usará para seleccionar aleatoriamente una propuesta
+   reciente del [NNS](/docs/building-apps/governing-apps/nns/overview).
 
-2. The random number will be passed into the HTTPS outcall. The HTTPS outcall will query the IC API endpoint for details about that specific proposal number.
+2. El número aleatorio se pasará a la llamada HTTP externa. La llamada HTTP
+   consultará el endpoint de la API de IC para obtener detalles sobre esa
+   propuesta específica.
 
-3. Timers will be used to generate a new number every 30 seconds and send a new HTTPS outcall every 32 seconds.
+3. Se utilizarán temporizadores para generar un nuevo número cada 30 segundos y
+   enviar una nueva llamada HTTP externa cada 32 segundos.
 
-Replace the backend canister source code with the following revised code:
+Reemplaza el código fuente del canister backend con el siguiente código
+revisado:
 
 <AdornedTabs groupId="language">
 <TabItem value="motoko" label="Motoko" default>
@@ -760,7 +881,8 @@ actor {
 }
 ```
 
-You will still need the `Types.mo` file created in step 4. You do not need to make any edits to the `Types.mo` file.
+Aún necesitarás el archivo `Types.mo` creado en el paso 4. No necesitas hacer
+ninguna edición en el archivo `Types.mo`.
 
 </TabItem>
 <TabItem value="rust" label="Rust">
@@ -860,14 +982,15 @@ fn print_results() {
 </TabItem>
 <AdornedTab value={"typescript"} label="TypeScript" endAdornment={<BetaChip />}>
 
-[Learn more about Azle](https://demergent-labs.github.io/azle/).
+[Lee mas sobre Azle](https://demergent-labs.github.io/azle/).
 
 </AdornedTab>
 <AdornedTab value={"python"} label="Python" endAdornment={<BetaChip />}>
 
-[Learn more about Kybra](https://demergent-labs.github.io/kybra/).
+[Lee mas sobre Kybra](https://demergent-labs.github.io/kybra/).
 
 </AdornedTab>
 </AdornedTabs>
 
-Save your code file, then [learn how to deploy the project](deploy.mdx).
+Guarda el archivo de codigo, luego
+[aprende como desplegar el proyecto](deploy.mdx).

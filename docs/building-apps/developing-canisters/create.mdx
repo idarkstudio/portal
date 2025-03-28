@@ -1,53 +1,86 @@
 ---
-keywords: [beginner, tutorial, create, create canister, compile code, compile canister, compile, build, install, canister install, install code]
+keywords:
+  [
+    beginner,
+    tutorial,
+    create,
+    create canister,
+    compile code,
+    compile canister,
+    compile,
+    build,
+    install,
+    canister install,
+    install code,
+  ]
 ---
 
 import TabItem from "@theme/TabItem";
-import Tabs from '@theme/Tabs';
+import Tabs from "@theme/Tabs";
 import { AdornedTabs } from "/src/components/Tabs/AdornedTabs";
 import { AdornedTab } from "/src/components/Tabs/AdornedTab";
 import { BetaChip } from "/src/components/Chip/BetaChip";
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 
-# Create
+# Crear
 
-<MarkdownChipRow labels={["Beginner", "Developing canisters"]} />
+<MarkdownChipRow labels={["Principiante", "Desarrollando canisters"]} />
 
-Before a canister can be deployed, it must be created and registered with ICP, either locally, on the playground, or on the mainnet. When a canister is initially created, it is empty and does not contain code or state; it only contains the canister settings, canister ID, cycles balance, and controllers. Then, the canister's source code must then be compiled into WebAssembly and installed into the canister.
+Antes de que un canister pueda ser desplegado, debe ser creado y registrado en
+ICP, ya sea localmente, en el playground o en la mainnet. Cuando un canister es
+creado inicialmente, está vacío y no contiene código ni estado; solo contiene la
+configuración del canister, el ID del canister, el saldo de ciclos y los
+controladores. Luego, el código fuente del canister debe ser compilado en
+WebAssembly e instalado en el canister.
 
-Once you have a project that contains a `dfx.json` file defining a project's canisters, you can create one of those canisters using the `dfx canister create` command.
+Una vez que tengas un proyecto que contenga un archivo `dfx.json` que defina los
+canisters del proyecto, puedes crear uno de esos canisters usando el comando
+`dfx canister create`.
 
 :::info
-Canister creation is done automatically in the background of the `dfx deploy` command. However, there may be certain workflows where creating an empty canister is necessary.
+
+La creación de canisters se realiza automáticamente en segundo plano cuando se
+ejecuta el comando `dfx deploy`. Sin embargo, puede haber ciertos flujos de
+trabajo en los que sea necesario crear un canister vacío.
+
 :::
 
-Canisters are created with [`dfx canister create`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-create). They are initially empty and do not contain program code. The code must be [compiled](/docs/building-apps/developing-canisters/what-are-canisters) into Wasm and [installed](/docs/building-apps/developing-canisters/what-are-canisters) into the empty canister before it can be deployed.
+Los canisters se crean con el comando
+[`dfx canister create`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-create).
+Inicialmente están vacíos y no contienen código de programa. El código debe ser
+[compilado](/docs/building-apps/developing-canisters/what-are-canisters) en Wasm
+e [instalado](/docs/building-apps/developing-canisters/what-are-canisters) en el
+canister vacío antes de que pueda ser desplegado.
 
-Create your canisters from within the project's directory:
+Crea tus canisters desde el directorio del proyecto:
 
 ```
 dfx canister create <canister-name> --network=<NETWORK>
 ```
 
-Settings can be configured while creating a canister using optional flags. [View the full list of settings](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-create).
+Se pueden configurar ajustes durante la creación de un canister utilizando
+banderas opcionales.
+[Consulta la lista completa de configuraciones](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-create).
 
-When a canister is created, the following steps happen:
+Cuando se crea un canister, ocurren los siguientes pasos:
 
-- A canister ID is registered with the local replica or the mainnet for each canister in the project's `dfx.json` file.
+- Un ID de canister es registrado con el replicador local o la mainnet para cada
+  canister en el archivo `dfx.json` del proyecto.
 
-- The following canister components are created:
-  - List of controllers.
-  - Cycles balance.
-  - Reserved cycles balance.
-  - Canister status.
-  - Resource reservations.
+- Se crean los siguientes componentes del canister:
 
-- Each canister ID is returned in the command line.
+  - Lista de controladores.
+  - Saldo de ciclos.
+  - Saldo de ciclos reservado.
+  - Estado del canister.
+  - Reservas de recursos.
 
-### Errors related to canister creation
+- El ID de cada canister es devuelto en la línea de comandos.
 
-Common errors related to canister creation include:
+### Errores relacionados con la creación de canisters
 
-- [Canister not found](/docs/references/execution-errors#canister-not-found).
-- [Maximum number of canisters reached](/docs/references/execution-errors#maximum-number-of-canisters-reached).
+Los errores comunes relacionados con la creación de canisters incluyen:
+
+- [Canister no encontrado](/docs/references/execution-errors#canister-not-found).
+- [Se alcanzó el número máximo de canisters](/docs/references/execution-errors#maximum-number-of-canisters-reached).

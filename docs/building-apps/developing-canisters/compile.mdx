@@ -1,67 +1,123 @@
 ---
-keywords: [beginner, tutorial, create, create canister, compile code, compile canister, compile, build, install, canister install, install code]
+keywords:
+  [
+    beginner,
+    tutorial,
+    create,
+    create canister,
+    compile code,
+    compile canister,
+    compile,
+    build,
+    install,
+    canister install,
+    install code,
+  ]
 ---
 
 import TabItem from "@theme/TabItem";
-import Tabs from '@theme/Tabs';
+import Tabs from "@theme/Tabs";
 import { AdornedTabs } from "/src/components/Tabs/AdornedTabs";
 import { AdornedTab } from "/src/components/Tabs/AdornedTab";
 import { BetaChip } from "/src/components/Chip/BetaChip";
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 
-# Compile
+# Compilar
 
-<MarkdownChipRow labels={["Beginner", "Developing canisters"]} />
+<MarkdownChipRow labels={["Principiante", "Desarrollando canisters"]} />
 
-After you have created your canisters, you need to compile the code into a WebAssembly module before it can be deployed on ICP.
+Después de haber creado tus canisters, necesitas compilar el código en un módulo
+WebAssembly antes de que pueda ser desplegado en ICP.
 
 :::danger
 
-You must create your canisters before you can build them; otherwise, you will receive an error message saying they do not exist.
+Debes crear tus canisters antes de poder compilarlos; de lo contrario, recibirás
+un mensaje de error indicando que no existen.
 
 :::
 
 :::info
-Canister compilation is done automatically in the background of the `dfx deploy` command. However, there may be certain workflows where manually compiling code into Wasm is necessary.
+
+La compilación del canister se realiza automáticamente en segundo plano cuando
+se ejecuta el comando `dfx deploy`. Sin embargo, puede haber ciertos flujos de
+trabajo en los que sea necesario compilar manualmente el código a Wasm.
+
 :::
 
-[`dfx build`](/docs/building-apps/developer-tools/dfx/dfx-build) looks for source code to compile for each canister configured under the `canisters` section in the [`dfx.json`](/docs/building-apps/developer-tools/dfx-json-reference) file. `dfx build` can be used to compile a specific canister or all canisters defined in the project.
+[`dfx build`](/docs/building-apps/developer-tools/dfx/dfx-build) busca el código
+fuente para compilarlo para cada canister configurado en la sección `canisters`
+del archivo
+[`dfx.json`](/docs/building-apps/developer-tools/dfx-json-reference).
+`dfx build` se puede usar para compilar un canister específico o todos los
+canisters definidos en el proyecto.
 
-Verify the location of your project's files and their file names. If necessary, edit your project's `dfx.json` file to reflect the current intended configuration.
+Verifica la ubicación de los archivos de tu proyecto y sus nombres. Si es
+necesario, edita el archivo `dfx.json` de tu proyecto para reflejar la
+configuración actual prevista.
 
-Compile your canisters from within the project's directory:
+Compila tus canisters desde el directorio del proyecto:
 
 ```
 dfx build <canister-name> --network=<NETWORK>
 ```
 
-Compilation happens on the local machine of the developer. `dfx build` isn't the only workflow that can be used for compiling code. For example, Rust canisters can be compiled using `cargo`.
+La compilación ocurre en la máquina local del desarrollador. `dfx build` no es
+el único flujo de trabajo que se puede utilizar para compilar código. Por
+ejemplo, los canisters escritos en Rust pueden ser compilados utilizando
+`cargo`.
 
-When this command is executed, the following steps happen:
+Cuando se ejecuta este comando, ocurren los siguientes pasos:
 
-- The source code for a canister is compiled into a Wasm module.
+- El código fuente de un canister se compila en un módulo Wasm.
 
-- If a canister is written in Motoko, type declarations are automatically generated using Candid.
+- Si un canister está escrito en Motoko, las declaraciones de tipos se generan
+  automáticamente usando Candid.
 
-- If a canister is written in Rust, the build process checks for Rust vulnerabilities.
+- Si un canister está escrito en Rust, el proceso de construcción verifica
+  vulnerabilidades en Rust.
 
-### How code is compiled to Wasm
+### Cómo se compila el código a Wasm
 
-WebAssembly (Wasm) is a platform-independent binary format that can be executed in the Wasm virtual machine.
-Many modern compilers support Wasm as the compilation target along with traditional targets such as x86 and arm32.
+WebAssembly (Wasm) es un formato binario independiente de la plataforma que
+puede ser ejecutado en la máquina virtual de Wasm. Muchos compiladores modernos
+admiten Wasm como objetivo de compilación junto con objetivos tradicionales como
+x86 y arm32.
 
-There are three types of Wasm depending on where the Wasm virtual machine is hosted and how it interacts with users and the host environment:
+Existen tres tipos de Wasm dependiendo de dónde se aloje la máquina virtual de
+Wasm y cómo interactúe con los usuarios y el entorno del host:
 
-- **Web browser**: The Wasm program interacts with the users via the JavaScript bindings of the browser. The primary toolchain for compiling Wasm for browsers is [Emscripten](https://emscripten.org/). Note that such Wasm programs are incompatible with ICP.
+- **Navegador web**: El programa Wasm interactúa con los usuarios a través de
+  los enlaces de JavaScript del navegador. La cadena de herramientas principal
+  para compilar Wasm para navegadores es [Emscripten](https://emscripten.org/).
+  Ten en cuenta que dichos programas Wasm son incompatibles con ICP.
 
-- **WASI**: This abbreviation stands for [WebAssembly System Interface](https://wasi.dev/). It is becoming the standard for running Wasm programs outside of web browsers. Major Wasm runtimes such as Wasmtime and Wasmer support this standard. Compilers denote this target as `wasm32-wasi`. ICP does not directly support WASI, but it is possible to preprocess a WASI program and make it runnable on ICP with the community project [`wasi2ic`](https://github.com/wasm-forge/wasi2ic).
+- **WASI**: Esta abreviatura significa
+  [WebAssembly System Interface](https://wasi.dev/). Se está convirtiendo en el
+  estándar para ejecutar programas Wasm fuera de los navegadores web. Los
+  principales entornos de ejecución de Wasm como Wasmtime y Wasmer admiten este
+  estándar. Los compiladores denominan este objetivo como `wasm32-wasi`. ICP no
+  admite directamente WASI, pero es posible preprocesar un programa WASI y
+  hacerlo ejecutable en ICP con el proyecto comunitario
+  [`wasi2ic`](https://github.com/wasm-forge/wasi2ic).
 
-- **Vanilla Wasm**: There is no standard API for interacting with users and the host environment. Every host environment provides its own API. ICP uses this approach and provides a set of functions, called the System API, to the Wasm program. Many compilers denote this target as `wasm32-unknown-unknown` since they do not know the target host environment and do not make any assumptions about the available APIs.
+- **Wasm Vanilla**: No existe una API estándar para interactuar con los usuarios
+  y el entorno del host. Cada entorno de host proporciona su propia API. ICP
+  utiliza este enfoque y proporciona un conjunto de funciones, llamadas la API
+  del Sistema, al programa Wasm. Muchos compiladores denominan este objetivo
+  como `wasm32-unknown-unknown` ya que no conocen el entorno de host objetivo y
+  no hacen suposiciones sobre las APIs disponibles.
 
-The Canister Development Kit (CDK) of supported programming language comes with build scripts that link the System API and compile the code to Wasm programs that are compatible with ICP:
+El Kit de Desarrollo de Canisters (CDK) de los lenguajes de programación
+compatibles viene con scripts de construcción que enlazan la API del Sistema y
+compilan el código a programas Wasm que son compatibles con ICP:
 
-- Rust and Motoko compile to the `wasm32-unknown-unknown` target directly under the hood.
-- Azle and Kybra first compile to the `wasm32-wasi` target and then convert the Wasm binary to `wasm32-unknown-unknown` using the `wasi2ic` tool.
+- Rust y Motoko se compilan al objetivo `wasm32-unknown-unknown` directamente
+  bajo el capó.
+- Azle y Kybra primero se compilan al objetivo `wasm32-wasi` y luego convierten
+  el binario Wasm a `wasm32-unknown-unknown` utilizando la herramienta
+  `wasi2ic`.
 
-For the convenience of developers, `dfx` wraps the CDK-specific build scripts and provides the `dfx build` command to compile the code to a Wasm binary.
+Para la conveniencia de los desarrolladores, `dfx` envuelve los scripts de
+construcción específicos del CDK y proporciona el comando `dfx build` para
+compilar el código a un binario Wasm.

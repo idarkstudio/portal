@@ -1,92 +1,183 @@
 ---
-keywords: [beginner, tutorial, deploy, deploy canisters, subnets, application subnet, european subnet, gdpr, subnets, subnet size, subnet flag, specific subnet, system subnet, fiduciary subnet ]
+keywords:
+  [
+    beginner,
+    tutorial,
+    deploy,
+    deploy canisters,
+    subnets,
+    application subnet,
+    european subnet,
+    gdpr,
+    subnets,
+    subnet size,
+    subnet flag,
+    specific subnet,
+    system subnet,
+    fiduciary subnet,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 
-# Deploying to specific subnets
+# Despliegue en subredes específicas
 
-<MarkdownChipRow labels={["Advanced", "Developing canisters"]} />
+<MarkdownChipRow labels={["Avanzado", "Desplegando canisters"]} />
 
-A subnet on ICP is a collection of interacting replicas that run their own, separate instance of the ICP consensus mechanism, effectively creating their own blockchain on which a set of canisters can run. Each subnet can communicate with other subnets and is controlled by a root subnet. The root subnet uses chain-key cryptography to delegate its authority to the various subnets.
+Una **subred** en ICP es un conjunto de réplicas que interactúan entre sí y que
+ejecutan su propia instancia del mecanismo de consenso de ICP, creando
+efectivamente su propia blockchain sobre la que pueden ejecutarse un conjunto de
+canisters. Cada subred puede comunicarse con otras subredes y está controlada
+por la **subred raíz**, que utiliza criptografía de **chain-key** para delegar
+su autoridad a las diversas subredes.
 
-The replica is implemented by a number of software components that, as a bundle, replicate state and computation across all of the nodes in a subnet blockchain.
+La réplica es implementada por varios componentes de software que, como un
+conjunto, replican el estado y la computación a través de todos los nodos de la
+blockchain de la subred.
 
-Each subnet can communicate with other subnets and is controlled by the **root subnet**, which uses [chain-key](/docs/references/glossary#c) cryptography to delegate its authority to the various subnets.
+Cada subred puede comunicarse con otras subredes y está controlada por la
+**subred raíz**, que utiliza criptografía de
+[chain-key](/docs/references/glossary#c) para delegar su autoridad a las
+diversas subredes.
 
-Subnets allow ICP to scale indefinitely. The problem with traditional blockchains (and individual subnets) is that they are limited by the computing power of a single node machine because every node has to run everything that happens on the blockchain to participate in the [consensus](/docs/references/glossary#c) algorithm. Running multiple independent subnets in parallel allows the Internet Computer to break through this single-machine barrier.
+Las subredes permiten a ICP escalar indefinidamente. El problema de las
+blockchain tradicionales (y de las subredes individuales) es que están limitadas
+por la potencia de computación de una sola máquina nodo, ya que cada nodo debe
+ejecutar todo lo que ocurre en la blockchain para participar en el algoritmo de
+[consenso](/docs/references/glossary#c). Ejecutar múltiples subredes
+independientes en paralelo permite que Internet Computer rompa esta barrera de
+una sola máquina.
 
-Not every canister has the same security, size, or feature requirements, therefore not every subnet has the same configuration. The `system` subnet (which contains the [NNS](/docs/references/glossary#n) and several other critical services), for example, does not charge any cycles for its canisters, because those canisters should be available in all circumstances. Other subnets can have different features enabled or disabled, such as the subnet running the canisters for the Bitcoin integration.
+No todos los canisters tienen los mismos requisitos de seguridad, tamaño o
+características, por lo que no todas las subredes tienen la misma configuración.
+Por ejemplo, la subred `system` (que contiene el
+[NNS](/docs/references/glossary#n) y otros servicios críticos) no cobra ciclos a
+sus canisters, ya que esos canisters deben estar disponibles en todas las
+circunstancias. Otras subredes pueden tener características habilitadas o
+deshabilitadas, como la subred que ejecuta los canisters para la integración de
+Bitcoin.
 
-There are four types of subnets: application, system, fiduciary, and the European subnet.
+Existen cuatro tipos de subredes: **aplicación**, **sistema**, **fiduciarias** y
+la subred **europea**.
 
-## Application subnets
+## Subredes de aplicación
 
-Application subnets are the most common type of subnet on ICP. Almost all canisters run on an application subnet. Each application subnet has 13 nodes and can be individually configured to have different features enabled or disabled.
+Las **subredes de aplicación** son el tipo de subred más común en ICP. Casi
+todos los canisters se ejecutan en una subred de aplicación. Cada subred de
+aplicación tiene 13 nodos y puede configurarse individualmente para habilitar o
+deshabilitar diferentes características.
 
-You may want to deploy to a specific application subnet for reasons such as resource availability, latency, feature availability, or simply keeping all of your projects on one subnet for simplified management.
+Es posible que desees desplegar en una subred de aplicación específica por
+razones como la disponibilidad de recursos, latencia, disponibilidad de
+características o simplemente para mantener todos tus proyectos en una sola
+subred para una gestión simplificada.
 
-### Deploying to a specific subnet
+### Desplegar en una subred específica
 
-To deploy your canister to a specific subnet, you can pass the `--subnet` flag to the `dfx deploy` command:
+Para desplegar tu canister en una subred específica, puedes pasar el flag
+`--subnet` al comando `dfx deploy`:
 
 ```
 dfx deploy --network=ic --subnet=fuqsr-in2lc-zbcjj-ydmcw-pzq7h-4xm2z-pto4i-dcyee-5z4rz-x63ji-nae
 ```
 
-You can view the full list of subnets and details about them, such as the number of canisters and block rate, on the [ICP dashboard](https://dashboard.internetcomputer.org/subnets).
+Puedes ver la lista completa de subredes y detalles sobre ellas, como el número
+de canisters y la tasa de bloques, en el
+[ICP dashboard](https://dashboard.internetcomputer.org/subnets).
 
-### Deploying to the same subnet as an existing canister
+### Desplegar en la misma subred que un canister existente
 
-If you have a canister deployed to the mainnet already and you want to deploy another canister to that same subnet, you can use the `--next-to` flag along with the canister ID of the canister already deployed on the mainnet:
+Si ya tienes un canister desplegado en la red principal y deseas desplegar otro
+canister en la misma subred, puedes usar el flag `--next-to` junto con el ID del
+canister ya desplegado en la red principal:
 
 ```
 dfx deploy --network=ic --next-to=kfvpr-oiaaa-aaaar-qam2q-cai
 ```
 
-## System subnets
+## Subredes del sistema
 
-System subnets are reserved for running canisters that provide system functionality to ICP, such as the NNS canisters. You cannot deploy an application to the system subnets. System subnets may have special configurations, such as not charging cycles to any of the canisters running on the subnet since system canisters need to be available at all times. System subnets also have a more generous per-call instruction limit and a more generous Wasm module size limit.
+Las **subredes del sistema** están reservadas para ejecutar canisters que
+proporcionan funcionalidad del sistema para ICP, como los canisters del NNS. No
+puedes desplegar aplicaciones en las subredes del sistema. Estas subredes pueden
+tener configuraciones especiales, como no cobrar ciclos a los canisters que se
+ejecutan en ellas, ya que esos canisters deben estar disponibles en todo
+momento. También tienen un límite más generoso de instrucciones por llamada y un
+límite más generoso en el tamaño de los módulos Wasm.
 
-There are currently three system subnets:
+Actualmente existen tres subredes del sistema:
 
-- [`tdb26`](https://dashboard.internetcomputer.org/subnet/tdb26-jop6k-aogll-7ltgs-eruif-6kk7m-qpktf-gdiqx-mxtrf-vb5e6-eqe) hosts the 14 canisters that make up the NNS.
+- [`tdb26`](https://dashboard.internetcomputer.org/subnet/tdb26-jop6k-aogll-7ltgs-eruif-6kk7m-qpktf-gdiqx-mxtrf-vb5e6-eqe)
+  alberga los 14 canisters que componen el NNS.
+- [`uzr34`](https://dashboard.internetcomputer.org/subnet/uzr34-akd3s-xrdag-3ql62-ocgoh-ld2ao-tamcv-54e7j-krwgb-2gm4z-oqe)
+  alberga los canisters para
+  [Internet Identity](/docs/building-apps/authentication/overview), el
+  [ledger de ciclos](/docs/defi/token-ledgers/cycles-ledger), el
+  [canister de tipo de cambio](/docs/references/system-canisters/) y el
+  dashboard, además de almacenar las claves de firma del umbral.
+- [`w4rem`](https://dashboard.internetcomputer.org/subnet/w4rem-dv5e3-widiz-wbpea-kbttk-mnzfm-tzrc7-svcj3-kbxyb-zamch-hqe)
+  alberga los canisters para la integración de Bitcoin.
 
-- [`uzr34`](https://dashboard.internetcomputer.org/subnet/uzr34-akd3s-xrdag-3ql62-ocgoh-ld2ao-tamcv-54e7j-krwgb-2gm4z-oqe) hosts the canisters for [Internet Identity](/docs/building-apps/authentication/overview), the [cycles ledger](/docs/defi/token-ledgers/cycles-ledger), the [exchange rate canister](/docs/references/system-canisters/) and the dashboard, and stores the backup threshold signature keys.
+## Subredes fiduciarias
 
-- [`w4rem`](https://dashboard.internetcomputer.org/subnet/w4rem-dv5e3-widiz-wbpea-kbttk-mnzfm-tzrc7-svcj3-kbxyb-zamch-hqe) hosts the canisters for the Bitcoin integration.
+Una **subred fiduciaria** es una subred de más de 13 nodos. Los canisters que se
+ejecutan en esta subred más grande pagarán más ciclos en comparación con los
+canisters que se ejecutan en subredes de 13 nodos, pero a cambio tendrán un
+nivel de seguridad más alto debido al mayor tamaño de la subred. El costo de los
+ciclos escala linealmente con el número de nodos. El tipo de subred fiduciaria
+fue creado para permitir un despliegue más seguro de aplicaciones DeFi que
+necesitan garantías aún más fuertes que las que puede proporcionar una subred de
+13 nodos.
 
-## Fiduciary subnets
+Actualmente existe una subred fiduciaria,
+[`pzp6e`](https://dashboard.internetcomputer.org/subnet/pzp6e-ekpqk-3c5x7-2h6so-njoeq-mt45d-h3h6c-q3mxf-vpeq5-fk5o7-yae),
+que contiene 34 nodos, alberga el canister EVM RPC y almacena las claves de
+firma de umbral (t-ECDSA y t-Schnorr).
 
-A fiduciary subnet is a subnet larger than 13 nodes. Canisters running on this larger subnet will pay more cycles compared to canisters running on 13-node subnets, but in return they will have a higher level of security due to the bigger subnet size. The cycle costs scale linearly to the number of nodes. The fiduciary subnet type was created to enable safer deployment of DeFi applications that need even stronger guarantees than the ones that a 13-node subnet can provide.
+Puedes desplegar en la subred fiduciaria usando el comando:
 
-There is currently one fiduciary subnet, [`pzp6e`](https://dashboard.internetcomputer.org/subnet/pzp6e-ekpqk-3c5x7-2h6so-njoeq-mt45d-h3h6c-q3mxf-vpeq5-fk5o7-yae), which contains 34 nodes, hosts the EVM RPC canister, and stores the threshold signature (t-ECDSA and t-Schnorr) signing keys.
+```
+dfx deploy --network=ic --subnet-type fiduciary
+```
 
-You can deploy to the fiduciary subnet using the command `dfx deploy --network=ic --subnet-type fiduciary`.
+## La subred europea
 
-## The European subnet
+La subred de tipo **'europea'** indica que la subred está compuesta únicamente
+por máquinas nodo ubicadas en la región geográfica europea. Este tipo de subred
+permite a los desarrolladores y empresas construir aplicaciones que requieren
+una infraestructura alineada con el GDPR y aprovechar la descentralización de
+blockchain con necesidades de soberanía de datos regional.
 
-The 'European' type subnet indicates that the subnet is comprised of only node machines located in the European geographic region. This type of subnet allows for developers and enterprises to build applications that require a GDPR-aligned infrastructure and leverage blockchain decentralization with regional data sovereignty needs.
-
-There is currently one European subnet, [`bkfrj`](https://dashboard.internetcomputer.org/subnet/bkfrj-6k62g-dycql-7h53p-atvkj-zg4to-gaogh-netha-ptybj-ntsgw-rqe).
+Actualmente existe una subred europea,
+[`bkfrj`](https://dashboard.internetcomputer.org/subnet/bkfrj-6k62g-dycql-7h53p-atvkj-zg4to-gaogh-netha-ptybj-ntsgw-rqe).
 
 :::caution
-The European subnet enables applications to be GDPR-compliant, but developers and enterprises must take further measures to ensure that their applications meet all GDPR requirements.
+
+La subred europea permite que las aplicaciones sean compatibles con el GDPR,
+pero los desarrolladores y empresas deben tomar medidas adicionales para
+garantizar que sus aplicaciones cumplan con todos los requisitos del GDPR.
+
 :::
 
-To deploy to the European subnet, use the `--subnet-type` flag:
+Para desplegar en la subred europea, utiliza el flag `--subnet-type`:
 
 ```
 dfx deploy --network=ic --subnet-type european
 ```
 
-## Important notes about deploying to subnets
+## Notas importantes sobre el despliegue en subredes
 
-When deploying a project to the mainnet using `dfx`:
+Cuando se despliega un proyecto en la red principal usando `dfx`:
 
-- If your canisters have already been created, `dfx` will continue to deploy the canisters on the same subnet that they are already located on.
+- Si tus canisters ya han sido creados, `dfx` continuará desplegando los
+  canisters en la misma subred en la que ya se encuentran.
 
-- If your canisters do not exist yet, when they are created, `dfx` will create them on the same subnet as your cycles wallet canister. It is recommended to consistently use the same wallet when using the European subnet.
+- Si tus canisters no existen aún, cuando se creen, `dfx` los ubicará en la
+  misma subred que el canister de tu billetera de ciclos. Se recomienda usar
+  consistentemente la misma billetera cuando utilices la subred europea.
 
-- If your canisters do not exist yet, you can specify the wallet canister that should be used to create them by using the `dfx deploy --wallet <WALLET_CANISTER_ID>`. This will create the new canisters on the same subnet where the specified `<WALLET_CANISTER_ID>` is located.
+- Si tus canisters no existen aún, puedes especificar el canister de la
+  billetera que debe usarse para crearlos utilizando el comando
+  `dfx deploy --wallet <WALLET_CANISTER_ID>`. Esto creará los nuevos canisters
+  en la misma subred en la que se encuentra el `<WALLET_CANISTER_ID>`.
