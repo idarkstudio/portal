@@ -4,54 +4,82 @@ keywords: [beginner, candid, tutorial, didc, candid ui, ic-repl, candid tests]
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Candid tools
+# Herramientas de Candid
 
 <MarkdownChipRow labels={["Beginner", "Tutorial"]} />
 
-Candid is an **interface description language** that can be used by ICP canisters to define the public interface of a service. Candid is language-agnostic and allows for the interoperation of services and frontends written in different programming languages, including Motoko, Rust, and JavaScript.
+Candid es un **lenguaje de descripción de interfaces** que puede ser utilizado
+por los canisters de ICP para definir la interfaz pública de un servicio. Candid
+es independiente del lenguaje y permite la interoperabilidad entre servicios y
+frontends escritos en diferentes lenguajes de programación, incluyendo Motoko,
+Rust y JavaScript.
 
-Several tools exist to facilitate writing, testing, and interacting with Candid. These tools are described below.
+Existen varias herramientas para facilitar la escritura, prueba e interacción
+con Candid. A continuación se describen algunas de estas herramientas.
 
 ## didc
 
-Candid CLI, known as `didc`, is a multi-purpose CLI tool that can be used to execute several Candid functions, such as checking the validity of a Candid file, generating test suites for different languages, encoding and decoding Candid binary data, and generating random Candid values.
+El CLI de Candid, conocido como `didc`, es una herramienta multipropósito que se
+puede utilizar para ejecutar varias funciones de Candid, tales como comprobar la
+validez de un archivo Candid, generar suites de pruebas para diferentes
+lenguajes, codificar y decodificar datos binarios de Candid, y generar valores
+Candid aleatorios.
 
-To use `didc`, first download the [prebuilt binary](https://github.com/dfinity/candid/releases).
+Para usar `didc`, primero descarga el
+[binario preconstruido](https://github.com/dfinity/candid/releases).
 
-The following commands for `didc` are available:
+Los siguientes comandos de `didc` están disponibles:
 
-| Command       | Description        | Example      | Example response       |
-|---------------|--------------------|--------------|------------------------|
-| `didc check <INPUT> [PREVIOUS]` | Type check Candid file | `didc check test_file.did` | Will return parser error if invalid; will return no output if valid. |
-| `didc bind --target <TARGET> <INPUT>` | Binding for different languages | `didc bind hello.did -t js` | `export const idlFactory = ({ IDL }) => { return IDL.Service({ 'greet' : IDL.Func([IDL.Text] [IDL.Text], []) });}`|
-| `didc test [OPTIONS] <INPUT>` | Generate test suites for different languages | `didc test -t did test_file.test.did` | Will return parser error if invalid; will return no output if valid. |
-| `didc encode [OPTIONS] [ARGS]` | Encode Candid value | `didc encode '(42, vec {1;2;-3})'` | `4449444c016d7c027c002a0301027d` |
-| `didc decode [OPTIONS] [BLOB]` | Decode Candid binary data | `didc decode '4449444c016d7c027c002a0301027d'` |
-| `didc random [OPTIONS]` | Generate random Candid values | `didc random -t '(int, text)'` | `(-72_594_379_354_493_140_610_202_928_640_651_761_468, "_J:t7^>")` |
-| `didc hash  <INPUT>` | Compute the hash of a field name | `didc hash '(int, text)'` | `2392326401` |
-| `didc subtype [OPTIONS] <TY1> <TY2>` | Check for subtyping | `didc subtype func () -> (t1)` | Result is a `reference` or `null`|
+| Comando                               | Descripción                                        | Ejemplo                                        | Respuesta de ejemplo                                                                                               |
+| ------------------------------------- | -------------------------------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `didc check <INPUT> [PREVIOUS]`       | Verificar el tipo de un archivo Candid             | `didc check test_file.did`                     | Devuelve un error de analizador si es inválido; no devuelve nada si es válido.                                     |
+| `didc bind --target <TARGET> <INPUT>` | Vinculación para diferentes lenguajes              | `didc bind hello.did -t js`                    | `export const idlFactory = ({ IDL }) => { return IDL.Service({ 'greet' : IDL.Func([IDL.Text] [IDL.Text], []) });}` |
+| `didc test [OPTIONS] <INPUT>`         | Generar suites de prueba para diferentes lenguajes | `didc test -t did test_file.test.did`          | Devuelve un error de analizador si es inválido; no devuelve nada si es válido.                                     |
+| `didc encode [OPTIONS] [ARGS]`        | Codificar valor Candid                             | `didc encode '(42, vec {1;2;-3})'`             | `4449444c016d7c027c002a0301027d`                                                                                   |
+| `didc decode [OPTIONS] [BLOB]`        | Decodificar datos binarios Candid                  | `didc decode '4449444c016d7c027c002a0301027d'` |
+| `didc random [OPTIONS]`               | Generar valores Candid aleatorios                  | `didc random -t '(int, text)'`                 | `(-72_594_379_354_493_140_610_202_928_640_651_761_468, "_J:t7^>")`                                                 |
+| `didc hash <INPUT>`                   | Calcular el hash de un nombre de campo             | `didc hash '(int, text)'`                      | `2392326401`                                                                                                       |
+| `didc subtype [OPTIONS] <TY1> <TY2>`  | Verificar subtipos                                 | `didc subtype func () -> (t1)`                 | El resultado es `reference` o `null`                                                                               |
 
 ## Candid UI
 
-Candid UI is a web-based tool used to interact with a canister's Candid interface. It is automatically generated for every canister with a Candid definition when that canister is deployed. However, it can also be used through the dedicated [Candid UI canister](https://a4gq6-oaaaa-aaaab-qaa4q-cai.raw.ic0.app/) running on the mainnet, which allows you to provide a canister ID or upload a `.did` file to interact with the canister's Candid interface.
+Candid UI es una herramienta basada en la web que se utiliza para interactuar
+con la interfaz Candid de un canister. Se genera automáticamente para cada
+canister con una definición Candid cuando el canister es desplegado. Sin
+embargo, también puede ser utilizada a través del
+[canister UI de Candid](https://a4gq6-oaaaa-aaaab-qaa4q-cai.raw.ic0.app/) en la
+red principal, lo que permite proporcionar un ID de canister o cargar un archivo
+`.did` para interactuar con la interfaz Candid del canister.
 
-You can learn more about the Candid UI in [using Candid](/docs/building-apps/interact-with-canisters/candid/using-candid#interact-with-a-service-from-a-browser).
+Puedes aprender más sobre cómo utilizar Candid en
+[interactuar con un servicio desde un navegador](/docs/building-apps/interact-with-canisters/candid/using-candid#interact-with-a-service-from-a-browser).
 
 ## ic-repl
 
-`ic-repl` is a REPL environment that can be used to communicate with canisters using Candid. The documentation for `ic-repl` can be found [in the GitHub ic-repl repo](https://github.com/dfinity/ic-repl).
+`ic-repl` es un entorno REPL que se puede utilizar para comunicarse con
+canisters utilizando Candid. La documentación de `ic-repl` se puede encontrar
+[en el repositorio de GitHub de ic-repl](https://github.com/dfinity/ic-repl).
 
-## Candid test suite
+## Suite de pruebas de Candid
 
-For additional Candid testing, you can use the [Candid test suite](https://github.com/dfinity/candid/blob/master/test), which uses Candid test data to test the implementation for compliance. The test suite covers:
+Para realizar pruebas adicionales de Candid, puedes utilizar la
+[Suite de pruebas de Candid](https://github.com/dfinity/candid/blob/master/test),
+que utiliza datos de prueba Candid para verificar el cumplimiento de la
+implementación. La suite de pruebas cubre:
 
-- Parsing Candid service descriptions.
+- Análisis de descripciones de servicios Candid.
 
-- Decoding binary Candid data for a given Candid type and asserting a success or failure.
+- Decodificación de datos binarios Candid para un tipo Candid dado y
+  comprobación de éxito o fallo.
 
-- Parsing textual Candid data for a given Candid type and asserting a success or failure.
+- Análisis de datos Candid en formato textual para un tipo Candid dado y
+  comprobación de éxito o fallo.
 
-- Comparing decoded/parsed values using the host language’s notion of equality.
+- Comparación de valores decodificados/analizados utilizando el concepto de
+  igualdad del lenguaje host.
 
-The Candid test suite currently does not include testing for encoding since the Candid binary format is not canonical. It is encouraged that implementations of this test suite be extended with randomized round-tripping tests (host value → candid → host value) to cover encoding.
-
+Actualmente, la suite de pruebas de Candid no incluye pruebas para la
+codificación, ya que el formato binario Candid no es canónico. Se recomienda que
+las implementaciones de esta suite de pruebas sean extendidas con pruebas de ida
+y vuelta aleatorias (valor host → candid → valor host) para cubrir la
+codificación.

@@ -5,24 +5,36 @@ keywords: [beginner, concept, candid, idl]
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 
+# ¿Qué es Candid?
 
-# What is Candid?
+<MarkdownChipRow labels={["Principiante", "Concepto"]} />
 
-<MarkdownChipRow labels={["Beginner", "Concept"]} />
+Candid es un **lenguaje de descripción de interfaces**. Su propósito principal
+es describir la interfaz pública de un **servicio**, generalmente en forma de un
+programa desplegado como un <GlossaryTooltip>canister</GlossaryTooltip> que se
+ejecuta en el Internet Computer. Uno de los principales beneficios de Candid es
+que es independiente del lenguaje de programación y permite la interoperabilidad
+entre canisters escritos en diferentes lenguajes de programación, como Motoko,
+Rust y JavaScript.
 
-Candid is an **interface description language**. Its primary purpose is to describe the public interface of a **service**, usually in the form of a program deployed as a <GlossaryTooltip>canister</GlossaryTooltip> that runs on the Internet Computer. One of the key benefits of Candid is that it is language-agnostic and allows interoperation between canisters written in different programming languages, including Motoko, Rust, and JavaScript.
+Un archivo de descripción de servicio en Candid (un archivo `.DID`) puede ser
+escrito a mano o generado a partir de una implementación de servicio. Candid es
+un sistema fuertemente tipado con un conjunto de tipos que cubren de manera
+canónica la mayoría de los casos de uso. Todos los tipos están descritos en
+detalle en la [documentación de referencia](/docs/references/candid-ref).
 
-A Candid service description file (a `.DID` file) can either be written by hand or generated from a service implementation. Candid is a strongly typed system with a set of types that canonically cover most uses. All types are described in detail in the [reference](/docs/references/candid-ref) documentation.
-
-The simplest service description specifies a service with a `ping` method:
+La descripción de servicio más sencilla especifica un servicio con un método
+`ping`:
 
 ```candid
 service : {
-  ping : () -> ();
+  ping : () -> ();
 }
 ```
 
-Every method of a canister has a sequence of argument and result types. A method can also include annotations, like the `query` notation shown in this example:
+Cada método de un canister tiene una secuencia de tipos de argumentos y
+resultados. Un método también puede incluir anotaciones, como la notación
+`query` mostrada en este ejemplo:
 
 ```candid
 service counter: {
@@ -32,28 +44,50 @@ service counter: {
 }
 ```
 
-In this example, the described service `counter` consists of the following public methods:
+En este ejemplo, el servicio descrito como `counter` consta de los siguientes
+métodos públicos:
 
-- The `inc` method changes the value of a counter. It takes no inputs and returns no output types.
+- El método `inc` cambia el valor de un contador. No toma entradas y no devuelve
+  tipos de salida.
 
-- The `read` method reads the current value of a counter. It takes no input and returns a `Nat` output type.
+- El método `read` lee el valor actual de un contador. No toma entradas y
+  devuelve un tipo de salida `Nat`.
 
-- The `write` method can be used to set the counter value. It takes an input of `Nat` and returns no output type.
+- El método `write` se puede usar para establecer el valor del contador. Toma
+  una entrada de tipo `Nat` y no devuelve tipo de salida.
 
-Given this simple interface description, it is possible for you to interact with this `counter` service directly from the command line, through a web-based frontend, or programmatically from a scripting language.
+Dada esta simple descripción de interfaz, es posible interactuar con este
+servicio `counter` directamente desde la línea de comandos, a través de un
+frontend basado en la web o programáticamente desde un lenguaje de script.
 
-In addition to interoperability, Candid supports the evolution of service interfaces by precisely specifying the changes that can be made without breaking existing clients. For example, you can safely add new optional parameters to a service without losing compatibility for existing clients.
+Además de la interoperabilidad, Candid admite la evolución de las interfaces de
+servicio al especificar de manera precisa los cambios que se pueden hacer sin
+romper los clientes existentes. Por ejemplo, puedes agregar de forma segura
+nuevos parámetros opcionales a un servicio sin perder compatibilidad con los
+clientes existentes.
 
-### Why use Candid?
+### ¿Por qué usar Candid?
 
-The features that make Candid particularly well-suited for developing dapps for the Internet Computer include the following:
+Las características que hacen que Candid sea particularmente adecuado para
+desarrollar dapps para el Internet Computer incluyen las siguientes:
 
--   Many languages like JSON, XML, and Protobuf only describe how to map individual values to bytes or characters. These data description languages do not describe services as a whole. These languages focus on the data types you want to transfer instead of the methods that make use of those data types.
+- Muchos lenguajes como JSON, XML y Protobuf solo describen cómo mapear valores
+  individuales a bytes o caracteres. Estos lenguajes de descripción de datos no
+  describen los servicios como un todo. Estos lenguajes se enfocan en los tipos
+  de datos que deseas transferir en lugar de los métodos que hacen uso de esos
+  tipos de datos.
 
--   Candid implementations map the Candid value directly to types and values of the host language. With Candid, developers do not construct or deconstruct some abstract `Candid` value.
+- Las implementaciones de Candid mapean el valor de Candid directamente a los
+  tipos y valores del lenguaje anfitrión. Con Candid, los desarrolladores no
+  construyen ni destruyen un valor abstracto `Candid`.
 
--   Candid defines rules for how services and their interfaces can be upgraded in a sound and compositional way.
+- Candid define reglas sobre cómo los servicios y sus interfaces pueden ser
+  actualizados de manera sólida y compositiva.
 
--   Candid is inherently a higher-order language. With Candid, you can pass more than plain data, including references to services and methods. Candid support for safe upgrades takes such higher-order use into account.
+- Candid es inherentemente un lenguaje de orden superior. Con Candid, puedes
+  pasar más que solo datos planos, incluyendo referencias a servicios y métodos.
+  El soporte de Candid para actualizaciones seguras toma en cuenta este uso de
+  orden superior.
 
--   Candid has built-in support for specific Internet Computer features, such as the `query` annotation.
+- Candid tiene soporte integrado para características específicas del Internet
+  Computer, como la anotación `query`.

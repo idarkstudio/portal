@@ -1,5 +1,14 @@
 ---
-keywords: [beginner, query calls, queries, composite queries, query call, making a query, call a canister with query]
+keywords:
+  [
+    beginner,
+    query calls,
+    queries,
+    composite queries,
+    query call,
+    making a query,
+    call a canister with query,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
@@ -7,95 +16,134 @@ import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 import TabItem from "@theme/TabItem";
 import { AdornedTabs } from "/src/components/Tabs/AdornedTabs";
 
-# Query calls
+# Llamadas de consulta (Query calls)
 
-<MarkdownChipRow labels={["Beginner", "Tutorial"]} />
+<MarkdownChipRow labels={["Principiante", "Tutorial"]} />
 
-ICP supports two types of calls: updates and queries. Query calls, also referred to as non-replicated queries, are executed on a single node and return a synchronous response.
+ICP soporta dos tipos de llamadas: escritura (update) y consulta (query). Las
+llamadas de consulta, también conocidas como consultas no replicadas, se
+ejecutan en un solo nodo y devuelven una respuesta sincrónica.
 
-A query call discards state changes and typically executes on a single node. An update call is executed on all nodes and persists canister state changes. Since they execute on a single node, they do not go through consensus and can be much faster than [update](/docs/building-apps/interact-with-canisters/update-calls) calls.
+Una llamada de consulta descarta los cambios de estado y típicamente se ejecuta
+en un solo nodo. Una llamada de escritura se ejecuta en todos los nodos y
+persiste los cambios de estado del canister. Como se ejecutan en un solo nodo,
+no pasan por consenso y pueden ser mucho más rápidas que las llamadas de
+[escritura](/docs/building-apps/interact-with-canisters/update-calls).
 
-It is possible to execute a query call as an update. In such a case, the query still discards the state changes, but the execution happens on all nodes, and the result of execution goes through consensus. This “query-as-update” execution mode is also known as a replicated query.
+Es posible ejecutar una llamada de consulta como escritura. En ese caso, la
+consulta sigue descartando los cambios de estado, pero la ejecución ocurre en
+todos los nodos, y el resultado de la ejecución pasa por consenso. Este modo de
+ejecución "consulta-como-escritura" también se conoce como consulta replicada.
 
-Query calls are:
+Las llamadas de consulta son:
 
-- Fast (200-400ms).
-- Can't modify state.
-- Do not go through consensus.
-- Return a synchronous response.
-- Executed on a single node.
-- Currently free.
+- Rápidas (200-400ms).
+- No pueden modificar el estado.
+- No pasan por consenso.
+- Devuelven una respuesta sincrónica.
+- Ejecutadas en un solo nodo.
+- Actualmente gratuitas.
 
+## Haciendo llamadas de consulta con `dfx`
 
-## Making query calls with `dfx`
+Para hacer una llamada de consulta a un canister, usa el comando
+[`dfx canister call`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-call)
+con el flag `--query`:
 
-To make a query call to a canister, use the [`dfx canister call`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-call) command with the `--query` flag:
+- `dfx canister call --query <canister-name> <method_name>`: Haz una llamada de
+  consulta a un canister desplegado localmente. La réplica local debe estar en
+  ejecución para crear un canister localmente. Iníciala con
+  `dfx start --background`.
 
-- `dfx canister call --query <canister-name> <method_name>`: Make a query call to a canister deployed locally. The local replica must be running to create a canister locally. Start it with `dfx start --background`.
+- `dfx canister call --query <canister-name> <method_name> --network=playground`:
+  Haz una llamada de consulta a un canister desplegado en el
+  [playground](/docs/building-apps/developing-canisters/deploy#testnets). Las
+  llamadas de consulta son gratuitas, pero los canisters son temporales y se
+  eliminarán después de 20 minutos.
 
-- `dfx canister call --query <canister-name> <method_name> --network=playground`: Make a query call to a canister deployed on the [playground](/docs/building-apps/developing-canisters/deploy#testnets). Query calls are free, but canisters are temporary and will be removed after 20 minutes.
+- `dfx canister call --query <canister-name> <method_name> --network=ic`: Haz
+  una llamada de consulta a un canister desplegado en la mainnet. Las llamadas
+  de consulta son gratuitas.
 
-- `dfx canister call --query <canister-name> <method_name> --network=ic`: Make a query call to a canister deployed on the mainnet. Query calls are free.
+La desventaja de las llamadas de consulta es que la respuesta no es confiable ya
+que proviene de un solo nodo. Se debe usar una llamada de escritura o una
+[consulta certificada](#certified-queries) para llamadas críticas de seguridad.
 
-The downside of query calls is that the response is not trusted since it's coming from a single node. An update call or a [certified query](#certified-queries) should be used for security-critical calls.
-
-### Making query calls from within canisters
+### Haciendo llamadas de consulta desde dentro de canisters
 
 <AdornedTabs groupId="language">
 <TabItem value="motoko" label="Motoko" default>
 
 ```motoko no-repl file=../../references/samples/motoko/counter/src/Main.mo#L5-L9
+
 ```
+
 </TabItem>
 
 <TabItem value="rust" label="Rust">
 
 ```rust file=../../references/samples/rust/counter/src/lib.rs#L8-L12
+
 ```
+
 </TabItem>
 
 <AdornedTab value={"typescript"} label="TypeScript" endAdornment={<BetaChip />}>
 
 [Learn more about Azle.](https://demergent-labs.github.io/azle/)
+
 </AdornedTab>
 
 <AdornedTab value={"python"} label="Python" endAdornment={<BetaChip />}>
 
 [Learn more about Kybra.](https://demergent-labs.github.io/kybra/)
+
 </AdornedTab>
 </AdornedTabs>
 
-## Query stats
+## Estadísticas de consultas
 
-The **query stats** feature gives developers information about the use of each canister's query calls. An approximation of some statistics related to query stats is made available to developers as part of the existing canister status API.
+La función de **estadísticas de consultas** brinda a los desarrolladores
+información sobre el uso de las llamadas de consulta de cada canister. Una
+aproximación de algunas estadísticas relacionadas con las estadísticas de
+consultas está disponible para los desarrolladores como parte de la API de
+estado del canister existente.
 
-The statistics collected in the canister status are an approximation. They might not capture all query calls, especially for infrequently used canisters.
-Query stats are collected in intervals by the system and therefore may lag behind the actual query execution by up to 30 mins.
+Las estadísticas recopiladas en el estado del canister son una aproximación.
+Pueden no capturar todas las llamadas de consulta, especialmente para canisters
+poco utilizados. Las estadísticas de consultas se recopilan en intervalos por el
+sistema y, por lo tanto, pueden retrasarse respecto a la ejecución real de la
+consulta hasta 30 minutos.
 
-Statistics of composite queries are not currently collected.
+Actualmente no se recopilan estadísticas de consultas compuestas.
 
-### Canister status entries
+### Entradas de estado del canister
 
-The feature exposes the following fields to the canister status endpoint:
+La función expone los siguientes campos al endpoint de estado del canister:
 
-- A counter for the total number of query calls executed by that canister.
-- The sum of all instructions executed by the canister for query calls.
-- The sum of the payload sizes of all query requests to the canister.
-- The sum of the payload sizes of all query responses from the canister.
+- Un contador para el número total de llamadas de consulta ejecutadas por ese
+  canister.
+- La suma de todas las instrucciones ejecutadas por el canister para llamadas de
+  consulta.
+- La suma de los tamaños de carga útil de todas las solicitudes de consulta al
+  canister.
+- La suma de los tamaños de carga útil de todas las respuestas de consulta del
+  canister.
 
-Each value represents the total count since the canister has been created.
-Rates for these values can be calculated from multiple calls to the canister status and observing the difference between the values in different calls.
-All values are monotonically increasing.
+Cada valor representa el conteo total desde que se creó el canister. Las tasas
+para estos valores se pueden calcular a partir de múltiples llamadas al estado
+del canister y observando la diferencia entre los valores en diferentes
+llamadas. Todos los valores son monótonamente crecientes.
 
-### Retrieve query stats using `dfx`
+### Obtener estadísticas de consultas usando `dfx`
 
-`dfx` can be used to return a canister's query stats:
+Se puede usar `dfx` para devolver las estadísticas de consultas de un canister:
 
 ```
 dfx canister status sample_canister
 ```
 
-This will return output such as:
+Esto devolverá un resultado como:
 
 ```
 Canister status call result for sample_canister.
@@ -107,85 +155,107 @@ Total query request paylod size (bytes): 0
 Total query response payload size (bytes): 0
 ```
 
-Query stats are available via `dfx` since version `0.16.1`.
+Las estadísticas de consultas están disponibles en `dfx` desde la versión
+`0.16.1`.
 
+### Usar estadísticas de consultas programáticamente
 
-### Using query stats programmatically
-
-It's also possible to programmatically retrieve query stats from within the canister via the canister status method. The following is an example of how to do this in Rust:
+También es posible recuperar las estadísticas de consultas programáticamente
+desde dentro del canister a través del método de estado del canister. El
+siguiente es un ejemplo de cómo hacer esto en Rust:
 
 ```rust
 let canister_status = canister_status(CanisterIdRecord {
-    canister_id: ic_cdk::id(),
+    canister_id: ic_cdk::id(),
 })
 .await.unwrap();
 let query_stats = canister_status.0.query_stats;
 ```
 
-Query stats are supported in the `ic-cdk` since version `0.12.1`.
+Las estadísticas de consultas son compatibles con `ic-cdk` desde la versión
+`0.12.1`.
 
-## Composite queries
+## Consultas compuestas
 
-An update can call other updates and queries. However, a query cannot make any calls, which can hinder the development of scalable decentralized applications, especially those that shard data across multiple canisters.
+Una actualización puede llamar a otras actualizaciones y consultas. Sin embargo,
+una consulta no puede hacer ninguna llamada, lo que puede dificultar el
+desarrollo de aplicaciones descentralizadas escalables, especialmente aquellas
+que fragmentan datos en múltiples canisters.
 
-Composite queries solve this problem. You can add composite queries to your canister using the following annotations:
+Las consultas compuestas resuelven este problema. Puedes agregar consultas
+compuestas a tu canister usando las siguientes anotaciones:
 
 - Candid: `composite_query`
 - Motoko: `composite query`
 - Rust: `#[query(composite = true)]`
 
-Users and the client-side JavaScript code can invoke a composite query endpoint of a canister using the same query URL for existing regular queries. In contrast to regular queries, a composite query can call other composite and regular queries. Due to limitations of the current implementation, composite queries have two restrictions:
+Los usuarios y el código JavaScript del lado del cliente pueden invocar un
+endpoint de consulta compuesta de un canister usando la misma URL de consulta
+para las consultas regulares existentes. A diferencia de las consultas
+regulares, una consulta compuesta puede llamar a otras consultas compuestas y
+regulares. Debido a limitaciones de la implementación actual, las consultas
+compuestas tienen dos restricciones:
 
-| Query | Update | Composite query |
-|--------|--------|----------------|
-| Cannot call other queries or composite queries| Can call other updates and queries ; Cannot call composite queries| Can call other queries and composite queries |
-| Can be called as an update | Cannot be called as a query | Cannot be called as an update |
-| Can call canisters on another subnet | Can call canisters on another subnet | Cannot call canisters on another subnet |
+| Consulta                                       | Actualización                                                                          | Consulta compuesta                          |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------- |
+| No puede llamar a otras consultas o compuestas | Puede llamar a otras actualizaciones y consultas; No puede llamar consultas compuestas | Puede llamar a otras consultas y compuestas |
+| Se puede llamar como actualización             | No se puede llamar como consulta                                                       | No se puede llamar como actualización       |
+| Puede llamar canisters en otra subred          | Puede llamar canisters en otra subred                                                  | No puede llamar canisters en otra subred    |
 
+Las consultas compuestas se habilitaron en las siguientes versiones:
 
-Composite queries were enabled in the following releases:
+| Plataforma/Lenguaje       | Versión                                                                                                                                                               |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Internet Computer mainnet | Release [7742d96ddd30aa6b607c9d2d4093a7b714f5b25b](https://nns.ic0.app/proposal/?u=qoctq-giaaa-aaaaa-aaaea-cai&proposal=123311)                                       |
+| Candid                    | [2023-06-30 (Rust 0.9.0)](https://github.com/dfinity/candid/blob/master/Changelog.md#2023-06-30-rust-090)                                                             |
+| Motoko                    | [0.9.4](https://github.com/dfinity/motoko/releases/tag/0.9.4), revisión: [2d9902f](https://github.com/dfinity/motoko/commit/2d9902fb75bb04e377c28913c311aa2be373e159) |
+| Rust                      | [0.6.8](https://github.com/dfinity/cdk-rs/blob/219ae179b9c5ef0ebfff20b926a90f6624ebe704/src/ic-cdk/CHANGELOG.md#068---2022-11-28)                                     |
 
-| Platform / Language        | Version |
-| -------------------------- | ------- |
-| Internet computer mainnet  | Release [7742d96ddd30aa6b607c9d2d4093a7b714f5b25b](https://nns.ic0.app/proposal/?u=qoctq-giaaa-aaaaa-aaaea-cai&proposal=123311)     |
-| Candid                     | [2023-06-30 (Rust 0.9.0)](https://github.com/dfinity/candid/blob/master/Changelog.md#2023-06-30-rust-090)     |
-| Motoko                     | [0.9.4](https://github.com/dfinity/motoko/releases/tag/0.9.4), revision: [2d9902f](https://github.com/dfinity/motoko/commit/2d9902fb75bb04e377c28913c311aa2be373e159)    |
-| Rust                       | [0.6.8](https://github.com/dfinity/cdk-rs/blob/219ae179b9c5ef0ebfff20b926a90f6624ebe704/src/ic-cdk/CHANGELOG.md#068---2022-11-28)    |
+### Código de ejemplo
 
+Como ejemplo, considera un almacén clave-valor particionado, donde un único
+frontend hace lo siguiente para una llamada `put` y `get`:
 
-### Sample code
-As an example, consider a partitioned key-value store, where a single frontend does the following for a `put` and `get` call:
-
-- First, it determines the ID of the data partition canister that holds the value with the given key.
-- Then, it makes a call into the `get` or `put` function of that canister and parses the result.
+1. Primero determina el ID del canister particionado que contiene el valor con
+   la clave dada.
+2. Luego hace una llamada a la función `get` o `put` de ese canister y analiza
+   el resultado.
 
 <AdornedTabs groupId="language">
 <TabItem value="motoko" label="Motoko" default>
 
 ```motoko no-repl file=../../references/samples/motoko/composite_query/src/map/Map.mo
+
 ```
+
 </TabItem>
 <TabItem value="rust" label="Rust">
 
 ```rust file=../../references/samples/rust/composite_query/src/kv_frontend/lib.rs
+
 ```
+
 </TabItem>
 
 <AdornedTab value={"typescript"} label="TypeScript" endAdornment={<BetaChip />}>
 
 [Learn more about Azle](https://demergent-labs.github.io/azle/the_azle_book.html).
+
 </AdornedTab>
 
 <AdornedTab value={"python"} label="Python" endAdornment={<BetaChip />}>
 
 [Learn more about Kybra](https://demergent-labs.github.io/kybra/).
+
 </AdornedTab>
 </AdornedTabs>
 
-### Resources
-The following example canisters demonstrate how to use composite queries:
+### Recursos
 
-- [Motoko example](https://github.com/dfinity/examples/tree/master/motoko/composite_query)
-- [Rust example](https://github.com/dfinity/examples/tree/master/rust/composite_query)
+Los siguientes canisters de ejemplo demuestran cómo usar consultas compuestas:
 
-Feedback and suggestions can be contributed on the [forum](https://forum.dfinity.org/t/proposal-composite-queries/15979).
+- [Ejemplo Motoko](https://github.com/dfinity/examples/tree/master/motoko/composite_query)
+- [Ejemplo Rust](https://github.com/dfinity/examples/tree/master/rust/composite_query)
+
+Puedes contribuir comentarios y sugerencias en el
+[foro](https://forum.dfinity.org/t/proposal-composite-queries/15979).
