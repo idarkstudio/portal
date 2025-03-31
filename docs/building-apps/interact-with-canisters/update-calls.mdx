@@ -1,5 +1,13 @@
 ---
-keywords: [beginner, update calls, updates, update call, making an update, call a canister with update]
+keywords:
+  [
+    beginner,
+    update calls,
+    updates,
+    update call,
+    making an update,
+    call a canister with update,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
@@ -7,46 +15,75 @@ import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 import TabItem from "@theme/TabItem";
 import { AdornedTabs } from "/src/components/Tabs/AdornedTabs";
 
-# Update calls
+# Llamadas de escritura/actualización (Update calls)
 
 <MarkdownChipRow labels={["Beginner", "Tutorial"]} />
 
-To interact with a <GlossaryTooltip>canister</GlossaryTooltip>'s methods, there are two primary types of calls that can be used: update calls and query calls.
+Para interactuar con los métodos de un
 
-**Update calls** can make modifications to a canister's state, while **query calls** cannot. Update calls are executed on all nodes of the <GlossaryTooltip>subnet</GlossaryTooltip> that the canister is deployed on since the result of the call must go through consensus. This makes them slower than query calls. They can be synchronous or asynchronous. 
+<GlossaryTooltip>canister</GlossaryTooltip>, se pueden utilizar dos tipos
+principales de llamadas: llamadas de escritura y llamadas de lectura/consulta
+(query).
+
+Las **llamadas de escritura** pueden modificar el estado de un canister,
+mientras que las **llamadas de lectura** no pueden hacerlo. Las llamadas de
+escritura se ejecutan en todos los nodos de la
+
+<GlossaryTooltip>subnet</GlossaryTooltip> en la que el canister está desplegado,
+ya que el resultado de la llamada debe pasar por consenso. Esto las hace más lentas
+que las llamadas de lectura. Pueden ser síncronas o asíncronas.
 
 :::danger
-Update calls do not go through consensus on the local replica.
+
+Las llamadas de escritura no pasan por consenso en la réplica local.
+
 :::
 
-A query method can be called as both an update or a query, whereas update methods can only be called as an update.
+Un método de lectura puede ser llamado tanto como una escritura como una
+lectura, mientras que los métodos de escritura solo pueden ser llamados como una
+escritura.
 
-| Update calls | Query calls |
-| :----------: | :------: |
-| Slow (1-2s) | Fast (200-400ms) |
-| Can modify state | Can't modify state |
-| Goes through consensus | Does not go through consensus |
-| Executed on all nodes of a subnet | Executed on a single node |
-| Cost cycles | Free |
+|            Llamadas de escritura             |      Llamadas de lectura      |
+| :------------------------------------------: | :---------------------------: |
+|                Lentas (1-2s)                 |      Rápidas (200-400ms)      |
+|          Pueden modificar el estado          | No pueden modificar el estado |
+|              Pasan por consenso              |     No pasan por consenso     |
+| Se ejecutan en todos los nodos de una subnet |  Se ejecutan en un solo nodo  |
+|               Consumen cycles                |            Gratis             |
 
-See the reference on [ingress messages](/docs/building-apps/interact-with-canisters/advanced-calls) for a more technical discussion of this topic.
+lectura la referencia sobre
+[mensajes de ingreso](/docs/building-apps/interact-with-canisters/advanced-calls)
+para una discusión más técnica sobre este tema.
 
-## Making update calls with `dfx`
+## Realizar llamadas de escritura con `dfx`
 
-To make an update call to a canister, use the [`dfx canister call`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-call) command with the `--update` flag:
+Para hacer una llamada de escritura a un canister, usa el comando
+[`dfx canister call`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-call)
+con la opción `--update`:
 
-- `dfx canister call --update <canister-name> <method_name>` : Make an update call to a canister deployed locally. The local replica must be running to create a canister locally. Start it with `dfx start --background`.
+- `dfx canister call --update <canister-name> <method_name>` : Realiza una
+  llamada de escritura a un canister desplegado localmente. La réplica local
+  debe estar en ejecución para crear un canister localmente. Iníciala con
+  `dfx start --background`.
 
-- `dfx canister call --update <canister-name> <method_name> --network=playground`: Make an update call to a canister deployed on the [playground](/docs/building-apps/developing-canisters/deploy#testnets). Making update calls to canisters deployed on the playground is free, but canisters are temporary and will be removed after 20 minutes.
+- `dfx canister call --update <canister-name> <method_name> --network=playground`:
+  Realiza una llamada de escritura a un canister desplegado en el
+  [playground](/docs/building-apps/developing-canisters/deploy#testnets). Hacer
+  llamadas de escritura a canisters en el playground es gratis, pero los
+  canisters son temporales y serán eliminados después de 20 minutos.
 
-- `dfx canister call --update <canister-name> <method_name> --network=ic`: Make an update call to a canister deployed on the mainnet. Update calls will cost [cycles](/docs/building-apps/essentials/gas-cost).
+- `dfx canister call --update <canister-name> <method_name> --network=ic`:
+  Realiza una llamada de escritura a un canister desplegado en el mainnet. Las
+  llamadas de escritura consumirán
+  [cycles](/docs/building-apps/essentials/gas-cost).
 
-## Making update calls from within canisters
+## Realizar llamadas de escritura desde dentro de los canisters
 
 <AdornedTabs groupId="language">
 <TabItem value="motoko" label="Motoko" default>
 
 ```motoko file=../../references/samples/motoko/counter/src/Main.mo#L10-L13
+
 ```
 
 </TabItem>
@@ -54,62 +91,146 @@ To make an update call to a canister, use the [`dfx canister call`](/docs/buildi
 <TabItem value="rust" label="Rust">
 
 ```rust file=../../references/samples/rust/counter/src/lib.rs#L14-L19
+
 ```
 
 </TabItem>
 
 </AdornedTabs>
 
-### Update call errors and their implications
+### Errores en llamadas de escritura y sus implicaciones
 
-A number of errors could occur in the above flow. The following are examples of errors, indicated using the numbers in the diagram:
-1. Due to misconfiguration, the agent might fail to successfully sign the update call and not even send it.
-2. The call to the boundary node may fail because, for example, the agent or the boundary node is offline and the call times out.
-3. Calls (`call` or `read_state`) to the IC node may fail due to possible reasons such as:
-   1. The node is offline.
-   2. An execution pre-processing error (status `200` in case of the async call) occurs.
-   3. The node is incapable of handling the request (status `5xx`).
-4. It could be that status responses are never received. For example, a malicious boundary node could block the status response. Thus, the agent would never see a [status like `received`, `processing`, etc.](/docs/references/ic-interface-spec#state-tree-request-status) upon calling `read_state`.
-5. The certificate in the `read_state` response could be invalid. For example, it could be malformed or have an invalid signature.
-6. Finally, the call could be `rejected` (see [rejected status](/docs/references/ic-interface-spec#state-tree-request-status) and [reject codes](/docs/references/ic-interface-spec#reject-codes)).
+Pueden ocurrir varios errores en el flujo descrito anteriormente. A continuación
+se presentan ejemplos de errores, indicados con los números en el diagrama:
 
-When seeing errors 2-5, the call may still be successfully executed. For example, the users might lose network connectivity, or a malicious boundary node or replica could return an error but still successfully execute the request. Only if a `rejected` response is received along with a valid certificate, the subnet guarantees that the call hasn’t been executed and never will be.
+1. Debido a una configuración incorrecta, el agente podría fallar al firmar
+   correctamente la llamada de escritura y ni siquiera enviarla.
+2. La llamada al nodo de frontera puede fallar porque, por ejemplo, el agente o
+   el nodo de frontera están fuera de línea y la llamada expira.
+3. Las llamadas (`call` o `read_state`) al nodo de la IC pueden fallar debido a
+   razones como:
+   1. El nodo está fuera de línea.
+   2. Ocurre un error en el preprocesamiento de la ejecución (estado `200` en el
+      caso de la llamada asíncrona).
+   3. El nodo no puede manejar la solicitud (estado `5xx`).
+4. Podría ocurrir que nunca se reciban respuestas de estado. Por ejemplo, un
+   nodo de frontera malicioso podría bloquear la respuesta de estado. De este
+   modo, el agente nunca vería un
+   [estado como `received`, `processing`, etc.](/docs/references/ic-interface-spec#state-tree-request-status)
+   al llamar a `read_state`.
+5. El certificado en la respuesta de `read_state` podría ser inválido. Por
+   ejemplo, podría estar mal formado o tener una firma no válida.
+6. Finalmente, la llamada podría ser `rejected` (ver
+   [estado rechazado](/docs/references/ic-interface-spec#state-tree-request-status)
+   y [códigos de rechazo](/docs/references/ic-interface-spec#reject-codes)).
 
-Some operations, such as transfers, must not be executed multiple times. If a call was `rejected` as described above, it is safe to retry the operation. In all other error cases, however, retrying can be risky because the call could still successfully execute, potentially leading to severe security vulnerabilities such as double spending.
+Si se presentan los errores 2-5, la llamada aún podría ejecutarse con éxito. Por
+ejemplo, los usuarios podrían perder la conectividad de red, o un nodo de
+frontera o réplica malicioso podría devolver un error pero seguir ejecutando la
+solicitud correctamente. Solo si se recibe una respuesta `rejected` junto con un
+certificado válido, la subnet garantiza que la llamada no ha sido ejecutada y
+nunca lo será.
 
-In general, there are cases where it is impossible to determine if a call was successful. For example, suppose that:
+Algunas operaciones, como las transferencias, no deben ejecutarse múltiples
+veces. Si una llamada fue `rejected` como se describió anteriormente, es seguro
+reintentar la operación. Sin embargo, en todos los demás casos de error,
+reintentar puede ser riesgoso porque la llamada aún podría haberse ejecutado con
+éxito, lo que podría llevar a vulnerabilidades de seguridad graves, como el
+doble gasto.
 
-- The client loses its connection until the request status has been removed from the state tree. (Recall that ICP will remove the request from the system state tree some time after ingress expiry.)
+En general, hay casos en los que es imposible determinar si una llamada fue
+exitosa. Por ejemplo, supongamos que:
 
-- There is no application-specific way to tell if the call successfully executed. For example, the canister does not provide a way to find out if the call happened.
+- El cliente pierde su conexión hasta que el estado de la solicitud ha sido
+  eliminado del árbol de estado. (Recuerda que ICP eliminará la solicitud del
+  árbol de estado del sistema algún tiempo después de la expiración de la
+  solicitud de ingreso).
 
-In this situation, it is indistinguishable if the call was successful, but all information has already been removed from the system state tree, or the call never made it into the state tree in the first place and hasn't been executed.
+- No existe una forma específica de la aplicación para determinar si la llamada
+  se ejecutó con éxito. Por ejemplo, el canister no proporciona una manera de
+  saber si la llamada ocurrió.
 
-### Recommendations and best practices for secure update call handling
+En esta situación, es indistinguible si la llamada fue exitosa pero toda la
+información ya ha sido eliminada del árbol de estado del sistema, o si la
+llamada nunca llegó al árbol de estado en primer lugar y no ha sido ejecutada.
 
-The best way to handle the aforementioned errors is to implement safe retries using idempotent calls. Idempotency and several patterns to achieve it are discussed in the [best practices on safe retries and idempotency](/docs/building-apps/best-practices/idempotency).
+### Recomendaciones y mejores prácticas para el manejo seguro de llamadas de actualización
 
-It may not always be possible to make call endpoints idempotent. For example, an endpoint that is not under the developer’s control may simply not have this property. In this case, there is still a secure way to retry the calls by relying on built-in deduplication based on request IDs, as we describe below. However, the guarantees in this case are weaker compared to using idempotent calls.
+La mejor manera de manejar los errores mencionados es implementar reintentos
+seguros utilizando llamadas idempotentes. La idempotencia y varios patrones para
+lograrla se discuten en la sección de  
+[mejores prácticas sobre reintentos seguros e idempotencia](/docs/building-apps/best-practices/idempotency).
 
-ICP provides a built-in deduplication feature. Namely, if two calls with identical [request id](/docs/references/ic-interface-spec#request-ids) are made, the message is processed at most once. For two calls to have the same `request_id`, they must have the same values for all fields: `request_type`, `sender`, `nonce`, `canister_id`, `method_name`, `arg`, and **ingress_expiry**. This gives idempotency, but only until the [`ingress_expiry`](/docs/references/ic-interface-spec#authentication) is reached, at which point the message expires and ICP [may remove the `request_id` from the system state tree](/docs/references/ic-interface-spec#state-tree-request-status). This isn't an issue since the same request will not be accepted later, as it expired. Thus, such requests can be safely retried analogously to how it is done for [idempotent calls](/docs/building-apps/best-practices/idempotency#idempotent-canister-apis), see the illustration on that page.
+No siempre es posible hacer que los endpoints de llamada sean idempotentes. Por
+ejemplo, un endpoint que no está bajo el control del desarrollador puede no
+cumplir con esta propiedad. En este caso, todavía hay una manera segura de
+reintentar las llamadas aprovechando la deduplicación integrada basada en
+identificadores de solicitud, como se describe a continuación. Sin embargo, las
+garantías en este caso son más débiles en comparación con el uso de llamadas
+idempotentes.
 
-As ICP rejects `ingress_expiry` that is too far in the future, the time window for retrying is limited. To maximize the window, one can maximize `ingress_expiry` in this case and time out the retries after `ingress_expiry` as well.
+ICP proporciona una función integrada de deduplicación. Es decir, si se realizan
+dos llamadas con el mismo  
+[request_id](/docs/references/ic-interface-spec#request-ids), el mensaje se
+procesará como máximo una vez. Para que dos llamadas tengan el mismo
+`request_id`, deben tener los mismos valores en todos los campos:
+`request_type`, `sender`, `nonce`, `canister_id`, `method_name`, `arg` e
+**ingress_expiry**. Esto proporciona idempotencia, pero solo hasta que el  
+[`ingress_expiry`](/docs/references/ic-interface-spec#authentication) se
+alcance, momento en el cual el mensaje expira e ICP  
+[puede eliminar el `request_id` del árbol de estado del sistema](/docs/references/ic-interface-spec#state-tree-request-status).  
+Esto no representa un problema, ya que la misma solicitud no será aceptada
+posteriormente debido a su expiración. Por lo tanto, estas solicitudes pueden
+reintentarse de manera segura de forma similar a las  
+[llamadas idempotentes](/docs/building-apps/best-practices/idempotency#idempotent-canister-apis),
+como se ilustra en esa página.
 
-In summary, there are two options for a client:
-1. **No retries, only poll `read_state`**: Submit the `call` once, and poll `read_state` until at least one of the following conditions is met:
+Dado que ICP rechaza `ingress_expiry` que está demasiado lejos en el futuro, la
+ventana de tiempo para los reintentos es limitada. Para maximizar esta ventana,
+se puede establecer `ingress_expiry` en su valor máximo y detener los reintentos
+después de que `ingress_expiry` se haya alcanzado.
 
-    - A certified response was produced. That is, the call status is `replied`, `rejected`, or `done`.
-    - The subnet time exceeds `ingress_expiry`, and the call status is not `processing`.
+En resumen, un cliente tiene dos opciones:
 
-Evaluating the second condition may be hard if the subnet time and local time of the user differ.
+1. **Sin reintentos, solo sondeo con `read_state`**: Enviar la llamada una vez y
+   consultar `read_state` hasta que al menos una de las siguientes condiciones
+   se cumpla:
 
-2. **Retry the call while polling `read_state`**: Do the same as above, but resubmit the initial `call` (same `request_id`) periodically (e.g., every `30s`) until at least one of the following conditions is met:
+   - Se haya producido una respuesta certificada. Es decir, el estado de la
+     llamada sea `replied`, `rejected` o `done`.
+   - El tiempo del subnet exceda `ingress_expiry` y el estado de la llamada no
+     sea `processing`.
 
-    - The call is known to the system. That is, the call status is `received`, `processing`, `replied`, `rejected`, or `done`.
-    - `ingress_expiry` is reached.
+   Evaluar la segunda condición puede ser difícil si el tiempo del subnet y el
+   tiempo local del usuario difieren.
 
-This can be beneficial because a call that didn’t make it is retried. For example, if the first call was dropped due to a network issue or by a malicious replica, a subsequent call could make it through, e.g., if it is successfully routed to an honest replica.
+2. **Reintentar la llamada mientras se consulta `read_state`**: Hacer lo mismo
+   que en la primera opción, pero reenviar periódicamente la llamada original
+   (con el mismo `request_id`) cada cierto tiempo (por ejemplo, cada `30s`),
+   hasta que al menos una de las siguientes condiciones se cumpla:
 
-At the time of writing, both agent-js (v2.1.3) and agent-rs (v0.39.1) don't retry `call`, so they follow the first option above. By default, both agent-rs and agent-js use `ingress_expiry` of four minutes and poll for five minutes. Additionally, agent-rs resets the timer to allow for an additional five minutes of polling whenever it observes a `received` or `processing` status.
+   - El sistema reconozca la llamada. Es decir, el estado de la llamada sea
+     `received`, `processing`, `replied`, `rejected` o `done`.
+   - `ingress_expiry` haya sido alcanzado.
 
-Some time after expiry is reached, there is no way for the client to determine if the call was successful unless the canister’s API provides this information. In this case, the client can check the status of the call using application-specific APIs. There can be (hopefully uncommon) cases where the APIs don't allow checking this, in which case the client simply can’t tell if the message has been executed. Ideally, applications set expiry values such that under typical load, timeouts are rare.
+   Esto puede ser beneficioso porque una llamada que no haya llegado
+   correctamente puede ser reenviada. Por ejemplo, si la primera llamada se
+   pierde debido a un problema de red o es bloqueada por una réplica maliciosa,
+   una llamada posterior podría llegar correctamente si es redirigida a una
+   réplica honesta.
+
+En el momento de escribir esto, tanto `agent-js` (v2.1.3) como `agent-rs`
+(v0.39.1) no reintentan automáticamente la llamada, por lo que siguen la primera
+opción. De forma predeterminada, `agent-rs` y `agent-js` usan un
+`ingress_expiry` de cuatro minutos y realizan sondeos durante cinco minutos.
+Además, `agent-rs` reinicia el temporizador para permitir cinco minutos
+adicionales de sondeo cada vez que detecta un estado `received` o `processing`.
+
+Un tiempo después de que `ingress_expiry` haya sido alcanzado, el cliente ya no
+podrá determinar si la llamada fue exitosa a menos que la API del canister
+proporcione esta información. En este caso, el cliente puede verificar el estado
+de la llamada utilizando APIs específicas de la aplicación. Sin embargo, puede
+haber casos (esperemos que poco comunes) en los que las APIs no permitan esta
+verificación, en cuyo caso el cliente simplemente no podrá saber si el mensaje
+se ejecutó. Idealmente, las aplicaciones deben establecer valores de expiración
+de manera que, bajo una carga típica, los tiempos de espera sean raros.

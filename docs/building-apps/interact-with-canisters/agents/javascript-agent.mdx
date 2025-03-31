@@ -4,327 +4,426 @@ keywords: [intermediate, agents, tutorial, javascript]
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import TabItem from "@theme/TabItem";
-import Tabs from '@theme/Tabs';
+import Tabs from "@theme/Tabs";
 
-# ICP JavaScript agent
+# Agente de JavaScript para ICP
 
-<MarkdownChipRow labels={["Intermediate", "Agents"]} />
+<MarkdownChipRow labels={["Intermedio", "Agentes"]} />
 
-An **agent** is an API client used to interact with ICP. The [ICP JavaScript agent](https://www.npmjs.com/package/@dfinity/agent) is used to interact with the public ICP API endpoints and canisters deployed on ICP. The ICP JavaScript agent provides `call`, `query`, and `readState` methods, along with other utilities, to an actor.
+Un **agente** es un cliente API utilizado para interactuar con ICP. El  
+[agente de JavaScript para ICP](https://www.npmjs.com/package/@dfinity/agent)  
+se usa para interactuar con los endpoints públicos de la API de ICP y con los  
+canisters desplegados en ICP.
 
-Calls made through the agent are intended to be structured through an actor and configured with a canister's interface that can be generated from a [Candid interface](/docs/building-apps/interact-with-canisters/candid/candid-concepts). Raw calls are supported but not recommended per best practices.
+El agente de JavaScript para ICP proporciona los métodos `call`, `query` y  
+`readState`, junto con otras utilidades, para un actor.
 
-## Installation
+Las llamadas realizadas a través del agente deben estructurarse mediante un
+actor  
+y configurarse con la interfaz del canister, la cual puede generarse desde una  
+[interfaz Candid](/docs/building-apps/interact-with-canisters/candid/candid-concepts).  
+Las llamadas en bruto están soportadas, pero no se recomiendan como buena
+práctica.
 
-<Tabs>
-<TabItem value="prereq" label="Prerequisites" default>
+## Instalación
 
-<input type="checkbox"/> <a href="/docs/building-apps/getting-started/install">Install the IC SDK.</a>
+<Tabs>  
+<TabItem value="prereq" label="Requisitos previos" default>
 
-</TabItem>
+<input type="checkbox" /> <a href="/docs/building-apps/getting-started/install">
+  Instalar el IC SDK.
+</a>
+
+</TabItem>  
 </Tabs>
 
-To install the [ICP JavaScript agent](https://www.npmjs.com/package/@dfinity/agent), run the following command:
+Para instalar el  
+[agente de JavaScript para ICP](https://www.npmjs.com/package/@dfinity/agent),  
+ejecuta el siguiente comando:
 
-```
+```bash
 npm i --save @dfinity/agent
 ```
 
-## Authentication
+## Autenticación
 
-The ICP JavaScript agent supports authentication through `auth-client`, which uses the [Internet Identity service](/docs/building-apps/authentication/overview).
+El agente de JavaScript para ICP admite autenticación a través de
+`auth-client`,  
+que utiliza el  
+[servicio Internet Identity](/docs/building-apps/authentication/overview).
 
-First, install the `auth-client` package:
+Primero, instala el paquete `auth-client`:
 
-```
+```bash
 npm i --save @dfinity/auth-client
 ```
 
-Create an authentication client that will open an `identity.ic0.app` window, save your delegation to `indexedDb`, and provide you with an identity:
+Crea un cliente de autenticación que abrirá una ventana en `identity.ic0.app`,  
+guardará tu delegación en `indexedDb` y te proporcionará una identidad:
 
 ```javascript title="project_name/src/project_name_frontend/src/index.js"
 const authClient = await AuthClient.create();
 ```
 
-Then, the `authClient` can log in with:
+Luego, el `authClient` puede iniciar sesión con:
 
 ```javascript title="project_name/src/project_name_frontend/src/index.js"
 authClient.login({
-  // 7 days in nanoseconds
-  maxTimeToLive: BigInt(7 * 24 * 60 * 60 * 1000 * 1000 * 1000),
-  onSuccess: async () => {
-    handleAuthenticated(authClient);
-  },
+  // 7 días en nanosegundos
+  maxTimeToLive: BigInt(7 * 24 * 60 * 60 * 1000 * 1000 * 1000),
+  onSuccess: async () => {
+    handleAuthenticated(authClient);
+  },
 });
 ```
 
-Use that identity to make authenticated calls using the `@dfinity/agent` actor:
+Usa esa identidad para realizar llamadas autenticadas con el actor de
+`@dfinity/agent`:
 
 ```js title="project_name/src/project_name_frontend/src/index.js"
 const identity = await authClient.getIdentity();
 const actor = Actor.createActor(idlFactory, {
-  agent: new HttpAgent({
-    identity,
-  }),
-  canisterId,
+  agent: new HttpAgent({
+    identity,
+  }),
+  canisterId,
 });
 ```
 
-### Storage and key management
+### Almacenamiento y gestión de claves
 
-By default, the ICP JavaScript agent uses a default IndexedDb storage interface and ECDSA keys.
+Por defecto, el agente de JavaScript para ICP utiliza una interfaz de
+almacenamiento  
+en `IndexedDb` y claves ECDSA.
 
-You can use any storage structure that implements the `AuthClientStorage` interface:
+Puedes usar cualquier estructura de almacenamiento que implemente la interfaz  
+`AuthClientStorage`:
 
 ```js
 export type StoredKey = string | CryptoKeyPair;
 export interface AuthClientStorage {
-  get(key: string): Promise<StoredKey | null>;
+  get(key: string): Promise<StoredKey | null>;
 
-  set(key: string, value: StoredKey): Promise<void>;
+  set(key: string, value: StoredKey): Promise<void>;
 
-  remove(key: string): Promise<void>;
+  remove(key: string): Promise<void>;
 }
 ```
 
 :::caution
 
-If you decide to use a custom storage implementation that only supports string data types, it is recommended to use the `keyType` option to use an `Ed25519` key instead of the default ECDSA key:
+Si decides utilizar una implementación de almacenamiento personalizada que
+solo  
+admite tipos de datos de tipo `string`, se recomienda utilizar la opción
+`keyType`  
+para emplear una clave `Ed25519` en lugar de la clave ECDSA predeterminada:
 
 ```js
 const authClient = await AuthClient.create({
-  storage: new LocalStorage(),
-  keyType: 'Ed25519',
+  storage: new LocalStorage(),
+  keyType: "Ed25519",
 });
 ```
+
 :::
 
-### Session management
+### Gestión de sesión
 
-There are two options supported by `AuthClient` for secure session management:
+`AuthClient` admite dos opciones para la gestión segura de sesiones:
 
-1. The `maxTimeToLive` option built into the Internet Identity delegation determines in nanoseconds how long the `DelegationIdentity` returned will be valid for.
+1. La opción `maxTimeToLive` incorporada en la delegación de Internet Identity  
+   determina en nanosegundos cuánto tiempo será válida la `DelegationIdentity`  
+   devuelta.
 
-2. The Idle Manager, which monitors keyboard, mouse, and touchscreen activity. The Idle Manager will automatically log you out if the browser is not interacted with for a period of time.
+2. **Idle Manager**, que monitorea la actividad del teclado, mouse y pantalla
+   táctil.  
+   Si el usuario no interactúa con el navegador durante un tiempo determinado,  
+   se cerrará la sesión automáticamente.
 
-    - By default, this period is 10 minutes. After 10 minutes, the `DelegationIdentity` will be removed from from `localStorage` and `window.location.reload()` is called.
+   - Por defecto, este período es de **10 minutos**. Luego de este tiempo,  
+     la `DelegationIdentity` se eliminará de `localStorage` y se llamará  
+     `window.location.reload()`.
 
-    - Alternatively, you can pass an `onIdle` option that will replace the default `window.location.reload()` behavior or register callbacks with `idleManager.registerCallback()`, which will also replace the default callback.
+   - Alternativamente, puedes pasar una opción `onIdle` para reemplazar el  
+     comportamiento predeterminado de `window.location.reload()` o registrar  
+     callbacks con `idleManager.registerCallback()`, que también reemplazará  
+     el callback predeterminado.
 
-View the full set of [options for the IdleManager](https://agent-js.icp.xyz/auth-client/index.html).
+Consulta el conjunto completo de  
+[opciones para IdleManager](https://agent-js.icp.xyz/auth-client/index.html).
 
-## Initializing an actor
+## Inicialización de un actor
 
-Agents are most commonly used to create an actor using the `Actor.createActor` constructor:
+Los agentes se utilizan comúnmente para crear un actor mediante el constructor  
+`Actor.createActor`:
 
 ```
 Actor.createActor(interfaceFactory: InterfaceFactory, configuration: ActorConfig): ActorSubclass<T>
 ```
 
-The `interfaceFactory` function returns a runtime interface that the actor uses to structure calls made to a canister. This function is generated by running the `dfx generate` command in your project or using the `didc` tool to generate interfaces for your project. Alternatively, this function can be written manually, though it is not recommended.
+La función `interfaceFactory` devuelve una interfaz en tiempo de ejecución que  
+el actor utiliza para estructurar las llamadas realizadas a un canister.
 
-Actors in the context of the ICP JavaScript agent are used to:
+Esta función se genera ejecutando el comando `dfx generate` en tu proyecto  
+o usando la herramienta `didc` para generar interfaces. También se puede
+escribir  
+manualmente, aunque no se recomienda.
 
-- Poll for updates.
+Los actores en el contexto del agente de JavaScript para ICP se utilizan para:
 
-- Build the Candid-encoded body of the agent's request.
+- Realizar consultas en busca de actualizaciones.
+- Construir el cuerpo codificado en Candid de la solicitud del agente.
+- Analizar la respuesta.
+- Proporcionar seguridad de tipos para la interfaz del canister.
 
-- Parse the response.
+Realizar una llamada directamente con `HttpAgent`, sin usar un actor, es un
+caso  
+avanzado y **no es necesario para la mayoría de las aplicaciones**.
 
-- Provide type safety for the canister's interface.
+Para configurar un actor, puedes importar una utilidad `createActor` desde las  
+declaraciones Candid de tu canister y un `canisterId alias`, que por defecto  
+apunta a `process.env<canister-id>_CANISTER_ID`.
 
-Making a call to the `HttpAgent` by itself without the use of an actor is an advanced use case that is unnecessary for most applications.
+Puedes pasar la variable de entorno del ID del canister a tu aplicación de
+varias maneras, como:
 
-To set up an actor, you can import a `createActor` utility from your canister's Candid declarations and `canisterId alias`, which by default points to `process.env<canister-id>_CANISTER_ID`.
+- Editarla al inicio de los scripts en `package.json`  
+  (`NFT_CANISTER_ID=... node....`).
+- Instalar [dotenv](https://www.npmjs.com/package/dotenv) y configurarlo para
+  leer  
+  desde un archivo oculto `.env`.
 
-You can pass the canister ID environment variable logic to your application in a number of ways, such as:
-
-- Edit it into the start of your `package.json` scripts (`NFT_CANISTER_ID=... node....`).
-
-- Install [dotenv](https://www.npmjs.com/package/dotenv) and configure it to read from a hidden `.env` file.
-
-The following example uses local development, where you can read the canister ID from the local `canister_ids.json` file, which can be found at `.dfx/local/canister_ids.json`:
+El siguiente ejemplo usa un entorno de desarrollo local, donde se puede leer  
+el ID del canister desde el archivo `canister_ids.json` ubicado en  
+`.dfx/local/canister_ids.json`:
 
 ```js title="src/node/index.js"
 import fetch from "isomorphic-fetch";
 import { HttpAgent } from "@dfinity/agent";
 import { createRequire } from "node:module";
-import { canisterId, createActor } from "../declarations/agent_js_example/index.js";
+import {
+  canisterId,
+  createActor,
+} from "../declarations/agent_js_example/index.js";
 import { identity } from "./identity.js";
 
-// Require syntax is needed for JSON file imports
+// Se requiere `createRequire` para importar archivos JSON
 const require = createRequire(import.meta.url);
 const localCanisterIds = require("../../.dfx/local/canister_ids.json");
 
-// Use `process.env` if available, or fall back to local
+// Usa `process.env` si está disponible, o usa la configuración local
 const effectiveCanisterId =
-  canisterId?.toString() ?? localCanisterIds.agent_js_example.local;
+  canisterId?.toString() ?? localCanisterIds.agent_js_example.local;
 
 const agent = new HttpAgent({
-  identity: await identity,
-  host: "http://127.0.0.1:4943",
-  fetch,
+  identity: await identity,
+  host: "http://127.0.0.1:4943",
+  fetch,
 });
 
 const actor = createActor(effectiveCanisterId, {
-  agent,
+  agent,
 });
 ```
 
-### HTTP headers
+### Headers HTTP
 
-An actor can be initialized to include the boundary node HTTP headers using the `Actor.createActor` constructor:
+Un actor puede inicializarse para incluir las headers HTTP del nodo límite
+usando el constructor `Actor.createActor`:
 
 ```js
 Actor.createActorWithHttpDetails(interfaceFactory: InterfaceFactory, configuration: ActorConfig): ActorSubclass<ActorMethodMappedWithHttpDetails<T>>
 ```
 
+### Inspeccionar el agente de un actor
 
-### Inspecting an actor's agent
-
-To get the agent of an actor, use the `Actor.agentOf` method:
+Para obtener el agente de un actor, usa el método `Actor.agentOf`:
 
 ```js
 const defaultAgent = Actor.agentOf(defaultActor);
 ```
 
-This method can be used to replace or invalidate an identity used by an actor's agent. For example, the following method can be used to replace the current identity of an actor's agent with a newly authenticated identity from Internet Identity:
+Este método puede usarse para reemplazar o invalidar una identidad usada por el
+agente de un actor. Por ejemplo, el siguiente método puede usarse para
+reemplazar la identidad actual del agente de un actor con una nueva identidad
+autenticada desde Internet Identity:
 
 ```js
 defaultAgent.replaceIdentity(await authClient.getIdentity());
 ```
 
-## Making calls
+## Realizar llamadas
 
-The ICP JavaScript agent supports the following methods for making calls to ICP:
+El agente JavaScript de ICP soporta los siguientes métodos para hacer llamadas a
+ICP:
 
-- `call`: Used to make [update calls](/docs/building-apps/interact-with-canisters/advanced-calls).
+- `call`: Usado para hacer
+  [llamadas de actualización](/docs/building-apps/interact-with-canisters/advanced-calls).
+- `query`: Usado para hacer
+  [llamadas de consulta](/docs/building-apps/interact-with-canisters/advanced-calls).
+- `readState`: Usado para leer información de estado de la réplica ICP.
 
-- `query`: Used to make [query calls](/docs/building-apps/interact-with-canisters/advanced-calls).
+Se pueden hacer llamadas directas usando el agente, pero se recomienda usar las
+llamadas generadas por el agente.
 
-- `readState`: Used to read state information from the ICP replica.
+### Llamadas de actualización
 
-Raw calls can be made using the agent, but it is recommended to use the agent's generated calls instead.
-
-### Update calls
-
-Update calls on ICP make a change to the canister's state. To make an update call with the ICP JavaScript agent, use the `call` method:
+Las llamadas de actualización en ICP modifican el estado del canister. Para
+hacer una llamada de actualización con el agente JavaScript de ICP, usa el
+método `call`:
 
 ```js
 call(canisterId: string | Principal, fields: CallOptions): Promise<SubmitResponse>
 ```
 
-This method is defined in [packages/agent/src/agent/api.ts:178](https://github.com/dfinity/agent-js/blob/21e8d2b/packages/agent/src/agent/api.ts#L178).
+Este método está definido en
+[packages/agent/src/agent/api.ts:178](https://github.com/dfinity/agent-js/blob/21e8d2b/packages/agent/src/agent/api.ts#L178).
 
-Parameters for this method are:
+Parámetros:
 
-- `canisterId`: The canister's principal ID in the format `string`.
+- `canisterId`: ID principal del canister como `string`.
+- `fields`: Opciones de la llamada, definidas en
+  [CallOptions](https://agent-js.icp.xyz/agent/interfaces/CallOptions.html).
 
-- `fields`: The call's options. Possible options are defined in [CallOptions](https://agent-js.icp.xyz/agent/interfaces/CallOptions.html).
+Devuelve
+`Promise<[SubmitResponse](https://agent-js.icp.xyz/agent/interfaces/SubmitResponse.html)>`.
 
-The `call` method returns `Promise<[SubmitResponse](https://agent-js.icp.xyz/agent/interfaces/SubmitResponse.html)>`.
+### Llamadas de consulta
 
-
-### Query calls
-
-Query calls on ICP do not change a canister's state and are only used to return information. To make an update call with the ICP JavaScript agent, use the `query` method:
+Las llamadas de consulta en ICP no modifican el estado del canister. Para hacer
+una llamada de consulta, usa el método `query`:
 
 ```js
 query(canisterId: string | Principal, options: QueryFields, identity?: Identity | Promise<Identity>): Promise<ApiQueryResponse>
 ```
 
-This method is defined in [packages/agent/src/agent/api.ts:200](https://github.com/dfinity/agent-js/blob/21e8d2b/packages/agent/src/agent/api.ts#L200)
+Definido en
+[packages/agent/src/agent/api.ts:200](https://github.com/dfinity/agent-js/blob/21e8d2b/packages/agent/src/agent/api.ts#L200).
 
-Parameters for this method are:
+Parámetros:
 
-- `canisterId`: The canister's principal ID in the format `string`. Note that sending a query to the [management canister](/docs/references/system-canisters/management-canister) is not supported, as it has no meaning from an agent.
+- `canisterId`: ID principal del canister como `string`.
+- `options`: Opciones definidas en
+  [QueryFields](https://agent-js.icp.xyz/agent/interfaces/QueryFields.html).
+- `identity`: Opcional, identidad del remitente.
 
-- `options`: Options used to create and send the query. Possible options are defined in [QueryFields](https://agent-js.icp.xyz/agent/interfaces/QueryFields.html).
+Devuelve `Promise<ApiQueryResponse>`.
 
-- `identity`: Optional; identifies the sender principal to use when sending the query.
+### Leer información de estado
 
-The `query` method returns `Promise<ApiQueryResponse>`. This is the response from the replica and will be rejected if the communication failed. If the query itself failed but there were no protocol errors, the response will be of type `QueryResponseRejected`.
-
-### Read state information
-
-To read state information from the ICP replica, use the `readState` method. This method makes a query call with a list of paths to return and receives a certificate in response. If there are communication errors, the call will be rejected, and the certificate may contain less information than what was requested.
+Para leer información de estado de la réplica ICP, usa `readState`:
 
 ```js
 readState(effectiveCanisterId: string | Principal, options: ReadStateOptions, identity?: Identity, request?: any): Promise<ReadStateResponse>
 ```
 
-This method is defined in [packages/agent/src/agent/api.ts:170](https://github.com/dfinity/agent-js/blob/21e8d2b/packages/agent/src/agent/api.ts#L170)
+Definido en
+[packages/agent/src/agent/api.ts:170](https://github.com/dfinity/agent-js/blob/21e8d2b/packages/agent/src/agent/api.ts#L170).
 
-Parameters for this method are:
+Parámetros:
 
-- `effectiveCanisterId`: A canister's principal ID related to the call in the format `string`.
+- `effectiveCanisterId`: ID principal relacionado.
+- `options`: Opciones de
+  [ReadStateOptions](https://agent-js.icp.xyz/agent/interfaces/ReadStateOptions.html).
+- `identity`: Opcional, identidad del remitente.
+- `request`: Opcional, solicitud pre-creada.
 
-- `options`: The call's options. Possible options are defined in [ReadStateOptions](https://agent-js.icp.xyz/agent/interfaces/ReadStateOptions.html).
+Devuelve `Promise<ReadStateResponse>`.
 
-- `identity`: Optional; identifies the sender principal to use when sending the query. If not specified, it uses the instance identity.
+## Navegador
 
-- `request`: Optional; the request to send in case it has already been created.
+Para apps en navegador, se puede usar la API `fetch` como se describe a
+continuación. La mayoría de apps pueden determinar si necesitan conectarse a
+`https://icp0.io` o a una réplica local según su URL.
 
-This method returns `Promise<ReadStateResponse>`.
+### Usando `fetch`
 
-## Browser
+El agent de JavaScript de ICP utiliza la API `fetch` del navegador web para
+realizar llamadas a ICP. Cuando el agente no se usa en el navegador, se puede
+pasar una implementación de `fetch` al constructor del agente. Esto puede ser
+útil si deseas incluir datos de implementación personalizados de `fetch`, como
+agregar un encabezado de autenticación a tu solicitud.
 
-When you are building apps that run in the browser, you can use the `fetch` API as described below. Most apps will be able to determine whether they need to talk to `https://icp0.io` or a local replica, depending on their URL.
+Se recomienda usar el paquete `isomorphic-fetch` para proporcionar una API
+consistente de `fetch` en Node.js y en el navegador. Deberás proporcionar una
+opción de host al constructor del agente, ya que el agente no podrá determinar
+el host desde el contexto global.
 
-### Using `fetch`
-
-The ICP JavaScript agent uses the web browser's `fetch` API to make calls to ICP. When the agent isn't used in the browser, a `fetch` implementation can be passed to the agent's constructor. This can be useful if you want to include custom `fetch` implementation data, such as adding an authentication header to your request.
-
-It is recommended to use the `isomorphic-fetch` package to provide a consistent `fetch` API across Node.js and the browser. You will need to provide a host option to the agent's constructor, since the agent will not be able to determine the host from the global context.
-
-An example can be found below:
+A continuación se muestra un ejemplo:
 
 ```js
-import fetch from 'isomorphic-fetch';
-import { HttpAgent } from '@dfinity/agent';
+import fetch from "isomorphic-fetch";
+import { HttpAgent } from "@dfinity/agent";
 
-const host = process.env.DFX_NETWORK === 'local' ? 'http://127.0.0.1:4943' : 'https://icp-api.io';
+const host =
+  process.env.DFX_NETWORK === "local"
+    ? "http://127.0.0.1:4943"
+    : "https://icp-api.io";
 
 const agent = new HttpAgent({ fetch, host });
 ```
 
-You can also pass `fetchOptions` to the agent's constructor, which is then passed to the `fetch` implementation. This is useful if you want to pass additional options to the fetch implementation. An example specifying a custom header can be found below:
+También puedes pasar `fetchOptions` al constructor del agente, que luego se pasa
+a la implementación de `fetch`. Esto es útil si deseas pasar opciones
+adicionales a la implementación de `fetch`. A continuación se muestra un ejemplo
+que especifica un encabezado personalizado:
 
 ```js
-import fetch from 'isomorphic-fetch';
-import { HttpAgent } from '@dfinity/agent';
+import fetch from "isomorphic-fetch";
+import { HttpAgent } from "@dfinity/agent";
 
-const host = process.env.DFX_NETWORK === 'local' ? 'http://127.0.0.1:4943' : 'https://ic0.app';
+const host =
+  process.env.DFX_NETWORK === "local"
+    ? "http://127.0.0.1:4943"
+    : "https://ic0.app";
 
 /**
- * @type {RequestInit}
- */
+ * @type {RequestInit}
+ */
 const fetchOptions = {
-  headers: {
-    'X-Custom-Header': 'value',
-  },
+  headers: {
+    "X-Custom-Header": "value",
+  },
 };
 
 const agent = new HttpAgent({ fetch, host, fetchOptions });
 ```
 
-## Performance
+## Rendimiento
 
-When developing an app that runs in the browser, it is important to take application performance into consideration. Updates to ICP may feel slow to your users, at around 2-4 seconds. When building your application, take that latency into consideration and consider following these best practices:
+Al desarrollar una aplicación que se ejecuta en el navegador, es importante
+tener en cuenta el rendimiento de la aplicación. Las actualizaciones en ICP
+pueden parecer lentas para tus usuarios, alrededor de 2-4 segundos. Al construir
+tu aplicación, ten en cuenta esa latencia y considera seguir estas mejores
+prácticas:
 
-- Avoid blocking UI interactions while you wait for the result of your update. Instead, allow users to continue to make other updates and interactions, and inform your users of success asynchronously.
+- Evita bloquear las interacciones de la interfaz de usuario mientras esperas el
+  resultado de la actualización. En su lugar, permite a los usuarios continuar
+  realizando otras actualizaciones e interacciones, e informa a tus usuarios de
+  éxito de forma asíncrona.
 
-- Try to avoid making inter-canister calls. If the backend needs to talk to other canisters, the latency can add up quickly.
+- Intenta evitar realizar llamadas entre canisters. Si el backend necesita
+  comunicarse con otros canisters, la latencia puede acumularse rápidamente.
 
-- Use `Promise.all` to make multiple calls in a batch, instead of making them one by one.
+- Utiliza `Promise.all` para realizar múltiples llamadas en un lote, en lugar de
+  hacerlas una por una.
 
-- If you need to fetch assets or data, you can make direct `fetch` calls to the `raw.icp0.io` endpoint of canisters.
+- Si necesitas obtener activos o datos, puedes realizar llamadas directas de
+  `fetch` al punto final `raw.icp0.io` de los canisters.
 
 ## Bundlers
 
-It is recommended to use a bundler to assemble your code for convenience and simplified troubleshooting. Below is an example that provides a standard Webpack configuration, but you may also use other frameworks such as Rollup, Vite, Parcel, or others.
+Se recomienda utilizar un empaquetador para ensamblar tu código por conveniencia
+y para facilitar la solución de problemas. A continuación se muestra un ejemplo
+que proporciona una configuración estándar de Webpack, pero también puedes
+utilizar otros frameworks como Rollup, Vite, Parcel u otros.
 
-For this pattern, it is recommended to run a script to generate the `.env.development` and `.env.production` environment variable files for your project's canister IDs. This is a fairly standard approach for bundlers and can be easily supported using [dotenv](https://www.npmjs.com/package/dotenv). An example of this script can be found below:
+Para este patrón, se recomienda ejecutar un script para generar los archivos de
+variables de entorno `.env.development` y `.env.production` para los IDs de
+canister de tu proyecto. Este es un enfoque bastante estándar para los
+empaquetadores y se puede admitir fácilmente utilizando
+[dotenv](https://www.npmjs.com/package/dotenv). A continuación se muestra un
+ejemplo de este script:
 
 ```js
 // setupEnv.js
@@ -332,131 +431,143 @@ const fs = require("fs");
 const path = require("path");
 
 function initCanisterEnv() {
-  let localCanisters, prodCanisters;
-  try {
-    localCanisters = require(path.resolve(
-      ".dfx",
-      "local",
-      "canister_ids.json"
-    ));
-  } catch (error) {
-    console.log("No local canister_ids.json found");
-  }
-  try {
-    prodCanisters = require(path.resolve("canister_ids.json"));
-  } catch (error) {
-    console.log("No production canister_ids.json found");
-  }
+  let localCanisters, prodCanisters;
+  try {
+    localCanisters = require(path.resolve(
+      ".dfx",
+      "local",
+      "canister_ids.json"
+    ));
+  } catch (error) {
+    console.log("No local canister_ids.json found");
+  }
+  try {
+    prodCanisters = require(path.resolve("canister_ids.json"));
+  } catch (error) {
+    console.log("No production canister_ids.json found");
+  }
 
-  const network =
-    process.env.DFX_NETWORK ||
-    (process.env.NODE_ENV === "production" ? "ic" : "local");
+  const network =
+    process.env.DFX_NETWORK ||
+    (process.env.NODE_ENV === "production" ? "ic" : "local");
 
-  const canisterConfig = network === "local" ? localCanisters : prodCanisters;
+  const canisterConfig = network === "local" ? localCanisters : prodCanisters;
 
-  const localMap = localCanisters
-    ? Object.entries(localCanisters).reduce((prev, current) => {
-        const [canisterName, canisterDetails] = current;
-        prev[canisterName.toUpperCase() + "_CANISTER_ID"] =
-          canisterDetails[network];
-        return prev;
-      }, {})
-    : undefined;
-  const prodMap = prodCanisters
-    ? Object.entries(prodCanisters).reduce((prev, current) => {
-        const [canisterName, canisterDetails] = current;
-        prev[canisterName.toUpperCase() + "_CANISTER_ID"] =
-          canisterDetails[network];
-        return prev;
-      }, {})
-    : undefined;
-  return [localMap, prodMap];
+  const localMap = localCanisters
+    ? Object.entries(localCanisters).reduce((prev, current) => {
+        const [canisterName, canisterDetails] = current;
+        prev[canisterName.toUpperCase() + "_CANISTER_ID"] =
+          canisterDetails[network];
+        return prev;
+      }, {})
+    : undefined;
+  const prodMap = prodCanisters
+    ? Object.entries(prodCanisters).reduce((prev, current) => {
+        const [canisterName, canisterDetails] = current;
+        prev[canisterName.toUpperCase() + "_CANISTER_ID"] =
+          canisterDetails[network];
+        return prev;
+      }, {})
+    : undefined;
+  return [localMap, prodMap];
 }
 const [localCanisters, prodCanisters] = initCanisterEnv();
 
 if (localCanisters) {
-  const localTemplate = Object.entries(localCanisters).reduce((start, next) => {
-    const [key, val] = next;
-    if (!start) return `${key}=${val}`;
-    return `${start ?? ""}
+  const localTemplate = Object.entries(localCanisters).reduce((start, next) => {
+    const [key, val] = next;
+    if (!start) return `${key}=${val}`;
+    return `${start ?? ""}
           ${key}=${val}`;
-  }, ``);
-  fs.writeFileSync(".env.development", localTemplate);
+  }, ``);
+  fs.writeFileSync(".env.development", localTemplate);
 }
 if (prodCanisters) {
-  const prodTemplate = Object.entries(prodCanisters).reduce((start, next) => {
-    const [key, val] = next;
-    if (!start) return `${key}=${val}`;
-    return `${start ?? ""}
+  const prodTemplate = Object.entries(prodCanisters).reduce((start, next) => {
+    const [key, val] = next;
+    if (!start) return `${key}=${val}`;
+    return `${start ?? ""}
         ${key}=${val}`;
-  }, ``);
-  fs.writeFileSync(".env", localTemplate);
+  }, ``);
+  fs.writeFileSync(".env", localTemplate);
 }
 ```
 
-Then, you can add `"prestart"` and `"prebuild"` commands of `dfx generate; node setupEnv.js`. Follow the documentation for your preferred bundler on how to work with environment variables.
+Luego, puedes agregar comandos `"prestart"` y `"prebuild"` de
+`dfx generate; node setupEnv.js`. Sigue la documentación de tu empaquetador
+preferido sobre cómo trabajar con variables de entorno.
 
+## Ejemplo
 
-## Example
-
-Below is an example that creates an agent, fetches the root key of the replica, then creates an actor automatically through the Candid interface of the canister.
+A continuación se muestra un ejemplo que crea un agente, obtiene la clave raíz
+de la réplica y luego crea automáticamente un actor a través de la interfaz
+Candid del canister.
 
 :::caution
-This example uses fetchRootKey. It is not recommended that dapps deployed on the mainnet call this function from the ICP JavaScript agent, since using fetchRootKey on the mainnet poses severe security concerns for the dapp that's making the call. It is recommended to put it behind a condition so that it only runs locally.
 
-This API call will fetch a root key for verification of update calls from a single replica, so it’s possible for that replica to respond with a malicious key. A verified mainnet root key is already embedded into the ICP JavaScript agent, so this only needs to be called on your local replica, which will have a different key from mainnet that the ICP JavaScript agent does not know ahead of time.
+Este ejemplo usa `fetchRootKey`. No se recomienda que las dapps desplegadas en
+la red principal llamen a esta función desde el agente de JavaScript de ICP, ya
+que usar `fetchRootKey` en la red principal presenta graves preocupaciones de
+seguridad para la dapp que realiza la llamada. Se recomienda ponerlo detrás de
+una condición para que solo se ejecute localmente.
+
+Esta llamada a la API obtendrá una clave raíz para la verificación de las
+llamadas de actualización desde un solo réplica, por lo que es posible que esa
+réplica responda con una clave maliciosa. Una clave raíz verificada de la red
+principal ya está incrustada en el agente de JavaScript de ICP, por lo que solo
+necesita ser llamada en tu réplica local, que tendrá una clave diferente de la
+red principal que el agente de JavaScript de ICP no conoce de antemano.
+
 :::
 
 ```js
 import { Actor, HttpAgent } from "@dfinity/agent";
 
-// Imports and re-exports candid interface
+// Importa y vuelve a exportar la interfaz candid
 import { idlFactory } from "./backend_canister.did.js";
 export { idlFactory } from "./backend_canister.did.js";
 
-/* CANISTER_ID is replaced by webpack based on the node environment.
- * Note: The canister environment variable will be standardized as
- * process.env.CANISTER_ID_<CANISTER_NAME_UPPERCASE>
- * beginning in dfx 0.15.0
- */
+/* CANISTER_ID se reemplaza por webpack según el entorno del nodo.
+ * Nota: La variable de entorno del canister se estandarizará como
+ * process.env.CANISTER_ID_<CANISTER_NAME_UPPERCASE>
+ * comenzando en dfx 0.15.0
+ */
 export const canisterId =
-  process.env.CANISTER_ID_BACKEND_CANISTER ||
-  process.env.BACKEND_CANISTER_CANISTER_ID;
+  process.env.CANISTER_ID_BACKEND_CANISTER ||
+  process.env.BACKEND_CANISTER_CANISTER_ID;
 
 export const createActor = (canisterId, options = {}) => {
-  const agent = options.agent || new HttpAgent({ ...options.agentOptions });
+  const agent = options.agent || new HttpAgent({ ...options.agentOptions });
 
-  if (options.agent && options.agentOptions) {
-    console.warn(
-      "Detected both agent and agentOptions passed to createActor. Ignoring agentOptions and proceeding with the provided agent."
-    );
-  }
+  if (options.agent && options.agentOptions) {
+    console.warn(
+      "Detectado tanto 'agent' como 'agentOptions' pasados a createActor. Ignorando 'agentOptions' y procediendo con el agente proporcionado."
+    );
+  } // Obtiene la clave raíz para la validación del certificado durante el desarrollo
 
-  // Fetch root key for certificate validation during development
-  if (process.env.DFX_NETWORK !== "ic") {
-    agent.fetchRootKey().catch((err) => {
-      console.warn(
-        "Unable to fetch root key. Check to ensure that your local replica is running"
-      );
-      console.error(err);
-    });
-  }
+  if (process.env.DFX_NETWORK !== "ic") {
+    agent.fetchRootKey().catch((err) => {
+      console.warn(
+        "No se pudo obtener la clave raíz. Verifica que tu réplica local esté ejecutándose"
+      );
+      console.error(err);
+    });
+  } // Crea un actor usando la interfaz candid y el HttpAgent
 
-  // Creates an actor using the candid interface and the HttpAgent
-  return Actor.createActor(idlFactory, {
-    agent,
-    canisterId,
-    ...options.actorOptions,
-  });
+  return Actor.createActor(idlFactory, {
+    agent,
+    canisterId,
+    ...options.actorOptions,
+  });
 };
 
 export const backend_canister = createActor(canisterId);
 ```
 
-## Resources
+## Recursos
 
-- [ICP JavaScript agent GitHub repo](https://github.com/dfinity/agent-js.git).
+- [Repositorio de ICP JavaScript agent en GitHub](https://github.com/dfinity/agent-js.git).
 
-- [ICP JavaScript agent documentation](https://agent-js.icp.xyz/agent/modules.html).
+- [Documentación de ICP JavaScript agent](https://agent-js.icp.xyz/agent/modules.html).
 
-- [ICP JavaScript agent npm package](https://www.npmjs.com/package/@dfinity/agent).
+- [Paquete npm de ICP JavaScript agent](https://www.npmjs.com/package/@dfinity/agent).

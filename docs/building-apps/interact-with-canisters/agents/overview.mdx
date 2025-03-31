@@ -1,89 +1,148 @@
 ---
-keywords: [intermediate, agents,  javascript, rust, nodejs]
+keywords: [intermediate, agents, javascript, rust, nodejs]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Agents
+# Agentes
 
-<MarkdownChipRow labels={["Intermediate", "Agents" ]} />
+<MarkdownChipRow labels={["Intermedio", "Agentes"]} />{" "}
 
-In the Internet Computer ecosystem, a library that is used to make calls to the ICP public interface is called an **agent**. An agent has a few key responsibilities, which make it convenient to work with in your language of choice.
+En el ecosistema de Internet Computer, una biblioteca utilizada para realizar
+llamadas a la interfaz pública de ICP se denomina **agente**. Un agente tiene
+varias responsabilidades clave, lo que lo hace conveniente para trabajar en el
+lenguaje de tu elección.
 
-If you have a canister running, either on your local machine or live on the Internet Computer, you will have two main ways to interact with your canister smart contract.
-You can talk to the canister using the v2 API with an agent that follows the interface specification, or you can use the canister's HTTPS interface.
+Si tienes un canister en ejecución, ya sea en tu máquina local o en vivo en
+Internet Computer, tendrás dos formas principales de interactuar con tu contrato
+inteligente:
 
-Smart contracts are able to define their own APIs using the Candid Interface Declaration Language (IDL), and they will respond to calls through the public API.
+1. Usando la API v2 con un agente que sigue la especificación de la interfaz.
+2. Usando la interfaz HTTPS del canister.
 
-ICP supports two types of calls: `queries` and `updates`. Queries are fast and cannot change state. Updates go through consensus and will take around 2-4 seconds to complete.
+Los contratos inteligentes pueden definir sus propias API utilizando el **Candid
+Interface Declaration Language (IDL)** y responderán a llamadas a través de la
+API pública.
 
-As a result of the latency for updates, best practices around modeling your application's performance will have you make updates asynchronously and early. If you can make an update ahead of time and have it already "cached" in your canister's memory, your users will have a better experience requesting that data. Similarly, if your application needs to make an update, it is best to avoid blocking interaction while your update is taking place. Use **optimistic rendering** wherever practical, and proceed with your application as if the call has already succeeded.
+ICP admite dos tipos de llamadas: `queries` y `updates`.
 
-## Available agents
+- **Queries**: Son rápidas y no pueden modificar el estado del canister.
+- **Updates**: Requieren consenso y tardan entre 2 y 4 segundos en completarse.
 
-This section of the docs covers the following agents, ordered by languages:
+Debido a la latencia de las actualizaciones, las mejores prácticas para modelar
+el rendimiento de tu aplicación sugieren realizar actualizaciones de forma
+**asíncrona** y anticipada.
 
-- JavaScript / TypeScript
-    - [JavaScript/TypeScript agent by DFINITY](/docs/building-apps/interact-with-canisters/agents/javascript-agent)
-- Rust
-    - [Rust agent by DFINITY](/docs/building-apps/interact-with-canisters/agents/rust-agent)
+Si puedes realizar una actualización por adelantado y almacenarla en la memoria
+de tu canister, los usuarios tendrán una mejor experiencia al solicitar esos
+datos.  
+Asimismo, si tu aplicación necesita realizar una actualización, es recomendable
+evitar bloquear la interacción mientras se lleva a cabo.  
+Utiliza **renderizado optimista** siempre que sea posible y continúa con la
+ejecución de la aplicación como si la llamada ya hubiera tenido éxito.
 
-In addition to those, there are several other community-supported agents. Note that these agents may be unmaintained or may not have undergone a security review; be sure to check their current status before using them:
+## Agentes disponibles
 
-- .NET
-    - [`ICP.NET` by Gekctek](https://github.com/Gekctek/ICP.NET)
-- Dart
-    - [`agent_dart` by AstroX](https://github.com/AstroxNetwork/agent_dart) (supports mobile development with Flutter)
-- Go
-    - [`agent-go` by Aviate Labs](https://github.com/aviate-labs/agent-go)
-- Java
-    - [`ic4j-agent` by IC4J](https://github.com/ic4j/ic4j-agent) (supports Android)
-- C
-    - [`agent-c` by Zondax](https://github.com/Zondax/icp-client-cpp) (C Wrapper for IC Rust Agent)
-- Elixir
-    - [`icp_agent`](https://github.com/diodechain/icp_agent)
+Esta sección cubre los siguientes agentes, organizados por lenguaje:
 
-If you're interested in building an agent in another language, please reach out to us via [https://dfinity.org/grants](https://dfinity.org/grants).
+- **JavaScript / TypeScript**
+  - [Agente de JavaScript/TypeScript por DFINITY](/docs/building-apps/interact-with-canisters/agents/javascript-agent)
+- **Rust**
+  - [Agente de Rust por DFINITY](/docs/building-apps/interact-with-canisters/agents/rust-agent)
 
-## What an agent does
+Además de estos, existen varios agentes desarrollados por la comunidad. Ten en
+cuenta que estos agentes pueden estar desactualizados o no haber pasado por una
+auditoría de seguridad; verifica su estado antes de usarlos:
 
-### Structuring data
+- **.NET**
+  - [`ICP.NET` por Gekctek](https://github.com/Gekctek/ICP.NET)
+- **Dart**
+  - [`agent_dart` por AstroX](https://github.com/AstroxNetwork/agent_dart)
+    (compatible con desarrollo móvil en Flutter)
+- **Go**
+  - [`agent-go` por Aviate Labs](https://github.com/aviate-labs/agent-go)
+- **Java**
+  - [`ic4j-agent` por IC4J](https://github.com/ic4j/ic4j-agent) (compatible con
+    Android)
+- **C**
+  - [`agent-c` por Zondax](https://github.com/Zondax/icp-client-cpp) (wrapper en
+    C para el Agente de Rust de IC)
+- **Elixir**
+  - [`icp_agent`](https://github.com/diodechain/icp_agent)
 
-When an agent makes a call to a canister on ICP, it submits a `POST` request to `/api/v2/canister/<effective_canister_id>/call` that includes the following components:
+Si estás interesado en desarrollar un agente en otro lenguaje, contáctanos a
+través de  
+[https://dfinity.org/grants](https://dfinity.org/grants).
+
+## Qué hace un agente
+
+### Estructuración de datos
+
+Cuando un agente realiza una llamada a un canister en ICP, envía una solicitud
+`POST` a  
+`/api/v2/canister/<effective_canister_id>/call`, que incluye los siguientes
+componentes:
 
 - `request_type`
-- Authentication
-    - `sender`, `nonce`, and `ingress_expiry`
+- Autenticación
+  - `sender`, `nonce` y `ingress_expiry`
 - `canister_id`
 - `method_name`
-- `request_id`: Required for `update` request type calls.
-- `arg`: The rest of the payload.
+- `request_id`: Requerido para llamadas de tipo `update`.
+- `arg`: El resto de la carga útil.
 
-By knowing the Candid interface of the canister, the agent will assemble the `"arg"` with data from the client application, ensuring it matches the Candid interface for the method it will be calling. All of the above components are then assembled into a certificate, which is transformed into a CBOR-encoded buffer.
+Al conocer la interfaz Candid del canister, el agente ensamblará el campo
+`"arg"` con datos de la aplicación cliente, asegurándose de que coincida con la
+interfaz Candid del método que se llamará. Luego, todos los componentes
+anteriores se ensamblan en un certificado, que se transforma en un buffer
+codificado en CBOR.
 
-For update requests, the agent also hashes the rest of the fields and passes it in as a unique `request_id`. That `request_id` is used for polling while ICP reaches consensus on the update.
+Para solicitudes de tipo `update`, el agente también genera un hash con el resto
+de los campos y lo pasa como un `request_id` único. Este `request_id` se usa
+para la consulta mientras ICP alcanza consenso sobre la actualización.
 
-The agent takes the CBOR-encoded certificate and attaches it to the body of the `POST` request. The canister will work on that request asynchronously, and then the agent can begin polling with `read_state` requests until the canister response is ready.
+El agente toma el certificado codificado en CBOR y lo adjunta al cuerpo de la
+solicitud `POST`. El canister procesará la solicitud de forma asíncrona, y el
+agente podrá comenzar a hacer consultas con `read_state` hasta que la respuesta
+del canister esté lista.
 
-### Decoding data
+### Decodificación de datos
 
-Once the data has been returned from ICP, the agent takes the certificate from the payload and verifies it. The certificate can be verified as genuine using the public `rootKey` of the NNS subnet. The network will respond with a CBOR-encoded buffer, which the agent can then decode and transform into a useful structure using semantic language-specific types. For example, if the type returned from the canister is `text`, that will get turned into a JavaScript `string`, and so on.
+Una vez que ICP devuelve los datos, el agente extrae el certificado de la carga
+útil y lo verifica. El certificado puede autenticarse como genuino utilizando la
+clave pública `rootKey` de la subred NNS.
 
-### Managing authentication
+La red responderá con un buffer codificado en CBOR, que el agente podrá
+decodificar y transformar en una estructura útil utilizando tipos semánticos
+específicos del lenguaje. Por ejemplo, si el tipo devuelto por el canister es
+`text`, se convertirá en un `string` en JavaScript, y así sucesivamente.
 
-Calls to the Internet Computer always need to have a cryptographic identity attached. That identity will either be **anonymous** or **authenticated**, using a cryptographic signature. Since identities are required, canisters can use the identity attached to a call to decide how to respond to that call. This enables contracts to use those identities for other purposes.
+### Gestión de autenticación
 
-#### Accepted identities
+Las llamadas a Internet Computer siempre deben incluir una identidad
+criptográfica adjunta. Esta identidad puede ser **anónima** o **autenticada**,
+utilizando una firma criptográfica.
 
-ICP accepts calls using the following types of signatures in identities:
+Dado que las identidades son obligatorias, los canisters pueden utilizar la
+identidad adjunta a una llamada para decidir cómo responder. Esto permite que
+los contratos usen esas identidades para otros propósitos.
+
+#### Identidades aceptadas
+
+ICP acepta llamadas con los siguientes tipos de firmas en las identidades:
 
 - [Ed25519](https://ed25519.cr.yp.to/index.html)
 - [ECDSA](https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.186-4.pdf)
-    - on curve P-256 (also known as `secp256r1`), using `SHA-256` as the hash function.
-    - on the Koblitz curve in `secp256k1`.
+  - En la curva P-256 (también conocida como `secp256r1`), usando `SHA-256` como
+    función hash.
+  - En la curva Koblitz `secp256k1`.
 
-Plain signatures are supported for the schemes.
+Las firmas simples están soportadas para estos esquemas.
 
-When encoding these identities as a `principal`, agents attach a suffix byte, indicating whether the identity is self-authenticating or anonymous.
+Al codificar estas identidades como un `principal`, los agentes adjuntan un byte
+de sufijo que indica si la identidad es **autenticada** o **anónima**.
 
-A self-authenticating identity using one of the above curves will have a suffix of 2, while the anonymous identity is a single byte 4 and resolves to `"2vxsx-fae"` in its textual encoding.
+- Una identidad **autenticada** utilizando una de las curvas mencionadas tendrá
+  un sufijo de `2`.
+- Una identidad **anónima** es representada por un solo byte `4`, lo que en su
+  codificación textual se resuelve como `"2vxsx-fae"`.
