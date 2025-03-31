@@ -7,27 +7,43 @@ import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 
 # Upgrading a canister
 
-<MarkdownChipRow labels={["Beginner", "Management"]} />
+<MarkdownChipRow labels={["Principiante", "Gestión"]} />
 
-Unlike a <GlossaryTooltip>canister</GlossaryTooltip> reinstall that preserves the canister identifier but no state, a canister upgrade enables you to preserve the state of a deployed canister and change the code.
+A diferencia de una reinstalación de
 
-For example, assume you have a dapp that manages professional profiles and social connections. If you want to add a new feature to the dapp, you need to be able to update the canister code without losing any of the previously-stored data. A canister upgrade enables you to update existing canister identifiers with program changes without losing the program state.
+<GlossaryTooltip>canister</GlossaryTooltip>, que conserva el identificador del
+canister pero no su estado, una actualización de canister permite preservar el
+estado del canister desplegado mientras se modifica su código.
+
+Por ejemplo, supongamos que tienes una dapp que gestiona perfiles profesionales
+y conexiones sociales. Si deseas agregar una nueva funcionalidad a la dapp,
+necesitas poder actualizar el código del canister sin perder los datos
+almacenados previamente. Una actualización de canister te permite modificar el
+código manteniendo el estado del programa.
 
 :::tip
-To preserve state when you are upgrading a canister written in Motoko, be sure to use the `stable` keyword to identify the variables you want to preserve. For more information about preserving variable state in Motoko, see [stable variables and upgrade methods](/docs/motoko/main/canister-maintenance/upgrades).
+
+Para preservar el estado al actualizar un canister escrito en Motoko, asegúrate
+de usar la palabra clave `stable` para identificar las variables que deseas
+conservar. Para más información sobre cómo preservar el estado de variables en
+Motoko, consulta la sección sobre  
+[variables estables y métodos de actualización](/docs/motoko/main/canister-maintenance/upgrades).
+
 :::
 
-To upgrade a canister, first you must:
+## Pasos para actualizar un canister
 
-1. Edit the canister's code and save the changes.
+Para actualizar un canister, primero debes:
 
-2. Use [`dfx build <canister-name>`](/docs/building-apps/developer-tools/dfx/dfx-build) to compile the code into a new Wasm module.
+1. Editar el código del canister y guardar los cambios.
+2. Compilar el código en un nuevo módulo Wasm usando:  
+   [`dfx build <canister-name>`](/docs/building-apps/developer-tools/dfx/dfx-build).
+3. Instalar el nuevo módulo Wasm con el modo de actualización usando:  
+   [`dfx canister install <canister-name> --mode upgrade`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-install).
 
-3. Use [`dfx canister install <canister-name> --mode upgrade`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-install) to install the new Wasm module.
+## Errores relacionados con actualizaciones de canisters
 
-## Errors related to canister upgrades
+Algunos errores comunes durante la actualización de un canister incluyen:
 
-Common errors related to canister upgrades include:
-
-- [Missing upgrade option](/docs/references/execution-errors#missing-upgrade-option).
-- [Invalid upgrade option](/docs/references/execution-errors#invalid-upgrade-option).
+- [Opción de actualización faltante](/docs/references/execution-errors#missing-upgrade-option).
+- [Opción de actualización inválida](/docs/references/execution-errors#invalid-upgrade-option).

@@ -6,37 +6,62 @@ import TabItem from "@theme/TabItem";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 import { AdornedTabs } from "/src/components/Tabs/AdornedTabs";
 import { AdornedTab } from "/src/components/Tabs/AdornedTab";
-import { BetaChip } from "/src/components/Chip/BetaChip"
+import { BetaChip } from "/src/components/Chip/BetaChip";
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 
-# Canister history
+# Historial de Canister
 
-<MarkdownChipRow labels={["Beginner", "Management"]} />
+<MarkdownChipRow labels={["Principiante", "Administración"]} />
 
-The Internet Computer tracks the history of a deployed <GlossaryTooltip>canister</GlossaryTooltip> through the canister's Wasm module hashes and controller changes. This tracking provides insight into the canister's history, such as what code has been used to run the canister and which controller deployed that code.
+Internet Computer rastrea el historial de un
 
-Viewing a canister's history can be important in use cases such as:
+<GlossaryTooltip>canister</GlossaryTooltip> desplegado a través de los hashes del
+módulo Wasm del canister y los cambios en sus controladores. Este seguimiento proporciona
+información sobre el historial del canister, como qué código se ha utilizado para
+ejecutarlo y qué controlador desplegó dicho código.
 
-- Verifying that a canister's controller has not maliciously modified the code.
+Ver el historial de un canister puede ser importante en casos como:
 
-- Verifying that a canister's controller does not maliciously change the list of controllers for the canister. For example, if a canister's controller list only displays the governance canister as the current controller, users can trust that the canister's code has not been maliciously altered.
+- Verificar que el controlador de un canister no haya modificado maliciosamente
+  el código.
 
-## How canister history works
+- Verificar que el controlador de un canister no cambie maliciosamente la lista
+  de controladores. Por ejemplo, si la lista de controladores de un canister
+  solo muestra el canister de gobernanza como controlador actual, los usuarios
+  pueden confiar en que el código del canister no ha sido alterado de manera
+  maliciosa.
 
-Canister history was introduced and released by the NNS DAO proposal [122617](https://dashboard.internetcomputer.org/proposal/122617).
+## Cómo funciona el historial de canister
 
-Canister history information is made available via inter-canister calls made to the `canister_info` method of the management canister, using a canister's ID as an argument for the call. A canister's history stores the 20 most recent changes to the canister, including the canister's creation, Wasm module installations, reinstallations, upgrades, and changes to the list of canister controllers. It is important to note that since only the 20 most recent changes are stored, this feature cannot be used for auditing canisters that are frequently changed within a short period of time.
+El historial de canister fue introducido y publicado a través de la propuesta de
+la NNS DAO  
+[122617](https://dashboard.internetcomputer.org/proposal/122617).
+
+La información del historial de un canister está disponible a través de llamadas
+inter-canister al método `canister_info` del canister de administración,
+utilizando el ID del canister como argumento. Un historial de canister almacena
+los 20 cambios más recientes en el canister, incluyendo su creación,
+instalaciones del módulo Wasm, reinstalaciones, actualizaciones y cambios en la
+lista de controladores. Es importante tener en cuenta que, dado que solo se
+almacenan los 20 cambios más recientes, esta función no puede utilizarse para
+auditar canisters que cambian con frecuencia en un corto período de tiempo.
 
 :::danger
-Canister history is only available for changes that have happened since this feature was rolled out on 23-06-05, 9:47:46 AM UTC, across all <GlossaryTooltip>subnets</GlossaryTooltip>.
+
+El historial de canister solo está disponible para los cambios ocurridos desde
+que esta función se implementó el 5 de junio de 2023 a las 9:47:46 AM UTC, en
+todas las <GlossaryTooltip>subnets</GlossaryTooltip>.
+
 :::
 
-You can read more about this feature on the [developer forum](https://forum.dfinity.org/t/canister-history-on-the-ic/21745).
+Puedes obtener más información sobre esta función en el  
+[foro de desarrolladores](https://forum.dfinity.org/t/canister-history-on-the-ic/21745).
 
-## Getting a canister's history
+## Obtener el historial de un canister
 
-To get a canister's history, make a call to the IC management canister's `canister_info` method:
+Para obtener el historial de un canister, realiza una llamada al método
+`canister_info` del canister de administración de IC:
 
 <AdornedTabs groupId="language">
 <TabItem value="motoko" label="Motoko" default>
@@ -72,19 +97,20 @@ actor Info {
 <TabItem value="rust" label="Rust">
 
 ```rust file=../../references/samples/rust/canister-info/src/lib.rs
+
 ```
 
 </TabItem>
 
 <AdornedTab value={"typescript"} label="TypeScript" endAdornment={<BetaChip />}>
 
-[Learn more about Azle](https://demergent-labs.github.io/azle/get_started.html).
+[Aprende más sobre Azle](https://demergent-labs.github.io/azle/get_started.html).
 
 </AdornedTab>
 
 <AdornedTab value={"python"} label="Python" endAdornment={<BetaChip />}>
 
-[Learn more about Kybra](https://demergent-labs.github.io/kybra/).
+[Aprende más sobre Kybra](https://demergent-labs.github.io/kybra/).
 
 </AdornedTab>
 </AdornedTabs>

@@ -1,60 +1,79 @@
 ---
-keywords: [beginner, tutorial, maintain canisters, logs, canister logging, logging]
+keywords:
+  [beginner, tutorial, maintain canisters, logs, canister logging, logging]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 
-# Canister logging
+# Registro de Canister (Canister logging)
 
-<MarkdownChipRow labels={["Beginner", "Management"]} />
+<MarkdownChipRow labels={["Principiante", "Administración"]} />
 
-The <GlossaryTooltip>canister</GlossaryTooltip> logging feature is designed to provide developers with insight into their canister's behavior and assist with scenarios where their canister traps. This feature supports log messages for:
+La función de registro de <GlossaryTooltip>canister</GlossaryTooltip> está
+diseñada para proporcionar a los desarrolladores información sobre el
+comportamiento de su canister y ayudar en escenarios donde el canister se traba
+(trap). Esta función admite mensajes de registro para:
 
 - Heartbeats.
-
 - Timers.
+- Pre/post upgrade y `canister_init`.
+- Llamadas de actualización.
+- Consultas (queries), solo si se llaman en modo replicado.
 
-- Pre/post upgrade and `canister_init`.
+El controlador de un canister puede recuperar los registros del canister,
+incluso cuando las ejecuciones fallan, utilizando el comando  
+[`dfx canister logs <canister-name>`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-logs):
 
-- Update calls.
-
-- Queries, only if called in replicated mode.
-
-A canister's controller is able to retrieve the canister's logs, even when executions trap, using [`dfx canister logs <canister-name>`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-logs):
-
-```
+```bash
 dfx canister logs <canister-name>
 ```
 
 :::info
-Non-replicated calls are not currently supported for logging.
+
+Las llamadas no replicadas actualmente no son compatibles con el registro de
+logs.
+
 :::
 
-## Log visibility
+## Visibilidad de los registros
 
-By default, a canister's logs are only visible to the controllers of the canister. A canister's logs can be made public by updating the canister's settings with the [`dfx canister update-settings`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-update-settings) command:
+De forma predeterminada, los registros de un canister solo son visibles para los
+controladores del canister. Sin embargo, los registros pueden hacerse públicos
+actualizando la configuración del canister con el comando  
+[`dfx canister update-settings`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-update-settings):
 
 ```bash
 dfx canister update-settings <canister-name> --log-visibility public
 ```
 
-### Log viewer allow lists
+### Listas de permitidos para el visor de registros
 
-Canister log allow lists enable principals that are not controllers of the canister to view the logs without the logs being public. Log allow lists are supported in `dfx` versions `0.24.2` and newer.
+Las listas de permitidos para el visor de registros permiten que principales que
+no son controladores del canister puedan ver los registros sin necesidad de
+hacerlos públicos. Estas listas están disponibles en versiones de `dfx` `0.24.2`
+y superiores.
 
-To specify principals in the canister's log allow list, update the canister's settings with the flags:
+Para especificar principales en la lista de permitidos para los registros del
+canister, actualiza la configuración del canister con las siguientes opciones:
 
-- `dfx canister update-settings <canister-name> --set-log-viewer <principal-id>`: Set a single principal as a log viewer.
+- `dfx canister update-settings <canister-name> --set-log-viewer <principal-id>`:  
+  Establece un único principal como visor de registros.
 
-- `dfx canister update-settings <canister-name> --add-log-viewer <principal-id>`: Add a principal to a list of log viewers.
+- `dfx canister update-settings <canister-name> --add-log-viewer <principal-id>`:  
+  Agrega un principal a la lista de visores de registros.
 
-- `dfx canister update-settings <canister-name> --remove-log-viewer <principal-id>`: Remove a principal from the log viewer list.
+- `dfx canister update-settings <canister-name> --remove-log-viewer <principal-id>`:  
+  Elimina un principal de la lista de visores de registros.
 
-You can also configure a principal as a log viewer when you create a canister:
+También puedes configurar un principal como visor de registros al crear un
+canister:
 
-```
+```bash
 dfx canister create <canister-name> --log-viewer <principal-id>
 ```
 
-Or, you can set the `canisters[].initialization_values.log_visibility.allowed_viewers` configuration setting in your project's `dfx.json` file to set the canister log allowed viewers upon canister creation.
+O bien, puedes establecer la configuración  
+`canisters[].initialization_values.log_visibility.allowed_viewers` en el archivo
+`dfx.json` de tu proyecto para definir los visores de registros del canister en
+el momento de su creación.

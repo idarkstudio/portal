@@ -1,5 +1,14 @@
 ---
-keywords: [beginner, tutorial, maintain canisters, canister trapping, traps, traps during upgrades, handling traps]
+keywords:
+  [
+    beginner,
+    tutorial,
+    maintain canisters,
+    canister trapping,
+    traps,
+    traps during upgrades,
+    handling traps,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
@@ -7,59 +16,102 @@ import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 
 # Canister trapping
 
-<MarkdownChipRow labels={["Beginner", "Management"]} />
+<MarkdownChipRow labels={["Principiante", "Gestión"]} />
 
-Trapping, in the context of WebAssembly code, refers to an interruption of code execution that returns an error. Trapping is defined by [the WebAssembly documentation](https://webassembly.github.io/spec/core/intro/overview.html) as:
+Trapping, en el contexto del código WebAssembly, se refiere a una interrupción
+de la ejecución del código que devuelve un error. Trapping está definido por la
+[documentación de WebAssembly](https://webassembly.github.io/spec/core/intro/overview.html)
+como:
 
-*“Under some conditions, certain instructions may produce a trap, which immediately aborts execution. Traps cannot be handled by WebAssembly code but are reported to the outside environment, where they typically can be caught.”*
+> “Bajo ciertas condiciones, algunas instrucciones pueden producir un trap, lo
+> que interrumpe inmediatamente la ejecución. Los traps no pueden ser manejados
+> por el código WebAssembly, pero son reportados al entorno externo, donde
+> típicamente pueden ser capturados.”
 
-On ICP, canister code is compiled into WebAssembly before it is executed. This means that canisters can trap. Some example cases when canisters might trap include:
+En ICP, el código de los canisters se compila en WebAssembly antes de
+ejecutarse. Esto significa que los canisters pueden generar traps. Algunos casos
+en los que pueden ocurrir traps incluyen:
 
-- Canister code panics (e.g., in Rust).
-- Dividing by zero.
-- Calling a system API in a context that is not permitted by ICP ([see a list of APIs and which contexts they are available in](/docs/references/ic-interface-spec#system-api-imports)).
-- Accessing [heap data](/docs/building-apps/canister-management/storage) that is out of bounds.
+- Pánico en el código del canister (por ejemplo, en Rust).
+- División por cero.
+- Llamadas a una API del sistema en un contexto no permitido por ICP
+  ([ver lista de APIs y sus contextos permitidos](/docs/references/ic-interface-spec#system-api-imports)).
+- Acceso a [datos en el heap](/docs/building-apps/canister-management/storage)
+  fuera de límites.
 
-## What happens when a canister traps?
+## ¿Qué sucede cuando un canister genera un trap?
 
-If a canister traps during a message execution, two things happen:
+Si un canister genera un trap durante la ejecución de un mensaje, ocurren dos
+cosas:
 
-- Message execution immediately ends and an error is returned.
-- Any state changes made by the canister during this message execution will be rolled back.
+- La ejecución del mensaje se detiene inmediatamente y se devuelve un error.
+- Cualquier cambio de estado realizado durante la ejecución de ese mensaje se
+  revierte.
 
-## Traps during upgrades
+## Traps durante actualizaciones
 
-Using pre_ and post_upgrade hooks is discouraged. It is error-prone and can render a canister unusable. Per best practices, using these methods should be avoided if possible.
+El uso de `pre_upgrade` y `post_upgrade` hooks no es recomendable, ya que puede
+provocar errores y dejar inservible un canister. Como mejor práctica, se debe
+evitar su uso siempre que sea posible.
 
-Special care should be taken when writing a [`pre_upgrade`](/docs/references/ic-interface-spec#system-api-upgrades) hook for your canister, which will run during an upgrade against the current canister's Wasm module. If the `pre_upgrade` hook traps, then the canister upgrade will fail. This is extremely important, as it means your canister can be permanently unrecoverable.
+Se debe tener especial cuidado al escribir un
+[`pre_upgrade`](/docs/references/ic-interface-spec#system-api-upgrades) hook, ya
+que se ejecuta antes de actualizar el módulo Wasm del canister. Si el hook
+`pre_upgrade` genera un trap, la actualización del canister fallará, lo que
+puede volverlo irrecuperable.
 
-In order to avoid unexpected surprises, it is strongly recommended that your canisters use stable memory directly, which removes the need for having a `pre_upgrade` hook in the first place.
+Para evitar problemas, se recomienda utilizar directamente la memoria estable,
+eliminando así la necesidad de un `pre_upgrade` hook.
 
-## Traps during inter-canister calls
+## Traps en llamadas entre canisters
 
-Trapping is an important concern when using inter-canister calls. Since the state is rolled back only for the current message execution, this means that if there's a trap in a callback handler execution, the state only rolls back to the point before this message execution. In particular, any state changes made by the canister before making the inter-canister call and calling `await` to wait for the response will not be rolled back (as this was a separate message execution that happened before the callback handler was invoked).
+El trapping es un problema importante en llamadas entre canisters. Como el
+estado solo se revierte en la ejecución actual del mensaje, si hay un trap en la
+ejecución de un manejador de callback, el estado solo se revierte hasta antes de
+la ejecución de ese mensaje. Esto significa que los cambios de estado realizados
+antes de hacer una llamada entre canisters y de usar `await` para esperar la
+respuesta no se revertirán, ya que pertenecen a una ejecución de mensaje
+anterior.
 
-This is quite important as it might affect how one can implement canisters safely. Generally speaking, traps should be avoided in callback handler invocations. If this is not possible, then it's recommended to use the [cleanup system API call](/docs/references/ic-interface-spec#system-api-call) to ensure that any cleanup action is performed (e.g., releasing a lock that was acquired before making an inter-canister call).
+Por esta razón, se recomienda evitar traps en los manejadores de callback. Si
+esto no es posible, se sugiere usar la llamada
+[cleanup system API](/docs/references/ic-interface-spec#system-api-call) para
+asegurarse de que cualquier acción de limpieza se realice (por ejemplo, liberar
+un bloqueo adquirido antes de la llamada entre canisters).
 
-## When to use traps explicitly
+## Cuándo usar traps explícitamente
 
-Traps can also be useful in certain situations. If you encounter an unrecoverable error while processing a message, it might be better to trap and roll back any changes made in that message execution to avoid leaving your canister in a weird state. Another case would be if an invariant that should generally hold is violated.
+En algunos casos, los traps pueden ser útiles. Si se encuentra un error
+irrecuperable mientras se procesa un mensaje, puede ser preferible generar un
+trap y revertir todos los cambios hechos en esa ejecución, evitando dejar el
+canister en un estado inconsistente. Otro caso sería si se viola una invariante
+importante.
 
-## Troubleshooting why your canister has trapped
+## Solución de problemas de trapping en un canister
 
-Some of the common root causes of canister traps include:
+Algunas causas comunes de traps en un canister incluyen:
 
-- *“Heap out of bounds”*: Usually means that your canister is attempting to access heap memory that has not been allocated yet. This typically points to a programming error. Look for places where memory is allocated (e.g., creating vectors) and whether you try to access such memory before allocating it.
+- **"Heap out of bounds"**: Ocurre cuando el canister intenta acceder a una
+  memoria heap no asignada. Generalmente indica un error de programación. Se
+  debe revisar la asignación de memoria (por ejemplo, al crear vectores) y
+  verificar si se intenta acceder a memoria antes de asignarla.
 
-- *“Stable memory out of bounds”*: Similar to *“heap out of bounds”* but for stable memory.
+- **"Stable memory out of bounds"**: Similar a "heap out of bounds", pero
+  aplicado a la memoria estable.
 
-- *“Integer division by zero”*: The canister attempted to divide by zero. Inspect the canister's code for any division operations.
+- **"Integer division by zero"**: El canister intentó dividir por cero. Se debe
+  inspeccionar el código del canister en busca de operaciones de división.
 
-- *“Unreachable”*: Typically produced when the canister panics, e.g., for Rust canisters. It's recommended to use the [panic hook](https://github.com/dfinity/cdk-rs/blob/08cbe397fcbaf62dd1edbec218492f967e80dd00/src/ic-cdk/src/printer.rs#L5) so that panics are converted to an explicit call to [ic0.trap](/docs/references/ic-interface-spec#debugging-aids) which will append an error message that will be more useful for debugging.
+- **"Unreachable"**: Generalmente ocurre cuando el canister entra en pánico (por
+  ejemplo, en canisters escritos en Rust). Se recomienda usar un
+  [panic hook](https://github.com/dfinity/cdk-rs/blob/08cbe397fcbaf62dd1edbec218492f967e80dd00/src/ic-cdk/src/printer.rs#L5)
+  para que los pánicos se conviertan en una llamada explícita a
+  [ic0.trap](/docs/references/ic-interface-spec#debugging-aids), lo que agregará
+  un mensaje de error más útil para la depuración.
 
-## Errors related to canister trapping
+## Errores relacionados con trapping en canisters
 
-Common errors related to canister trapping include:
+Errores comunes relacionados con trapping en canisters incluyen:
 
 - [Trapped](/docs/references/execution-errors#trapped).
 - [Trapped explicitly](/docs/references/execution-errors#trapped-explicitly).

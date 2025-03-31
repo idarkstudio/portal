@@ -5,116 +5,198 @@ keywords: [beginner, tutorial, maintain canisters, storage, canister storage]
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 
-# Canister storage
+# Almacenamiento de Canisters
 
-<MarkdownChipRow labels={["Beginner", "Management"]} />
+<MarkdownChipRow labels={["Principiante", "Gestión"]} />
 
-When developing projects on ICP, there are two primary forms of data storage that your <GlossaryTooltip>canisters</GlossaryTooltip> can utilize. The first type of storage is the canister's **heap memory**, sometimes referred to as the canister's *main memory*. Heap memory is **temporary**, and any data stored in a canister's heap memory is cleared whenever the canister is reinstalled or upgraded.
+Cuando desarrollas proyectos en ICP, existen dos formas principales de
+almacenamiento de datos que tus **canisters** pueden utilizar. El primer tipo de
+almacenamiento es la **memoria heap** del canister, a veces conocida como la
+_memoria principal_ del canister. La memoria heap es **temporal**, y cualquier
+dato almacenado en ella se elimina siempre que el canister sea reinstalado o
+actualizado.
 
-The second type of storage available to a canister is **stable memory**. Stable memory is a unique feature of ICP that defines a separate data store aside from a canister's regular Wasm heap memory data storage. It is a secondary storage type that can be used to store data long-term, since all data stored in stable memory will persist across all canister processes.
+El segundo tipo de almacenamiento disponible para un canister es la **memoria
+estable**. La memoria estable es una característica única de ICP que define un
+almacenamiento de datos separado de la memoria regular del heap del canister. Es
+un tipo de almacenamiento secundario que se puede utilizar para almacenar datos
+a largo plazo, ya que todos los datos almacenados en la memoria estable
+persistirán a través de todos los procesos del canister.
 
-## Heap memory
+## Memoria Heap
 
-Heap memory refers to a canister's regular Wasm memory. It does not persist and does not store data long-term. A canister's heap memory is cleared whenever a canister is reinstalled or upgraded. Heap memory is used by default for storing things such as variable values, the result of an executed function, or other arguments passed to your canister.
+La memoria heap se refiere a la memoria regular de un canister en Wasm. No
+persiste y no almacena datos a largo plazo. La memoria heap de un canister se
+borra siempre que el canister sea reinstalado o actualizado. Esta memoria se
+utiliza por defecto para almacenar cosas como valores de variables, el resultado
+de una función ejecutada u otros argumentos pasados al canister.
 
-Heap memory is limited to a maximum of 4GiB of data.
+La memoria heap tiene un límite máximo de 4GiB de datos.
 
-## Stable memory
+## Memoria Estable
 
-Stable memory is a feature unique to the Internet Computer Protocol that provides a long-term, persistent data storage option separate from a canister's heap memory. Unless a canister is reinstalled or its data is cleared due to cycle depletion, the data stored in stable memory is not cleared or removed. The stable memory is preserved throughout the process, while any other WebAssembly state is discarded.
+La memoria estable es una característica única del Protocolo Internet Computer
+que proporciona una opción de almacenamiento de datos persistente a largo plazo,
+separada de la memoria heap del canister. A menos que un canister sea
+reinstalado o sus datos sean borrados debido a la agotación de ciclos, los datos
+almacenados en la memoria estable no se eliminan ni se retiran. La memoria
+estable se conserva durante todo el proceso, mientras que cualquier otro estado
+de WebAssembly se descarta.
 
-To use stable memory, you must anticipate which portions of the canister's data you want to persist across upgrades by indicating this within the canister code. More information about this can be found in the section below, [Storage handling in different languages](#storage-handling-in-different-languages).
+Para utilizar memoria estable, debes anticipar qué partes de los datos del
+canister deseas que persistan a través de las actualizaciones indicando esto en
+el código del canister. Más información sobre esto se encuentra en la sección
+siguiente,
+[Manejo de almacenamiento en diferentes lenguajes](#manejo-de-almacenamiento-en-diferentes-lenguajes).
 
-By default, a canister's stable memory is empty. The maximum storage limit for stable memory is 500GiB if the <GlossaryTooltip>subnet</GlossaryTooltip> the canister is deployed on can accommodate it. If a canister uses more than 500GiB of stable memory, the canister will trap and become unrecoverable.
+Por defecto, la memoria estable de un canister está vacía. El límite máximo de
+almacenamiento para la memoria estable es de 500GiB, si la **subred** en la que
+el canister está desplegado lo permite. Si un canister utiliza más de 500GiB de
+memoria estable, el canister atrapará el error y se volverá irrecuperable.
 
-## Storage cost
+## Costo de Almacenamiento
 
-Storage cost is calculated based on the GiB of storage used by a canister per second, costing `127_000` <GlossaryTooltip>cycles</GlossaryTooltip> on a 13-node subnet and `127_000 / 13 * 34` cycles on a subnet with 34 nodes. In USD, this works out to about $0.43 and $1.13, respectively, for storing 1 GiB of data for a 30-day month. The cost is the same whether the canister is using heap memory, stable memory, or both.
+El costo de almacenamiento se calcula en base a los GiB de almacenamiento
+utilizados por un canister por segundo, costando `127_000` **ciclos** en una
+subred de 13 nodos y `127_000 / 13 * 34` ciclos en una subred con 34 nodos. En
+USD, esto equivale a aproximadamente $0.43 y $1.13, respectivamente, por
+almacenar 1 GiB de datos durante un mes de 30 días. El costo es el mismo, ya sea
+que el canister utilice memoria heap, memoria estable o ambas.
 
-[Learn more about storage costs](/docs/building-apps/essentials/gas-cost).
+[Aprende más sobre los costos de almacenamiento](/docs/building-apps/essentials/gas-cost).
 
-## Storage handling in different languages
+## Manejo de Almacenamiento en Diferentes Lenguajes
 
-### Motoko storage handling
+### Manejo de Almacenamiento en Motoko
 
-In Motoko canisters, stable memory can be utilized through the Motoko **stable storage** and **stable variable** features. Stable storage is a Motoko-specific term used to refer to Motoko's implementation of stable memory to persist data across canister upgrades. Stable variables are Motoko-defined variables that use the `stable` modifying keyword to indicate that the variable's value should persist across canister upgrades, such as:
+En los canisters de Motoko, la memoria estable se puede utilizar a través de las
+características de **almacenamiento estable** y **variables estables**. El
+almacenamiento estable es un término específico de Motoko que se refiere a la
+implementación de la memoria estable de Motoko para persistir datos a través de
+actualizaciones del canister. Las variables estables son variables definidas en
+Motoko que utilizan la palabra clave `stable` para indicar que el valor de la
+variable debe persistir a través de las actualizaciones del canister, como se
+muestra a continuación:
 
 ```motoko
 actor Counter {
-  stable var value = 0;
-  public func inc() : async Nat {
-    value += 1;
-    return value;
-  };
+  stable var value = 0;
+  public func inc() : async Nat {
+    value += 1;
+    return value;
+  };
 }
 ```
 
-To utilize stable memory when upgrading a Motoko canister, the following workflow is used:
+Para utilizar memoria estable al actualizar un canister de Motoko, el siguiente
+flujo de trabajo se utiliza:
 
-- The canister must be stopped.
-- The canister's heap memory is discarded, and a new version of the canister's Wasm module is initialized. Data stored in stable memory is made available to the new Wasm module.
-- The canister's new code is installed using the `--mode upgrade` flag.
-- The canister is started and now runs the newly upgraded code.
-- Stable variables are reloaded. Stable memory bytes that store those variables are overwritten with zeros to minimize stable memory costs for the canister.
+- El canister debe detenerse.
+- La memoria heap del canister se descarta y se inicializa una nueva versión del
+  módulo Wasm del canister. Los datos almacenados en la memoria estable se hacen
+  disponibles para el nuevo módulo Wasm.
+- El nuevo código del canister se instala usando la bandera `--mode upgrade`.
+- El canister se reinicia y ahora ejecuta el código actualizado.
+- Las variables estables se recargan. Los bytes de memoria estable que almacenan
+  esas variables se sobrescriben con ceros para minimizar los costos de memoria
+  estable del canister.
 
-#### Garbage collection
+#### Recolección de Basura
 
-A garbage collection process is an automatic utility that is used to manage the amount of memory used. For heap memory, garbage collection is used to remove unreferenced or dead objects in order to free up otherwise allocated heap memory.
+Un proceso de recolección de basura es una utilidad automática que se utiliza
+para gestionar la cantidad de memoria utilizada. Para la memoria heap, la
+recolección de basura se utiliza para eliminar objetos no referenciados o
+muertos con el fin de liberar memoria heap previamente asignada.
 
-In Motoko, the default garbage collection process uses a copying approach, which depends on the size of the amount of heap memory currently used. In contrast, an additional garbage collector that uses a marking approach can be selected, which is based on the amount of free heap memory. These garbage collection methods are triggered when there are enough changes made to heap memory since the last round of garbage collection. Garbage collection can be forced to run after every message using the `--force-gc` flag in the project's `dfx.json` file:
+En Motoko, el proceso de recolección de basura por defecto utiliza un enfoque de
+copiado, que depende del tamaño de la memoria heap utilizada en ese momento. En
+contraste, se puede seleccionar un colector de basura adicional que utiliza un
+enfoque de marcado, basado en la cantidad de memoria heap libre. Estos métodos
+de recolección de basura se activan cuando se realizan suficientes cambios en la
+memoria heap desde la última ronda de recolección de basura. La recolección de
+basura puede forzarse para que se ejecute después de cada mensaje utilizando la
+bandera `--force-gc` en el archivo `dfx.json` del proyecto:
 
 ```json
-  "defaults": {
-    "build": {
-      "packtool": "",
-      "args": "--force-gc"
-    }
-  },
+"defaults": {
+  "build": {
+    "packtool": "",
+    "args": "--force-gc"
+  }
+},
 ```
 
-Both of these garbage collectors, however, are unable to collect the entire heap memory pool due to the instruction limit per message on ICP. Since these garbage collectors cannot collect the entire heap memory pool, canisters do not benefit from fully utilizing the entire 4GiB memory pool, as there must be some heap memory space left for the garbage collector to operate.
+Ambos recolectores de basura, sin embargo, no pueden recolectar toda la memoria
+heap debido al límite de instrucciones por mensaje en ICP. Dado que estos
+recolectores no pueden recolectar toda la memoria heap, los canisters no se
+benefician completamente del uso de todo el espacio de memoria de 4GiB, ya que
+debe quedar algo de espacio de memoria heap libre para que el recolector de
+basura opere.
 
-A beta incremental garbage collection process is available, which uses incremental messages that distribute the garbage collection work across multiple messages when needed. This form of garbage collection allows for the allocation of up to 3x more heap space after it has been run while consuming fewer cycles on average. Using this garbage collection service, canisters can benefit from using the entire 4GiB of heap memory, as it can garbage collect the entire heap memory pool.
+Actualmente está disponible un proceso de recolección de basura incremental en
+fase beta, el cual utiliza mensajes incrementales para distribuir el trabajo de
+recolección de basura a través de varios mensajes cuando sea necesario. Este
+tipo de recolección de basura permite asignar hasta 3 veces más espacio en
+memoria heap después de que se haya ejecutado, consumiendo menos ciclos en
+promedio. Con este servicio de recolección de basura, los canisters pueden
+beneficiarse de utilizar toda la memoria heap de 4GiB, ya que pueden recolectar
+toda la memoria heap.
 
-The incremental garbage collector can be used by specifying the `--incremental-gc` compiler flag in a project's `dfx.json` file, such as:
+El colector de basura incremental se puede utilizar especificando la bandera
+`--incremental-gc` en el archivo `dfx.json` del proyecto, como sigue:
 
 ```json
 {
-  "canisters": {
-    “my_dapp”: {
-       "main": "src/my-dapp.mo",
-       "type": "motoko",
-       "args" : "--incremental-gc"
-    },
-  },
+  "canisters": {
+    "my_dapp": {
+      "main": "src/my-dapp.mo",
+      "type": "motoko",
+      "args": "--incremental-gc"
+    }
+  }
 }
 ```
 
 :::info
-This garbage collector is still in beta testing and should be used with caution.
+
+Este colector de basura aún está en fase beta y debe ser utilizado con
+precaución.
+
 :::
 
-[Learn more about the incremental garbage collector](https://github.com/dfinity/motoko/pull/3837).
+[Aprende más sobre el colector de basura incremental](https://github.com/dfinity/motoko/pull/3837).
 
-### Rust storage handling
+### Manejo de Almacenamiento en Rust
 
-To utilize stable memory for canisters written in Rust, the crate [ic-stable-structures](https://github.com/dfinity/stable-structures) can be used. It is recommended to review the documentation for these crates to learn more or [review the tutorial on the stable structures crate](https://mmapped.blog/posts/14-stable-structures.html).
+Para utilizar memoria estable en canisters escritos en Rust, se puede usar la
+crate [ic-stable-structures](https://github.com/dfinity/stable-structures). Se
+recomienda revisar la documentación de estas crates para aprender más o
+[revisar el tutorial sobre la crate de estructuras estables](https://mmapped.blog/posts/14-stable-structures.html).
 
-As good practice, stable memory should be versioned since the stable memory decoding mechanism may need to guess the data's format in situations where the serialization format or stable data layout of a canister drastically changes. This can be as simple as declaring that the first byte of the canister's stable memory will be used to represent the version number.
+Como buena práctica, la memoria estable debe versionarse, ya que el mecanismo de
+decodificación de memoria estable puede necesitar adivinar el formato de los
+datos en situaciones donde el formato de serialización o el diseño de datos
+estables de un canister cambian drásticamente. Esto puede ser tan simple como
+declarar que el primer byte de la memoria estable del canister se utilizará para
+representar el número de versión.
 
-To utilize stable memory when upgrading a Rust canister, the following workflow is used:
+Para utilizar memoria estable al actualizar un canister de Rust, el siguiente
+flujo de trabajo se utiliza:
 
-- The canister must be stopped.
-- The canister's heap memory is discarded, and a new version of the canister's Wasm module is initialized. Data stored in stable memory is made available to the new Wasm module.
-- The canister's new code is installed using the `--mode upgrade` flag.
-- The canister has been started and now runs the newly upgraded code. The init function is not executed.
+- El canister debe detenerse.
+- La memoria heap del canister se descarta y se inicializa una nueva versión del
+  módulo Wasm del canister. Los datos almacenados en la memoria estable se hacen
+  disponibles para el nuevo módulo Wasm.
+- El nuevo código del canister se instala usando la bandera `--mode upgrade`.
+- El canister se reinicia y ahora ejecuta el código actualizado. La función
+  `init` no se ejecuta.
 
-## Errors related to canister memory
+## Errores relacionados con la memoria del canister
 
-Common errors related to canister memory include:
+Errores comunes relacionados con la memoria del canister incluyen:
 
-- [Out of memory](/docs/references/execution-errors#out-of-memory).
-- [Memory access limit exceeded](/docs/references/execution-errors#memory-access-limit-exceeded).
-- [Wasm memory limit exceeded](/docs/references/execution-errors#wasm-memory-limit-exceeded).
-- [Not enough memory allocation given](/docs/references/execution-errors#not-enough-memory-allocation-given).
-- [Wasm chunk store error](/docs/references/execution-errors#wasm-chunk-store-error).
+- [Falta de memoria](/docs/references/execution-errors#out-of-memory).
+- [Límite de acceso a memoria excedido](/docs/references/execution-errors#memory-access-limit-exceeded).
+- [Límite de memoria Wasm excedido](/docs/references/execution-errors#wasm-memory-limit-exceeded).
+- [No se ha asignado suficiente memoria](/docs/references/execution-errors#not-enough-memory-allocation-given).
+- [Error de almacenamiento de chunks Wasm](/docs/references/execution-errors#wasm-chunk-store-error).

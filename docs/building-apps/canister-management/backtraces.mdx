@@ -1,34 +1,52 @@
 ---
-keywords: [intermediate, tutorial, maintain canisters, logs, logging, backtraces, debugging, trap, canister trap]
+keywords:
+  [
+    intermediate,
+    tutorial,
+    maintain canisters,
+    logs,
+    logging,
+    backtraces,
+    debugging,
+    trap,
+    canister trap,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 
-# Canister backtraces
+# Rastreo de errores en canisters
 
-<MarkdownChipRow labels={["Intermediate", "Tutorial", "Motoko", "Rust"]} />
+<MarkdownChipRow labels={["Intermedio", "Tutorial", "Motoko", "Rust"]} />
 
-When canisters trap, ICP reports backtraces that contain the names of functions in the call stack. Backtraces are added to the canister logs and if the caller has [access to canister logs](/docs/building-apps/canister-management/logs#log-visibility) they will also be included in the message error response.
+Cuando los canisters generan un error, ICP reporta un rastreo de pila que
+contiene los nombres de las funciones en la pila de llamadas. Estos rastreos se
+agregan a los registros del canister y, si el llamador tiene
+[acceso a los registros del canister](/docs/building-apps/canister-management/logs#log-visibility),
+también se incluirán en la respuesta del mensaje de error.
 
-For example, if the following Rust canister accidentally performs an out of bounds access of stable memory:
+Por ejemplo, si el siguiente canister en Rust accidentalmente intenta acceder
+fuera de los límites de la memoria estable:
 
 ```rust
-	#[update]
-	fn outer() {
-		inner();
-	}
+#[update]
+fn outer() {
+	inner();
+}
 
-	fn inner() {
-		inner_2();
-	}
+fn inner() {
+	inner_2();
+}
 
-	fn inner_2() {
-		ic_cdk::api::stable::stable_write(0xdeadbeef, b"foo")
-	}
+fn inner_2() {
+	ic_cdk::api::stable::stable_write(0xdeadbeef, b"foo")
+}
 ```
 
-The resulting stable memory out of bounds error will also contain the following backtrace which can help determine that the error is in `inner_2` which is reached via `outer` and `inner`:
+El error resultante de acceso fuera de los límites de la memoria estable también
+contendrá el siguiente rastreo de pila, el cual puede ayudar a determinar que el
+error ocurre en `inner_2`, alcanzado a través de `outer` y `inner`:
 
 ```
 Canister Backtrace:
@@ -38,14 +56,21 @@ _wasm_backtrace_canister::inner
 _wasm_backtrace_canister::outer
 ```
 
+## Verificación de soporte para rastreo de errores en canisters
 
+El soporte para rastreo de errores depende de que los nombres de las funciones
+se almacenen en la sección
+[`name`](https://webassembly.github.io/spec/core/appendix/custom.html#name-section)
+del módulo Wasm del canister. Cualquier canister construido con `dfx` versión
+`>= 0.24.2` debería tener soporte automático para rastreos de errores. Si estás
+modificando manualmente el código Wasm de tu canister con los comandos
+`ic-wasm shrink`, `ic-wasm optimize` o `ic-wasm metadata`, necesitarás agregar
+el flag `--keep-name-section` para asegurarte de que el canister pueda seguir
+proporcionando rastreos de errores. Esto requiere la versión `ic-wasm`
+`>= 0.8.6`.
 
-## Checking for canister support
-
-Backtrace support relies on function names being stored in the `name` [custom section](https://webassembly.github.io/spec/core/appendix/custom.html#name-section) of the canister Wasm module.
-Any canister built with `dfx` version `>= 0.24.2` should automatically have support for backtraces. If you're manually altering your canister Wasm code with the `ic-wasm shrink`, `ic-wasm optimize`, or `ic-wasm metadata` commands, you'll need to add the `--keep-name-section` flag to ensure the canister can still provide backtraces. This requires version `ic-wasm` version `>= 0.8.6`.
-
-To double check that a Wasm module has the name section, you can use [`wasm-objdump`](https://github.com/WebAssembly/wabt):
+Para verificar que un módulo Wasm contiene la sección `name`, puedes usar
+[`wasm-objdump`](https://github.com/WebAssembly/wabt):
 
 ```
 $ wasm-objdump -h test.wasm

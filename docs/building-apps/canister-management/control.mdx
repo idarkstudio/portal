@@ -5,60 +5,96 @@ keywords: [beginner, tutorial, maintain canisters, access control, controllers]
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 
-# Canister controllers
+# Controladores de Canister
 
-<MarkdownChipRow labels={["Beginner", "Management"]} />
+<MarkdownChipRow labels={["Principiante", "Administración"]} />
 
-A <GlossaryTooltip>canister</GlossaryTooltip> is managed by a list of controllers. A controller is specified by a <GlossaryTooltip>principal</GlossaryTooltip>, which can be self-authenticating, e.g., a `dfx` developer identity, or another canister. Canisters can have multiple controllers, where each has the same administrative rights, or it can have no controller, in which case the canister becomes immutable (blackholed) and cannot be upgraded or deleted.
+Un <GlossaryTooltip>canister</GlossaryTooltip> es administrado por una lista de
+controladores. Un controlador está definido por un
+<GlossaryTooltip>principal</GlossaryTooltip>, el cual puede ser
+auto-autenticable (por ejemplo, una identidad de desarrollador de `dfx`) o
+incluso otro canister. Un canister puede tener múltiples controladores, donde
+cada uno tiene los mismos derechos administrativos, o puede no tener ningún
+controlador, en cuyo caso el canister se vuelve inmutable (blackholed) y no se
+puede actualizar ni eliminar.
 
-When a canister is created, the default controller list contains the developer identity used to create the canister. Additional controllers can be specified during canister creation, or they can be added in the future.
+Cuando se crea un canister, la lista de controladores por defecto contiene la
+identidad del desarrollador que lo creó. Se pueden especificar controladores
+adicionales durante la creación del canister o agregarlos más adelante.
 
-To specify a different controller upon canister creation, use the [`dfx canister create --controller <controller>`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-create) command.
+Para especificar un controlador diferente al momento de crear el canister, se
+puede usar el comando  
+[`dfx canister create --controller <controller>`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-create).
 
-To update a canister's controllers after the canister has been created, the [`dfx canister update-settings`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-update-settings) command can be used with the `--add-controller <controller>` or `--remove-controller <controller>` flag to add or remove controllers, respectively.
+Para actualizar la lista de controladores de un canister después de su creación,
+se puede utilizar el comando  
+[`dfx canister update-settings`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-update-settings)  
+junto con los flags `--add-controller <controller>` o
+`--remove-controller <controller>` para agregar o eliminar controladores,
+respectivamente.
 
-## Actions available only to controllers
+## Acciones disponibles solo para controladores
 
-- Stopping and starting the canister.
+- Detener e iniciar el canister.
+- Instalar código en el canister.
+- Actualizar el canister.
+- Obtener el estado del canister, que incluye su balance de
+  <GlossaryTooltip>cycles</GlossaryTooltip>, uso de memoria y lista de
+  controladores.
+- Eliminar el canister.
+- Actualizar configuraciones como el umbral de congelación, asignación de
+  recursos y controladores.
 
-- Installing code in the canister.
+## Modelos comunes de control
 
-- Upgrading the canister.
+### Desarrollador o equipo de desarrolladores
 
-- Getting the status of the canister, which includes its <GlossaryTooltip>cycles</GlossaryTooltip> balance, memory usage, and list of controllers.
+Un canister es controlado por un solo desarrollador o un equipo de
+desarrolladores. Cada desarrollador tiene los mismos derechos administrativos
+sobre el canister. Este es el modelo de control más común en las primeras etapas
+de desarrollo. Se puede aumentar la seguridad utilizando un módulo de seguridad
+de hardware (HSM) para almacenar la clave privada de la identidad del
+desarrollador.
 
-- Deleting the canister.
+### MultiFirma (MultiSig)
 
-- Updating settings like the freezing threshold, resource allocation, and controllers.
+Un canister es controlado por un canister de múltiples firmas. Este canister
+está administrado por una lista de desarrolladores y requiere un número mínimo
+de firmas para realizar acciones administrativas. Este modelo es más seguro que
+el de un solo desarrollador, ya que se necesita consenso entre varios
+desarrolladores antes de ejecutar una acción.
 
-## Common control models
-
-### Developer or team of developers
-
-A canister is controlled by a single developer or a team of developers. Each developer has the same administrative rights over the canister. This is the most common control model for canisters in early development stages. This model can be made more secure by using a hardware security module (HSM) to store the private key of the developer identity.
-
-### MultiSig
-
-A canister is controlled by a multi-signature canister. The multi-signature canister is controlled by a list of developers and requires a threshold number of signatures to perform administrative actions on the canister. This model is more secure than the single developer model, as it requires multiple developers to agree on an action before it can be performed.
-
-A canister that can be used for this purpose is the [Threshold canister](https://github.com/dfinity/threshold).
+Un canister que se puede utilizar para este propósito es el  
+[Threshold canister](https://github.com/dfinity/threshold).
 
 ### Launchtrail
 
-The [Launchtrail canister](https://github.com/spinner-cash/launchtrail) can be used to schedule the upgrade of a canister at a future time to give the public enough time to review the proposed changes. The canister also keeps a complete record of all actions and their execution results. The Launchtrail canister itself should be immutable without a controller.
+El [canister Launchtrail](https://github.com/spinner-cash/launchtrail) permite
+programar la actualización de un canister en un momento futuro, dando al público
+tiempo suficiente para revisar los cambios propuestos. Además, mantiene un
+registro completo de todas las acciones y sus resultados. Para garantizar su
+integridad, el propio canister Launchtrail debería ser inmutable y no tener un
+controlador.
 
-### Decentralized autonomous organization (DAO)
+### Organización Autónoma Descentralizada (DAO)
 
-A canister is controlled by a DAO, and all upgrades and administrative actions are decided by a vote of the DAO members. The most common DAO model for applications on the Internet Computer is the [Service Nervous System (SNS)](/docs/building-apps/governing-apps/index.mdx).
+Un canister puede ser controlado por una DAO, donde todas las actualizaciones y
+acciones administrativas son decididas mediante votación de los miembros de la
+DAO. El modelo de DAO más común para aplicaciones en Internet Computer es el  
+[Service Nervous System (SNS)](/docs/building-apps/governing-apps/index.mdx).
 
-The system canisters on ICP are controlled by the Network Nervous System (NNS) root canister, which allows administration of the canisters by NNS proposals.
+Los canisters del sistema en ICP son controlados por el canister raíz del
+Network Nervous System (NNS), lo que permite su administración a través de
+propuestas en el NNS.
 
-### No controller
+### Sin controlador
 
-A canister has no controller and is immutable. On ICP, this model is often called a blackholed canister. This is the model used by smart contracts on Ethereum.
+Un canister sin controlador es completamente inmutable. En ICP, este modelo se
+conoce como un canister "blackholed". Es similar al modelo utilizado por los
+contratos inteligentes en Ethereum.
 
-## Errors related to controllers
+## Errores relacionados con los controladores
 
-Common errors related to controllers include:
+Algunos errores comunes relacionados con los controladores incluyen:
 
-- [Invalid controller](/docs/references/execution-errors#invalid-controller).
+- [Controlador inválido](/docs/references/execution-errors#invalid-controller).

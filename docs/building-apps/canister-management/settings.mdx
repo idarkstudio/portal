@@ -1,43 +1,57 @@
 ---
 keywords: [beginner, tutorial, maintain canisters, settings, canister settings]
 ---
+
 import TabItem from "@theme/TabItem";
 import { AdornedTabs } from "/src/components/Tabs/AdornedTabs";
 import { AdornedTab } from "/src/components/Tabs/AdornedTab";
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 
-# Canister settings
+# Configuración del Canister
 
-<MarkdownChipRow labels={["Beginner", "Management"]} />
+<MarkdownChipRow labels={["Principiante", "Gestión"]} />
 
-Each <GlossaryTooltip>canister</GlossaryTooltip> has a group of possible settings that control its behavior. Only a controller of the canister can read and modify a canister's settings.
+Cada <GlossaryTooltip>canister</GlossaryTooltip> tiene un conjunto de
+configuraciones posibles que controlan su comportamiento. Solo un controlador
+del canister puede leer y modificar la configuración de un canister.
 
-Currently, there are seven canister setting fields:
+Actualmente, existen siete campos de configuración para el canister:
 
-1. `controllers`: The list of controllers of the canister.
-1. `compute_allocation`: Amount of compute that the canister has allocated.
-1. `memory_allocation`: Amount of memory (storage) that the canister has allocated.
-1. `freezing_threshold`: A safety threshold to prevent the canister from running out of cycles and avoid being deleted.
-1. `reserved_cycles_limit`: A safety threshold to protect against spending too many cycles for resource reservation.
-1. `wasm_memory_limit`: A safety threshold to protect against reaching the 4GiB hard limit of 32-bit Wasm memory.
-1. `log_visibility`: Controls who can read the canister logs.
+1. `controllers`: La lista de controladores del canister.
+2. `compute_allocation`: La cantidad de cómputo que el canister tiene asignado.
+3. `memory_allocation`: La cantidad de memoria (almacenamiento) que el canister
+   tiene asignada.
+4. `freezing_threshold`: Un umbral de seguridad para evitar que el canister se
+   quede sin ciclos y se elimine.
+5. `reserved_cycles_limit`: Un umbral de seguridad para proteger contra el gasto
+   excesivo de ciclos para la reserva de recursos.
+6. `wasm_memory_limit`: Un umbral de seguridad para evitar alcanzar el límite de
+   4 GiB de memoria Wasm de 32 bits.
+7. `log_visibility`: Controla quién puede leer los registros del canister.
 
-## Viewing current settings
+## Ver configuración actual
 
-There are two ways to read the settings of a canister:
+Existen dos formas de leer la configuración de un canister:
 
-1. Command line: [`dfx canister status <canister-name>`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-status). Note that this command returns the canister's settings, along with other canister status information.
-2. Programmatically: Call the [`canister_status`](/docs/references/ic-interface-spec) endpoint of the IC management canister. The canister's settings will be in the `settings` field of the result.
+1. **Desde la línea de comandos**:
+   [`dfx canister status <canister-name>`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-status).
+   Ten en cuenta que este comando devuelve la configuración del canister, junto
+   con otra información sobre su estado.
 
-### Command line
+2. **De forma programática**: Llama al endpoint
+   [`canister_status`](/docs/references/ic-interface-spec) del canister de
+   gestión de IC. La configuración del canister estará en el campo `settings`
+   del resultado.
+
+### Línea de comandos
 
 ```bash
 dfx canister status ajuq4-ruaaa-aaaaa-qaaga-cai
 ```
 
 <details>
-<summary>Output</summary>
+<summary>Salida</summary>
 
 ```
 Canister status call result for <canister-name>.
@@ -62,151 +76,224 @@ Log visibility: controllers
 
 </details>
 
-### Programmatically
+### De forma programática
 
 <AdornedTabs groupId="language">
 <TabItem value="motoko" label="Motoko" default>
 
 ```motoko no-repl file=../../references/samples/motoko/query_stats/src/query_stats_backend/main.mo
+
 ```
 
 </TabItem>
 <TabItem value="rust" label="Rust">
 
 ```rust file=../../references/samples/rust/query_stats/src/lib.rs
+
 ```
+
 </TabItem>
 
 <AdornedTab value={"typescript"} label="TypeScript" endAdornment={<BetaChip />}>
 
-[Learn more about Azle](https://demergent-labs.github.io/azle/the_azle_book.html).
+[Aprende más sobre Azle](https://demergent-labs.github.io/azle/the_azle_book.html).
 
 </AdornedTab>
 
 <AdornedTab value={"python"} label="Python" endAdornment={<BetaChip />}>
 
-[Learn more about Kybra](https://demergent-labs.github.io/kybra/).
+[Aprende más sobre Kybra](https://demergent-labs.github.io/kybra/).
 
 </AdornedTab>
 </AdornedTabs>
 
-## Modifying settings
+## Modificar configuración
 
-There are two ways to modify the settings of a canister:
+Existen dos formas de modificar la configuración de un canister:
 
-1. Command line: `dfx canister update-settings <canister-name> --<field-name> <field-value>`.
-1. Programmatically: Call the [`update_settings`](/docs/references/ic-interface-spec#ic-update_settings) endpoint of the IC management canister.
+1. **Desde la línea de comandos**:
+   `dfx canister update-settings <canister-name> --<field-name> <field-value>`.
+2. **De forma programática**: Llama al endpoint
+   [`update_settings`](/docs/references/ic-interface-spec#ic-update_settings)
+   del canister de gestión de IC.
 
-Note that only a controller of the canister can modify canister settings.
+Ten en cuenta que solo un controlador del canister puede modificar su
+configuración.
 
-### Command line
+### Línea de comandos
 
 ```bash
 dfx canister update-settings <canister-name> --wasm-memory-limit 3000000000
 ```
 
-### Programmatically
+### De forma programática
 
-From within your canister, make a call to the [`update_settings`](/docs/references/ic-interface-spec#ic-update_settings) endpoint of the IC management canister.
+Desde dentro de tu canister, haz una llamada al endpoint
+[`update_settings`](/docs/references/ic-interface-spec#ic-update_settings) del
+canister de gestión de IC.
 
-## Controllers
+## Controladores
 
-The `controllers` field in a canister's settings contains a list of principals that control the canister.
-Learn more about [canister control](/docs/building-apps/canister-management/control).
+El campo `controllers` en la configuración de un canister contiene una lista de
+principios que controlan el canister. Aprende más sobre
+[control de canisters](/docs/building-apps/canister-management/control).
 
-## Compute allocation
+## Asignación de cómputo
 
-By default, canisters are scheduled for execution in a "best-effort" manner. Canisters that require guaranteed execution can get a share of compute capacity by setting `compute_allocation` in their canister settings.
+Por defecto, los canisters se programan para ejecutarse de manera "de mejor
+esfuerzo". Los canisters que requieren ejecución garantizada pueden obtener una
+parte de la capacidad de cómputo asignando `compute_allocation` en su
+configuración.
 
-Compute allocation is expressed in percents and denotes the percentage of an execution core reserved for the canister. For example, compute allocation of 50% means that the canister will get 50% of an execution core. It will be scheduled at least every other round. Compute allocation of 100% means that the canister will be scheduled every round.
+La asignación de cómputo se expresa en porcentajes y denota el porcentaje de un
+núcleo de ejecución reservado para el canister. Por ejemplo, una asignación de
+cómputo del 50% significa que el canister obtendrá el 50% de un núcleo de
+ejecución. Se programará al menos una vez cada dos rondas. Una asignación de
+cómputo del 100% significa que el canister se programará cada ronda.
 
-Canisters pay a rental fee for compute allocation, meaning that the payment depends on time and the amount of compute allocation regardless of whether the canister actually executed or not.
-For example, an idle canister that has a compute allocation of 50% for one hour will be charged `base_fee * 50 * 3600`, where `base_fee` is the fee for [one percent per second](/docs/building-apps/essentials/gas-cost).
+Los canisters deben pagar una tarifa de alquiler por la asignación de cómputo,
+lo que significa que el pago depende del tiempo y de la cantidad de asignación
+de cómputo, independientemente de si el canister ejecutó o no. Por ejemplo, un
+canister inactivo que tiene una asignación de cómputo del 50% durante una hora
+se cobrará como `base_fee * 50 * 3600`, donde `base_fee` es la tarifa por
+[uno por ciento por segundo](/docs/building-apps/essentials/gas-cost).
 
-The rental fee increases the amount of cycles a canister consumes while idle or frozen.
-To successfully increase the compute allocation, a canister must have sufficient cycles
-to run for at least the current [freezing threshold](#freezing-threshold) number of seconds.
+La tarifa de alquiler aumenta la cantidad de ciclos que consume un canister
+mientras está inactivo o congelado. Para aumentar exitosamente la asignación de
+cómputo, un canister debe tener suficientes ciclos para ejecutarse al menos
+durante el número de segundos del [umbral de congelación](#freezing-threshold).
 
-The default value of compute allocation is 0%.
+El valor predeterminado de la asignación de cómputo es 0%.
 
-## Memory allocation
+## Asignación de memoria
 
-By default, canisters get new memory in a "best-effort" manner. For example, when a canister grows its Wasm or stable memory, the system allocates that memory on demand. That operation can fail if the subnet running the canister is at capacity.
+Por defecto, los canisters obtienen nueva memoria de manera "mejor esfuerzo".
+Por ejemplo, cuando un canister crece su memoria Wasm o estable, el sistema
+asigna esa memoria bajo demanda. Esa operación puede fallar si la subred que
+ejecuta el canister está a su máxima capacidad.
 
-Canisters can pre-allocate memory by setting the `memory_allocation` field in their canister settings. This field is expressed in bytes and denotes the total amount of memory that the canister pre-allocated. When a canister with a memory allocation configured grows its Wasm or stable memory, the new memory comes from the pre-allocated memory.
+Los canisters pueden preasignar memoria configurando el campo
+`memory_allocation` en sus ajustes. Este campo se expresa en bytes y denota la
+cantidad total de memoria que el canister ha preasignado. Cuando un canister con
+una asignación de memoria configurada crece su memoria Wasm o estable, la nueva
+memoria proviene de la memoria preasignada.
 
-Currently, `memory_allocation` also denotes the maximum amount of memory that the canister is allowed to use in total.
-For example, if a canister has a memory allocation of 8GiB, then it pre-allocates 8GiBs and cannot exceed that amount.
-This constraint may be lifted in the future.
+Actualmente, `memory_allocation` también denota la cantidad máxima de memoria
+que el canister está autorizado a usar en total. Por ejemplo, si un canister
+tiene una asignación de memoria de 8GiB, entonces preasigna 8GiBs y no puede
+superar esa cantidad. Esta restricción podría levantarse en el futuro.
 
-Canisters pay a rental fee for memory allocation, meaning that the payment depends on the time duration and the amount of memory allocation, regardless of whether the canister actually uses that memory or not.
-[Learn more about payment for memory](/docs/building-apps/essentials/gas-cost).
+Los canisters pagan una tarifa de alquiler por la asignación de memoria, lo que
+significa que el pago depende de la duración en el tiempo y la cantidad de
+memoria asignada, independientemente de si el canister usa o no esa memoria.  
+[Aprende más sobre el pago por memoria](/docs/building-apps/essentials/gas-cost).
 
-The rental fee increases the amount of cycles a canister consumes while idle or frozen.
-To successfully increase the memory allocation, a canister must have sufficient cycles
-to run for at least the current [freezing threshold](#freezing-threshold) number of seconds.
+La tarifa de alquiler aumenta la cantidad de ciclos que un canister consume
+mientras está inactivo o congelado. Para aumentar correctamente la asignación de
+memoria, un canister debe tener suficientes ciclos para ejecutarse al menos
+durante el tiempo del  
+[umbral de congelación](#freezing-threshold).
 
-The default value of memory allocation is 0 bytes, which means that there is no default memory allocation.
+El valor predeterminado de la asignación de memoria es 0 bytes, lo que significa
+que no hay una asignación de memoria predeterminada.
 
-## Freezing threshold
+## Umbral de congelación
 
-If a canister runs out of cycles and the freezing threshold expires, then it gets uninstalled, meaning that its code and data are deleted.
-A canister will only retain its metadata such as the canister ID, controllers, settings, etc.
+Si un canister se queda sin ciclos y expira el umbral de congelación, se
+desinstala, lo que significa que su código y datos son eliminados. Un canister
+solo retendrá su metadato, como el ID del canister, los controladores, la
+configuración, etc.
 
-The freezing threshold protects against the canister unexpectedly running out of cycles.
-This field denotes time duration in seconds, indicating the minimum duration that the canister should exist without running out of cycles.
+El umbral de congelación protege contra la pérdida inesperada de ciclos en un
+canister. Este campo denota una duración en segundos, indicando la duración
+mínima que el canister debe existir sin quedarse sin ciclos.
 
-When the cycles balance of the canister becomes too low, then the system freezes the canister in order to guarantee its freezing threshold.
-A frozen canister does not execute messages and pays only for renting resources such as compute allocation, memory allocation, and memory usage.
+Cuando el saldo de ciclos del canister es demasiado bajo, el sistema congela el
+canister para garantizar que no se quede sin ciclos antes de que expire su
+umbral de congelación. Un canister congelado no ejecuta mensajes y solo paga por
+el alquiler de recursos como la asignación de cómputo, asignación de memoria y
+el uso de memoria.
 
-See also the `idle_cycles_burned_per_day` field in the canister's status to learn how many cycles a canister consumes in its idle or frozen state.
+Consulta también el campo `idle_cycles_burned_per_day` en el estado del canister
+para ver cuántos ciclos consume un canister en su estado inactivo o congelado.
 
-The default value of the freezing threshold is 2_592_000 (approximately 30 days).
+El valor predeterminado del umbral de congelación es 2_592_000 (aproximadamente
+30 días).
 
-## Reserved cycles limit
+## Límite de ciclos reservados
 
-In addition to the main cycles balance, a canister has a secondary cycles balance called reserved cycles.
-The reserved cycles are set aside for future resource payments by the resource reservation mechanism.
-[Learn more about resource reservation](/docs/building-apps/essentials/gas-cost).
+Además del saldo principal de ciclos, un canister tiene un saldo secundario de
+ciclos llamado ciclos reservados. Los ciclos reservados se apartan para futuros
+pagos de recursos mediante el mecanismo de reserva de recursos.  
+[Aprende más sobre la reserva de recursos](/docs/building-apps/essentials/gas-cost).
 
-The `reserved_cycles_limit` field in a canister's settings serves as the upper limit on reserved cycles.
-It protects against spending too many cycles in the resource reservation.
+El campo `reserved_cycles_limit` en la configuración de un canister sirve como
+límite superior de los ciclos reservados. Protege contra el gasto excesivo de
+ciclos en la reserva de recursos.
 
-The default value is 5 trillion cycles.
+El valor predeterminado es 5 billones de ciclos.
 
-## Wasm memory limit
+## Límite de memoria Wasm
 
-A canister has a Wasm memory and a stable memory. Currently, the Wasm memory is 32-bit, which means that it cannot grow beyond the hard limit of 4GiB.
+Un canister tiene memoria Wasm y memoria estable. Actualmente, la memoria Wasm
+es de 32 bits, lo que significa que no puede crecer más allá del límite de 4GiB.
 
-If a canister stores user data in the Wasm memory instead of the stable memory, then its memory usage will increase with the number of users. Using that configuration, a canister could reach 4GiB, at which point it won’t be able to allocate more memory and will stop working. It is also likely that the pre-upgrade hook will fail to allocate, which will make the canister and its data unrecoverable.
+Si un canister almacena datos de usuario en la memoria Wasm en lugar de en la
+memoria estable, el uso de memoria aumentará con el número de usuarios. Con esa
+configuración, un canister podría alcanzar los 4GiB, momento en el cual no podrá
+asignar más memoria y dejará de funcionar. También es probable que el hook de
+pre-actualización falle al intentar asignar más memoria, lo que hará que el
+canister y sus datos sean irrecuperables.
 
-Even if the canister doesn’t store user data in Wasm memory, its memory usage may increase due to memory leaks.
+Incluso si el canister no almacena datos de usuario en la memoria Wasm, su uso
+de memoria puede aumentar debido a fugas de memoria.
 
-The `wasm_memory_limit` field in a canister's settings provides "best-effort" protection against the canister running out of Wasm memory. The limit is expressed in bytes, and it is a soft limit, which means that in some circumstances the canister may grow its Wasm memory above the limit.
+El campo `wasm_memory_limit` en la configuración de un canister proporciona
+protección de "mejor esfuerzo" contra el agotamiento de la memoria Wasm. El
+límite se expresa en bytes y es un límite suave, lo que significa que en algunas
+circunstancias el canister puede superar el límite de memoria Wasm.
 
-Handling of the limit depends on the message type:
+El manejo del límite depende del tipo de mensaje:
 
-- **Update messages**: Enforced up to the first `await` point. If the canister attempts to grow its Wasm memory above the limit, then execution fails with a corresponding error message. After the `await` point, execution continues in a response callback where the limit is not enforced.
-- **Response callback**: Not enforced, and the canister may grow its Wasm memory above the limit. The motivation for not enforcing the limit is to avoid failing execution after the `await` point that could lead to subtle bugs in the canister code.
-- **Heartbeats and timers**: Currently not enforced, but will be enforced in the future after the canister logging feature is available. Without canister logging, it is difficult for developers to debug failures in heartbeats and timers.
-- **Queries**: Not enforced in queries because state changes are not preserved in query execution, so any increase in memory is tentative and will be reverted after the query execution completes.
-- **Canister init**: Enforced, and code installation fails if it grows the Wasm memory above the limit.
-- **Canister pre-upgrade**: Not enforced in order to allow upgrading the canister to a new version.
-- **Canister post-upgrade**: Enforced and code upgrades will fail if the new version has Wasm memory usage higher than the limit.
+- **Mensajes de actualización**: Se aplica hasta el primer punto `await`. Si el
+  canister intenta crecer su memoria Wasm por encima del límite, la ejecución
+  falla con un mensaje de error correspondiente. Después del punto `await`, la
+  ejecución continúa en un callback de respuesta donde el límite no se aplica.
+- **Callback de respuesta**: No se aplica el límite, y el canister puede crecer
+  su memoria Wasm por encima del límite. La motivación para no aplicar el límite
+  es evitar fallos de ejecución después del punto `await`, lo que podría generar
+  errores sutiles en el código del canister.
+- **Latidos y temporizadores**: Actualmente no se aplica, pero se aplicará en el
+  futuro cuando la funcionalidad de registro de canisters esté disponible. Sin
+  el registro de canisters, es difícil para los desarrolladores depurar fallos
+  en latidos y temporizadores.
+- **Consultas**: No se aplica en las consultas porque los cambios de estado no
+  se conservan en la ejecución de la consulta, por lo que cualquier aumento de
+  memoria es tentativo y se revertirá después de completar la ejecución de la
+  consulta.
+- **Inicialización de canister**: Se aplica, y la instalación de código falla si
+  crece la memoria Wasm por encima del límite.
+- **Pre-actualización de canister**: No se aplica para permitir la actualización
+  del canister a una nueva versión.
+- **Post-actualización de canister**: Se aplica, y las actualizaciones de código
+  fallarán si la nueva versión usa más memoria Wasm que el límite.
 
-Currently, the default value of the field is 0 bytes, which means that there is no limit.
-In the future, the default value will be set to 3GiB.
+Actualmente, el valor predeterminado del campo es 0 bytes, lo que significa que
+no hay límite. En el futuro, el valor predeterminado se establecerá en 3GiB.
 
-## Log visibility
+## Visibilidad de logs
 
-The `log_visibility` field in a canister's settings can take one of two possible values: `controllers` or `public`.
-`Controllers` means that only the controllers of the canister can fetch its logs using the `fetch_canister_logs` endpoint of the management canister.
-`Public` means that the logs are public and everyone is able to fetch the logs using the `fetch_canister_logs` endpoint of the management canister.
+El campo `log_visibility` en los ajustes de un canister puede tomar uno de dos
+valores posibles: `controllers` o `public`. `Controllers` significa que solo los
+controladores del canister pueden obtener sus logs mediante el endpoint
+`fetch_canister_logs` del canister de gestión. `Public` significa que los logs
+son públicos y cualquiera puede obtenerlos usando el endpoint
+`fetch_canister_logs` del canister de gestión.
 
-The default value of the field is `controllers`.
+El valor predeterminado del campo es `controllers`.
 
-## Errors related to canister settings
+## Errores relacionados con los ajustes de canister
 
-Common errors related to canister settings include:
+Los errores comunes relacionados con los ajustes de canister incluyen:
 
-- [Invalid settings](/docs/references/execution-errors#invalid-settings).
+- [Ajustes inválidos](/docs/references/execution-errors#invalid-settings).

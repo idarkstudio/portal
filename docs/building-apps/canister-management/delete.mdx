@@ -5,18 +5,25 @@ keywords: [beginner, tutorial, maintain canisters, delete canisters, delete]
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 
-# Deleting a canister
+# Eliminando un canister
 
-<MarkdownChipRow labels={["Beginner", "Management"]} />
+<MarkdownChipRow labels={["Principiante", "Gestión"]} />
 
-If you want to permanently delete a specific <GlossaryTooltip>canister</GlossaryTooltip> or all canisters for a project, you can use the [`dfx canister delete <canister-name>`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-delete) command.
+Si deseas eliminar permanentemente un canister específico o todos los canisters
+de un proyecto, puedes utilizar el comando
+[`dfx canister delete <nombre-del-canister>`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-delete).
 
-Deleting a canister permanently removes its code and state. This action cannot be undone, and once the canister is deleted, its ID cannot be reused. Before you can delete a canister, you must first stop the canister using [`dfx canister stop <canister-name>`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-stop) to clear any pending message requests or replies.
+Eliminar un canister elimina permanentemente su código y estado. Esta acción no
+se puede deshacer y una vez que el canister se elimina, su ID no se puede
+reutilizar. Antes de poder eliminar un canister, debes detenerlo primero
+utilizando el comando
+[`dfx canister stop <nombre-del-canister>`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-stop)
+para eliminar cualquier solicitud o respuesta de mensaje pendiente.
 
-## Errors related to canister deletion
+## Errores relacionados con la eliminación de canisters
 
-Common errors related to canister deletion include:
+Algunos errores comunes relacionados con la eliminación de canisters incluyen:
 
-- [Delete canister not stopped](/docs/references/execution-errors#delete-canister-not-stopped).
-- [Delete canister self](/docs/references/execution-errors#delete-canister-self).
-- [Delete canister queue not empty](/docs/references/execution-errors#delete-canister-queue-not-empty).
+- [Eliminar canister no detenido](/docs/references/execution-errors#delete-canister-not-stopped).
+- [Eliminar canister propio](/docs/references/execution-errors#delete-canister-self).
+- [Cola de eliminación de canister no vacía](/docs/references/execution-errors#delete-canister-queue-not-empty).

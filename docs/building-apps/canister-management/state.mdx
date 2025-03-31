@@ -5,19 +5,36 @@ keywords: [beginner, tutorial, maintain canisters, state, canister state]
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 
-# Canister state
+# Estado del canister
 
-<MarkdownChipRow labels={["Beginner", "Management"]} />
+<MarkdownChipRow labels={["Principiante", "Gestión"]} />
 
-After you deploy a <GlossaryTooltip>canister</GlossaryTooltip>, it can begin receiving and processing requests from users and from other canisters. Canisters that are available to send requests and receive replies are considered to be in a **Running** state.
+Después de implementar un <GlossaryTooltip>canister</GlossaryTooltip>, puede
+comenzar a recibir y procesar solicitudes de usuarios y de otros canisters. Los
+canisters que están disponibles para enviar solicitudes y recibir respuestas se
+consideran en estado **Ejecutándose**.
 
-Although canisters are normally placed in the Running state by default, there are cases where you might want to temporarily or permanently stop a canister. For example, you might want to stop a canister before upgrading it. Stopping a canister helps to ensure proper handling of any messages that are in progress and need to either run to completion or be rolled back. You might also want to stop a canister to clear its message queue cleanly as a prerequisite to deleting the canister.
+Aunque los canisters normalmente se colocan en el estado Ejecutándose de forma
+predeterminada, hay casos en los que es posible que desee detener temporal o
+permanentemente un canister. Por ejemplo, es posible que desee detener un
+canister antes de actualizarlo. Detener un canister ayuda a garantizar el manejo
+adecuado de cualquier mensaje en progreso que necesite ejecutarse por completo o
+deshacerse. También es posible que desee detener un canister para limpiar su
+cola de mensajes de forma limpia como requisito previo para eliminar el
+canister.
 
-To modify the state of a canister:
+Para modificar el estado de un canister:
 
-- [`dfx canister status <canister-name>`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-status): Check if the canister is `Running`, `Stopping`, or `Stopped`. This command also returns details about the canister's settings.
+- [`dfx canister status <nombre-del-canister>`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-status):
+  Verifique si el canister está `Ejecutándose`, `Deteniéndose` o `Detenido`.
+  Este comando también devuelve detalles sobre la configuración del canister.
 
-- [`dfx canister stop <canister-name>`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-stop): Stop the canister. The canister's status will change to `Stopping` if it has in-flight messages that must be addressed before it can be stopped.
+- [`dfx canister stop <nombre-del-canister>`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-stop):
+  Detenga el canister. El estado del canister cambiará a `Deteniéndose` si tiene
+  mensajes en curso que deben ser abordados antes de que se pueda detener.
 
-- [`dfx canister start <canister-name>`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-start): Start the canister. After a canister has been stopped with `dfx canister stop`, the only way to restart it is through `dfx canister start`. Other commands, such as `dfx deploy`, do not start the canister if it has been manually stopped.
-
+- [`dfx canister start <nombre-del-canister>`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-start):
+  Inicie el canister. Después de que un canister se haya detenido con
+  `dfx canister stop`, la única forma de reiniciarlo es a través de
+  `dfx canister start`. Otros comandos, como `dfx deploy`, no inician el
+  canister si se ha detenido manualmente.
