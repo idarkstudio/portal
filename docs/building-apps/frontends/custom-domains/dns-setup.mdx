@@ -1,197 +1,307 @@
 ---
-keywords: [intermediate, tutorial, dns, dns config, name cheap, namecheap, godaddy, go daddy, apex domain, apex, subdomain, sub domain]
+keywords:
+  [
+    intermediate,
+    tutorial,
+    dns,
+    dns config,
+    name cheap,
+    namecheap,
+    godaddy,
+    go daddy,
+    apex domain,
+    apex,
+    subdomain,
+    sub domain,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# DNS configuration guide
+# Guía de configuración de DNS
 
-<MarkdownChipRow labels={["Intermediate", "Tutorial"]} />
+<MarkdownChipRow labels={["Intermedio", "Tutorial"]} />
 
-This guide explains how to configure the DNS records of your domain for three popular
-registrars: [Namecheap](#namecheap), [GoDaddy](#godaddy), and [Amazon Route 53](#amazon-route-53).
+Esta guía explica cómo configurar los registros DNS de tu dominio para tres
+registradores populares: [Namecheap](#namecheap), [GoDaddy](#godaddy) y
+[Amazon Route 53](#amazon-route-53).
 
 :::caution
-The steps in this guide are prerequisites to using a custom domain. You must complete this DNS configuration before following the ["using custom domains" guide](using-custom-domains.mdx).
+
+Los pasos en esta guía son requisitos previos para usar un dominio
+personalizado. Debes completar esta configuración de DNS antes de seguir la
+[guía de uso de dominios personalizados](using-custom-domains.mdx).
+
 :::
 
 :::info
-To illustrate these required configurations, the apex domain `ic-domain.live` and the subdomain `example.ic-domain.live` are used.
 
-Replace `ic-domain.live` with your own domain, such as `my-website.com`.
+Para ilustrar estas configuraciones requeridas, se utilizan el dominio raíz
+`ic-domain.live` y el subdominio `example.ic-domain.live`.
+
+Reemplaza `ic-domain.live` con tu propio dominio, como `mi-sitio.com`.
+
 :::
 
 ## Namecheap
 
-Below are the steps to configure the apex of a domain and a subdomain on Namecheap to be used as a custom domain for a canister deployed on ICP.
+A continuación, se describen los pasos para configurar el dominio raíz y un
+subdominio en Namecheap para ser utilizados como dominio personalizado en un
+canister desplegado en ICP.
 
-- #### Step 1: After purchasing your domain on Namecheap, open the management panel of your domain in the Namecheap dashboard.
+- #### Paso 1: Después de comprar tu dominio en Namecheap, abre el panel de administración de tu dominio en el dashboard de Namecheap.
 
-- #### Step 2: Open the **Advanced DNS** tab.
+- #### Paso 2: Abre la pestaña **Advanced DNS**.
 
-### Apex
-To configure the apex of the domain (e.g., `ic-domain.live`), add the following records by clicking on **Add new record**:
+### Dominio raíz (Apex)
 
-* Create an `ALIAS` record for which you set the host field to `@` and the target field to `ic-domain.live.icp1.io`.
+Para configurar el dominio raíz (por ejemplo, `ic-domain.live`), agrega los
+siguientes registros haciendo clic en **Add new record**:
 
-* Create a `CNAME` record for which you set the host field to `_acme-challenge` and the target field to `_acme-challenge.ic-domain.live.icp2.io`.
+- Crea un registro `ALIAS` donde el campo **host** sea `@` y el campo **target**
+  sea `ic-domain.live.icp1.io`.
 
-* Create a `TXT` record for which you set the host field to `_canister-id` and the value field to the canister ID `y5jqt-wqaaa-aaaam-abcoq-cai`.
+- Crea un registro `CNAME` donde el campo **host** sea `_acme-challenge` y el
+  campo **target** sea `_acme-challenge.ic-domain.live.icp2.io`.
 
-The resulting configuration should look similar to the following screenshot:
+- Crea un registro `TXT` donde el campo **host** sea `_canister-id` y el campo
+  **value** contenga el ID del canister `y5jqt-wqaaa-aaaam-abcoq-cai`.
 
-![DNS Configuration for `ic-domain.live` on Namecheap](namecheap-apex.png)
+La configuración resultante debería verse similar a la siguiente captura de
+pantalla:
 
-### Subdomain
-To configure a subdomain (e.g., `example.ic-domain.live`), add the following records by clicking on **Add new record**:
+![Configuración DNS para `ic-domain.live` en Namecheap](namecheap-apex.png)
 
-* Create an `ALIAS` record for which you set the host field to `example` and the target field to `example.ic-domain.live.icp1.io`.
+### Subdominio
 
-* Create a `CNAME` record for which you set the host field to `_acme-challenge.example` and the target field to `_acme-challenge.example.ic-domain.live.icp2.io`.
+Para configurar un subdominio (por ejemplo, `example.ic-domain.live`), agrega
+los siguientes registros haciendo clic en **Add new record**:
 
-* Create a `TXT` record for which you set the host field to `_canister-id.example` and the value field to the canister ID `y5jqt-wqaaa-aaaam-abcoq-cai`.
+- Crea un registro `ALIAS` donde el campo **host** sea `example` y el campo
+  **target** sea `example.ic-domain.live.icp1.io`.
 
-The resulting configuration should look similar to the following screenshot:
+- Crea un registro `CNAME` donde el campo **host** sea `_acme-challenge.example`
+  y el campo **target** sea `_acme-challenge.example.ic-domain.live.icp2.io`.
 
-![DNS Configuration for `example.ic-domain.live` on Namecheap](namecheap-subdomain.png)
+- Crea un registro `TXT` donde el campo **host** sea `_canister-id.example` y el
+  campo **value** contenga el ID del canister `y5jqt-wqaaa-aaaam-abcoq-cai`.
 
-Now, you are all set to register your custom domain with the boundary nodes, and you can continue with step 2 of the [general custom domains instructions](./using-custom-domains#custom-domains-on-the-boundary-nodes).
+La configuración resultante debería verse similar a la siguiente captura de
+pantalla:
+
+![Configuración DNS para `example.ic-domain.live` en Namecheap](namecheap-subdomain.png)
+
+Ahora, ya puedes registrar tu dominio personalizado con los boundary nodes y
+continuar con el paso 2 de las
+[instrucciones generales para dominios personalizados](./using-custom-domains#custom-domains-on-the-boundary-nodes).
 
 ## GoDaddy
 
-Below are the steps to configure the apex of a domain and a subdomain on GoDaddy to be used as a custom domain for a canister deployed on ICP.
+A continuación, se describen los pasos para configurar el dominio raíz y un
+subdominio en GoDaddy para ser utilizados como dominio personalizado en un
+canister desplegado en ICP.
 
-- #### Step 1: After purchasing your domain on GoDaddy, open your account and navigate to **My Products**.
+- #### Paso 1: Después de comprar tu dominio en GoDaddy, abre tu cuenta y navega a **Mis productos**.
 
-- #### Step 2: Click on the **DNS** button next to the domain.
+- #### Paso 2: Haz clic en el botón **DNS** junto al dominio.
 
-![Domain Management Overview](godaddy-overview.png)
+![Vista general de la gestión de dominios](godaddy-overview.png)
 
-### Apex
+### Dominio raíz (Apex)
 
-Unfortunately, GoDaddy does not support configuring a `CNAME` record (or one of its alternatives, `ALIAS` or `ANAME`) for the apex of the domain; you need to make use of a workaround.
+Desafortunadamente, GoDaddy no permite configurar un registro `CNAME` (ni sus
+alternativas, `ALIAS` o `ANAME`) para el dominio raíz; por lo que debes usar una
+solución alternativa.
 
-There are two options:
+Existen dos opciones:
 
-- [**Recommended**: Relying on a different DNS provider (e.g., Cloudflare).](#rely-on-an-alternative-dns-provider-recommended)
+- [**Recomendado**: Usar un proveedor de DNS diferente (por ejemplo, Cloudflare).](#usar-un-proveedor-de-dns-alternativo-recomendado)
 
-- [Directly configuring the IP addresses of the boundary nodes.](#directly-configure-the-ip-addresses-not-recommended-use-at-your-own-risk)
+- [Configurar directamente las direcciones IP de los boundary nodes.](#configurar-directamente-las-direcciones-ip-no-recomendado-úsalo-bajo-tu-propio-riesgo)
 
-Directly configuring the IP addresses is simpler compared to relying on another
-DNS provider, but is less resilient and performant. Therefore, it is advised to use
-a different DNS provider (e.g., Cloudflare or Route 53).
+Configurar directamente las direcciones IP es más sencillo en comparación con
+usar otro proveedor de DNS, pero es menos resistente y eficiente. Por ello, se
+recomienda utilizar un proveedor de DNS alternativo (por ejemplo, Cloudflare o
+Route 53).
 
-#### Rely on an alternative DNS provider (_recommended_)
+#### Usar un proveedor de DNS alternativo (_recomendado_)
 
-It is explained in this approach using Cloudflare as a DNS provider. It works similarly with any other DNS provider that supports `CNAME`, `ALIAS`, or `ANAME` records for the apex of a domain.
+Este método se explica utilizando Cloudflare como proveedor de DNS. Funciona de
+manera similar con cualquier otro proveedor de DNS que admita registros `CNAME`,
+`ALIAS` o `ANAME` para el dominio raíz.
 
-- #### Step 1: Create a free account with Cloudflare; click on **Add site** in the top bar of the dashboard.
+- #### Paso 1: Crea una cuenta gratuita en Cloudflare y haz clic en **Add site** en la barra superior del dashboard.
 
-- #### Step 2: Enter your domain (e.g., `ic-domain.live`) and click **Add site**.
+- #### Paso 2: Ingresa tu dominio (por ejemplo, `ic-domain.live`) y haz clic en **Add site**.
 
-- #### Step 3: Choose the free plan and continue.
+- #### Paso 3: Elige el plan gratuito y continúa.
 
-- #### Step 4: In the next step, Cloudflare lists two nameservers that you should configure GoDaddy to use.
-Take note of the two nameservers (e.g., `brianna.ns.cloudflare.com` and `kaiser.ns.cloudflare.com`) provided by Cloudflare.
+- #### Paso 4: En el siguiente paso, Cloudflare te proporcionará dos nameservers que debes configurar en GoDaddy.
 
-- #### Step 5: In the **DNS Management** panel of GoDaddy, remove all DNS entries on GoDaddy.
-Go back to your DNS settings on GoDaddy and make sure to remove all the DNS entries that GoDaddy created.
+  Toma nota de los dos nameservers (por ejemplo, `brianna.ns.cloudflare.com` y
+  `kaiser.ns.cloudflare.com`) que proporciona Cloudflare.
 
-- #### Step 6: Click on the **Change** button in the **Nameservers** section.
+- #### Paso 5: En el panel **Administración de DNS** de GoDaddy, elimina todas las entradas de DNS en GoDaddy.
 
-- #### Step 7: In the dialog that opened, click on **Enter my own nameservers (advanced)** and fill in the nameservers from Cloudflare in the provided fields.
+  Vuelve a la configuración de DNS en GoDaddy y asegúrate de eliminar todas las
+  entradas de DNS creadas por GoDaddy.
 
-To finish, click on **Save**.
+- #### Paso 6: Haz clic en el botón **Cambiar** en la sección **Servidores de nombres**.
 
-![GoDaddy's dialog to configure the nameservers](godaddy-ns-dialog.png)
+- #### Paso 7: En el cuadro de diálogo que se abre, haz clic en **Ingresar mis propios servidores de nombres (avanzado)** y completa los campos con los servidores de nombres de Cloudflare.
 
-- #### Step 8: Confirm in the dialog that you indeed intend to change the nameservers.
-The resulting configuration should look similar to the following screenshot:
+Para finalizar, haz clic en **Guardar**.
 
-![Alternative nameserver configuration on GoDaddy](godaddy-ns-configured.png)
+![Cuadro de diálogo de GoDaddy para configurar los servidores de nombres](godaddy-ns-dialog.png)
 
-- #### Step 9: Back in the Cloudflare management portal, click on **Done, check nameservers**.
+- #### Paso 8: Confirma en el cuadro de diálogo que realmente deseas cambiar los servidores de nombres.
+  La configuración resultante debería verse similar a la siguiente captura de
+  pantalla:
 
-This step can take several hours, and you will be notified by email once it succeeded.
+![Configuración de servidores de nombres alternativa en GoDaddy](godaddy-ns-configured.png)
 
-- #### Step 10: On Cloudflare, add the following records to configure your domain:
+- #### Paso 9: Vuelve al portal de administración de Cloudflare y haz clic en **Done, check nameservers**.
 
-    * Create a `CNAME` record for which you set the name field to `@` and the target field to `ic-domain.live.icp1.io`.
+Este paso puede tardar varias horas, y recibirás una notificación por correo
+electrónico cuando se complete con éxito.
 
-    * Create a `CNAME` record for which you set the host field to `_acme-challenge` and the target field to `_acme-challenge.ic-domain.live.icp2.io`.
+- #### Paso 10: En Cloudflare, agrega los siguientes registros para configurar tu dominio:
 
-    * Create a `TXT` record for which you set the name field to `_canister-id` and the content field to the canister ID `y5jqt-wqaaa-aaaam-abcoq-cai`.
+  - Crea un registro `CNAME` donde el campo **name** sea `@` y el campo
+    **target** sea `ic-domain.live.icp1.io`.
 
-The resulting configuration should look similar to the following screenshot:
+  - Crea un registro `CNAME` donde el campo **host** sea `_acme-challenge` y el
+    campo **target** sea `_acme-challenge.ic-domain.live.icp2.io`.
 
-![DNS Configuration for `ic-domain.live` on Cloudflare](cloudflare-apex.png)
+  - Crea un registro `TXT` donde el campo **name** sea `_canister-id` y el campo
+    **content** contenga el ID del canister `y5jqt-wqaaa-aaaam-abcoq-cai`.
 
-#### Directly configure the IP addresses (not recommended; use at your own risk).
+La configuración resultante debería verse similar a la siguiente captura de
+pantalla:
+
+![Configuración DNS para `ic-domain.live` en Cloudflare](cloudflare-apex.png)
+
+### Configurar directamente las direcciones IP (no recomendado; úsalo bajo tu propio riesgo)
 
 :::caution
-By directly configuring the IP addresses of the boundary nodes, you always need to make sure to keep your DNS records up-to-date. If a boundary node is retired or changes its IP addresses, you need to remove or update your DNS records. Otherwise, you risk that your dapp becomes inaccessible.
+
+Al configurar directamente las direcciones IP de los nodos de frontera, siempre
+debes asegurarte de mantener tus registros DNS actualizados. Si un nodo de
+frontera se retira o cambia sus direcciones IP, deberás eliminar o actualizar
+tus registros DNS. De lo contrario, corres el riesgo de que tu dapp se vuelva
+inaccesible.
+
 :::
 
-- #### Step 1: First, you need to look up the IP addresses of the boundary nodes (`icp1.io`).
-To this end, use an online DNS lookup service (e.g., [nslookup.io](https://nslookup.io)) and take a note of the IPv4- and IPv6-addresses, the `A` and `AAAA` records, respectively.
+- #### Paso 1: Primero, necesitas buscar las direcciones IP de los nodos de frontera (`icp1.io`).
+  Para ello, usa un servicio de consulta DNS en línea (por ejemplo,  
+  [nslookup.io](https://nslookup.io)) y toma nota de las direcciones IPv4 e
+  IPv6,  
+  que corresponden a los registros `A` y `AAAA`, respectivamente.
 
-![Resulting `A` and `AAAA` records from querying `icp1.io` on nslookup.io](nslookup-results.png)
+![Registros `A` y `AAAA` resultantes de la consulta a `icp1.io` en nslookup.io](nslookup-results.png)
 
-- #### Step 2: In the **DNS Management** panel in your GoDaddy account, add the following DNS records:
+- #### Paso 2: En el panel de **Gestión de DNS** de tu cuenta de GoDaddy, agrega los siguientes registros DNS:
 
-    * Create an `A` record for each IPv4 address by setting the name field to "@" and the value field to the IPv4 address (e.g., `193.118.63.173`).
+  - Crea un registro `A` para cada dirección IPv4, estableciendo el campo
+    "Nombre" en `"@"`  
+    y el campo "Valor" en la dirección IPv4 (por ejemplo, `193.118.63.173`).
 
-    * Create an `AAAA` record for each IPv6 address by setting the name field to "@" and the value field to the IPv6 address (e.g., `2a0b:21c0:b002:2:5000:59ff:fead:c233`).
+  - Crea un registro `AAAA` para cada dirección IPv6, estableciendo el campo
+    "Nombre" en `"@"`  
+    y el campo "Valor" en la dirección IPv6 (por ejemplo,
+    `2a0b:21c0:b002:2:5000:59ff:fead:c233`).
 
-    * Create a `CNAME` record for which you set the name field to `_acme-challenge` and the value field to `_acme-challenge.ic-domain.live.icp2.io`.
+  - Crea un registro `CNAME` en el que establezcas el campo "Nombre" como  
+    `_acme-challenge` y el campo "Valor" como
+    `_acme-challenge.ic-domain.live.icp2.io`.
 
-    * Create a `TXT` record for which you set the name field to `_canister-id` and the value field to the canister ID `y5jqt-wqaaa-aaaam-abcoq-cai`.
+  - Crea un registro `TXT` en el que establezcas el campo "Nombre" como
+    `_canister-id`  
+    y el campo "Valor" como el ID del canister `y5jqt-wqaaa-aaaam-abcoq-cai`.
 
-The resulting configuration should look similar to the following screenshot:
+La configuración resultante debería verse similar a la siguiente captura de
+pantalla:
 
-![DNS Configuration for `ic-domain.live` on GoDaddy](godaddy-apex-ips.png)
+![Configuración DNS para `ic-domain.live` en GoDaddy](godaddy-apex-ips.png)
 
-### Subdomain
-To configure a subdomain (e.g., `example.ic-domain.live`), add the following records by clicking on **Add new record**:
+### Subdominio
 
-* Create a `CNAME` record for which you set the host field to `example` and the target field to `example.ic-domain.live.icp1.io`.
+Para configurar un subdominio (por ejemplo, `example.ic-domain.live`), agrega
+los siguientes  
+registros haciendo clic en **Añadir nuevo registro**:
 
-* Create a `CNAME` record for which you set the host field to `_acme-challenge.example` and the target field to `_acme-challenge.example.ic-domain.live.icp2.io`.
+- Crea un registro `CNAME` en el que establezcas el campo "Host" como
+  `example`  
+  y el campo "Destino" como `example.ic-domain.live.icp1.io`.
 
-* Create a `TXT` record for which you set the host field to `_canister-id.example` and the value field to the canister ID `y5jqt-wqaaa-aaaam-abcoq-cai`.
+- Crea un registro `CNAME` en el que establezcas el campo "Host" como  
+  `_acme-challenge.example` y el campo "Destino" como  
+  `_acme-challenge.example.ic-domain.live.icp2.io`.
 
-The resulting configuration should look similar to the following screenshot:
+- Crea un registro `TXT` en el que establezcas el campo "Host" como  
+  `_canister-id.example` y el campo "Valor" como el ID del canister  
+  `y5jqt-wqaaa-aaaam-abcoq-cai`.
 
-![DNS Configuration for `example.ic-domain.live` on GoDaddy](godaddy-subdomain.png)
+La configuración resultante debería verse similar a la siguiente captura de
+pantalla:
 
-Now, you are all set to register your custom domain with the boundary nodes, and you can continue with step 2 of the [general custom domains instructions](./using-custom-domains#custom-domains-on-the-boundary-nodes).
+![Configuración DNS para `example.ic-domain.live` en GoDaddy](godaddy-subdomain.png)
+
+Ahora, ya tienes todo listo para registrar tu dominio personalizado con los
+nodos de frontera,  
+y puedes continuar con el paso 2 de las  
+[instrucciones generales para dominios personalizados](./using-custom-domains#custom-domains-on-the-boundary-nodes).
 
 ## Amazon Route 53
 
-Below are the steps to configure the apex of a domain and a subdomain on Amazon Route 53 to be used as a custom domain for a canister deployed on ICP.
+A continuación, se detallan los pasos para configurar el dominio raíz y un
+subdominio en  
+Amazon Route 53 para su uso como dominio personalizado en un canister desplegado
+en ICP.
 
-### Apex
+### Dominio raíz (Apex)
 
-Unfortunately, Amazon Route 53 does not support configuring a `CNAME` record (or one of its alternatives, `ALIAS` or `ANAME`) for the apex of the domain. You need to make use of a workaround.
-For instructions, take a look at the steps outlined for GoDaddy under ["Rely on an alternative DNS provider"](#rely-on-an-alternative-dns-provider-recommended).
+Lamentablemente, Amazon Route 53 no permite configurar un registro `CNAME` (o
+sus alternativas,  
+como `ALIAS` o `ANAME`) para el dominio raíz. Por lo tanto, debes usar una
+solución alternativa.  
+Para obtener instrucciones, consulta los pasos explicados en la sección de
+GoDaddy sobre  
+["Usar un proveedor de DNS alternativo"](#rely-on-an-alternative-dns-provider-recommended).
 
-### Subdomain
+### Subdominio
 
-- #### Step 1: After purchasing your domain on Route 53, navigate to **Hosted zones** and click on your domain.
+- #### Paso 1: Después de comprar tu dominio en Route 53, ve a **Zonas alojadas**
 
-- #### Step 2: Click on the domain to open the DNS settings.
+  y haz clic en tu dominio.
 
-- #### Step 3: Configure your DNS records.
-To configure a subdomain (e.g., `example.ic-domain.live`), add the following records by clicking on **Add new record**:
+- #### Paso 2: Haz clic en el dominio para abrir la configuración de DNS.
 
-* Create a `CNAME` record for which you set the host field to `example` and the target field to `example.ic-domain.live.icp1.io`.
+- #### Paso 3: Configura tus registros DNS.
 
-* Create a `CNAME` record for which you set the host field to `_acme-challenge.example` and the target field to `_acme-challenge.example.ic-domain.live.icp2.io`.
+  Para configurar un subdominio (por ejemplo, `example.ic-domain.live`), agrega
+  los  
+  siguientes registros haciendo clic en **Añadir nuevo registro**:
 
-* Create a `TXT` record for which you set the host field to `_canister-id.example` and the value field to the canister ID `y5jqt-wqaaa-aaaam-abcoq-cai`.
+  - Crea un registro `CNAME` en el que establezcas el campo "Host" como
+    `example`  
+    y el campo "Destino" como `example.ic-domain.live.icp1.io`.
 
-The resulting configuration should look similar to the following screenshot:
+  - Crea un registro `CNAME` en el que establezcas el campo "Host" como  
+    `_acme-challenge.example` y el campo "Destino" como  
+    `_acme-challenge.example.ic-domain.live.icp2.io`.
 
-![DNS Configuration for `example.ic-domain.live` on Amazon Route 53](route53-subdomain.png)
+  - Crea un registro `TXT` en el que establezcas el campo "Host" como  
+    `_canister-id.example` y el campo "Valor" como el ID del canister  
+    `y5jqt-wqaaa-aaaam-abcoq-cai`.
 
-Now, you are all set to register your custom domain with the boundary nodes, and you can continue with step 2 of the [general custom domains instructions](./using-custom-domains#custom-domains-on-the-boundary-nodes).
+La configuración resultante debería verse similar a la siguiente captura de
+pantalla:
+
+![Configuración DNS para `example.ic-domain.live` en Amazon Route 53](route53-subdomain.png)
+
+Ahora, ya tienes todo listo para registrar tu dominio personalizado con los
+nodos de frontera,  
+y puedes continuar con el paso 2 de las  
+[instrucciones generales para dominios personalizados](./using-custom-domains#custom-domains-on-the-boundary-nodes).

@@ -5,44 +5,77 @@ keywords: [intermediate, concept, frontend, asset canister, assets]
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 
-# Asset security
+### Seguridad de assets
 
-<MarkdownChipRow labels={["Intermediate", "Concept"]} />
+<MarkdownChipRow labels={["Intermedio", "Concepto"]} />
 
-To configure how a frontend <GlossaryTooltip>canister</GlossaryTooltip> responds to requests for specific assets, you can edit the Concent Security Policy in a project's `.ic-assets.json5`. Each entry in this file allows for specifying a [glob](https://code.visualstudio.com/docs/editor/glob-patterns) pattern along with the headers to be returned for any file that matches the pattern. You may also dictate whether redirects are performed from a non-certified endpoint to a certified endpoint for any given filename pattern.
+Para configurar cómo responde un <GlossaryTooltip>canister</GlossaryTooltip> de
+frontend a solicitudes de assets específicos, puedes editar la Concent Security
+Policy en el archivo `.ic-assets.json5` de un proyecto. Cada entrada en este
+archivo permite especificar un patrón
+[glob](https://code.visualstudio.com/docs/editor/glob-patterns) junto con los
+encabezados que se devolverán para cualquier archivo que coincida con el patrón.
+También puedes definir si se realizan redirecciones desde un endpoint no
+certificado a un endpoint certificado para un patrón de nombre de archivo
+determinado.
 
-## Content Security Policies (CSP)
+## Políticas de Seguridad de Contenido (CSP)
 
-By default, frontend canisters created with `dfx new` contain the following Content Security Policy (CSP) in the project's `.ic-assets.json5` file:
+Por defecto, los canisters de frontend creados con `dfx new` contienen la
+siguiente Política de Seguridad de Contenido (CSP) en el archivo
+`.ic-assets.json5` del proyecto:
 
 ```
 "Content-Security-Policy": "default-src 'self';script-src 'self';connect-src 'self' http://localhost:* https://icp0.io https://*.icp0.io https://icp-api.io;img-src 'self' data:;style-src * 'unsafe-inline';style-src-elem * 'unsafe-inline';font-src *;object-src 'none';base-uri 'self';frame-ancestors 'none';form-action 'self';upgrade-insecure-requests;",
 ```
 
-This CSP includes the configuration `img-src data` because image files are often included in frontend interfaces. It also includes the security setting `frame-ancestors: none` which is used to mitigate [clickjacking attacks](https://owasp.org/www-community/attacks/Clickjacking).
+Esta CSP incluye la configuración `img-src data` porque los archivos de imagen
+suelen formar parte de las interfaces de frontend. También incluye la
+configuración de seguridad `frame-ancestors: none`, que se usa para mitigar los
+[ataques de clickjacking](https://owasp.org/www-community/attacks/Clickjacking).
 
-## Security recommendations
+## Recomendaciones de seguridad
 
-This default Content Security Policy aims to work with as many applications as possible rather than providing the maximum security. It is recommended that you update this policy for your application's specific needs by utilizing tools such as:
+Esta Política de Seguridad de Contenido predeterminada está diseñada para
+funcionar con la mayor cantidad posible de aplicaciones en lugar de proporcionar
+la máxima seguridad. Se recomienda actualizar esta política según las
+necesidades específicas de tu aplicación utilizando herramientas como:
 
-- Use the [CSP Evaluator](https://csp-evaluator.withgoogle.com/) tool to validate your security policy.
+- Utilizar la herramienta [CSP Evaluator](https://csp-evaluator.withgoogle.com/)
+  para validar tu política de seguridad.
 
-- Follow these CSP [recommendations](https://csp.withgoogle.com/docs/strict-csp.html). Note that on ICP, nonces cannot be used because the response bodies must be static to work with HTTP asset certification.
+- Seguir estas
+  [recomendaciones de CSP](https://csp.withgoogle.com/docs/strict-csp.html). Ten
+  en cuenta que en ICP no se pueden usar _nonces_ porque los cuerpos de
+  respuesta deben ser estáticos para que funcione la certificación de assets
+  HTTP.
 
-- It is recommended to include [script hashes in combination with strict-dynamic](https://csp.withgoogle.com/docs/faq.html) in the CSP to account for not using nonces.
+- Se recomienda incluir
+  [hashes de scripts en combinación con _strict-dynamic_](https://csp.withgoogle.com/docs/faq.html)
+  en la CSP para compensar la imposibilidad de usar _nonces_.
 
-- Tighten the `connect-src` directive, as the default CSP allows for any canister to be called via `https://icp0.io/api/v2/canister/{canister-ID}`.
+- Restringir la directiva `connect-src`, ya que la CSP predeterminada permite
+  que cualquier canister sea llamado a través de
+  `https://icp0.io/api/v2/canister/{canister-ID}`.
 
-- Configure `style-src`, `style-src-elem` and `font-src` directives instead of using the wildcard (*) option.
+- Configurar las directivas `style-src`, `style-src-elem` y `font-src` en lugar
+  de utilizar el comodín (`*`).
 
-View more details on the [default CSP](/docs/references/asset-canister).
+Puedes ver más detalles sobre la
+[CSP predeterminada](/docs/references/asset-canister).
 
-### `dfx v0.21.0` and older
+### `dfx v0.21.0` y versiones anteriores
 
-`dfx` versions `0.21.0` and older include `script-src 'unsafe-eval'` in the default security policy. This is required for older versions because previous versions of the [ICP JavaScript agent](https://www.npmjs.com/package/@dfinity/agent) used a WebAssembly module for the BLS signature validation. This has since been removed and is no longer included in the most recent versions of `dfx`.
+Las versiones `0.21.0` y anteriores de `dfx` incluyen `script-src 'unsafe-eval'`
+en la política de seguridad predeterminada. Esto era necesario en versiones
+antiguas porque las versiones anteriores del
+[agente de JavaScript de ICP](https://www.npmjs.com/package/@dfinity/agent)
+utilizaban un módulo WebAssembly para la validación de firmas BLS. Este módulo
+ha sido eliminado y ya no está presente en las versiones más recientes de `dfx`.
 
-If you are using an older version of `dfx`, we recommend updating your security policy to remove the `script-src 'unsafe-eval'` portion.
+Si estás utilizando una versión antigua de `dfx`, se recomienda actualizar tu
+política de seguridad para eliminar la directiva `script-src 'unsafe-eval'`.
 
-## Resources
+## Recursos
 
-- [Asset canister architecture reference](/docs/references/asset-canister).
+- [Referencia de arquitectura del canister de assets](/docs/references/asset-canister).

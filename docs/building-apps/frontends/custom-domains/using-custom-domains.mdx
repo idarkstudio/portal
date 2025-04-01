@@ -1,51 +1,85 @@
 ---
-keywords: [intermediate, tutorial, custom domains, using custom domains, configuring a domain for a canister, using your own domain, use domain]
+keywords:
+  [
+    intermediate,
+    tutorial,
+    custom domains,
+    using custom domains,
+    configuring a domain for a canister,
+    using your own domain,
+    use domain,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Using custom domains
+# Uso de dominios personalizados
 
-<MarkdownChipRow labels={["Intermediate", "Tutorial"]} />
+<MarkdownChipRow labels={["Intermedio", "Tutorial"]} />
 
-By default, all canisters on the Internet Computer are accessible through the domain `icp0.io` and their canister ID. In addition to that default domain, one can also make a canister accessible under a custom domain using one of the following approaches:
+Por defecto, todos los canisters en el Internet Computer son accesibles a través
+del dominio `icp0.io` y su ID de canister. Además de ese dominio predeterminado,
+también se puede hacer que un canister sea accesible bajo un dominio
+personalizado utilizando uno de los siguientes enfoques:
 
-- [Register the domain with the boundary nodes](#custom-domains-on-the-boundary-nodes).
-- [Hosting the domain on your own infrastructure](#custom-domains-using-your-own-infrastructure).
+- [Registrar el dominio con los nodos de frontera](#dominios-personalizados-en-los-nodos-de-frontera).
+- [Alojar el dominio en tu propia infraestructura](#dominios-personalizados-usando-tu-propia-infraestructura).
 
-For both approaches, you need to acquire a domain through any registry, such as NameCheap or GoDaddy.
+Para ambos enfoques, es necesario adquirir un dominio a través de cualquier
+registrador, como NameCheap o GoDaddy.
 
-The two approaches differ in the ease of use and configurability. When registering the domain with the boundary nodes, you simply have to configure the DNS records of the custom domain, and the boundary nodes take care of obtaining a certificate, renewing the certificate before its expiration, and SEO.
+Los dos enfoques difieren en facilidad de uso y configurabilidad. Al registrar
+el dominio con los nodos de frontera, solo hay que configurar los registros DNS
+del dominio personalizado. Los nodos de frontera se encargan de obtener un
+certificado, renovarlo antes de su expiración y optimizar el SEO.
 
-When hosting the domain on your own infrastructure, you need to obtain and renew the certificates and provide your own infrastructure with support for the [HTTP gateway protocol](../../../references/http-gateway-protocol-spec.md). However, there is more configuration flexibility using this approach.
+Al alojar el dominio en tu propia infraestructura, debes obtener y renovar los
+certificados, además de proporcionar tu propia infraestructura con soporte para
+el
+[protocolo de puerta de enlace HTTP](../../../references/http-gateway-protocol-spec.md).
+Sin embargo, este enfoque ofrece mayor flexibilidad en la configuración.
 
-## Register the domain with the boundary nodes
+## Registrar el dominio con los nodos de frontera
 
-By following the steps below, you can host your canister under your custom domain using the boundary nodes. First, the configuration steps are described, then an [example is used to illustrate these steps](#concrete-example), followed by some instructions on [troubleshooting](#troubleshooting).
+Siguiendo los pasos a continuación, puedes alojar tu canister bajo tu dominio
+personalizado utilizando los nodos de frontera. Primero se describen los pasos
+de configuración, luego se usa un [ejemplo concreto](#ejemplo-concreto) para
+ilustrarlos, seguido de instrucciones sobre
+[solución de problemas](#solucion-de-problemas).
 
-- #### Step 1: Configure the DNS record of your domain, which is denoted with `CUSTOM_DOMAIN`.
+- #### Paso 1: Configurar el registro DNS de tu dominio (`CUSTOM_DOMAIN`).
 
-  - Add a `CNAME` entry for your domain pointing to `CUSTOM_DOMAIN.icp1.io` such that all the traffic destined to your domain is redirected to the boundary nodes.
-
-  - Add a `TXT` entry containing the canister ID to the `_canister-id`-subdomain of your domain (e.g., `_canister-id.CUSTOM_DOMAIN`);
-
-  - Add a `CNAME` entry for the `_acme-challenge` subdomain (e.g., `_acme-challenge.CUSTOM_DOMAIN`) pointing to `_acme-challenge.CUSTOM_DOMAIN.icp2.io` in order for the boundary nodes to acquire the certificate.
+  - Agrega un registro `CNAME` para tu dominio apuntando a
+    `CUSTOM_DOMAIN.icp1.io`, de modo que todo el tráfico destinado a tu dominio
+    sea redirigido a los nodos de frontera.
+  - Agrega un registro `TXT` con el ID del canister en el subdominio
+    `_canister-id` de tu dominio (por ejemplo, `_canister-id.CUSTOM_DOMAIN`).
+  - Agrega un registro `CNAME` para el subdominio `_acme-challenge` (por
+    ejemplo, `_acme-challenge.CUSTOM_DOMAIN`) apuntando a
+    `_acme-challenge.CUSTOM_DOMAIN.icp2.io`, permitiendo que los nodos de
+    frontera adquieran el certificado.
 
 :::caution
 
-These records must be configured before continuing with the next steps.
+Estos registros deben estar configurados antes de continuar con los siguientes
+pasos.
 
 :::
 
 :::info
 
-In many cases, it is not possible to set a `CNAME` record for the top of a domain, the Apex record. In this case, DNS providers support so-called `CNAME` flattening. To this end, these DNS providers offer flattened record types, such as `ANAME` or `ALIAS` records, which can be used instead of the `CNAME` to `CUSTOM_DOMAIN.icp1.io`. The [custom DNS configuration guide](./dns-setup.mdx) provides detailed instructions for three popular registrars.
+En muchos casos, no es posible establecer un registro `CNAME` para la parte
+superior de un dominio (registro Apex). Algunos proveedores de DNS admiten
+`CNAME` flattening y ofrecen tipos de registros como `ANAME` o `ALIAS`, que
+pueden usarse en lugar del `CNAME` a `CUSTOM_DOMAIN.icp1.io`. La
+[guía de configuración de DNS personalizada](./dns-setup.mdx) proporciona
+instrucciones detalladas para tres registradores populares.
 
 :::
 
-- #### Step 2: Create a file named `ic-domains` in your canister under the `.well-known` directory containing the custom domain.
+- #### Paso 2: Crear un archivo `ic-domains` en el canister dentro del directorio `.well-known`, incluyendo el dominio personalizado.
 
-The `.well-known` directory with the `ic-domains` file should be placed within the canister files, not at the root, such as:
+La estructura de directorios debe ser la siguiente:
 
 ```
 ├── dfx.json
@@ -57,9 +91,10 @@ The `.well-known` directory with the `ic-domains` file should be placed within t
 │ │ │ │ └── ic-domains
 ```
 
-The location of the files should allow your frontend framework to include the files during the build process.
-
-By default, `dfx` excludes all files and directories whose names start with a `.` from the asset canister. To include the `ic-domains` file, you need to create an additional file, called `.ic-assets.json5` inside the same top-level directory as the `.well-known` directory:
+Por defecto, `dfx` excluye todos los archivos y directorios cuyos nombres
+comienzan con `.` del canister de activos. Para incluir el archivo `ic-domains`,
+crea un archivo adicional `.ic-assets.json5` en el mismo directorio de nivel
+superior que `.well-known`:
 
 ```
 ├── dfx.json
@@ -69,10 +104,12 @@ By default, `dfx` excludes all files and directories whose names start with a `.
 │ │ ├── src
 │ │ │ ├── .ic-assets.json
 │ │ │ ├── .well-known
-│ │ │ │ └──ic-domains
+│ │ │ │ └── ic-domains
 ```
 
-Then, open the `ic-domains` file and insert your domain names. To use multiple custom domains and their subdomains with a single canister, simply list each one of them on a newline in the `ic-domains` file:
+Abre el archivo `ic-domains` e inserta los nombres de los dominios
+personalizados. Si usas múltiples dominios y subdominios con un solo canister,
+enuméralos en líneas separadas:
 
 ```sh
 custom-domain1.com
@@ -83,9 +120,10 @@ subdomain1.custom-domain3.com
 custom-domain4.com
 ```
 
-For example, `subdomain1` could stand for `www`.
+Por ejemplo, `subdomain1` podría representar `www`.
 
-Configure the `.well-known` directory to be included by writing the following configuration into the `.ic-assets.json5` file:
+Configura el directorio `.well-known` para que sea incluido en el canister,
+escribiendo lo siguiente en el archivo `.ic-assets.json5`:
 
 ```
 [
@@ -96,9 +134,9 @@ Configure the `.well-known` directory to be included by writing the following co
 ]
 ```
 
-- #### Step 3: Deploy the updated canister.
+- #### Paso 3: Desplegar el canister actualizado.
 
-- #### Step 4: Register the domain with the boundary nodes by issuing the following command and replacing `CUSTOM_DOMAIN` with your custom domain.
+- #### Paso 4: Registrar el dominio con los nodos de frontera ejecutando el siguiente comando, reemplazando `CUSTOM_DOMAIN` con tu dominio personalizado:
 
 ```sh
 curl -sL -X POST \
@@ -111,86 +149,89 @@ curl -sL -X POST \
 EOF
 ```
 
-If the call was successful, you will get a JSON response that contains the request ID in the body, which you can use to query the status of your registration request:
+Si la llamada fue exitosa, recibirás una respuesta JSON con el ID de la
+solicitud, que puedes usar para consultar el estado de tu registro:
 
 ```
 {"id":"REQUEST_ID"}
 ```
 
-In case the call failed, you will get an error message indicating the reason for the failure:
+Si la llamada falló, recibirás un mensaje de error indicando la razón:
 
-**Missing DNS CNAME record**: The `CNAME` entry for the `_acme-challenge` subdomain is missing.
+- **Registro DNS CNAME faltante**: Falta la entrada `CNAME` para el subdominio
+  `_acme-challenge`.
+- **Registro DNS TXT de desafío existente**: Ya existe una entrada `TXT` en el
+  subdominio `_acme-challenge`. Elimínala y prueba de nuevo.
+- **Registro DNS TXT faltante**: Falta la entrada `TXT` para el subdominio
+  `_canister-id`.
+- **Registro DNS TXT inválido**: El contenido del registro `TXT` no es un ID de
+  canister válido.
+- **Más de un registro DNS TXT**: Hay múltiples entradas `TXT` en el subdominio
+  `_canister-id`. Mantén solo una.
+- **No se pudo recuperar los dominios conocidos**: El archivo `ic-domains` no es
+  accesible en `.well-known/ic-domains`.
+- **El dominio falta en la lista de dominios conocidos**: El dominio
+  personalizado no está en el archivo `ic-domains`.
+- **Límite de solicitudes superado para el dominio Apex**: Se enviaron
+  demasiadas solicitudes de registro para el dominio Apex. Inténtalo más tarde
+  (máximo 5 solicitudes por dominio Apex por hora).
 
-**Existing DNS TXT challenge record**: The DNS record already contains a `TXT` entry for the `_acme-challenge` subdomain. Remove it and try again.
+- #### Paso 5: Procesamiento del registro (puede tardar varios minutos).
 
-**Missing DNS TXT record**: The `TXT` entry for the `_canister-id` subdomain is missing.
-
-**Invalid DNS TXT record**: The content of the `TXT` entry is not a valid canister ID.
-
-**More than one DNS TXT record**: There are multiple `TXT` entries for the `_canister-id`-subdomain. Remove them and keep only one.
-
-**Failed to retrieve known domains**: The `ic-domains` file is not accessible under `.well-known/ic-domains`.
-
-**Domain is missing from list of known domains**: The custom domain is missing from the `ic-domains` file.
-
-**Rate limit exceeded for apex domain**: Too many registration requests have been submitted for the apex domain. Try again later. You can submit at most 5 registration requests per apex domain and hour.
-
-- #### Step 5: Processing the registration can take several minutes.
-
-Track the progress of your registration request by issuing the following command and replacing `REQUEST_ID` with the ID you received in the previous step.
+Para rastrear el progreso, ejecuta el siguiente comando reemplazando
+`REQUEST_ID` con el ID obtenido en el paso anterior:
 
 ```sh
 curl -sL -X GET \
     https://icp0.io/registrations/REQUEST_ID
 ```
 
-The status will be one of the following:
+El estado puede ser:
 
-`PendingOrder`: The registration request has been submitted and is waiting to be picked up.
+- `PendingOrder`: La solicitud fue enviada y está en cola.
+- `PendingChallengeResponse`: El certificado ha sido solicitado.
+- `PendingAcmeApproval`: El desafío ha sido completado.
+- `Available`: La solicitud se procesó con éxito.
+- `Failed`: La solicitud de registro falló.
 
-`PendingChallengeResponse`: The certificate has been ordered.
+- #### Paso 6: Cuando el estado de la solicitud pase a `Available`, espera unos minutos para que el certificado esté disponible en todos los nodos de frontera.
 
-`PendingAcmeApproval`: The challenge has been completed.
+Después de eso, deberías poder acceder a tu canister usando el dominio
+personalizado.
 
-`Available`: The registration request has been successfully processed.
+## Ejemplo
 
-`Failed`: The registration request failed.
+Imagina que quieres registrar tu dominio `foo.bar.com` para tu canister con el
+ID `hwvjt-wqaaa-aaaam-qadra-cai`.
 
-- #### Step 6: Once your registration request becomes `available`, wait a few minutes for the certificate to become available on all boundary nodes.
+### Configuración de DNS
 
-After that, you should be able to access your canister using the custom domain.
-
-## Example
-
-Imagine you wanted to register your domain `foo.bar.com` for your canister with the canister ID `hwvjt-wqaaa-aaaam-qadra-cai`.
-
-### DNS configuration
-
-| Record Type | Host  | Value  |
-| ------------- | ----------------------------- | ------------------------------------ |
-| `CNAME` | foo.bar.com | foo.bar.com.icp1.io  |
-| `TXT` | \_canister-id.foo.bar.com | hwvjt-wqaaa-aaaam-qadra-cai  |
-| `CNAME` | \_acme-challenge.foo.bar.com  | \_acme-challenge.foo.bar.com.icp2.io |
+| Tipo de Registro | Host                           | Valor                                |
+| ---------------- | ------------------------------ | ------------------------------------ |
+| `CNAME`          | foo.bar.com                    | foo.bar.com.icp1.io                  |
+| `TXT`            | \_canister-id.foo.bar.com      | hwvjt-wqaaa-aaaam-qadra-cai          |
+| `CNAME`          | \_acme-challenge.foo.bar.com   | \_acme-challenge.foo.bar.com.icp2.io |
 
 :::info
 
-Some DNS providers do not require you to specify the main domain (`bar.com`). For example:
+Algunos proveedores de DNS no requieren que especifiques el dominio principal
+(`bar.com`). Por ejemplo:
 
-- `foo` instead of `foo.bar.com`.
-
-- `_canister-id.foo` instead of `_canister-id.foo.bar.com`.
-
-- `_acme-challenge.foo` instead of `_acme-challenge.foo.bar.com`.
+- `foo` en lugar de `foo.bar.com`.
+- `_canister-id.foo` en lugar de `_canister-id.foo.bar.com`.
+- `_acme-challenge.foo` en lugar de `_acme-challenge.foo.bar.com`.
 
 :::
 
-- #### Step 1: Create the `ic-domains` file with the following content in the `.well-known` directory:
+### Pasos para registrar el dominio
+
+#### Paso 1: Crear el archivo `ic-domains` con el siguiente contenido en el directorio `.well-known`:
 
 ```
 foo.bar.com
 ```
 
-- #### Step 2: Create the `.ic-assets.json` file at the root of the canister source:
+#### Paso 2: Crear el archivo `.ic-assets.json` en la raíz del canister:
 
 ```
 [
@@ -201,9 +242,9 @@ foo.bar.com
 ]
 ```
 
-- #### Step 3: Deploy the updated canister.
+#### Paso 3: Desplegar el canister actualizado.
 
-- #### Step 4: Start the registration process.
+#### Paso 4: Iniciar el proceso de registro.
 
 ```sh
 curl -sL -X POST \
@@ -216,33 +257,50 @@ curl -sL -X POST \
 EOF
 ```
 
-### Troubleshooting
+## Solución de problemas
 
-When you are running into issues trying to register your custom domain, try the following troubleshooting steps:
+Cuando te encuentres con problemas al intentar registrar tu dominio
+personalizado, prueba los siguientes pasos de solución de problemas:
 
-- Check your DNS configuration using a tool like [`dig`](https://linux.die.net/man/1/dig) or [`nslookup`](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/nslookup). For example, to check the `TXT` record with the canister ID, you can run `dig TXT _canister-id.CUSTOM_DOMAIN`. In particular, make sure that there are no extra entries (e.g., multiple `TXT` records for the `_canister-id`-subdomain).
-- Check that there are no `TXT` records for the `_acme-challenge-subdomain` (e.g., by using `dig TXT _acme-challenge.CUSTOM_DOMAIN`). If there are `TXT` records, then they are most likely left over from previous ACME challenges by your domain provider. Note that these records often do not show up in your domain management dashboard. Try disabling all TLS/SSL-certificate offerings from your domain provider to remove these records.
-- Check the `ic-domains` file by downloading it directly from your canister (e.g., by opening `CANISTER_ID.icp0.io/.well-known/ic-domains` in your browser or using `curl CANISTER_ID.icp0.io/.well-known/ic-domains` in your terminal).
+- Verifica la configuración de tu DNS utilizando una herramienta como `dig` o
+  `nslookup`. Por ejemplo, para verificar el registro `TXT` con el ID del
+  canister, puedes ejecutar `dig TXT _canister-id.CUSTOM_DOMAIN`. En particular,
+  asegúrate de que no haya entradas adicionales (por ejemplo, múltiples
+  registros `TXT` para el subdominio `_canister-id`).
+- Verifica que no haya registros `TXT` para el subdominio `_acme-challenge` (por
+  ejemplo, utilizando `dig TXT _acme-challenge.CUSTOM_DOMAIN`). Si hay registros
+  `TXT`, es probable que sean restos de desafíos ACME anteriores de tu proveedor
+  de dominio. Ten en cuenta que estos registros a menudo no aparecen en el panel
+  de administración de tu dominio. Intenta desactivar todas las ofertas de
+  certificados TLS/SSL de tu proveedor de dominio para eliminar estos registros.
+- Verifica el archivo `ic-domains` descargándolo directamente desde tu canister
+  (por ejemplo, abriendo `CANISTER_ID.icp0.io/.well-known/ic-domains` en tu
+  navegador o utilizando `curl CANISTER_ID.icp0.io/.well-known/ic-domains` en tu
+  terminal).
 
 :::info
 
-You may need to specify a `host` in your frontend code when you are using a custom domain, as the `HttpAgent` may not be able to automatically infer the host like it can on `icp0.io` and `icp0.io`. To configure your agent, it will look something like this:
+Es posible que necesites especificar un `host` en tu código frontend al usar un
+dominio personalizado, ya que el `HttpAgent` podría no inferirlo automáticamente
+como lo hace en `icp0.io`. Para configurarlo, puedes hacer lo siguiente:
 
 ```ts
-// Point to icp-api for the mainnet. Leaving host undefined will work for localhost
+// Apunta a icp-api para mainnet. Dejando host undefined funcionará para localhost
 const host = isProduction ? "https://icp-api.io" : undefined;
 const agent = await HttpAgent.create({ host });
 ```
 
 :::
 
-## Updating a custom domain
+## Actualización de un dominio personalizado
 
-In case you want to update the domain to point to a different canister, you first need to update the DNS record of your domain, then notify a boundary node:
+Si deseas actualizar el dominio para que apunte a un canister diferente, primero
+debes actualizar el registro DNS de tu dominio y luego notificar a un boundary
+node:
 
-- #### Step 1: Update the `TXT` entry to contain the new canister ID for the `_canister-id` subdomain of your domain (e.g., `_canister-id.CUSTOM_DOMAIN`).
+#### Paso 1: Actualiza la entrada `TXT` para que contenga el nuevo ID del canister en el subdominio `_canister-id` de tu dominio (por ejemplo, `_canister-id.CUSTOM_DOMAIN`).
 
-- #### Step 2: Notify a boundary node of the change using a `PUT` request and the ID of your registration (`REQUEST_ID`).
+#### Paso 2: Notifica a un boundary node del cambio con una solicitud `PUT` y el ID de tu registro (`REQUEST_ID`).
 
 ```sh
 curl -sL -X PUT \
@@ -251,16 +309,19 @@ curl -sL -X PUT \
 
 :::info
 
-In case you forgot the ID of your registration, you can just submit another registration request for your domain, and the boundary node will return the corresponding ID.
+Si olvidaste el ID de tu registro, puedes enviar otra solicitud de registro para
+tu dominio y el boundary node te devolverá el ID correspondiente.
 
 :::
 
-## Removing a custom domain
+## Eliminación de un dominio personalizado
 
-In case you want to remove your domain, you just need to remove the DNS records and notify a boundary node:
+Si deseas eliminar tu dominio, solo necesitas eliminar los registros DNS y
+notificar a un boundary node:
 
-- #### Step 1: Remove the `TXT` entry containing the canister ID for the `_canister-id` subdomain (e.g., `_canister-id.CUSTOM_DOMAIN`) and the `CNAME` entry for the `_acme-challenge` subdomain (e.g., `_acme-challenge.CUSTOM_DOMAIN`).
-- #### Step 2: Notify a boundary node of the removal using a `DELETE` request.
+#### Paso 1: Elimina la entrada `TXT` que contiene el ID del canister en el subdominio `_canister-id` (por ejemplo, `_canister-id.CUSTOM_DOMAIN`) y la entrada `CNAME` para el subdominio `_acme-challenge` (por ejemplo, `_acme-challenge.CUSTOM_DOMAIN`).
+
+#### Paso 2: Notifica a un boundary node de la eliminación con una solicitud `DELETE`.
 
 ```sh
 curl -sL -X DELETE \
@@ -269,27 +330,38 @@ curl -sL -X DELETE \
 
 :::info
 
-In case you forgot the ID of your registration, you can just submit another registration request for your domain, and the boundary node will return the corresponding ID.
+Si olvidaste el ID de tu registro, puedes enviar otra solicitud de registro para
+tu dominio y el boundary node te devolverá el ID correspondiente.
 
 :::
 
-## Custom domains using your own infrastructure
+## Uso de dominios personalizados con tu propia infraestructura
 
-- #### Step 1: Deploy your canister to ICP and note the canister ID.
+- #### Paso 1: Despliega tu canister en ICP y toma nota del ID del canister.
 
-- #### Step 2: Clone the [official ICP repo](https://github.com/dfinity/ic), checkout the commit `2304690ca1d241d9ce6e19a427a18de9aac95b82` and navigate to the [service worker folder](https://github.com/dfinity/ic/tree/2304690ca1d241d9ce6e19a427a18de9aac95b82/typescript/service-worker) located under `ic/typescript/service-worker`.
+- #### Paso 2: Clona el [repositorio oficial de ICP](https://github.com/dfinity/ic), cambia al commit `2304690ca1d241d9ce6e19a427a18de9aac95b82` y navega a la [carpeta del service worker](https://github.com/dfinity/ic/tree/2304690ca1d241d9ce6e19a427a18de9aac95b82/typescript/service-worker) ubicada en `ic/typescript/service-worker`.
 
-- #### Step 3: Map your domain to the canister ID by adding your domain-to-canister mapping to `hostnameCanisterIdMap` in the file [`service-worker/src/sw/domains/static.ts`](https://github.com/dfinity/ic/blob/2304690ca1d241d9ce6e19a427a18de9aac95b82/typescript/service-worker/src/sw/domains/static.ts).
+- #### Paso 3: Mapea tu dominio al ID del canister agregando tu asignación dominio-canister a `hostnameCanisterIdMap` en el archivo [`service-worker/src/sw/domains/static.ts`](https://github.com/dfinity/ic/blob/2304690ca1d241d9ce6e19a427a18de9aac95b82/typescript/service-worker/src/sw/domains/static.ts).
 
-- #### Step 4: Build the service worker according to the instructions in `service-worker/README.md`. The output should be:
-    - An `index.html`,.
-    - A minified `.js` file.
-    - A `.map` file.
-- #### Step 5: Host the assets (`index.html`, `.js` and `.map` files) from a server or CDN and point your custom domain name at this server.
-- #### Step 6: Test.
+- #### Paso 4: Compila el service worker siguiendo las instrucciones en `service-worker/README.md`. La salida debería incluir:
+
+- Un `index.html`.
+- Un archivo `.js` minificado.
+- Un archivo `.map`.
+
+- #### Paso 5: Aloja los archivos (`index.html`, `.js` y `.map`) en un servidor o CDN y apunta tu dominio personalizado a este servidor.
+
+- #### Paso 6: Prueba que todo funcione correctamente.
 
 :::caution
 
-For frontends that use Internet Identity (II) to authenticate users, the principals provided by II depend on the domain from which the login request was started. If you authenticate your users through the canister URL and want to switch over to a custom domain, users will not have the same principals anymore. You can prevent this by setting up [alternative origins](/docs/building-apps/authentication/alternative-origins).
+Para frontends que usan Internet Identity (II) para autenticar usuarios, los
+`principals` proporcionados por II dependen del dominio desde el cual se inició
+la solicitud de inicio de sesión. Si autenticas a tus usuarios a través de la
+URL del canister y luego cambias a un dominio personalizado, los usuarios
+tendrán un `principal` diferente.
+
+Puedes evitar este problema configurando
+[orígenes alternativos](/docs/building-apps/authentication/alternative-origins).
 
 :::
