@@ -1,5 +1,16 @@
 ---
-keywords: [intermediate, test, tutorial, test code, test canisters, pocketic, pocketic rust, pocketic python, pocket ic]
+keywords:
+  [
+    intermediate,
+    test,
+    tutorial,
+    test code,
+    test canisters,
+    pocketic,
+    pocketic rust,
+    pocketic python,
+    pocket ic,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
@@ -7,67 +18,94 @@ import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 
 # PocketIC
 
-<MarkdownChipRow labels={["Intermediate", "Developing canisters"]} />
+<MarkdownChipRow labels={["Intermedio", "Desarrollando canisters"]} />
 
-PocketIC is a lightweight, deterministic testing solution for programmatic testing of <GlossaryTooltip>canisters</GlossaryTooltip>.
-It seamlessly integrates with existing testing infrastructure, such as `cargo test`, and runs as a standalone binary that doesn't require additional containers or virtual machines.
-Currently, PocketIC is supported on macOS and Linux host systems.
+PocketIC es una solución de prueba ligera y determinista para pruebas
+programáticas de <GlossaryTooltip>canisters</GlossaryTooltip>. Se integra sin
+problemas con la infraestructura de prueba existente, como `cargo test`, y se
+ejecuta como un binario independiente que no requiere contenedores adicionales
+ni máquinas virtuales. Actualmente, PocketIC es compatible con sistemas host
+macOS y Linux.
 
-While there are other options for testing canisters, they may come with pitfalls such as:
+Si bien existen otras opciones para probar canisters, pueden presentar
+inconvenientes como:
 
-- Installing and testing canisters on the mainnet provides the 'real' workflow experience but will cost developers real cycles.
+- Instalar y probar canisters en la mainnet proporciona la experiencia de flujo
+  de trabajo "real", pero costará ciclos reales a los desarrolladores.
 
-- Testing using the local <GlossaryTooltip>replica</GlossaryTooltip> provided by `dfx` allows for testing on a single IC node, but there is no cross-net or multi-subnet functionality. Testing with the local replica is not deterministic, and it is rather heavyweight. Additionally, testing with `dfx` can be complex, slow, and require additional boilerplate code to get working.
+- Probar con la <GlossaryTooltip>réplica</GlossaryTooltip> local proporcionada
+  por `dfx` permite realizar pruebas en un solo nodo del IC, pero no tiene
+  funcionalidad cross-net ni multi-subnet. Las pruebas con la réplica local no
+  son deterministas y son bastante pesadas. Además, probar con `dfx` puede ser
+  complejo, lento y requerir código adicional para funcionar.
 
-PocketIC is designed to remedy these pitfalls, resulting in a testing environment that provides the following benefits:
+PocketIC está diseñado para solucionar estos inconvenientes, proporcionando un
+entorno de prueba con los siguientes beneficios:
 
-- Deterministic: Synchronous control over the local canister execution environment. PocketIC removes non-deterministic parts of the replica to make tests fully reproducible.
+- **Determinista**: Control síncrono sobre el entorno de ejecución local del
+  canister. PocketIC elimina las partes no deterministas de la réplica para
+  hacer que las pruebas sean completamente reproducibles.
 
-- Lightweight: Only provides the necessary components and strips away the consensus and networking layers.
+- **Ligero**: Solo proporciona los componentes necesarios y elimina las capas de
+  consenso y red.
 
-- Concurrent and independent IC instances: Enabling tests to run in parallel
+- **Instancias IC concurrentes e independientes**: Permite ejecutar pruebas en
+  paralelo.
 
-- Multi-language support: Currently supports Rust, Python, and JavaScript/TypeScript but supports integration with any language that is written against the PocketIC REST-API.
+- **Soporte para múltiples lenguajes**: Actualmente compatible con Rust, Python
+  y JavaScript/TypeScript, pero permite integración con cualquier lenguaje que
+  utilice la API REST de PocketIC.
 
-- Versatile: Allows for fine-grained control over the canister by providing the ability to set stable memory, control how time passes, and other testing environment variables.
+- **Versátil**: Proporciona control detallado sobre el canister, permitiendo
+  establecer memoria estable, controlar el paso del tiempo y modificar otras
+  variables del entorno de prueba.
 
-- Support for Xnet calls and multiple subnets.
+- **Compatibilidad con llamadas Xnet y múltiples subnets.**
 
 ## PocketIC Rust
 
-To use PocketIC, the latest PocketIC server binary must be downloaded from the PocketIC repo. [Download the latest version for macOS or Linux systems](https://github.com/dfinity/pocketic?tab=readme-ov-file#download-the-pocketic-server).
+Para usar PocketIC, se debe descargar el binario más reciente del servidor
+PocketIC desde el repositorio de PocketIC.  
+[Descargar la última versión para sistemas macOS o Linux](https://github.com/dfinity/pocketic?tab=readme-ov-file#download-the-pocketic-server).
 
 :::info
-PocketIC is currently not natively supported on Windows systems.
+
+PocketIC actualmente no es compatible de forma nativa con sistemas Windows.
+
 :::
 
-The PocketIC binary can be left in your working directory, or you can specify the path to the binary by setting the `POCKET_IC_BIN` environmental variable.
+El binario de PocketIC se puede dejar en el directorio de trabajo o se puede
+especificar su ruta estableciendo la variable de entorno `POCKET_IC_BIN`.
 
-Add PocketIC Rust to your project with the command:
+Añadir PocketIC Rust al proyecto con el siguiente comando:
 
 ```bash
 cargo add pocket-ic --dev
 ```
 
-PocketIC can be imported into your project with the code:
+Importar PocketIC en el proyecto con el código:
 
 ```rust
 use pocket_ic::PocketIc;
 ```
 
-Then, in your code, you can create a new PocketIC instance with the code:
+Luego, en el código, se puede crear una nueva instancia de PocketIC con:
 
 ```rust
 let pic = PocketIc::new();
 ```
 
-### Single canister testing on a single subnet
+### Pruebas de un solo canister en una sola subnet
 
-[View an example of testing a canister on a single subnet](https://crates.io/crates/pocket-ic).
+[Ver un ejemplo de prueba de un canister en una sola subnet](https://crates.io/crates/pocket-ic).
 
-### Multi-subnet testing
+### Pruebas multi-subnet
 
-Versions of PocketIC `v2.0.0` and newer support multi-subnet testing. Multi-subnet testing allows for simulating multiple, different types of subnets locally. For example, to create an IC instance with an NNS subnet and two application subnets, use the code:
+Las versiones de PocketIC `v2.0.0` y posteriores admiten pruebas multi-subnet.  
+Las pruebas multi-subnet permiten simular múltiples tipos de subnets
+localmente.  
+Por ejemplo, para crear una instancia de IC con una subnet NNS y dos subnets de
+aplicación, se usa el siguiente código:
 
 ```rust
 let pic = PocketIcBuilder::new()
@@ -77,14 +115,14 @@ let pic = PocketIcBuilder::new()
     .build();
 ```
 
-Then, to target the NNS subnet to create a canister, use the code:
+Luego, para apuntar a la subnet NNS y crear un canister:
 
 ```rust
 let nns_sub = pic.topology().get_nns_subnet().unwrap();
 let nns_can_id = pic.create_canister_on_subnet(..., nns_sub);
 ```
 
-To test one of the application subnets and install a canister, use the code:
+Para probar una de las subnets de aplicación e instalar un canister:
 
 ```rust
 let app_sub_2 = pic.topology().get_app_subnets()[1];
@@ -92,7 +130,9 @@ let app_can_id = pic.create_canister_on_subnet(..., app_sub_2);
 pic.install_canister(app_can_id, ...);
 ```
 
-To create a canister with a specific `canister_id` on a named subnet, in this example the NNS subnet, use the code:
+Para crear un canister con un `canister_id` específico en una subnet
+determinada,  
+por ejemplo, en la subnet NNS:
 
 ```rust
 let ledger_canister_id = Principal::from_text("ryjl3-tyaaa-aaaaa-aaaba-cai").unwrap();
@@ -100,70 +140,83 @@ pic.create_canister_with_id(..., ledger_canister_id).unwrap();
 pic.install_canister(ledger_canister_id, ...);
 ```
 
-Possible types of subnets include:
+Los tipos posibles de subnets incluyen:
 
-- Generic system subnets.
+- Subnets genéricas del sistema.
 
-- Generic application subnets.
+- Subnets genéricas de aplicación.
 
-- Named subnets with canister ID ranges like on the mainnet, such as the NNS, SNS, II, Bitcoin, and Fiduciary subnets.
+- Subnets con nombres específicos y rangos de ID de canister similares a la
+  mainnet,  
+  como las subnets NNS, SNS, II, Bitcoin y Fiduciaria.
 
-View a larger, more complex example that uses [cross-canister calls on two different subnets](https://github.com/dfinity/ic/blob/HEAD/packages/pocket-ic/tests/tests.rs#L57).
+Ver un ejemplo más grande y complejo que utiliza  
+[llamadas entre canisters en dos subnets diferentes](https://github.com/dfinity/ic/blob/HEAD/packages/pocket-ic/tests/tests.rs#L57).
 
 ## PocketIC Python
 
-To use PocketIC, the latest PocketIC server binary must be downloaded from the PocketIC repo. [Download the latest version for macOS or Linux systems](https://github.com/dfinity/pocketic#download-the-pocketic-server).
+Para usar PocketIC, se debe descargar el binario más reciente del servidor
+PocketIC  
+desde el repositorio de PocketIC.  
+[Descargar la última versión para sistemas macOS o Linux](https://github.com/dfinity/pocketic#download-the-pocketic-server).
 
-The PocketIC binary can be left in your working directory, or you can specify the path to the binary by setting the `POCKET_IC_BIN` environmental variable.
+El binario de PocketIC se puede dejar en el directorio de trabajo  
+o se puede especificar su ruta estableciendo la variable de entorno
+`POCKET_IC_BIN`.
 
-Then, run the following command to install PocketIC:
+Luego, ejecutar el siguiente comando para instalar PocketIC:
 
 ```bash
 pip3 install pocket-ic
 ```
 
-To import PocketIC into your Python code, use the line:
+Para importar PocketIC en código Python, usar:
 
 ```python
 from pocket_ic import PocketIC
 ```
 
-### Create a canister with <GlossaryTooltip>cycles</GlossaryTooltip> and call the canister
+### Crear un canister con <GlossaryTooltip>cycles</GlossaryTooltip> y llamarlo
 
-[View an example of how to create a canister with cycles and then call the canister](https://pypi.org/project/pocket-ic/).
+[Ver un ejemplo de cómo crear un canister con cycles y luego llamarlo](https://pypi.org/project/pocket-ic/).
 
-### Make a call directly with a canister object
+### Hacer una llamada directamente con un objeto canister
 
 ```python
 my_canister = pic.create_and_install_canister_with_candid(...)
 ```
 
-### Call your canister methods using the native Python syntax
+### Llamar métodos del canister usando sintaxis nativa de Python
 
 ```python
 response = my_canister.greeting()
 assert(response == 'Hello, PocketIC!')
 ```
 
-### Single canister testing on a single subnet
+### Pruebas de un solo canister en una sola subnet
 
-[View a complete example of testing a single canister on a single subnet](https://github.com/dfinity/pocketic-py/blob/main/examples/counter_canister/counter_canister_test.py).
+[Ver un ejemplo completo de prueba de un canister en una sola subnet](https://github.com/dfinity/pocketic-py/blob/main/examples/counter_canister/counter_canister_test.py).
 
-To see more examples and run them locally, clone the [PocketIC Python repo](https://github.com/dfinity/pocketic-py), then run the following command, replacing the example name with the example you'd like to run. For example, to run the `counter_canister` example, use the command:
+Para ver más ejemplos y ejecutarlos localmente, clonar el  
+[repositorio de PocketIC Python](https://github.com/dfinity/pocketic-py),  
+luego ejecutar el siguiente comando, reemplazando el nombre del ejemplo con el
+que se desea ejecutar.  
+Por ejemplo, para ejecutar el ejemplo `counter_canister`:
 
 ```bash
 python3 examples/counter_canister/counter_canister_test.py
 ```
 
-## Resources
+## Recursos
 
-- [PocketIC.](https://github.com/dfinity/pocketic)
+- [PocketIC](https://github.com/dfinity/pocketic)
 
-- [PocketIC forum post.](https://forum.dfinity.org/t/pocketic-fast-and-versatile-canister-testing-in-rust-and-python/23793)
+- [Publicación en el foro sobre PocketIC](https://forum.dfinity.org/t/pocketic-fast-and-versatile-canister-testing-in-rust-and-python/23793)
 
-- [PocketIC v2.0.0 release forum post.](https://forum.dfinity.org/t/pocketic-multi-subnet-canister-testing/24901)
-- [Pic JS.](https://www.npmjs.com/package/@hadronous/pic)
+- [Publicación en el foro sobre el lanzamiento de PocketIC v2.0.0](https://forum.dfinity.org/t/pocketic-multi-subnet-canister-testing/24901)
 
-- [PocketIC Python.](https://pypi.org/project/pocket-ic/)
+- [Pic JS](https://www.npmjs.com/package/@hadronous/pic)
 
-- [PocketIC Rust.](https://crates.io/crates/pocket-ic)
+- [PocketIC Python](https://pypi.org/project/pocket-ic/)
+
+- [PocketIC Rust](https://crates.io/crates/pocket-ic)

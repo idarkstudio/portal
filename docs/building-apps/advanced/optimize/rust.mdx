@@ -4,56 +4,72 @@ keywords: [beginner, rust, tutorial, optimizing, optimization]
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Optimizing Rust canisters
+# Optimización de canisters en Rust
 
-<MarkdownChipRow labels={["Beginner", "Rust", "Tutorial"]} />
+<MarkdownChipRow labels={["Principiante", "Rust", "Tutorial"]} />
 
-Compiling Rust to Wasm often increases the file size significantly. `dfx` versions `0.14.0` and newer include the `wasm-opt` package that can be used to optimize cycle consumption and binary size.
+Compilar Rust a Wasm a menudo incrementa significativamente el tamaño del
+archivo. A partir de la versión `0.14.0`, `dfx` incluye el paquete `wasm-opt`,
+que puede utilizarse para optimizar el consumo de ciclos y el tamaño del
+binario.
 
-## Reducing cycle consumption
+## Reducción del consumo de ciclos
 
-The first step towards an optimized system is profiling. Start by measuring the number of instructions your endpoints consume.
+El primer paso para optimizar un sistema es el análisis de rendimiento. Comienza
+midiendo el número de instrucciones que consumen tus endpoints.
 
-The `instruction_counter` API will tell you the number of instructions your code has consumed since the last entry point. Instructions are the internal currency of the runtime; one ICP instruction is the quantum of work that the protocol can do, such as loading a 32-bit integer from a memory address. The protocol assigns an instruction cost equivalent to each Wasm instruction and system call. It also defines all its limits in terms of instructions. [View a detailed breakdown of the current instruction and Wasm limitations on ICP](/docs/building-apps/canister-management/resource-limits).
+La API `instruction_counter` te permite conocer la cantidad de instrucciones que
+tu código ha consumido desde la última llamada de entrada. Las instrucciones son
+la unidad fundamental de trabajo en el entorno de ejecución; cada instrucción
+ICP representa una operación, como cargar un entero de 32 bits desde una
+dirección de memoria. El protocolo asigna un costo en instrucciones a cada
+operación Wasm y llamada al sistema, y define todos sus límites en términos de
+instrucciones.  
+[Consulta un desglose detallado de las limitaciones actuales de instrucciones y Wasm en ICP](/docs/building-apps/canister-management/resource-limits).
 
-The following is an example method that can be used to measure the number of instructions:
+A continuación, se muestra un método de ejemplo para medir el número de
+instrucciones consumidas:
 
 ```rust
 #[update]
 async fn transfer(from: Account, to: Account, amount: Nat) -> Result<TxId, Error> {
-  let start = ic_cdk::api::instruction_counter();
-  let tx = apply_transfer(from, to, amount)?;
-  let tx_id = archive_transaction(tx).await?;
-  // NOTE: the await point above resets the instruction counter.
-  let end = ic_cdk::api::instruction_counter();
-  record_measurement(end - start);
-Ok(tx_id)
+    let start = ic_cdk::api::instruction_counter();
+    let tx = apply_transfer(from, to, amount)?;
+    let tx_id = archive_transaction(tx).await?;
+    // NOTA: el punto await anterior restablece el contador de instrucciones.
+    let end = ic_cdk::api::instruction_counter();
+    record_measurement(end - start);
+    Ok(tx_id)
 }
 ```
 
-## Using `wasm-opt`
+## Uso de `wasm-opt`
 
-`Wasm-opt` is a general-purpose Wasm optimizer package available in `dfx` versions `0.14.0` and newer.
+`wasm-opt` es un optimizador de WebAssembly de propósito general que está
+disponible en `dfx` a partir de la versión `0.14.0`.
 
-`Wasm-opt` can be used to enable canister optimizations through a configuration option in the project's `dfx.json` file, such as:
+Puedes habilitar las optimizaciones para tu canister configurando la opción en
+el archivo `dfx.json` de tu proyecto, como se muestra a continuación:
 
 ```json title="dfx.json"
 {
-  "canisters": {
-    "my_canister": {
-      "optimize": "cycles"
-    }
-  }
+  "canisters": {
+    "my_canister": {
+      "optimize": "cycles"
+    }
+  }
 }
 ```
 
-## Optimization for cycle usage
+## Optimización para el uso de ciclos
 
-Using the `"optimize": "cycles"` option, you can expect a rough estimate of decreased cycles usage for Rust canisters by around 7%.
+Al utilizar la opción `"optimize": "cycles"`, se puede reducir el consumo de
+ciclos en los canisters de Rust aproximadamente en un 7%.
 
-The `"optimize": "cycles"` option is the recommended default, as it maps to optimization level 3 in the `wasm-opt` package.
+Se recomienda usar `"optimize": "cycles"` como opción predeterminada, ya que
+corresponde al nivel de optimización 3 en `wasm-opt`.
 
-The optimization levels for cycles usage are as follows:
+Los niveles de optimización para el uso de ciclos son los siguientes:
 
 ```
 O4
@@ -63,21 +79,34 @@ O1
 O0 (performs no optimizations)
 ```
 
-## Optimization for binary size
+## Optimización para el tamaño del binario
 
-To optimize the binary size instead, you can use the `"optimize": "size"` option. By using the size option, binary sizes can be reduced by roughly 16%.
+Para optimizar el tamaño del binario en su lugar, puedes usar la opción
+`"optimize": "size"`. Al utilizar esta opción, los binarios pueden reducirse
+aproximadamente en un 16%.
 
-The optimization levels for binary size are as follows:
+Los niveles de optimización para el tamaño del binario son los siguientes:
 
 ```
 Oz (equivalent to “size”)
 Os
 ```
 
-Each optimization preserves the ICP-specific metadata sections of each canister. Additionally, the name sections in your Wasm module can be preserved by directly invoking `ic-wasm` with the `--keep-name-section` flag.
+Cada optimización conserva las secciones de metadatos específicas de ICP en cada
+canister.  
+Además, las secciones de nombres en tu módulo Wasm pueden preservarse invocando
+directamente `ic-wasm` con la opción `--keep-name-section`.
 
 :::info
-Note that in certain cases the optimizations can increase the complexity of certain functions in your Wasm module such that they are rejected by the replica. If you run into this issue, it is recommended to use a less aggressive optimization level such that you do not exceed the complexity limit.
+
+Ten en cuenta que, en algunos casos, estas optimizaciones pueden aumentar la
+complejidad de ciertas funciones dentro del módulo Wasm, lo que podría hacer que
+sean rechazadas por la réplica. Si encuentras este problema, se recomienda
+utilizar un nivel de optimización menos agresivo para no superar el límite de
+complejidad.
+
 :::
 
-More information on canister optimization and information on `wasm-opt` benchmark testing can be found [on this forum post](https://forum.dfinity.org/t/canister-optimizer-available-in-dfx-0-14-0/21157).
+Más información sobre la optimización de canisters y pruebas de rendimiento de
+`wasm-opt` está disponible en
+[este post del foro](https://forum.dfinity.org/t/canister-optimizer-available-in-dfx-0-14-0/21157).

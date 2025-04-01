@@ -1,65 +1,125 @@
 ---
-keywords: [intermediate, test, tutorial, test code, test canister, pocket ic, pocketic, test projects, replicate mainnet for testing, unit testing, integration testing, e2e testing, e2e, unit, integration]
+keywords:
+  [
+    intermediate,
+    test,
+    tutorial,
+    test code,
+    test canister,
+    pocket ic,
+    pocketic,
+    test projects,
+    replicate mainnet for testing,
+    unit testing,
+    integration testing,
+    e2e testing,
+    e2e,
+    unit,
+    integration,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 
-# Testing canisters
+# Pruebas de canisters
 
-<MarkdownChipRow labels={["Beginner", "Developing canisters"]} />
+<MarkdownChipRow labels={["Principiante", "Desarrollando canisters"]} />
 
-Testing your canister's code during the development process is an important step to verify that the code operates as expected and does not produce bugs, errors, or result in the canister trapping. Before deploying and using the code in a production environment, it should undergo testing.
+Probar el código de tu canister durante el proceso de desarrollo es un paso
+importante para verificar que funcione como se espera y no produzca errores,
+fallos o termine atrapado. Antes de desplegar y usar el código en un entorno de
+producción, este debe someterse a pruebas.
 
-## Types of testing
+## Tipos de pruebas
 
-There are three types of testing:
+Existen tres tipos de pruebas:
 
-- **Unit testing**: Test each individual unit of the code separately, such as a function or calculation.
+- **Pruebas unitarias**: Evalúan cada unidad individual del código por separado,
+  como una función o un cálculo.
+- **Pruebas de integración**: Verifican cómo varias funciones o partes del
+  código se integran y operan juntas.
+- **Pruebas de extremo a extremo**: Evalúan el flujo de trabajo completo de la
+  aplicación, incluida la interfaz de usuario del frontend.
 
-- **Integration testing**: Test how multiple functions or portions of the code integrate and operate together.
+### Pruebas unitarias
 
-- **End-to-end testing**: Test the application's complete workflow, including the frontend user interface.
+Las pruebas unitarias consisten en evaluar una sola función o componente del
+código de forma aislada, probando así una _unidad_ específica. Estas pruebas no
+consideran cómo la unidad interactúa con otros componentes de la aplicación. Su
+objetivo es detectar errores en cada parte individual del código.
 
-### Unit testing
+En Motoko, la
+[librería base](https://github.com/dfinity/motoko-base/tree/master/test)
+contiene archivos útiles para pruebas unitarias. La mayoría utiliza la librería
+de pruebas **Motoko Matchers**, que ofrece funcionalidad para pruebas dentro de
+canisters.
 
-Unit testing refers to testing a single function or component of a piece of code by itself, thus testing a single *unit* of the code. Unit testing does not take into consideration how the single unit functions with other components of the application. The scope of unit testing is more narrow compared to other types of testing and is designed to catch bugs or errors that may occur for each individual unit of the application's code.
+Para pruebas con grandes volúmenes de datos o lotes de pruebas de larga
+duración, Motoko también proporciona la
+[librería BigTest](https://github.com/matthewhammer/motoko-bigtest).
 
-In Motoko, the [base library](https://github.com/dfinity/motoko-base/tree/master/test) contains files that can be used for unit testing. Most testing files utilize the Motoko Matchers test library to provide testing functionality. Motoko Matchers also includes a package for executing unit tests within canisters.
+Para pruebas unitarias en Rust, consulta la guía sobre
+[contenedores efectivos en Rust](https://mmapped.blog/posts/01-effective-rust-canisters).
 
-For tests that use large datasets or have long-running test batches, Motoko also provides the [BigTest library](https://github.com/matthewhammer/motoko-bigtest).
+### Pruebas de integración
 
-For Rust unit testing, refer to the guide on [effective Rust containers](https://mmapped.blog/posts/01-effective-rust-canisters).
+Las pruebas de integración verifican que múltiples componentes de una aplicación
+funcionen correctamente juntos. Estas pruebas pueden incluir:
 
-### Integration testing
+- La interacción entre varias funciones dentro de un canister.
+- La comunicación entre diferentes canisters.
+- La obtención y procesamiento de información externa mediante _HTTPS outcalls_.
 
-Integration testing refers to testing multiple components of an application together to ensure that they operate correctly. Integration testing often includes testing how several functions within a canister interact with one another, how different canisters may send and receive information from each other, or how a canister may obtain and digest external information from HTTPS outcalls. One common form of integration testing is continuous integration (CI) testing. CI testing uses an automated workflow to continuously test several components of an application.
+Un tipo común de prueba de integración es la **integración continua (CI)**, que
+utiliza flujos de trabajo automatizados para probar componentes de una
+aplicación en cada nueva actualización de código.
 
-GitHub CI testing is a common workflow used by developers that can be configured to run tests whenever new code is pushed to a repository. [Learn more about CI tests](https://docs.github.com/en/actions/using-workflows).
+GitHub permite configurar flujos de CI para ejecutar pruebas automáticamente al
+enviar nuevo código a un repositorio.  
+[Más información sobre pruebas CI](https://docs.github.com/en/actions/using-workflows).
 
-### End-to-end testing
+### Pruebas de extremo a extremo
 
-End-to-end testing refers to testing the entire functionality of an application, including the frontend user interface. This includes testing buttons, input forms, authentication methods, and the overall user journey within the app. End-to-end tests can be simple, such as testing that a frontend canister successfully communicates with a backend canister.
+Las pruebas de extremo a extremo se refieren a probar la funcionalidad completa
+de una aplicación, incluyendo la interfaz de usuario del frontend. Esto incluye
+probar botones, formularios de entrada, métodos de autenticación y el recorrido
+general del usuario dentro de la aplicación. Las pruebas de extremo a extremo
+pueden ser simples, como probar que un canister de frontend se comunique
+exitosamente con un canister de backend.
 
-For more information on end-to-end tests, check out the [Developer Liftoff module on testing](/docs/tutorials/developer-liftoff/level-2/2.5-unit-testing#end-to-end-e2e-testing).
+Para más información, consulta el  
+[módulo Developer Liftoff sobre pruebas](/docs/tutorials/developer-liftoff/level-2/2.5-unit-testing#end-to-end-e2e-testing).
 
-## Tools for testing canisters
+## Herramientas para probar canisters
 
-There are several tools available for testing ICP canisters. Motoko-specific libraries can be found in the section above, [unit testing](#unit-testing). Details about more comprehensive testing suites can be found below.
+Existen varias herramientas para probar canisters en ICP. Algunas son
+específicas para Motoko y se mencionaron en la sección de
+[pruebas unitarias](#pruebas-unitarias). A continuación, se presentan
+herramientas más avanzadas para pruebas integrales.
 
 ### PocketIC
 
-PocketIC is a comprehensive testing suite that can be used for testing canisters with custom environments, allowing you to test applications against real-world scenarios that your application may encounter once deployed on the mainnet. PocketIC tests can be written in several languages, including:
+**PocketIC** es un conjunto de pruebas avanzado que permite probar canisters en
+entornos personalizados, simulando escenarios del mundo real que tu aplicación
+podría enfrentar en la red principal (_mainnet_). Los tests de PocketIC pueden
+escribirse en varios lenguajes:
 
 - [PocketIC Rust](https://crates.io/crates/pocket-ic)
 - [PocketIC Python](https://pypi.org/project/pocket-ic/)
-- [Pic JS for JavaScript/TypeScript](https://www.npmjs.com/package/@hadronous/pic)
+- [Pic JS para JavaScript/TypeScript](https://www.npmjs.com/package/@hadronous/pic)
 - [PocketIC GoLang](https://pkg.go.dev/github.com/aviate-labs/agent-go/pocketic)
 
-[Learn more about PocketIC](/docs/building-apps/advanced/test/pocket-ic).
+[Más información sobre PocketIC](/docs/building-apps/advanced/test/pocket-ic).
 
 ### Light Replica
 
-Light Replica is a community-contributed tool designed to replicate the local testing environment that the Ethereum tools Hardhat or Truffle provide. Light Replica replicates the behavior of a real ICP node by running a local instance of a node, then providing additional logging and functionality to enable canister testing. Light Replica can be used to test any Wasm file as if it were a canister deployed on the mainnet.
+Light Replica es una herramienta contribuida por la comunidad diseñada para
+replicar el entorno de prueba local que proporcionan las herramientas Ethereum
+Hardhat o Truffle. Light Replica replica el comportamiento de un nodo ICP real
+ejecutando una instancia local de un nodo, y luego proporciona registros y
+funcionalidades adicionales para habilitar las pruebas de canisters. Light
+Replica se puede utilizar para probar cualquier archivo Wasm como si fuera un
+canister desplegado en la red principal.
 
-[Learn more about Light Replica](https://github.com/icopen/lightic/tree/main).
+[Más información sobre Light Replica](https://github.com/icopen/lightic/tree/main).

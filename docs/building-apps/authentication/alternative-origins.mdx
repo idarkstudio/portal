@@ -1,47 +1,73 @@
 ---
-keywords: [intermediate, tutorial, user sign in, user login, internet identity, alternative frontend origins, alternative origins, frontend origins ]
+keywords:
+  [
+    intermediate,
+    tutorial,
+    user sign in,
+    user login,
+    internet identity,
+    alternative frontend origins,
+    alternative origins,
+    frontend origins,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Alternative frontend origins
+# Orígenes alternativos de frontend
 
-<MarkdownChipRow labels={["Intermediate", "Authentication"]} />
+<MarkdownChipRow labels={["Intermedio", "Autenticación"]} />
+Si tu aplicación ha alcanzado la etapa en la que deseas cambiar los nombres de dominio
+y has estado autenticando con Internet Identity (II), querrás asegurarte de que tus
+usuarios puedan mantener sin problemas los mismos principals que ya han estado utilizando.
+Para admitir esta funcionalidad, puedes configurar tu aplicación para orígenes alternativos
+de frontend utilizando esta guía.
 
-If your application has reached the stage where you want to change domain names, and you have been authenticating with Internet Identity (II), you will want to make sure that your users can seamlessly keep the same principals they have already been using. To support this functionality, you can configure your application for alternative frontend origins using this guide.
+![Resultado final](./_attachments/alternative-origins.png)
 
-![End Result](./_attachments/alternative-origins.png)
+Es posible que necesites esta guía si estás realizando alguna de las siguientes
+acciones:
 
-You may need this guide if you are doing any of the following:
+- Migrando de `<canister-id>.icp0.io` a un
+  [dominio personalizado](/docs/building-apps/frontends/custom-domains/using-custom-domains/).
+- Pidiendo a los usuarios que inicien sesión en `/login` en lugar de `/`.
+- Admitiendo usuarios que usan `raw.icp0.io`.
+- Configurando varias aplicaciones en tu organización para que usen los mismos
+  principals.
 
-- Moving from `<canister-id>.icp0.io` to a [custom domain](/docs/building-apps/frontends/custom-domains/using-custom-domains/).
-- Asking users to log in at `/login` instead of `/`.
-- Supporting users using `raw.icp0.io`.
-- Configuring multiple apps in your organization to use the same principals.
+## Restricciones
 
-## Constraints
+Actualmente, se pueden listar un máximo de **10** orígenes alternativos.
 
-Currently, a maximum of **10** alternative origins can be listed.
+Internet Identity solo seguirá esta especificación cuando el origen que
+configura estos alternativos esté alojado en un canister que utilice **activos
+certificados**.
 
-Internet Identity will only follow this specification when the origin configuring these alternatives is hosted on a canister using **certified assets**.
+Para más información, consulta la
+[especificación de Internet Identity](/docs/references/ii-spec/#alternative-frontend-origins).
 
-For more information, see the [Internet Identity specification](/docs/references/ii-spec/#alternative-frontend-origins).
+## Configuración de orígenes alternativos
 
-## Configuring alternative origins
+En este ejemplo, tendrás dos dominios, **A** y **B**. **A** será el origen
+canónico y **B** será el dominio alternativo. Para ilustrar este modelo,
+considera un sitio web alojado tanto en `https://yourcustomdomain.com` como en
+`https://www.yourdomain.com`.
 
-For this example, you will have two domains, **A** and **B**. **A** will be the canonical origin, and **B** will be the alternative domain. To help illustrate this model, consider this website, which is hosted both at `https://yourcustomdomain.com` and `https://www.yourdomain.com`.
+En este caso, **A** sería `https://yourcustomdomain.com`.
 
-In this example, **A** would be `https://yourcustomdomain.com`.
+:::info Para casos de uso en producción, el dominio **A** debería ser un dominio
+en ICP, como `ic0.app` o `icp0.io`. :::
 
-:::info
-For production use cases, domain **A** would use a domain on ICP, such as `ic0.app` or `icp0.io`.
-:::
+**B** sería el origen alternativo, es decir, `https://www.yourdomain.com`.
 
-**B** would be the alternative origin, or `https://www.yourdomain.com`.
+### Listado de orígenes
 
-### Listing origins
-
-On origin **A**, you will need to provide a file that tells Internet Identity that **B** is a valid alternative origin. You'll be placing the config files in the `src/assets` directory of your frontend canister. If your frontend canister is currently configured to deploy assets from a `dist` folder, make sure to update the `sources` for your canister to include both:
+En el origen **A**, debes proporcionar un archivo que indique a Internet
+Identity que **B** es un origen alternativo válido. Debes colocar los archivos
+de configuración en el directorio `src/assets` de tu canister de frontend. Si tu
+canister de frontend está configurado actualmente para desplegar activos desde
+una carpeta `dist`, asegúrate de actualizar las `sources` de tu canister para
+incluir ambas:
 
 ```json title="dfx.json"
 "source": [
@@ -50,25 +76,33 @@ On origin **A**, you will need to provide a file that tells Internet Identity th
 ]
 ```
 
-Inside of `src/assets`, create a `.well-known` folder, and add a file named `ii-alternative-origins.`
+Dentro de `src/assets`, crea una carpeta `.well-known` y agrega un archivo
+llamado `ii-alternative-origins`.
 
 :::info
-The file needs to be exactly named `ii-alternative-origins`, with no file extension. The content inside will be formatted as JSON, but the file should not end with `.json`.
+
+El archivo debe llamarse exactamente `ii-alternative-origins`, sin extensión de
+archivo. El contenido será en formato JSON, pero el archivo no debe terminar en
+`.json`.
+
 :::
 
-Inside of the file, list your alternative origin for **B**. It will look something like this:
+Dentro del archivo, lista tu origen alternativo para **B**. Se verá algo como
+esto:
 
 ```json title="src/assets/.well-known/ii-alternative-origins"
 {
-  "alternativeOrigins": ["https://internetcomputer.org"]
+  "alternativeOrigins": ["https://internetcomputer.org"]
 }
 ```
 
 :::info
-Make sure that you remove any trailing slash or query parameters from the origin.
+
+Asegúrate de eliminar cualquier barra final o parámetros de consulta del origen.
+
 :::
 
-Now, your project should look something like this:
+Ahora, tu proyecto debería tener una estructura similar a esta:
 
 ```
 ├── dfx.json
@@ -78,9 +112,13 @@ Now, your project should look something like this:
 │   │   │   └── ii-alternative-origins
 ```
 
-### Configuring your frontend canister
+### Configuración de tu canister de frontend
 
-Because the dot syntax in `.well-known` ordinarily will be treated as "hidden" by the file system, the frontend canister will need to be configured to upload your document. To configure the frontend canister, create a new file, `.ic-assets.json`. `.ic-assets.json` needs to be placed inside a directory listed in `sources` for your canister, so you can use `src/assets` again. Your new list of files should look like this:
+Dado que la sintaxis de punto en `.well-known` generalmente se trata como
+"oculta" por el sistema de archivos, el canister de frontend debe configurarse
+para subir este documento. Para ello, crea un nuevo archivo llamado
+`.ic-assets.json` dentro del directorio `src/assets` o cualquier otro listado en
+`sources` de tu canister. Ahora, la lista de archivos debería verse así:
 
 ```
 ├── dfx.json
@@ -93,25 +131,32 @@ Because the dot syntax in `.well-known` ordinarily will be treated as "hidden" b
 │   │   │   │   └── ii-alternative-origins
 ```
 
-Then, configure the `.well-known` directory to be included with:
+Luego, configura el directorio `.well-known` para que sea incluido con:
 
 ```json title="src/project_frontend/src/.ic-assets.json"
 [
-  {
-    "match": ".well-known",
-    "ignore": false
-  },
-  {
-    "match": ".well-known/ii-alternative-origins",
-    "headers": {
-      "Access-Control-Allow-Origin": "*",
-      "Content-Type": "application/json"
-    },
-    "ignore": false
-  }
+  {
+    "match": ".well-known",
+    "ignore": false
+  },
+  {
+    "match": ".well-known/ii-alternative-origins",
+    "headers": {
+      "Access-Control-Allow-Origin": "*",
+      "Content-Type": "application/json"
+    },
+    "ignore": false
+  }
 ]
 ```
 
-This includes a general rule to not ignore the `.well-known` directory and rules to deliver the `ii-alternative-origins` with access control and content-type headers.
+Esto incluye una regla general para no ignorar el directorio `.well-known` y
+reglas específicas para servir `ii-alternative-origins` con cabeceras de control
+de acceso y tipo de contenido.
 
-Then, all you need to do is deploy your canister. When you attempt to authenticate from origin **B** from then on, you will get back the same principal you get while using **A**. This needs to be supplemented with the information configured with the `AuthClient` to specifically request to use domain **A** when authenticating from **B**, i.e., set `derivationOrigin` in call options to `login`.
+Luego, solo necesitas desplegar tu canister. A partir de este momento, cuando
+intentes autenticarte desde el origen **B**, recibirás el mismo principal que
+obtienes al usar **A**. Esto debe complementarse con la configuración del
+`AuthClient` para solicitar específicamente el uso del dominio **A** al
+autenticar desde **B**, es decir, estableciendo `derivationOrigin` en las
+opciones de la llamada a `login`.

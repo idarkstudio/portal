@@ -4,37 +4,64 @@ keywords: [authentication, identity, login, user login, integration]
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Authentication services
+# Servicios de autenticación
 
-<MarkdownChipRow labels={["Beginner", "Concept"]} />
+<MarkdownChipRow labels={["Principiante", "Concepto"]} />
 
-When building an application that enables users to have profiles or buy and sell assets, you must implement an authentication method. An authentication method allows users to log into an application by providing some form of credential or verification of identity. Authentication methods vary in levels of security and data privacy.
+Al construir una aplicación que permite a los usuarios tener perfiles o comprar
+y vender activos, debes implementar un método de autenticación. Un método de
+autenticación permite a los usuarios iniciar sesión en una aplicación
+proporcionando alguna forma de credencial o verificación de identidad. Los
+métodos de autenticación varían en niveles de seguridad y privacidad de datos.
 
-To implement authentication in your dapp, your application frontend must provide a user interface component that triggers an authentication workflow. Then, the backend logic must implement code to handle the authentication and return a response to the frontend service.
+Para implementar la autenticación en tu dapp, la interfaz de usuario de tu
+aplicación frontend debe proporcionar un componente que desencadene un flujo de
+autenticación. Luego, la lógica del backend debe implementar código para manejar
+la autenticación y devolver una respuesta al servicio frontend.
 
-A simple example of this workflow is a basic 'Who am I?' application that uses Internet Identity for authentication. View the [integrating with Internet Identity](/docs/building-apps/authentication/integrate-internet-identity) documentation for more information.
+Un ejemplo simple de este flujo de trabajo es una aplicación básica de '¿Quién
+soy yo?' que utiliza Internet Identity para la autenticación. Consulta la
+documentación de
+[integración con Internet Identity](/docs/building-apps/authentication/integrate-internet-identity)
+para obtener más información.
 
-## Authentication methods
+## Métodos de autenticación
 
-Authentication methods available on ICP include:
+Los métodos de autenticación disponibles en ICP incluyen:
 
-- [Internet Identity](/docs/building-apps/authentication/overview): ICP's native identity service that uses a cryptographic public/private key pair for authentication.
+- [Internet Identity](/docs/building-apps/authentication/overview): El servicio
+  de identidad nativo de ICP que utiliza un par de claves pública/privada
+  criptográficas para la autenticación.
 
-- [Email and password](https://nfid.one): Authentication with an email and password.
+- [Correo electrónico y contraseña](https://nfid.one): Autenticación con un
+  correo electrónico y contraseña.
 
-- [NFID](https://nfid.one/): A digital form of identity that allows users to use an email and password or their Google account.
+- [NFID](https://nfid.one/): Una forma digital de identidad que permite a los
+  usuarios utilizar un correo electrónico y contraseña o su cuenta de Google.
 
-- [`ic-auth`](https://github.com/id-daniel-mccoy/ic-auth): A modular tool to integrate wallet providers into ICP apps. Supports Stoic, Plug, Internet Identity, and NFID.
+- [`ic-auth`](https://github.com/id-daniel-mccoy/ic-auth): Una herramienta
+  modular para integrar proveedores de wallets en aplicaciones de ICP. Admite
+  Stoic, Plug, Internet Identity y NFID.
 
-- [Plug wallet](https://docs.plugwallet.ooo/): An in-browser wallet for managing all ICP assets such as cycles, ICP, tokens, and NFTs.
+- [Wallet Plug](https://docs.plugwallet.ooo/): Una wallet en el navegador para
+  administrar todos los activos de ICP, como ciclos, ICP, tokens y NFT.
 
-The following tools enable authenticating with ICP dapps using wallet addresses from other chains and ecosystems:
+Las siguientes herramientas permiten autenticarse con dapps de ICP utilizando
+direcciones de wallet de otras cadenas y ecosistemas:
 
-- [Sign in with Bitcoin](https://github.com/AstroxNetwork/ic-siwb): An authentication standard that enables Bitcoin wallet-based authentication for ICP applications.
+- [Iniciar sesión con Bitcoin](https://github.com/AstroxNetwork/ic-siwb): Un
+  estándar de autenticación que permite la autenticación basada en wallets de
+  Bitcoin para aplicaciones de ICP.
 
-- [Sign in with Ethereum](https://github.com/kristoferlund/ic-siwe-react-demo-rust): An authentication standard that enables Ethereum wallet-based authentication for ICP applications.
+- [Iniciar sesión con Ethereum](https://github.com/kristoferlund/ic-siwe-react-demo-rust):
+  Un estándar de autenticación que permite la autenticación basada en wallets de
+  Ethereum para aplicaciones de ICP.
 
-- [Sign in with Solana](https://github.com/kristoferlund/ic-siws): An authentication standard that enables Solana wallet-based authentication for ICP applications.
+- [Iniciar sesión con Solana](https://github.com/kristoferlund/ic-siws): Un
+  estándar de autenticación que permite la autenticación basada en wallets de
+  Solana para aplicaciones de ICP.
 
-- [MSQ library](https://icp.msq.tech/): A client library for dapps to enable user interaction with ICP solely via their existing MetaMask wallet using the [Metamask Snaps](https://metamask.io/snaps/) feature.
-
+- [Biblioteca MSQ](https://icp.msq.tech/): Una biblioteca de cliente para dapps
+  que permite la interacción del usuario con ICP únicamente a través de su
+  wallet existente de MetaMask utilizando la función
+  [Metamask Snaps](https://metamask.io/snaps/).

@@ -4,57 +4,60 @@ keywords: [intermediate, benchmark, test, bench mark, canbench]
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Canister benchmarking
+# Benchmarking de Canisters
 
-<MarkdownChipRow labels={["Intermediate"]} />
+<MarkdownChipRow labels={["Intermedio"]} />
 
-Canisters deployed on ICP use resources such as memory and compute. Resources are finite, and there are limits configured that restrict how many resources a canister may consume. The `canbench` Rust crate provides a way to benchmark a canister's resources so developers can gain an insight into how their canister uses memory, instructions, and other resources.
+Los canisters desplegados en ICP utilizan recursos como memoria y cómputo. Estos
+recursos son finitos y existen límites configurados que restringen cuánto puede
+consumir un canister. El crate de Rust `canbench` permite evaluar el uso de
+recursos de un canister para que los desarrolladores puedan obtener información
+sobre su consumo de memoria, instrucciones y otros recursos.
 
-`canbench` can be used to provide information such as:
+`canbench` proporciona información como:
 
-- Insight into how a canister consumes stable memory, heap memory, and instructions.
+- Análisis del consumo de memoria estable, memoria en heap e instrucciones.
+- Detección de posibles regresiones de rendimiento, tanto localmente como en la
+  mainnet.
+- Identificación de cuellos de botella en el rendimiento.
 
-- Detecting possible performance regressions, both locally or on the mainnet.
+Las características de `canbench` incluyen:
 
-- Analyzing performance bottlenecks.
+- Soporte para pruebas de rendimiento que ejecutan hasta 10 billones de
+  instrucciones.
+- Reporte del número de instrucciones consumidas, junto con cambios en la
+  memoria estable y en heap.
+- Persistencia de los resultados de benchmarking en el repositorio del canister.
+- Independencia del lenguaje, aunque inicialmente solo hay soporte para Rust.
 
-Features of `canbench` include:
+## Instalación
 
-- Supports benchmarks that are up to 10 trillion instructions.
-
-- Reports the number of instructions consumed alongside changes to stable and heap memories.
-
-- Persistence of benchmarking results in your canister's repo.
-
-- Language agnostic, though initially only support for Rust exists.
-
-## Installation
-
-You can install `canbench` using [cargo](https://crates.io/).
+Puedes instalar `canbench` utilizando [cargo](https://crates.io/).
 
 ```bash
 cargo install canbench
 ```
 
-Add an optional dependency for `canbench` in your `Cargo.toml` file:
+Agrega una dependencia opcional para `canbench` en tu archivo `Cargo.toml`:
 
-``` title="Cargo.toml"
+```title="Cargo.toml"
 canbench_rs = { version = "0.1.1", optional = true }
 ```
 
-Then, edit the `canbench.yml` file to point to your canister's Wasm file:
+Luego, edita el archivo `canbench.yml` para apuntar al archivo Wasm de tu
+canister:
 
 ```yml title="canbench.yml"
 build_cmd:
   cargo build --release --target wasm32-unknown-unknown --features canbench-rs
 
-wasm_path:
-  ./target/wasm32-unknown-unknown/release/<YOUR_CANISTER>.wasm
+wasm_path: ./target/wasm32-unknown-unknown/release/<YOUR_CANISTER>.wasm
 ```
 
-## Example benchmark test
+## Ejemplo de prueba de benchmarking
 
-Below is an example canister that uses a `query` function to compute and return the fibonacci sequence of a given number:
+A continuación, se muestra un canister con una función `query` que calcula y
+devuelve la secuencia de Fibonacci de un número dado:
 
 ```rust title="src/example_backend/src/lib.rs"
 #[ic_cdk::query]
@@ -79,24 +82,24 @@ fn fibonacci(n: u32) -> u32 {
 }
 ```
 
-An example benchmark test using `canbench` for this canister could look like this:
+A continuación, un ejemplo de prueba de benchmarking utilizando `canbench` para
+este canister:
 
-```
+```rust
 #[cfg(feature = "canbench-rs")]
 mod benches {
     use super::*;
     use canbench_rs::bench;
 
-
     #[bench]
     fn fibonacci_20() {
-        // NOTE: the result is printed to prevent the compiler from optimizing the call away.
+        // NOTA: el resultado se imprime para evitar que el compilador optimice la llamada.
         println!("{:?}", fibonacci(20));
     }
 }
 ```
 
-The benchmark output of this test would resemble the following:
+La salida del benchmark se vería así:
 
 ```
 canbench
@@ -114,4 +117,6 @@ Benchmark: fibonacci_20 (new)
 Executed 1 of 1 benchmarks.
 ```
 
-For more examples and information, view the [crate's documentation](https://docs.rs/canbench-rs) or the [GitHub repo for this crate](https://github.com/dfinity/canbench/tree/main).
+Para más ejemplos e información, consulta la
+[documentación del crate](https://docs.rs/canbench-rs) o el
+[repositorio de GitHub](https://github.com/dfinity/canbench/tree/main).

@@ -6,34 +6,53 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import TabItem from "@theme/TabItem";
 import Tabs from "@theme/Tabs";
 
-# Integrating Internet Identity
+# Integración con Internet Identity
 
-<MarkdownChipRow labels={["Intermediate", "Tutorial"]} />
+<MarkdownChipRow labels={["Intermedio", "Tutorial"]} />
 
-This guide demonstrates an example of how to integrate Internet Identity authentication into an application. In this example, a user can interact with the application's user interface to log in with their Internet Identity and then make a call to the backend canister's `whoami` method that returns the principal of the user.
+Esta guía muestra un ejemplo de cómo integrar la autenticación de Internet
+Identity en una aplicación. En este caso, un usuario puede interactuar con la
+interfaz de usuario para iniciar sesión con su Internet Identity y luego hacer
+una llamada al método `whoami` del canister backend, que devuelve el principal
+del usuario.
 
 <Tabs>
-<TabItem value="prereq" label="Prerequisites" default>
-<input type="checkbox"/> <a href="/docs/building-apps/getting-started/install">Install the IC SDK.</a>
-</TabItem>
+  <TabItem value="prereq" label="Requisitos previos" default>
+    <input type="checkbox" />
+    <a href="/docs/building-apps/getting-started/install">
+      Instalar el IC SDK.
+    </a>
+  </TabItem>
 </Tabs>
 
-## Creating a simple app with II authentication
+## Creación de una aplicación sencilla con autenticación de II
 
-### Step 1: Create or open a project.
+### Paso 1: Crear o abrir un proyecto
 
-First, use `dfx start` to start a [local instance of the replica](/docs/building-apps/developer-tools/dfx/dfx-start) (if necessary) and [create a new project](/docs/building-apps/developer-tools/dfx/dfx-new) or open an existing project.
+Primero, usa `dfx start` para iniciar una  
+[instancia local de la réplica](/docs/building-apps/developer-tools/dfx/dfx-start)  
+(si es necesario) y  
+[crear un nuevo proyecto](/docs/building-apps/developer-tools/dfx/dfx-new)  
+o abre un proyecto existente.
 
-#### Creating a new project
+#### Crear un nuevo proyecto
 
-When creating a new project with the command `dfx new`, you will have the option to **Add extra features**. From this prompt, select **Internet Identity**.
+Al crear un nuevo proyecto con el comando `dfx new`, tendrás la opción de
+**Agregar características adicionales**. En este paso, selecciona **Internet
+Identity**.
 
-This extra feature will add the **pullable** version of the Internet identity canister to your project. A pullable canister is a canister that provides a public service at a static canister ID. [Learn more about pullable canisters](/docs/building-apps/advanced/using-third-party-canisters).
+Esta opción añadirá la versión **pullable** del canister de Internet Identity a
+tu proyecto. Un canister pullable es un canister que proporciona un servicio
+público con un ID de canister estático.  
+[Más información sobre los canisters pullables](/docs/building-apps/advanced/using-third-party-canisters).
 
-#### Using an existing project
+#### Usar un proyecto existente
 
-If you already have a project that was not created with the extra Internet Identity feature, you can modify the project to use the pullable Internet Identity canister.
-First, add the canister configuration to the project's `dfx.json` file:
+Si ya tienes un proyecto que no fue creado con la opción de Internet Identity,
+puedes modificarlo para utilizar el canister de Internet Identity pullable.
+Primero, agrega la configuración del canister en el archivo `dfx.json` del
+proyecto:
+
 ```json title="dfx.json"
 {
   "canisters": {
@@ -52,21 +71,22 @@ First, add the canister configuration to the project's `dfx.json` file:
 }
 ```
 
-Then deploy the canister locally:
+Luego, despliega el canister localmente:
+
 ```bash
 dfx deploy
 ```
 
-
-:::info
-
-This example's frontend was created based on the **Vanilla JS** framework option that can be selected when creating a project with `dfx new`. If you used another framework or template for your project, you'll need to adapt the code.
-
+:::info  
+Este ejemplo utiliza un frontend basado en **Vanilla JS**, el cual puede
+seleccionarse al crear un proyecto con `dfx new`. Si usaste otro framework o
+plantilla, necesitarás adaptar el código.  
 :::
 
-### Step 2: Create a "Who am I" function.
+### Paso 2: Crear una función "Who am I?"
 
-To add a simple "Who am I?" function, insert the following code into the backend canister's source code file:
+Para agregar una función simple "Who am I?", inserta el siguiente código en el
+archivo fuente del canister backend:
 
 <Tabs>
 <TabItem value="motoko" label="Motoko" default>
@@ -92,24 +112,30 @@ async fn whoami() -> Principal {
 </TabItem>
 </Tabs>
 
-Then, build the project to make the new backend declarations available to the frontend:
+Luego, compila el proyecto para que las nuevas declaraciones del backend estén
+disponibles en el frontend:
+
 ```bash
 dfx build
 ```
 
-In the frontend canister code, add a method to the `App` class to call the backend function:
+En el código del canister frontend, agrega un método a la clase `App` para
+llamar a la función del backend:
+
 ```js title="src/ii-integration-frontend/src/App.js"
 /**
- * Call the new backend function and render the returned principal to the screen
+ * Llama a la función del backend y muestra el principal devuelto en pantalla
  */
 #handleWhoAmI = async () => {
   const principal = await ii_integration_backend.whoami();
-  this.greeting = `Your principal is: ${principal.toText()}`;
+  this.greeting = `Tu principal es: ${principal.toText()}`;
   this.#render();
 };
 ```
 
-Lastly, update the `#render` method to add a new "Who am I?" button and a click listener:
+Finalmente, actualiza el método `#render` para agregar un botón "Who am I?" y un
+listener de clic:
+
 ```js title="src/ii-integration-frontend/src/App.js"
 #render() {
   let body = html`
@@ -118,9 +144,9 @@ Lastly, update the `#render` method to add a new "Who am I?" button and a click 
       <br />
       <br />
       <form action="#">
-        <label for="name">Enter your name: &nbsp;</label>
-        <input id="name" alt="Name" type="text" />
-        <button type="submit">Click Me!</button>
+        <label for="name">Ingresa tu nombre: &nbsp;</label>
+        <input id="name" alt="Nombre" type="text" />
+        <button type="submit">Haz click</button>
       </form>
 // highlight-start
       <center>
@@ -142,33 +168,41 @@ Lastly, update the `#render` method to add a new "Who am I?" button and a click 
 }
 ```
 
-Deploy the project:
+Despliega el proyecto:
+
 ```bash
 dfx deploy
 ```
 
-View the deployed application's frontend. Click the "Who am I?" button, it should return the anonymous principal:
+Visualiza la aplicación desplegada en el frontend. Al hacer clic en el botón
+"Who am I?", debería devolver el principal anónimo.
+
 ```
 Your principal is: 2vxsx-fae
 ```
 
-### Step 3: Implement authentication.
+### Paso 3: Implementar autenticación.
 
-Install the required `npm` package:
+Instala el paquete `npm` requerido:
+
 ```bash
 npm install @dfinity/auth-client
 ```
 
 :::caution
 
-Make sure that all **@dfinity/&lt;package&gt;** dependencies in **package.json** are the same version.
+Asegúrate de que todas las dependencias **@dfinity/&lt;package&gt;** en
+**package.json**  
+tengan la misma versión.
 
 :::
 
-Add a method to the `App` class to get the correct Internet Identity URL:
+Añade un método a la clase `App` para obtener la URL correcta de Internet
+Identity:
+
 ```js title="src/ii-integration-frontend/src/App.js"
 /**
- * Get the correct Internet Identity URL based on the current environment
+ * Obtiene la URL correcta de Internet Identity según el entorno actual
  */
 #identityProvider = () => {
   if (process.env.DFX_NETWORK === "local") {
@@ -183,11 +217,15 @@ Add a method to the `App` class to get the correct Internet Identity URL:
 
 :::info
 
-If you are developing using the Safari web browser, you need to change the value returned for the local development environment to `http://localhost:4943?canisterId=<canister_id>`.
+Si estás desarrollando con el navegador Safari, debes cambiar el valor  
+devuelto para el entorno de desarrollo local a  
+`http://localhost:4943?canisterId=<canister_id>`.
 
 :::
 
-Add a method to create an `AuthClient` instance, then call it in the `App` class constructor:
+Añade un método para crear una instancia de `AuthClient`, luego llámalo en el
+constructor de la clase `App`:
+
 ```js title="src/ii-integration-frontend/src/App.js"
 constructor() {
   this.#render();
@@ -195,8 +233,8 @@ constructor() {
 }
 
 /**
- * Replace backend actor identity with the identity from AuthClient,
- * additionally re-render to show the updated authentication status
+ * Reemplaza la identidad del backend actor con la identidad de AuthClient,
+ * además, vuelve a renderizar para mostrar el estado de autenticación actualizado
  */
 #onIdentityUpdate = async () => {
   Actor.agentOf(ii_integration_backend).replaceIdentity(this.authClient.getIdentity());
@@ -205,7 +243,7 @@ constructor() {
 }
 
 /**
- * Create AuthClient, this loads an existing session if available
+ * Crea AuthClient, cargando una sesión existente si está disponible
  */
 #createAuthClient = async () => {
   this.authClient = await AuthClient.create();
@@ -213,10 +251,11 @@ constructor() {
 }
 ```
 
-Add methods to the `App` class to facilitate logging in and logging out:
+Añade métodos a la clase `App` para facilitar el inicio y cierre de sesión:
+
 ```js title="src/ii-integration-frontend/src/App.js"
 /**
- * Login with AuthClient, this should be called without any delay in a click handler
+ * Iniciar sesión con AuthClient, esto debe llamarse sin demora en un controlador de clics
  */
 #handleLogin = async () => {
   await new Promise((resolve, reject) => this.authClient.login({
@@ -228,7 +267,7 @@ Add methods to the `App` class to facilitate logging in and logging out:
 }
 
 /**
- * Logout with AuthClient
+ * Cerrar sesión con AuthClient
  */
 #handleLogout = async () => {
   await this.authClient.logout();
@@ -238,11 +277,17 @@ Add methods to the `App` class to facilitate logging in and logging out:
 
 :::warning
 
-Make sure to always create a single `AuthClient` instance on page load and reuse it within your click handlers as shown in the previous and current steps.
+Asegúrate de crear siempre una única instancia de `AuthClient` al cargar la
+página y  
+reutilizarla dentro de tus controladores de clics, como se muestra en los pasos
+anteriores y actuales.
 
 :::
 
-Lastly, update the `#render` method to add the new "Login" and "Logout" buttons and click listeners:
+Por último, actualiza el método `#render` para añadir los nuevos botones "Login"
+y "Logout"  
+y sus respectivos controladores de eventos:
+
 ```js title="src/ii-integration-frontend/src/App.js"
 #render() {
   let body = html`
@@ -251,7 +296,7 @@ Lastly, update the `#render` method to add the new "Login" and "Logout" buttons 
       <br />
       <br />
       <form action="#">
-        <label for="name">Enter your name: &nbsp;</label>
+        <label for="name">Ingresa tu nombre: &nbsp;</label>
         <input id="name" alt="Name" type="text" />
         <button type="submit">Click Me!</button>
       </form>
@@ -284,122 +329,161 @@ Lastly, update the `#render` method to add the new "Login" and "Logout" buttons 
 }
 ```
 
-Deploy the updated application:
+Despliega la aplicación actualizada:
+
 ```bash
 dfx deploy
 ```
 
-Click the "Login" button. You'll be redirected to the Internet Identity frontend. Since you're running this locally, you will be using a local, non-production Internet Identity. To create one, follow the on-screen steps.
+Haz clic en el botón "Login". Serás redirigido a la interfaz de Internet
+Identity.  
+Como estás ejecutando esto localmente, usarás una instancia local y no de
+producción de Internet Identity.  
+Para crear una, sigue los pasos en pantalla.
 
-Click the "Who am I" button and it should return your Internet Identity principal:
+Haz clic en el botón "Who am I?" y debería devolver tu principal de Internet
+Identity:
+
 ```
 Your principal is: 5uylz-j7fcd-isj73-gp57f-xwwyy-po2ib-7iboa-fdkdv-nrsam-3bd3r-qqe
 ```
 
 :::info
 
-The above principal is an example. The principal returned will be different based on the account and the environment where the application and Internet Identity are running.
+El principal anterior es solo un ejemplo. El principal devuelto será diferente  
+según la cuenta y el entorno donde la aplicación e Internet Identity estén
+ejecutándose.
 
 :::
 
-## Local frontend development
+## Desarrollo de frontend local
 
-When modifying this example's frontend, it is recommended to develop using a local development server instead of using the deployed frontend canister. This is because using a local development server will enable Hot Module Reloading, allowing you to see any modifications made to your frontend instantaneously, rather than having to redeploy the frontend canister to see the changes.
+Al modificar el frontend de este ejemplo, se recomienda desarrollar utilizando
+un servidor de desarrollo local en lugar de usar el canister de frontend
+desplegado. Esto se debe a que el uso de un servidor de desarrollo local
+permitirá Hot Module Reloading, lo que te permitirá ver instantáneamente
+cualquier modificación realizada en tu frontend, sin necesidad de volver a
+desplegar el canister de frontend para ver los cambios.
 
-To start a local development server, run `npm run start`. The output will contain the local address the project is running at, such as `127.0.0.1:4943`.
+Para iniciar un servidor de desarrollo local, ejecuta `npm run start`. La salida
+mostrará la dirección local en la que se está ejecutando el proyecto, como
+`127.0.0.1:4943`.
 
-## End-to-end testing
+## Pruebas end-to-end
 
-To run end-to-end testing for Internet Identity integrations, you can use the [Internet Identity Playwright plugin](https://github.com/dfinity/internet-identity-playwright).
+Para ejecutar pruebas end-to-end en integraciones con Internet Identity, puedes
+usar el
+[plugin Internet Identity Playwright](https://github.com/dfinity/internet-identity-playwright).
 
-To use this plugin, first install [Playwright](https://playwright.dev/), then install the plugin itself with a package manager:
+Para usar este plugin, primero instala [Playwright](https://playwright.dev/),
+luego instala el propio plugin con un gestor de paquetes:
 
 ```
-# Install with npm
+
+# Instalar con npm
+
 npm install --save-dev @dfinity/internet-identity-playwright
 
-# Install with pnpm
+# Instalar con pnpm
+
 pnpm add --save-dev @dfinity/internet-identity-playwright
 
-# Install with yarn
+# Instalar con yarn
+
 yarn add -D @dfinity/internet-identity-playwright
+
 ```
 
-Import the plugin into your Playwright test file:
+Importa el plugin en tu archivo de prueba de Playwright:
 
 ```typescript title="e2e/login.spec.ts"
-import {testWithII} from '@dfinity/internet-identity-playwright';
+import { testWithII } from "@dfinity/internet-identity-playwright";
 ```
 
-Then begin writing your tests, such as:
+Luego, comienza a escribir tus pruebas, como:
 
 ```typescript title="e2e/login.spec.ts"
-testWithII('should sign-in with a new user', async ({page, iiPage}) => {
-  await page.goto('/');
+testWithII("should sign-in with a new user", async ({ page, iiPage }) => {
+  await page.goto("/");
 
   await iiPage.signInWithNewIdentity();
 });
 
-testWithII('should sign-in with an existing new user', async ({page, iiPage}) => {
-  await page.goto('/');
+testWithII(
+  "should sign-in with an existing new user",
+  async ({ page, iiPage }) => {
+    await page.goto("/");
 
-  await iiPage.signInWithIdentity({identity: 10003});
+    await iiPage.signInWithIdentity({ identity: 10003 });
+  }
+);
+```
+
+En esta prueba, `iiPage` representa la página de tu aplicación que inicia el
+flujo de autenticación con Internet Identity. Por defecto, la prueba buscará un
+botón identificado por `[data-tid=login-button]`. Esto se puede personalizar
+configurando tu propio selector:
+
+```typescript title="e2e/login.spec.ts"
+const loginSelector = "#login";
+
+testWithII("should sign-in with a new user", async ({ page, iiPage }) => {
+  await page.goto("/");
+
+  await iiPage.signInWithNewIdentity({ selector: loginSelector });
+});
+
+testWithII(
+  "should sign-in with an existing new user",
+  async ({ page, iiPage }) => {
+    await page.goto("/");
+
+    await iiPage.signInWithIdentity({
+      identity: 10003,
+      selector: loginSelector,
+    });
+  }
+);
+```
+
+Si lo deseas, puedes hacer que la prueba espere a que Internet Identity esté
+listo proporcionando la URL de la réplica local y el canister ID de tu instancia
+local de Internet Identity:
+
+```typescript title="e2e/login.spec.ts"
+testWithII.beforeEach(async ({ iiPage, browser }) => {
+  const url = "http://127.0.0.1:4943";
+  const canisterId = "rdmx6-jaaaa-aaaaa-aaadq-cai";
+
+  await iiPage.waitReady({ url, canisterId });
 });
 ```
 
-In this test, `iiPage` represents your application's page that initiates the authentication flow with Internet Identity. By default, the test will look for a button identified by `[data-tid=login-button]`. This can be customized by configuring your own selector:
+También puedes configurar un parámetro de tiempo de espera que indique cuánto
+tiempo debe esperar la función antes de que falle la prueba:
 
 ```typescript title="e2e/login.spec.ts"
-const loginSelector = '#login';
-
-testWithII('should sign-in with a new user', async ({page, iiPage}) => {
-  await page.goto('/');
-
-  await iiPage.signInWithNewIdentity({selector: loginSelector});
-});
-
-testWithII('should sign-in with an existing new user', async ({page, iiPage}) => {
-  await page.goto('/');
-
-  await iiPage.signInWithIdentity({identity: 10003, selector: loginSelector});
-});
-```
-
-If desired, you can have the test wait for Internet Identity to be ready by providing the local replica URL and the canister ID of your local Internet Identity instance:
-
-```typescript title="e2e/login.spec.ts"
-testWithII.beforeEach(async ({iiPage, browser}) => {
-  const url = 'http://127.0.0.1:4943';
-  const canisterId = 'rdmx6-jaaaa-aaaaa-aaadq-cai';
-
-  await iiPage.waitReady({url, canisterId});
-});
-```
-
-You can also configure a timeout parameter that indicates how long the function should wait for Internet Identity before failing:
-
-```typescript title="e2e/login.spec.ts"
-testWithII.beforeEach(async ({iiPage, browser}) => {
-  const url = 'http://127.0.0.1:4943';
-  const canisterId = 'rdmx6-jaaaa-aaaaa-aaadq-cai';
+testWithII.beforeEach(async ({ iiPage, browser }) => {
+  const url = "http://127.0.0.1:4943";
+  const canisterId = "rdmx6-jaaaa-aaaaa-aaadq-cai";
   const timeout = 30000;
 
-  await iiPage.waitReady({url, canisterId, timeout});
+  await iiPage.waitReady({ url, canisterId, timeout });
 });
 ```
 
-Once your tests are ready, run them with the command:
+Una vez que tus pruebas estén listas, ejecútalas con el siguiente comando:
 
 ```
 npx playwright test
 ```
 
-[View more details in the plugin's repo](https://github.com/dfinity/internet-identity-playwright).
+[Ver más detalles en el repositorio del plugin](https://github.com/dfinity/internet-identity-playwright).
 
-## Resources
+## Recursos
 
 - [Internet Identity dashboard](https://identity.ic0.app/).
-- [Internet Identity specification](/docs/references/ii-spec).
-- [Internet Identity GitHub repository](https://github.com/dfinity/internet-identity).
-- [Internet Identity alternative frontend origins](/docs/building-apps/authentication/alternative-origins).
-- [Playwright plugin for E2E testing](https://github.com/dfinity/internet-identity-playwright).
+- [Especificación de Internet Identity](/docs/references/ii-spec).
+- [Repositorio de GitHub de Internet Identity](https://github.com/dfinity/internet-identity).
+- [Orígenes alternativos de frontend de Internet Identity](/docs/building-apps/authentication/alternative-origins).
+- [Plugin de Playwright para pruebas E2E](https://github.com/dfinity/internet-identity-playwright).

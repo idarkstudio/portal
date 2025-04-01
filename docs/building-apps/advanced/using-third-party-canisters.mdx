@@ -5,203 +5,267 @@ keywords: [beginner, tutorial, maintain canisters, import, pullable canisters]
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 
-# Using third-party canisters
+# Uso de canisters de terceros
 
-<MarkdownChipRow labels={["Beginner", "Tutorial"]} />
+<MarkdownChipRow labels={["Principiante", "Tutorial"]} />
 
-Third-party canisters are canisters created by DFINITY or ICP community members that provide an important functionality that other developers may want to integrate within their own projects. It is important to test integrations with these canisters locally to:
+Los canisters de terceros son canisters creados por DFINITY o miembros de la
+comunidad de ICP que proporcionan funcionalidades importantes que otros
+desarrolladores pueden querer integrar en sus propios proyectos. Es importante
+probar la integración con estos canisters de forma local para:
 
-- Validate the accuracy of the integration and other canister code.
-- Test without paying <GlossaryTooltip>cycles</GlossaryTooltip>.
-- Use non-production data and environments.
-- Execute operations faster when run locally.
+- Validar la precisión de la integración y del código del canister.
+- Probar sin pagar <GlossaryTooltip>cycles</GlossaryTooltip>.
+- Usar datos y entornos que no sean de producción.
+- Ejecutar operaciones más rápido cuando se ejecutan localmente.
 
-To integrate with third-party canisters and test them within your project, you can either:
+Para integrar canisters de terceros y probarlos en tu proyecto, puedes optar
+por:
 
-- If the canister's Candid and Wasm files are publicly available, the URLs of the files can be referenced directly in the project's `dfx.json` file.
+- Si los archivos Candid y Wasm del canister están disponibles públicamente,
+  puedes referenciarlos directamente en el archivo `dfx.json` de tu proyecto.
+- Si el canister está configurado como `pullable`, puedes importarlo en tu
+  proyecto con `dfx deps`.
 
-- If the canister is configured as `pullable`, it can be pulled into a project with `dfx deps`.
+## Uso de archivos Candid y Wasm de un canister directamente
 
-## Using a canister's Candid and Wasm files directly
+Si los archivos Candid y Wasm de un canister están disponibles públicamente,
+puedes referenciarlos directamente en el archivo `dfx.json` de tu proyecto.
 
-If a canister's Candid and Wasm files are publicly available, you can reference them directly in a project's `dfx.json` file.
-
-If the canister is deployed to the mainnet, you can also specify the `remote` canister ID. When your project is deployed to the mainnet, it will use the mainnet canister with that ID. When your project is deployed locally, `dfx` will download the specified Candid and Wasm files and create a new local canister using them.
+Si el canister está desplegado en la mainnet, también puedes especificar el ID
+del canister `remote`. Cuando tu proyecto se despliegue en la mainnet, usará el
+canister de mainnet con ese ID. Cuando se despliegue localmente, `dfx`
+descargará los archivos Candid y Wasm especificados y creará un nuevo canister
+local con ellos.
 
 ```json
 {
-  "canisters": {
-    "icp_ledger_canister": {
-      "type": "custom",
-      "candid": "https://raw.githubusercontent.com/dfinity/ic/aba60ffbc46acfc8990bf4d5685c1360bd7026b9/rs/ledger_suite/icp/ledger.did",
-      "wasm": "https://download.dfinity.systems/ic/aba60ffbc46acfc8990bf4d5685c1360bd7026b9/canisters/ledger-canister.wasm.gz",
-      "remote": {
-        "id": {
-          "ic": "ryjl3-tyaaa-aaaaa-aaaba-cai"
-        }
-      },
-...
+  "canisters": {
+    "icp_ledger_canister": {
+      "type": "custom",
+      "candid": "https://raw.githubusercontent.com/dfinity/ic/aba60ffbc46acfc8990bf4d5685c1360bd7026b9/rs/ledger_suite/icp/ledger.did",
+      "wasm": "https://download.dfinity.systems/ic/aba60ffbc46acfc8990bf4d5685c1360bd7026b9/canisters/ledger-canister.wasm.gz",
+      "remote": {
+        "id": {
+          "ic": "ryjl3-tyaaa-aaaaa-aaaba-cai"
+        }
+      }
+    }
+  }
+}
 ```
 
-Alternatively, you can reference Candid and Wasm files stored in your local environment:
+Alternativamente, puedes referenciar archivos Candid y Wasm almacenados en tu
+entorno local:
 
 ```json
 {
-  "canisters": {
-    "icp_ledger_canister": {
-      "type": "custom",
-      "candid": "ledger.did",
-      "wasm": "ledger-canister.wasm.gz",
-      "remote": {
-        "id": {
-          "ic": "ryjl3-tyaaa-aaaaa-aaaba-cai"
-        }
-      },
-...
+  "canisters": {
+    "icp_ledger_canister": {
+      "type": "custom",
+      "candid": "ledger.did",
+      "wasm": "ledger-canister.wasm.gz",
+      "remote": {
+        "id": {
+          "ic": "ryjl3-tyaaa-aaaaa-aaaba-cai"
+        }
+      }
+    }
+  }
+}
 ```
 
-An example of using this method is the [XRC demo project.](https://github.com/THLO/xrc_demo/blob/main/dfx.json#L15)
+Un ejemplo del uso de este método es el
+[proyecto demo de XRC](https://github.com/THLO/xrc_demo/blob/main/dfx.json#L15).
 
-## Using `dfx deps` to pull third-party canisters
+## Uso de `dfx deps` para importar canisters de terceros
 
-The command and workflow can be used to pull third-party canisters into a project that is deployed locally or on the mainnet.
+Este comando y flujo de trabajo permiten importar canisters de terceros en un
+proyecto desplegado localmente o en la mainnet.
 
-In this workflow, a **service provider** configures a canister to be `pullable` and then deploys the canister to the mainnet. A service provider can be anyone, such as a community developer creating a public, third-party canister.
+En este flujo de trabajo, un **proveedor de servicios** configura un canister
+como `pullable` y lo despliega en la mainnet. Un proveedor de servicios puede
+ser cualquier persona, como un desarrollador de la comunidad que crea un
+canister público de terceros.
 
-Then a **service consumer** can pull the canister as a dependency directly from the mainnet using [`dfx deps`](/docs/building-apps/developer-tools/dfx/dfx-deps) and deploy the dependency locally.
+Luego, un **consumidor de servicios** puede importar el canister como una
+dependencia directamente desde la mainnet usando
+[`dfx deps`](/docs/building-apps/developer-tools/dfx/dfx-deps) y desplegar la
+dependencia localmente.
 
-### Determining if a canister should be `pullable`
+### Determinar si un canister debe ser `pullable`
 
-First the canister must be configured to be `pullable`. Developers must ask the question of whether the canister *should* be `pullable`. Canisters should be `pullable` if it provides a public service at a static canister ID. If it depends on other canisters, those dependencies should also be `pullable`.
+Primero, el canister debe estar configurado como `pullable`. Los desarrolladores
+deben evaluar si un canister _debería_ ser `pullable`. Un canister debería ser
+`pullable` si proporciona un servicio público con un ID de canister estático. Si
+depende de otros canisters, esas dependencias también deben ser `pullable`.
 
-### Configuring a canister to be `pullable`
+### Configuración de un canister como `pullable`
 
-A service provider must configure a canister to be `pullable` by setting the following configuration details in the project's `dfx.json` file:
+Un proveedor de servicios debe configurar un canister como `pullable` definiendo
+los siguientes detalles en el archivo `dfx.json` del proyecto:
 
-- `wasm_url`: A URL used to download the canister Wasm module, which will be deployed locally.
-- `wasm_hash`: A SHA256 hash of the Wasm module located at `wasm_url`. This field is optional. In most cases, the Wasm module at `wasm_url` will be the same as the onchain Wasm module. This means that `dfx` can read the state tree to obtain and verify the module hash. In some cases, the Wasm module at `wasm_url` is not the same as the onchain Wasm module. For example, the Internet Identity canister provides a `development` variant to be integrated locally. In these cases, `wasm_hash` provides the expected hash, and `dfx` verifies the downloaded Wasm against this.
+- **`wasm_url`**: Una URL para descargar el módulo Wasm del canister, que se
+  desplegará localmente.
+- **`wasm_hash`**: Un hash SHA256 del módulo Wasm ubicado en `wasm_url`. Este
+  campo es opcional. En la mayoría de los casos, el módulo Wasm en `wasm_url`
+  será el mismo que el módulo Wasm en la blockchain. Esto significa que `dfx`
+  puede leer el árbol de estado para obtener y verificar el hash del módulo. En
+  algunos casos, el módulo Wasm en `wasm_url` no es el mismo que el de la
+  blockchain. Por ejemplo, el canister de Internet Identity proporciona una
+  variante de `desarrollo` para ser integrada localmente. En estos casos,
+  `wasm_hash` proporciona el hash esperado, y `dfx` verifica el Wasm descargado
+  con este.
 
-If the `wasm_hash` of the Wasm module at `wasm_url` does not match, `dfx` will abort with an error message indicating that there is a hash mismatch. In this scenario, the service consumer should contact the service provider. It is the responsibility of the service provider to assure that the correct Wasm module can be downloaded from the `wasm_url`.
+Si el `wasm_hash` del módulo Wasm en `wasm_url` no coincide, `dfx` abortará con
+un mensaje de error indicando que hay una discrepancia de hash. En este caso, el
+consumidor del servicio debe contactar al proveedor del servicio. Es
+responsabilidad del proveedor asegurar que el módulo Wasm correcto pueda
+descargarse desde `wasm_url`.
 
-- `dependencies`: An array of canister IDs (`Principal`) of direct dependencies.
-- `init_guide`: A message to guide consumers on how to initialize the canister.
-
+- `dependencies`: Un array de IDs de canister (`Principal`) de dependencias
+  directas.
+- `init_guide`: Un mensaje para guiar a los consumidores sobre cómo inicializar
+  el canister.
 
 ```json
 {
-    "canisters": {
-        "service": {
-            "type": "motoko",
-            "main": "src/main.mo",
-            "pullable": {
-                "wasm_url": "http://example.com/a.wasm",
-                "wasm_hash": "d180f1e232bafcee7d4879d8a2260ee7bcf9a20c241468d0e9cf4aa15ef8f312",
-                "dependencies": [
-                    "yofga-2qaaa-aaaaa-aabsq-cai"
-                ],
-                "init_guide": "A natural number, e.g. 10."
-            }
-        }
-    }
+  "canisters": {
+    "service": {
+      "type": "motoko",
+      "main": "src/main.mo",
+      "pullable": {
+        "wasm_url": "http://example.com/a.wasm",
+        "wasm_hash": "d180f1e232bafcee7d4879d8a2260ee7bcf9a20c241468d0e9cf4aa15ef8f312",
+        "dependencies": ["yofga-2qaaa-aaaaa-aabsq-cai"],
+        "init_guide": "Un número natural, por ejemplo, 10."
+      }
+    }
+  }
 }
 ```
 
 :::danger
-The Wasm module of a `pullable` canister must be hosted via a public URL where service consumers can download it, such as GitHub.
+
+El módulo Wasm de un canister `pullable` debe estar alojado en una URL pública
+donde los consumidores del servicio puedan descargarlo, como GitHub.
+
 :::
 
-The `pullable` object will be serialized as a part of the `dfx` metadata and attached to the Wasm.
+El objeto `pullable` se serializará como parte de los metadatos de `dfx` y se
+adjuntará al Wasm.
 
-### Canister metadata requirements
+### Requisitos de metadatos del canister
 
-A third-party canister used in production should have public `dfx` metadata and public or private `candid:service` and `candid:args` metadata. All metadata sections are handled by `dfx` when the canister is built.
+Un canister de terceros utilizado en producción debe tener metadatos públicos de
+`dfx` y metadatos `candid:service` y `candid:args` que pueden ser públicos o
+privados. Todas las secciones de metadatos son manejadas por `dfx` cuando se
+construye el canister.
 
-### Deployment process
+### Proceso de despliegue
 
-Service providers should use the following deployment process to deploy their `pullable` canister and make it available to others:
+Los proveedores de servicios deben seguir este proceso para desplegar su
+canister `pullable` y ponerlo a disposición de otros:
 
-- #### Step 1: Deploy the canister to the mainnet.
+#### Paso 1: Desplegar el canister en la mainnet
 
-```
+```sh
 dfx deploy <canister-name> --network ic
 ```
 
-- #### Step 2: If you're using GitHub, [`git tag` and `GitHub release`](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository#creating-a-release) with the commands:
+- #### Paso 2: Si estás usando GitHub, [`git tag` y `GitHub release`](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository#creating-a-release) con los comandos:
 
-```
+```sh
 git tag 0.1.0
 git push --tags
 ```
 
-- #### Step 3: Attach the Wasm to the release assets.
+#### Paso 3: Adjuntar el Wasm a los assets de la versión
 
-Edit the GitHub release and attach the deployed Wasm as a release asset. The deployed Wasm file will be located at:
+Edita la versión en GitHub y adjunta el archivo Wasm desplegado como un asset de
+la versión. El archivo Wasm desplegado se encuentra en:
 
-```
+```sh
 .dfx/ic/canisters/<CANISTER_NAME>/<CANISTER_NAME>.wasm
 ```
 
-### Automating the service provider process in CI
+### Automatización del proceso de proveedor de servicios en CI
 
-An [example CI configuration](https://github.com/lwshang/pullable/blob/main/.github/workflows/release.yml) demonstrates how to use a GitHub Action to automate the deploy routine described above.
+Un
+[ejemplo de configuración CI](https://github.com/lwshang/pullable/blob/main/.github/workflows/release.yml)
+demuestra cómo usar una GitHub Action para automatizar la rutina de despliegue
+descrita anteriormente.
 
-The workflow with CI will follow these steps:
+El flujo de trabajo con CI seguirá estos pasos:
 
-1. Push a git tag and wait for the GitHub release to complete.
-2. Download the canister Wasm from the release assets (`wget https://github.com/lwshang/pullable/releases/latest/download/service.wasm`).
-3. Install (upgrade) the canister using the downloaded Wasm (`dfx canister --network ic install service --wasm service.wasm --argument '(1 : nat)' --mode upgrade`).
+1. Hacer un push de un tag de git y esperar a que se complete el release en
+   GitHub.
+2. Descargar el canister Wasm desde los assets del release
+   (`wget https://github.com/lwshang/pullable/releases/latest/download/service.wasm`).
+3. Instalar (actualizar) el canister utilizando el Wasm descargado
+   (`dfx canister --network ic install service --wasm service.wasm --argument '(1 : nat)' --mode upgrade`).
 
-### Pulling a third-party canister into your project
+### Importación de un canister de terceros en tu proyecto
 
-The following workflow can be used for consumers to import a `pullable` canister as a dependency.
+El siguiente flujo de trabajo puede ser utilizado por los consumidores para
+importar un canister `pullable` como dependencia.
 
-- #### Step 1: Declare "pull" dependencies in `dfx.json`.
+- #### Paso 1: Declarar dependencias "pull" en `dfx.json`.
 
-An example `dfx.json` in which the consumer is developing a canister named "dapp" that has two pull dependencies can be found below:
+Un ejemplo de `dfx.json` en el que el consumidor está desarrollando un canister
+llamado "dapp" que tiene dos dependencias "pull" puede encontrarse a
+continuación:
 
-- "dep_b" has a canister ID of `yhgn4-myaaa-aaaaa-aabta-cai` on the mainnet.
-- "dep_c" has a canister ID of `yahli-baaaa-aaaaa-aabtq-cai` on the mainnet.
+- "dep_b" tiene un ID de canister de `yhgn4-myaaa-aaaaa-aabta-cai` en la red
+  principal.
+- "dep_c" tiene un ID de canister de `yahli-baaaa-aaaaa-aabtq-cai` en la red
+  principal.
 
 ```json
 {
-    "canisters": {
-        "dapp": {
-            "type": "motoko",
-            "main": "src/main.mo",
-            "dependencies": [
-                "dep_b", "dep_c"
-            ]
-        },
-        "dep_b": {
-            "type": "pull",
-            "id": "yhgn4-myaaa-aaaaa-aabta-cai"
-        },
-        "dep_c": {
-            "type": "pull",
-            "id": "yahli-baaaa-aaaaa-aabtq-cai"
-        }
-    }
+  "canisters": {
+    "dapp": {
+      "type": "motoko",
+      "main": "src/main.mo",
+      "dependencies": ["dep_b", "dep_c"]
+    },
+    "dep_b": {
+      "type": "pull",
+      "id": "yhgn4-myaaa-aaaaa-aabta-cai"
+    },
+    "dep_c": {
+      "type": "pull",
+      "id": "yahli-baaaa-aaaaa-aabtq-cai"
+    }
+  }
 }
 ```
 
-- #### Step 2: Pull the dependencies using the `dfx deps pull` command.
+- #### Paso 2: Descargar las dependencias usando el comando `dfx deps pull`.
 
-`dfx deps pull` connects to the mainnet by default (`--network ic`). You can choose other networks as usual, e.g., `--network local`.
+`dfx deps pull` se conecta por defecto a la red principal (`--network ic`).
+También puedes elegir otras redes como de costumbre, por ejemplo,
+`--network local`.
 
-- #### Step 3: Set init arguments using `dfx deps init`.
+- #### Paso 3: Establecer los argumentos de inicialización usando `dfx deps init`.
 
-Running the command `dfx deps init` will iterate over all dependencies in the `pulled.json` file and set an empty argument for any that do not need an `init` argument. Then, it will print the list of dependencies that do require an `init` argument.
+Ejecutar el comando `dfx deps init` iterará sobre todas las dependencias en el
+archivo `pulled.json` y establecerá un argumento vacío para aquellas que no
+necesiten un argumento de `init`. Luego, imprimirá la lista de dependencias que
+requieren un argumento de `init`.
 
-Running the command `dfx deps init <CANISTER> --argument <ARGUMENT>` will set the `init` argument for an individual dependency. The init arguments will be recorded in `deps/init.json`.
+Ejecutar el comando `dfx deps init <CANISTER> --argument <ARGUMENT>` establecerá
+el argumento de inicialización para una dependencia individual. Los argumentos
+de inicialización se registrarán en `deps/init.json`.
 
-To set the init arguments:
+Para establecer los argumentos de inicialización:
 
 ```
 dfx deps init
 ```
 
 <details>
-<summary>Output</summary>
+<summary>Salida</summary>
 
 ```
 WARN: The following canister(s) require an init argument. Please run `dfx deps init <NAME/PRINCIPAL>` to set them individually:
@@ -211,7 +275,8 @@ yahli-baaaa-aaaaa-aabtq-cai (dep_c)
 
 </details>
 
-If you try to set an `init` argument for an individual dependency without an argument, it will result in the following error:
+Si intentas establecer un argumento `init` para una dependencia individual sin
+un argumento, se mostrará el siguiente error:
 
 ```
 Error: Canister yofga-2qaaa-aaaaa-aabsq-cai requires an init argument. The following info might be helpful:
@@ -219,72 +284,99 @@ init_guide => A natural number, e.g., 10.
 candid:args => (nat)
 ```
 
-To set an init argument with an argument using the `--argument` flag:
+Para establecer un argumento de inicialización con un valor utilizando el flag
+`--argument`:
 
 ```
 dfx deps init <canister-id> --argument 10
 dfx deps init deps_c --argument 20
 ```
 
-The resulting generated file `init.json` will have the following content:
+El archivo generado `init.json` tendrá el siguiente contenido:
 
 ```json
 {
-  "canisters": {
-    "yofga-2qaaa-aaaaa-aabsq-cai": {
-      "arg_str": "10",
-      "arg_raw": "4449444c00017d0a"
-    },
-    "yhgn4-myaaa-aaaaa-aabta-cai": {
-      "arg_str": null,
-      "arg_raw": null
-    },
-    "yahli-baaaa-aaaaa-aabtq-cai": {
-      "arg_str": "20",
-      "arg_raw": "4449444c00017d14"
-    }
-  }
+  "canisters": {
+    "yofga-2qaaa-aaaaa-aabsq-cai": {
+      "arg_str": "10",
+      "arg_raw": "4449444c00017d0a"
+    },
+    "yhgn4-myaaa-aaaaa-aabta-cai": {
+      "arg_str": null,
+      "arg_raw": null
+    },
+    "yahli-baaaa-aaaaa-aabtq-cai": {
+      "arg_str": "20",
+      "arg_raw": "4449444c00017d14"
+    }
+  }
 }
 ```
 
-- #### Step 4: Deploy the pulled dependencies in your local environment using the `dfx deps deploy` command.
+- #### Paso 4: Desplegar las dependencias descargadas en tu entorno local utilizando el comando `dfx deps deploy`.
 
 ```
 dfx deps deploy
 ```
 
-Running the `dfx deps deploy` command will:
+Ejecutar el comando `dfx deps deploy` hará lo siguiente:
 
-1. Create the dependencies in your local environment with the same mainnet canister ID.
-2. Then, it will install the downloaded Wasm with the init arguments in the `init.json` file.
+1. Creará las dependencias en tu entorno local con el mismo ID de canister de la
+   red principal.
+2. Luego, instalará el Wasm descargado con los argumentos de inicialización en
+   el archivo `init.json`.
 
-You can also specify the canister name or <GlossaryTooltip>principal</GlossaryTooltip> to deploy one particular dependency.
+También puedes especificar el nombre del canister o
 
-`dfx deps deploy` always creates the canister with the anonymous identity so that dependencies and application canisters will have different controllers. It will also always install the canister in "reinstall" mode so that the canister status will be discarded.
+<GlossaryTooltip>principal</GlossaryTooltip> para desplegar una dependencia en particular.
 
-### Frequently asked questions
+`dfx deps deploy` siempre crea el canister con la identidad anónima, por lo que
+las dependencias y los canisters de la aplicación tendrán controladores
+diferentes. También instalará siempre el canister en modo "reinstalar" para que
+el estado del canister sea descartado.
 
-- #### Why download the Wasm into shared cache instead of a project subfolder?
+### Preguntas frecuentes
 
-It is not encouraged to include binary files in version control. On the Internet Computer, every canister only has one latest version running on the mainnet. Service consumers should integrate with that latest version.
+- #### ¿Por qué descargar el Wasm en una caché compartida en lugar de una subcarpeta del proyecto?
 
-`dfx deps pull` always gets the latest dependencies instead of locking on a particular run. Every pulled canister has the latest version in the shared cache and can be reused by different projects.
+No se recomienda incluir archivos binarios en el control de versiones. En el
+Internet Computer, cada canister solo tiene una versión más reciente corriendo
+en la red principal. Los consumidores de servicio deberían integrarse con esa
+última versión.
 
-- #### Should I include the `deps/` folder in version control?
+`dfx deps pull` siempre obtiene las dependencias más recientes en lugar de
+bloquear una en una ejecución particular. Cada canister descargado tiene la
+última versión en la caché compartida y puede ser reutilizado por diferentes
+proyectos.
 
-Yes. `deps/` files enable the dependent canister to build and get IDE support. If the required Wasm files are also available in the shared cache, all applications and dependencies can be deployed and tested integrally.
+- #### ¿Debo incluir la carpeta `deps/` en el control de versiones?
 
-Considering a canister developer team:
+Sí. Los archivos de `deps/` permiten que el canister dependiente se construya y
+obtenga soporte en el IDE. Si los archivos Wasm requeridos también están
+disponibles en la caché compartida, todas las aplicaciones y dependencias pueden
+ser desplegadas y probadas de manera integral.
 
-1.  Developer 1 follows the [service consumer workflow](#service-consumer-workflow) and includes all generated `deps/` files in source control.
-2.  Developer 2 pulls the branch by Developer 1 and runs the `dfx deps pull` command again.
-    - If the `pulled.json` has no change, then all dependencies are still up to date. Developer 2 can run `dfx deps deploy` without setting init arguments again.
-    - If there are changes in `pulled.json`, Developer 2 can try to run `dfx deps deploy` to see if all init arguments are still valid. Then Developer 2 can run `dfx deps init` if necessary and update source control.
+Considerando un equipo de desarrollo de canisters:
 
-These files also help CI to detect outdated dependencies.
+1.  El Desarrollador 1 sigue el
+    [flujo de trabajo del consumidor de servicios](#flujo-de-trabajo-del-consumidor-de-servicios)
+    e incluye todos los archivos generados de `deps/` en el control de
+    versiones.
+2.  El Desarrollador 2 descarga la rama del Desarrollador 1 y ejecuta nuevamente
+    el comando `dfx deps pull`.
+    - Si el archivo `pulled.json` no ha cambiado, todas las dependencias siguen
+      actualizadas. El Desarrollador 2 puede ejecutar `dfx deps deploy` sin
+      necesidad de establecer los argumentos de inicialización nuevamente.
+    - Si hay cambios en `pulled.json`, el Desarrollador 2 puede intentar
+      ejecutar `dfx deps deploy` para ver si todos los argumentos de
+      inicialización siguen siendo válidos. Luego, el Desarrollador 2 puede
+      ejecutar `dfx deps init` si es necesario y actualizar el control de
+      versiones.
 
-## Resources
+Estos archivos también ayudan al CI a detectar dependencias desactualizadas.
 
-- [`dfx deps` CLI reference](https://github.com/dfinity/sdk/blob/master/docs/cli-reference/dfx-deps.mdx).
-- [GitHub example project](https://github.com/lwshang/pullable.git).
-- [Pull dependencies concept documentation](https://github.com/dfinity/sdk/blob/master/docs/concepts/pull-dependencies.md).
+## Recursos
+
+- [Referencia CLI de `dfx deps`](https://github.com/dfinity/sdk/blob/master/docs/cli-reference/dfx-deps.mdx).
+- [Proyecto de ejemplo en GitHub](https://github.com/lwshang/pullable.git).
+- [Documentación sobre el concepto de dependencias "pull"](https://github.com/dfinity/sdk/blob/master/docs/concepts/pull-dependencies.md).
