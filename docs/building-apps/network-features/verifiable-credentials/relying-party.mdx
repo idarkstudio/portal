@@ -1,329 +1,401 @@
 ---
-keywords: [intermediate, tutorial, identity, credentials, verifiable credentials, relying party]
+keywords:
+  [
+    intermediate,
+    tutorial,
+    identity,
+    credentials,
+    verifiable credentials,
+    relying party,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 
-# Become a relying party
+# Convertirse en una parte confiable
 
-<MarkdownChipRow labels={["Intermediate", "Tutorial"]} />
+<MarkdownChipRow labels={["Intermedio", "Tutorial"]} />
 
-A **relying party** is a service or app that requests a user's verifiable credentials from an [issuer](issuer.mdx). Relying parties use an **identity provider**, such as Internet Identity, to communicate with the issuer. Identity providers must support the [verifiable credentials specification](https://github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md). Communication with the identity provider uses the [`window.postMessage()`](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage) communication channel.
+Una **parte confiable** es un servicio o aplicación que solicita las
+credenciales verificables de un usuario a un [emisor](issuer.mdx). Las partes
+confiables utilizan un **proveedor de identidad**, como Internet Identity, para
+comunicarse con el emisor. Los proveedores de identidad deben admitir la
+[especificación de credenciales verificables](https://github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md).
+La comunicación con el proveedor de identidad utiliza el canal de comunicación
+[`window.postMessage()`](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage).
 
-The relying party must perform two main tasks:
+La parte confiable debe realizar dos tareas principales:
 
-- Request the credentials from the issuer through an identity provider.
-- Verify the credentials received from an identity provider.
+- Solicitar las credenciales al emisor a través de un proveedor de identidad.
+- Verificar las credenciales recibidas de un proveedor de identidad.
 
-## Requesting credentials
+## Solicitar credenciales
 
-There are two ways to request credentials:
+Existen dos formas de solicitar credenciales:
 
-- Using the [verifiable credentials JavaScript SDK](https://www.npmjs.com/package/@dfinity/verifiable-credentials).
+- Usando el
+  [SDK de JavaScript para credenciales verificables](https://www.npmjs.com/package/@dfinity/verifiable-credentials).
 
-- Manually integrating with an identity provider.
+- Integrando manualmente un proveedor de identidad.
 
-## JavaScript SDK for verifiable credentials
+## SDK de JavaScript para credenciales verificables
 
-You can request credentials from issuers through identity providers with the JS client for relying parties NPM package [@dfinity/verifiable-credentials](https://www.npmjs.com/package/@dfinity/verifiable-credentials). Below is an example:
+Puedes solicitar credenciales a los emisores a través de proveedores de
+identidad utilizando el paquete de NPM para partes confiables
+[@dfinity/verifiable-credentials](https://www.npmjs.com/package/@dfinity/verifiable-credentials).
+A continuación, se muestra un ejemplo:
 
-```javascipt reference
+```javascript reference
 https://github.com/dfinity/verifiable-credentials-sdk/blob/8fe23fa830017d4d666d6fcdad38c1de7e99ca54/js-library/README.md#L50-73
 ```
 
-[Learn more about the JavaScript SDK for VCs](https://github.com/dfinity/verifiable-credentials-sdk/tree/main/js-library).
+[Aprende más sobre el SDK de JavaScript para VCs](https://github.com/dfinity/verifiable-credentials-sdk/tree/main/js-library).
 
-This code executes the following steps:
+Este código ejecuta los siguientes pasos:
 
-- Opens a new window or tab with the identity provider (Internet Identity (II)).
+- Abre una nueva ventana o pestaña con el proveedor de identidad (Internet
+  Identity (II)).
+- Espera un mensaje de ventana de II.
+- Envía una solicitud a II a través del mensaje de ventana.
+- Espera la respuesta de II.
+- Llama a un callback `onSuccess` si el proceso fue exitoso, aunque eso no
+  necesariamente significa que se recibió una credencial.
+- Llama a un callback `onError` si ocurre un error técnico, si el usuario cierra
+  la ventana de II o si II se agota el tiempo de espera.
 
-- Waits for a window post message from II.
+Aprende más sobre [cómo funciona este flujo de trabajo](how-it-works.mdx).
 
-- Sends a request to II through the window post message.
+## Integración manual
 
-- Waits for the response from II.
+Para implementar un servicio de parte confiable, tu canister debe realizar tres
+pasos:
 
-- Calls an `onSuccess` callback if the process was successful, but that does not necessarily mean that a credential was received.
+1. Cargar un proveedor de identidad como Internet Identity: Abrir una ventana
+   con un proveedor de identidad que actuará como puente de comunicación entre
+   la parte confiable y el emisor.
 
-- Calls an `onError` callback if the process has some technical error, if the user closes the II window, or if II times out.
+2. Solicitar credenciales: Enviar una solicitud JSON RPC a la API del emisor
+   para obtener las credenciales de un usuario.
 
-Learn more about [how this workflow works](how-it-works.mdx).
+3. Recibir una respuesta: Recibir un mensaje de éxito o error del proveedor de
+   identidad.
 
-## Manual integration
+### Paso 1: Cargar el proveedor de identidad en una nueva ventana
 
-To implement a relying party service, your canister must perform three steps:
-
-1. Load an identity provider such as Internet Identity: Open a window to an identity provider that will act as the communication bridge between the relying party and the issuer.
-
-2. Request credentials: Send a JSON RPC request to the issuer API for a user's credentials.
-
-3. Receive a response: Receive either a success or error message from the identity provider.
-
-### Step 1: Load the identity provider in a new window
-
-First, your canister must initiate and load an identity provider (in this example, Internet Identity) in a new window with the URL path `/vc-flow`. Opening this window will trigger the identity provider to load and send a notification to the [`window.postMessage()`](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage) interface with the following JSON-RPC content:
-
-```json
-{
-  "jsonrpc": "2.0",
-  "method": "vc-flow-ready"
-}
-```
-
-The user will interact with this window to authenticate with their Internet Identity. If this window is closed by the user or times out, the request for credentials will be closed and an error will be returned to the relying party.
-
-### Step 2: Request a verifiable credential
-
-Once the user has logged into Internet Identity and the service is ready, the relying party service can request a verifiable credential for the user by sending a JSON RPC request to the issuer API. The user must be logged into Internet Identity for the request to be successful. Below is an example of a JSON RPC request to request a credential:
+Primero, tu canister debe iniciar y cargar un proveedor de identidad (en este
+caso, Internet Identity) en una nueva ventana con la ruta de URL `/vc-flow`.
+Abrir esta ventana activará el proveedor de identidad, que enviará una
+notificación a la interfaz
+[`window.postMessage()`](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage)
+con el siguiente contenido JSON-RPC:
 
 ```json
 {
-  "id": 1,
-  "jsonrpc": "2.0",
-  "method": "request_credential",
-  "params": {
-    "issuer": {
-        "origin": "https://employment-info.com",
-        "canisterId": "rwlgt-iiaaa-aaaaa-aaaaa-cai"
-    },
-    "credentialSpec": {
-        "credentialType": "VerifiedEmployee",
-        "arguments": {
-          "employerName": "XYZ Ltd."
-        }
-    },
-    "credentialSubject": "2mdal-aedsb-hlpnv-qu3zl-ae6on-72bt5-fwha5-xzs74-5dkaz-dfywi-aqe"
-  }
+  "jsonrpc": "2.0",
+  "method": "vc-flow-ready"
 }
 ```
 
-In this request, the following parameters must be set:
+El usuario interactuará con esta ventana para autenticarse con su Internet
+Identity. Si el usuario cierra esta ventana o se agota el tiempo de espera, la
+solicitud de credenciales se cerrará y se devolverá un error a la parte
+confiable.
 
-- `method`: Pass the expected method `"request_credential"`.
+### Paso 2: Solicitar una credencial verificable
 
-- `params`: Configuration parameters to identify which credential is being requested.
-
-- `issuer`: The information to identify which issuer API instance the request is sent to.
-
-    - `origin`: The origin URL of the issuer.
-
-    - `canisterId`: The canister ID of the issuer API. This field is optional.
-
-- `credentialSpec`: The specification of the credential being requested.
-
-    - `credentialType`: The type of the requested credential.
-
-    - `arguments`: Key-value pairs that are specific to the credential. This field is optional.
-
-- `credentialSubject`: The principal of the user requesting the credential.
-
-- `derivationOrigin`: An origin that should be used for the relying party's principal derivation as an alternative to the frontend hostname. This should match the `derivationOrigin` used when logging in the relying party.
-
-
-Additional examples can be found in the [verifiable credentials specification](https://github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md#examples).
-
-### Step 3: Receive a response
-
-If the JSON RPC request is successfully sent and received by the issuer API, Internet Identity will return the following JSON-RPC response to the relying party:
+Una vez que el usuario haya iniciado sesión en Internet Identity y el servicio
+esté listo, la parte confiable puede solicitar una credencial verificable para
+el usuario enviando una solicitud JSON RPC a la API del emisor. El usuario debe
+haber iniciado sesión en Internet Identity para que la solicitud sea exitosa. A
+continuación, se muestra un ejemplo de una solicitud JSON RPC para solicitar una
+credencial:
 
 ```json
 {
-  "id": 1,
-  "jsonrpc": "2.0",
-  "result": {
-    "verifiablePresentation": "eyJQ..."
-  }
+  "id": 1,
+  "jsonrpc": "2.0",
+  "method": "request_credential",
+  "params": {
+    "issuer": {
+      "origin": "https://employment-info.com",
+      "canisterId": "rwlgt-iiaaa-aaaaa-aaaaa-cai"
+    },
+    "credentialSpec": {
+      "credentialType": "VerifiedEmployee",
+      "arguments": {
+        "employerName": "XYZ Ltd."
+      }
+    },
+    "credentialSubject": "2mdal-aedsb-hlpnv-qu3zl-ae6on-72bt5-fwha5-xzs74-5dkaz-dfywi-aqe"
+  }
 }
 ```
 
-In this response, `verifiablePresentation` is a JWT-based verifiable presentation (VP) containing two credentials:
+En esta solicitud, se deben establecer los siguientes parámetros:
 
-1. A verifiable credential issued by Internet Identity that relates the `credentialSubject` to the user principal.
+- `method`: Debe ser `"request_credential"`, que es el método esperado.
+- `params`: Parámetros de configuración para identificar qué credencial se está
+  solicitando.
+- `issuer`: Información para identificar a qué instancia de la API del emisor se
+  enviará la solicitud.
 
-2. A verifiable credential issued by the issuer to the user principal.
+  - `origin`: La URL de origen del emisor.
+  - `canisterId`: El ID del canister de la API del emisor. Este campo es
+    opcional.
 
-The specification ensures unlinkability between the relying party and the issuer. That's why two credentials are needed. The first credential proves the link between the relying party's principal and `id_alias` created in the identity provider. The second credential is the actual credential to the `id_alias`.
+- `credentialSpec`: La especificación de la credencial solicitada.
 
+  - `credentialType`: El tipo de credencial solicitada.
+  - `arguments`: Claves y valores específicos de la credencial. Este campo es
+    opcional.
+
+- `credentialSubject`: El principal del usuario que solicita la credencial.
+
+- `derivationOrigin`: Un origen alternativo que se debe utilizar para la
+  derivación del principal de la parte confiable en lugar del hostname del
+  frontend. Debe coincidir con el `derivationOrigin` utilizado al iniciar sesión
+  en la parte confiable.
+
+Puedes encontrar más ejemplos en la
+[especificación de credenciales verificables](https://github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md#examples).
+
+### Paso 3: Recibir una respuesta
+
+Si la solicitud JSON RPC se envía y recibe correctamente por la API del emisor,
+Internet Identity devolverá la siguiente respuesta JSON-RPC a la parte
+confiable:
+
+```json
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": {
+    "verifiablePresentation": "eyJQ..."
+  }
+}
+```
+
+En esta respuesta, `verifiablePresentation` es una presentación verificable (VP)
+basada en JWT que contiene dos credenciales:
+
+1. Una credencial verificable emitida por Internet Identity que relaciona el
+   `credentialSubject` con el principal del usuario.
+2. Una credencial verificable emitida por el emisor al principal del usuario.
+
+La especificación garantiza que no haya vinculación directa entre la parte
+confiable y el emisor. Por eso se necesitan dos credenciales. La primera
+credencial prueba la relación entre el principal de la parte confiable y el
+`id_alias` creado en el proveedor de identidad. La segunda credencial es la
+credencial real asociada al `id_alias`.
 
 <div class="text--center">
-  <img
-    src={useBaseUrl("/img/docs/vcs-4.png")}
-    alt="Relying Party workflow"
-    width="800"
-  />
+  <img
+    src={useBaseUrl("/img/docs/vcs-4.png")}
+    alt="Flujo de trabajo de la parte confiable"
+    width="800"
+  />
 </div>
 
-Note how the issuer's principal never appears in the credentials. Instead, the relying party and the issuer know about the `id_alias`. Therefore, this `id_alias` needs the credential to verify the link between the user's principal and the `id_alias`.
+Nota cómo el principal del emisor nunca aparece en las credenciales. En su
+lugar, la parte confiable y el emisor solo conocen el `id_alias`. Por lo tanto,
+este `id_alias` necesita la credencial para verificar el vínculo entre el
+principal del usuario y el `id_alias`.
 
-The order of the credentials in the VP should match the order above, such that the `id_alias` credential linking to the relying party's principal should come first.
+El orden de las credenciales en la VP debe coincidir con el orden mencionado, de
+modo que la credencial del `id_alias` vinculada al principal de la parte
+confiable debe aparecer primero.
 
-[View an example of a verifiable presentation](https://www.w3.org/TR/vc-data-model/#example-jwt-payload-of-a-jwt-based-verifiable-presentation-non-normative) for reference.
+[Consulta un ejemplo de una presentación verificable](https://www.w3.org/TR/vc-data-model/#example-jwt-payload-of-a-jwt-based-verifiable-presentation-non-normative)
+como referencia.
 
-The relying party should not expect to receive an immediate response, as it should wait for one of the following events:
+La parte confiable no debe esperar recibir una respuesta inmediata, sino que
+debe esperar uno de los siguientes eventos:
 
-- II sends a JSON-RPC response as described above.
+- II envía una respuesta JSON-RPC como se describió anteriormente.
+- II envía una respuesta de error JSON-RPC como se describe a continuación.
+- El usuario cierra la ventana de II. Esto debe tratarse como un error.
 
-- II sends a JSON-RPC error response as described below.
+La parte confiable también puede cerrar la ventana de II después de un tiempo de
+espera. En este caso, se debe notificar al usuario que la solicitud falló.
 
-- The user closes the II window. This should be treated as an error.
+### Mensajes de error
 
-The relying party may also close the II window after some timeout. The user would then be notified by the relying party that the request failed.
+Si el flujo de trabajo falla por cualquier motivo, Internet Identity devolverá
+un error. El error no proporciona detalles sobre la causa de la falla para
+proteger la privacidad.
 
-### Error messages
+Un ejemplo de error se muestra a continuación:
 
-If the workflow fails for any reason, Internet Identity will return an error. The error does not provide details on the cause of the failure to provide privacy protection.
-
-An example error can be found below:
-
-``` json
+```json
 {
-    "id": 1,
-    "jsonrpc": "2.0",
-    "error": {
-        "version": "1",
-        "code": "UNKNOWN"
-    }
+  "id": 1,
+  "jsonrpc": "2.0",
+  "error": {
+    "version": "1",
+    "code": "UNKNOWN"
+  }
 }
 ```
 
+## Verificación de credenciales
 
+Para verificar las credenciales, la parte confiable debe validar el JWT recibido
+del proveedor de identidad.
 
-## Verifying the credentials
+### Formato de las credenciales
 
-To verify the credentials, the relying party needs to validate the JWT received from the identity provider.
-
-### Credentials format
-
-The relying party receives the credential in a JWT format, containing long text split into common parts:
+La parte confiable recibe la credencial en formato JWT, que contiene un texto
+largo dividido en partes comunes:
 
 ```
 <header>.<payload>.
 ```
 
-The ICP verifiable credentials feature is based on the [w3c VC credentials data model](https://www.w3.org/TR/vc-data-model/).
+La funcionalidad de credenciales verificables de ICP se basa en el  
+[modelo de datos de credenciales verificables de W3C](https://www.w3.org/TR/vc-data-model/).
 
 :::info
-There is no signature in this first presentation.
+
+No hay firma en esta primera presentación.
+
 :::
 
-When this is decoded, the format is the following:
-
-```
-{
-  "iss": <issuer>,
-  "vp": {
-    "@context": "https://www.w3.org/2018/credentials/v1",
-    "type": "VerifiablePresentation",
-    "verifiableCredential": [
-       "<header>.<payload>.<signature>",
-"<header>.<payload>.<signature>"
-    ]
-  }
-}
-```
-
-The field `verifiableCredential` within `vp` should contain two more verifiable credentials in the specified order:
-
-- An `id_alias` credential that links the effective subject of the credential to a temporary alias. This credential is signed by the identity provider.
-
-- The actual credential requested by the user. The subject of this credential is `id_alias`, and it should be signed by the issuer.
-
-When the `id_alias` credential is decoded, the following info is returned:
+Cuando se decodifica, el formato es el siguiente:
 
 ```json
 {
-  "exp": <expiration>,
-  "iss": "https://identity.ic0.app/",
-  "nbf": <not-before>,
-  "jti": <jwt-id>,
-  "sub": <relying-party-user-principal>
-  "vc": {
-    "@context": "https://www.w3.org/2018/credentials/v1",
-    "type": [
-      "VerifiableCredential",
-      "InternetIdentityIdAlias"
-    ],
-    "credentialSubject": {
-      "InternetIdentityIdAlias": {
-        "hasIdAlias": <id-alias>,
-        "derivationOrigin": <user-principal-derivation-origin>
-     }
-    }
-  }
+  "iss": <issuer>,
+  "vp": {
+    "@context": "https://www.w3.org/2018/credentials/v1",
+    "type": "VerifiablePresentation",
+    "verifiableCredential": [
+      "<header>.<payload>.<signature>",
+      "<header>.<payload>.<signature>"
+    ]
+  }
 }
 ```
 
-When the actual credential is decoded, the following info is returned:
+El campo `verifiableCredential` dentro de `vp` debe contener dos credenciales
+verificables en el orden especificado:
 
-```
+- Una credencial `id_alias` que vincula el sujeto efectivo de la credencial con
+  un alias temporal. Esta credencial es firmada por el proveedor de identidad.
+
+- La credencial real solicitada por el usuario. El sujeto de esta credencial es
+  `id_alias`, y debe estar firmada por el emisor.
+
+Cuando se decodifica la credencial `id_alias`, se obtiene la siguiente
+información:
+
+```json
 {
-  "exp": <expiration>,
-  "iss": <isuer>,
-  "nbf": <not-before>,
- "jti": <jwt-id>,
- "sub": <did-id-alias>,
- "vc": {
-   "@context": "https://www.w3.org/2018/credentials/v1",
-   "type": [
-     "VerifiableCredential",
-     "<credential-type>"
-   ],
-   "credentialSubject": {
-     <credential-type>: {
-       <argument1-key>: <argument1-value>,
-       <argument2-key>: <argument2-value>,
-       ...
-     }
-   }
- }
+  "exp": <expiration>,
+  "iss": "https://identity.ic0.app/",
+  "nbf": <not-before>,
+  "jti": <jwt-id>,
+  "sub": <relying-party-user-principal>,
+  "vc": {
+    "@context": "https://www.w3.org/2018/credentials/v1",
+    "type": [
+      "VerifiableCredential",
+      "InternetIdentityIdAlias"
+    ],
+    "credentialSubject": {
+      "InternetIdentityIdAlias": {
+        "hasIdAlias": <id-alias>,
+        "derivationOrigin": <user-principal-derivation-origin>
+      }
+    }
+  }
 }
 ```
 
-### Cryptographic verification
+Cuando se decodifica la credencial real, se obtiene la siguiente información:
 
-To verify the two JWT signatures, verify the signature of the `id_alias` signed by the identity provider and the signature of the actual credential signed by the issuer. Both are found when you decode the received JWT.
+```json
+{
+  "exp": <expiration>,
+  "iss": <issuer>,
+  "nbf": <not-before>,
+  "jti": <jwt-id>,
+  "sub": <did-id-alias>,
+  "vc": {
+    "@context": "https://www.w3.org/2018/credentials/v1",
+    "type": [
+      "VerifiableCredential",
+      "<credential-type>"
+    ],
+    "credentialSubject": {
+      "<credential-type>": {
+        "<argument1-key>": "<argument1-value>",
+        "<argument2-key>": "<argument2-value>",
+        ...
+      }
+    }
+  }
+}
+```
 
-These signatures are [canister signatures](/docs/references/glossary#c) and there is an example on [how to verify those in the Internet Identity repository](https://github.com/dfinity/internet-identity/blob/2ae06956f9cabc048b8536b29b9f861092958515/src/vc_util/src/lib.rs#L193).
+### Verificación criptográfica
 
-### Semantic verification
+Para verificar las dos firmas JWT, es necesario verificar la firma de `id_alias`
+firmada por el proveedor de identidad y la firma de la credencial real firmada
+por el emisor. Ambas se encuentran al decodificar el JWT recibido.
 
-The relying party should verify the following data:
+Estas firmas son [firmas de canister](/docs/references/glossary#c) y hay un
+ejemplo sobre  
+[cómo verificarlas en el repositorio de Internet Identity](https://github.com/dfinity/internet-identity/blob/2ae06956f9cabc048b8536b29b9f861092958515/src/vc_util/src/lib.rs#L193).
 
-- From the received credential JWT:
+### Verificación semántica
 
-    - The `iss` matches the identity provider canister ID.
+La parte confiable debe verificar los siguientes datos:
 
-    - The decoded initial credential contains two credentials within `vp.verifiableCredential`: first the `id_alias` credential, then the requested one.
+- Desde el JWT de la credencial recibida:
 
-- From the `id_alias` JWT:
+  - El campo `iss` coincide con el ID del canister del proveedor de identidad.
 
-    - The `iss` is the expected identity provider.
+  - La credencial inicial decodificada contiene dos credenciales dentro de
+    `vp.verifiableCredential`:  
+    primero la credencial `id_alias` y luego la credencial solicitada.
 
-    - The `sub` in `id_alias` contains the principal of the user in the relying party.
+- Desde el JWT de `id_alias`:
 
-    - The credential type is `InternetIdentityIdAlias`.
+  - El campo `iss` es el proveedor de identidad esperado.
 
-    - The `derivationOrigin` is the derivation origin when logging in the relying party.
+  - El campo `sub` en `id_alias` contiene el principal del usuario en la parte
+    confiable.
 
-- From the requested credential JWT:
+  - El tipo de credencial es `InternetIdentityIdAlias`.
 
-    - The credential type within `vc.type` matches the first field in `vc.credentialSubject` and both are the same that was requested.
+  - El `derivationOrigin` coincide con el origen de derivación al iniciar sesión
+    en la parte confiable.
 
-    - The arguments within `vc.credentialSubject.<credential-type>` are the expected ones.
+- Desde el JWT de la credencial solicitada:
 
-- Cross credentials:
+  - El tipo de credencial dentro de `vc.type` coincide con el primer campo en
+    `vc.credentialSubject` y ambos son los mismos que se solicitaron.
 
-    - The `sub` from the requested credential contains the value in the `id_alias` credential from `vc.credentialSubject.InternetIdentityIdAlias`.
+  - Los argumentos dentro de `vc.credentialSubject.<credential-type>` son los
+    esperados.
 
-To learn more about verifying credentials, check out the [demo relying party's code](https://github.com/dfinity/vc-playground/blob/b2f8cd5f5397b7b355b6503df5af3789834b79e9/rp/src/main.rs#L262) and the helper used from the [Internet Identity repository](https://github.com/dfinity/internet-identity/blob/fd38b48f9fdf9085b4903d865a1f5e79ad24f81a/src/vc_util/src/lib.rs#L319).
+- Entre credenciales:
 
-## Resources
+  - El campo `sub` de la credencial solicitada contiene el valor de `id_alias`
+    dentro de `vc.credentialSubject.InternetIdentityIdAlias`.
 
-- [Verifiable credentials specification](https://github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md).
+Para aprender más sobre la verificación de credenciales, revisa el  
+[código de la parte confiable en la demo](https://github.com/dfinity/vc-playground/blob/b2f8cd5f5397b7b355b6503df5af3789834b79e9/rp/src/main.rs#L262)  
+y el asistente utilizado en el  
+[repositorio de Internet Identity](https://github.com/dfinity/internet-identity/blob/fd38b48f9fdf9085b4903d865a1f5e79ad24f81a/src/vc_util/src/lib.rs#L319).
 
-- [Relying party demo](https://github.com/dfinity/vc-playground/tree/main/rp/frontend).
+## Recursos
 
-- [Verifiable credentials playground: Issuer](https://metaissuer.vc/).
+- [Especificación de credenciales verificables](https://github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md).
 
-- [Verifiable credentials playground: Relying party](https://relyingparty.vc/).
+- [Demo de parte confiable](https://github.com/dfinity/vc-playground/tree/main/rp/frontend).
+
+- [Playground de credenciales verificables: Emisor](https://metaissuer.vc/).
+
+- [Playground de credenciales verificables: Parte confiable](https://relyingparty.vc/).

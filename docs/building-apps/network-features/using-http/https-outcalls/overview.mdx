@@ -1,64 +1,117 @@
 ---
-keywords: [https outcalls, advanced, concept, http requests, get, post, head, http methods, making http requests, making http calls, http get, http post, http get]
+keywords:
+  [
+    https outcalls,
+    advanced,
+    concept,
+    http requests,
+    get,
+    post,
+    head,
+    http methods,
+    making http requests,
+    making http calls,
+    http get,
+    http post,
+    http get,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
 # HTTPS outcalls
 
-<MarkdownChipRow labels={["Advanced", "Network feature"]} />
+<MarkdownChipRow labels={["Avanzado", "Network feature"]} />
 
-Canisters can make a request to a URL using [HTTPS outcalls](https://internetcomputer.org/https-outcalls). HTTPS outcalls can be used to directly obtain off-chain data or interact with off-chain systems, such as Web 2.0 services or enterprise IT infrastructure.
+Los canisters pueden hacer una solicitud a una URL utilizando
+[HTTPS outcalls](https://internetcomputer.org/https-outcalls). Los HTTPS
+outcalls se pueden utilizar para obtener datos fuera de la cadena o interactuar
+con sistemas externos, como servicios Web 2.0 o infraestructura de TI
+empresarial.
 
-HTTPS outcalls enable a wide range of applications. For example, oracle services can directly integrate with ICP in a trustless manner, and dapps can provide user notifications or anything else that requires communication with servers on the Internet.
+Los HTTPS outcalls permiten una amplia gama de aplicaciones. Por ejemplo, los
+servicios oráculo pueden integrarse directamente con ICP de manera confiable, y
+las dapps pueden proporcionar notificaciones a los usuarios o cualquier otra
+funcionalidad que requiera comunicación con servidores en Internet.
 
-Some examples of onchain oracle-like services that obtain data from off-chain sources through HTTP outcalls include the [EVM RPC canister](/docs/building-apps/chain-fusion/ethereum/evm-rpc/overview), the [exchange rate canister](/docs/references/system-canisters/) and the [Orally dapp](https://kclew-uiaaa-aaaal-qbuiq-cai.ic0.app/sybil).
+Algunos ejemplos de servicios onchain tipo oráculo que obtienen datos de fuentes
+externas a través de HTTPS outcalls incluyen el
+[EVM RPC canister](/docs/building-apps/chain-fusion/ethereum/evm-rpc/overview),
+el [exchange rate canister](/docs/references/system-canisters/) y la
+[dapp Orally](https://kclew-uiaaa-aaaal-qbuiq-cai.ic0.app/sybil).
 
-## How it works
+## Cómo funciona
 
-The feature currently supports `GET`, `HEAD`, and `POST` methods for HTTP requests.
+Actualmente, la funcionalidad admite los métodos `GET`, `HEAD` y `POST` para
+solicitudes HTTP.
 
-In order for a canister to use HTTPS outcalls, it needs to call the system API of ICP. Canisters can call into the system API by sending messages to [the ICP management canister](/docs/references/ic-interface-spec#ic-management-canister) using the identifier `"aaaaa-aa"`.
+Para que un canister utilice HTTPS outcalls, debe llamar a la API del sistema de
+ICP. Los canisters pueden llamar a la API del sistema enviando mensajes al
+[ICP management canister](/docs/references/ic-interface-spec#ic-management-canister)
+utilizando el identificador `"aaaaa-aa"`.
 
-[Cycles](/docs/building-apps/essentials/gas-cost) used to pay for the call must be explicitly transferred with the call. They are not deducted from the caller's balance implicitly.
+Los [Cycles](/docs/building-apps/essentials/gas-cost) utilizados para pagar la
+llamada deben transferirse explícitamente con la solicitud. No se deducen
+automáticamente del saldo del remitente.
 
-For detailed information on how it works, please refer to the [HTTPS outcalls reference documentation](/docs/references/https-outcalls-how-it-works).
+Para obtener información detallada sobre su funcionamiento, consulta la
+[documentación de referencia de HTTPS outcalls](/docs/references/https-outcalls-how-it-works).
 
-## The API for sending HTTPS outcalls
+## La API para enviar HTTPS outcalls
 
-As per the [Internet Computer interface specification](/docs/references/ic-interface-spec), a canister can use the `http_request` method by [following specification](/docs/references/ic-interface-spec#ic-http_request):
+Según la
+[especificación de la interfaz de Internet Computer](/docs/references/ic-interface-spec),
+un canister puede utilizar el método `http_request` siguiendo la
+[especificación](/docs/references/ic-interface-spec#ic-http_request):
 
-### The request
-The following parameters should be supplied within the request:
+### La solicitud
 
--   `url`: The requested URL that must be valid according to [RFC-3986](https://www.ietf.org/rfc/rfc3986.txt) and its length must not exceed `8192`. The URL may specify a custom port number.
+Los siguientes parámetros deben proporcionarse en la solicitud:
 
--   `max_response_bytes`: Optional; specifies the maximal size of the response in bytes. If provided, the value must not exceed `2MB` (`2_000_000B`). The call will be charged based on this parameter. If not provided, the maximum of `2MB` will be used.
+- `url`: La URL solicitada debe ser válida según
+  [RFC-3986](https://www.ietf.org/rfc/rfc3986.txt) y su longitud no debe exceder
+  `8192`. La URL puede especificar un número de puerto personalizado.
 
--   `method`: Currently, only `GET`, `HEAD`, and `POST` are supported.
+- `max_response_bytes`: Opcional; especifica el tamaño máximo de la respuesta en
+  bytes. Si se proporciona, el valor no debe superar `2MB` (`2_000_000B`). El
+  costo de la llamada se basará en este parámetro. Si no se proporciona, se
+  usará el máximo de `2MB`.
 
--   `headers`: List of HTTP request headers and their corresponding values.
+- `method`: Actualmente, solo se admiten `GET`, `HEAD` y `POST`.
 
--   `body`: Optional; The content of the request's body.
+- `headers`: Lista de encabezados de solicitud HTTP y sus valores
+  correspondientes.
 
--   `transform`: An optional function that transforms raw responses to [sanitized responses](https://en.wikipedia.org/wiki/HTML_sanitization), and a byte-encoded context that is provided to the function upon invocation, along with the response to be sanitized. If provided, the calling canister itself must export this function.
+- `body`: Opcional; el contenido del cuerpo de la solicitud.
 
-### The response
+- `transform`: Una función opcional que transforma respuestas sin procesar en
+  [respuestas sanitizadas](https://en.wikipedia.org/wiki/HTML_sanitization), y
+  un contexto codificado en bytes que se proporciona a la función al momento de
+  la invocación, junto con la respuesta a sanitizar. Si se proporciona, el
+  propio canister que realiza la llamada debe exportar esta función.
 
-The returned response (and the response provided to the `transform` function, if specified) contains the following fields:
+### La respuesta
 
--   `status`: The response status (e.g., 200, 404).
+La respuesta devuelta (y la respuesta proporcionada a la función `transform`, si
+se especifica) contiene los siguientes campos:
 
--   `headers`: List of HTTP response headers and their corresponding values.
+- `status`: El estado de la respuesta (por ejemplo, 200, 404).
 
--   `body`: The response's body.
+- `headers`: Lista de encabezados de respuesta HTTP y sus valores
+  correspondientes.
 
-## Examples
+- `body`: El cuerpo de la respuesta.
 
-Refer to the following examples of HTTPS outcalls implementations in canisters:
+## Ejemplos
 
-- Fetch price information for DeFi protocols using the [exchange rate canister](https://github.com/dfinity/exchange-rate-canister).
-- Communicate with other chains using the [EVM RPC canister](https://github.com/internet-computer-protocol/evm-rpc-canister).
-- Fetch information about Bitcoin Ordinals and Bitcoin Meta-Protocols using the [Ordinals canister](https://github.com/sardariuss/ordinals_canister).
-- [Minimal sample code of making a `GET` request](/docs/building-apps/network-features/using-http/https-outcalls/get).
-- [Minimal sample code of making a `POST` request](/docs/building-apps/network-features/using-http/https-outcalls/post).
+Consulta los siguientes ejemplos de implementaciones de HTTPS outcalls en
+canisters:
+
+- Obtener información de precios para protocolos DeFi utilizando el
+  [exchange rate canister](https://github.com/dfinity/exchange-rate-canister).
+- Comunicarse con otras cadenas utilizando el
+  [EVM RPC canister](https://github.com/internet-computer-protocol/evm-rpc-canister).
+- Obtener información sobre Bitcoin Ordinals y Bitcoin Meta-Protocols utilizando
+  el [Ordinals canister](https://github.com/sardariuss/ordinals_canister).
+- [Código de ejemplo mínimo para realizar una solicitud `GET`](/docs/building-apps/network-features/using-http/https-outcalls/get).
+- [Código de ejemplo mínimo para realizar una solicitud `POST`](/docs/building-apps/network-features/using-http/https-outcalls/post).

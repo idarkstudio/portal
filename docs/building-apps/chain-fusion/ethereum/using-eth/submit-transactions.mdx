@@ -1,5 +1,17 @@
 ---
-keywords: [advanced, ethereum, eth, tutorial, submit transactions, submit eth transaction, submit eth, submit, transactions, eth transactions]
+keywords:
+  [
+    advanced,
+    ethereum,
+    eth,
+    tutorial,
+    submit transactions,
+    submit eth transaction,
+    submit eth,
+    submit,
+    transactions,
+    eth transactions,
+  ]
 ---
 
 import TabItem from "@theme/TabItem";
@@ -8,28 +20,34 @@ import { AdornedTab } from "/src/components/Tabs/AdornedTab";
 import { BetaChip } from "/src/components/Chip/BetaChip";
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Submitting transactions
+### Enviando transacciones
 
-<MarkdownChipRow labels={["Advanced", "Ethereum", "Tutorial"]} />
+<MarkdownChipRow labels={["Avanzado", "Ethereum", "Tutorial"]} />
 
-To submit transactions to the Ethereum network, first the transaction must be signed and formatted as an ETH transaction. [Learn more about signing transactions](signing-transactions.mdx).
+Para enviar transacciones a la red de Ethereum, primero la transacción debe ser
+firmada y formateada como una transacción ETH.
+[Aprende más sobre la firma de transacciones](signing-transactions.mdx).
 
-Once you have your raw signed transaction, you can either programmatically submit the transaction or use the EVM RPC canister's RPC method `eth_sendRawTransaction`.
+Una vez que tengas tu transacción firmada sin procesar, puedes enviarla
+programáticamente o utilizar el método RPC `eth_sendRawTransaction` del canister
+EVM RPC.
 
-### Submitting transactions programmatically
+### Enviar transacciones programáticamente
 
-Below is an example demonstrating how to submit a raw ETH transaction programmatically using Rust:
+A continuación, se muestra un ejemplo de cómo enviar una transacción ETH sin
+procesar programáticamente usando Rust:
 
 ```rust reference
 https://github.com/letmejustputthishere/icp-evm-coprocessor-starter/blob/main/packages/ic-evm-utils/src/eth_send_raw_transaction.rs#L213-L230
 ```
 
-### Using the EVM RPC canister
+### Usar el canister EVM RPC
 
-To submit a raw transaction with the EVM RPC canister, make a call to the `eth_sendRawTransaction` method:
+Para enviar una transacción sin procesar con el canister EVM RPC, realiza una
+llamada al método `eth_sendRawTransaction`:
 
 ```
-# Configuration
+# Configuración
 NETWORK=local
 IDENTITY=default
 CYCLES=1000000000
@@ -37,14 +55,14 @@ WALLET=$(dfx identity get-wallet)
 RPC_SOURCE=EthMainnet
 RPC_CONFIG=null
 
-# Send a raw transaction
+# Enviar una transacción sin procesar
 dfx canister call evm_rpc eth_sendRawTransaction "(variant {$RPC_SOURCE}, $RPC_CONFIG, \"0xf86c098504a817c800825208943535353535353535353535353535353535353535880de0b6b3a76400008025a028ef61340bd939bc2195fe537567866003e1a15d3c71ff63e1590620aa636276a067cbe9d8997f761aecb703304b3800ccf555c9f3dc64214b297fb1966a3b6d83\")" --with-cycles=$CYCLES --wallet=$WALLET
 ```
 
-[Learn more about the EVM RPC canister](/docs/building-apps/chain-fusion/ethereum/evm-rpc/evm-rpc-canister).
+[Aprende más sobre el canister EVM RPC](/docs/building-apps/chain-fusion/ethereum/evm-rpc/evm-rpc-canister).
 
-## Resources
+## Recursos
 
-- [ICP ETH starter project](https://github.com/dfinity/icp-eth-starter).
+- [Proyecto ICP ETH starter](https://github.com/dfinity/icp-eth-starter).
 
-- [Ethers-core Rust library](https://github.com/gakonst/ethers-rs).
+- [Librería ethers-core para Rust](https://github.com/gakonst/ethers-rs).

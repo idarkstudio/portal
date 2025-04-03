@@ -9,27 +9,48 @@ import { AdornedTabs } from "/src/components/Tabs/AdornedTabs";
 import { AdornedTab } from "/src/components/Tabs/AdornedTab";
 import { BetaChip } from "/src/components/Chip/BetaChip";
 
-# Onchain randomness
+# Aleatoriedad Onchain
 
-<MarkdownChipRow labels={["Advanced", "Concept"]} />
+<MarkdownChipRow labels={["Avanzado", "Concepto"]} />
 
-The Internet Computer provides a secure and verifiable way to generate random numbers directly within canisters. This functionality is exposed through the [raw_rand](/docs/references/ic-interface-spec) method offered by the [management canister](/docs/references/system-canisters/management-canister) and the [Motoko Random module](/docs/motoko/main/base/Random).
+El Internet Computer proporciona una forma segura y verificable de generar
+números aleatorios directamente dentro de los canisters. Esta funcionalidad se
+expone a través del método [raw_rand](/docs/references/ic-interface-spec),
+ofrecido por el
+[management canister](/docs/references/system-canisters/management-canister) y
+el [módulo Random de Motoko](/docs/motoko/main/base/Random).
 
-The method takes no input and returns 32 pseudo-random bytes to the caller.
+El método no requiere entrada y devuelve 32 bytes pseudoaleatorios al llamador.
 
-## How it works
-Behind the scenes, ICP utilizes a Verifiable Random Function (VRF) to generate randomness.
+## Cómo funciona
 
-During each round, the VRF is evaluated with the current input being the number of the round. This process produces a fresh set of random bytes.
+En segundo plano, ICP utiliza una Verifiable Random Function (VRF) para generar
+aleatoriedad.
 
-These bytes become the seed for a pseudorandom number generator (PRNG) called random tape. The random tape is built using [chain-key cryptography](https://internetcomputer.org/how-it-works/chain-key-technology) and is used to create unique random values for each canister that requested randomness in the previous round.
+Durante cada ronda, la VRF se evalúa utilizando como entrada el número de la
+ronda actual. Este proceso produce un nuevo conjunto de bytes aleatorios.
 
-`raw_rand` calls only use the random tape from the next round. This ensures that no one can exploit knowledge of the current round's randomness to predict future outputs. To learn more about the execution layer of ICP, refer to the [execution layer documentation](https://internetcomputer.org/how-it-works/execution-layer/).
+Estos bytes se convierten en la semilla de un generador de números
+pseudoaleatorios (PRNG) llamado random tape. El random tape se construye
+utilizando
+[criptografía de clave de cadena (_chain-key cryptography_)](https://internetcomputer.org/how-it-works/chain-key-technology)
+y se usa para crear valores aleatorios únicos para cada canister que solicitó
+aleatoriedad en la ronda anterior.
 
-To learn more about the technical details of randomness on ICP, watch the [Community Conversations video on randomness](https://www.youtube.com/watch?v=nl5BuiWClD0).
+Las llamadas a `raw_rand` solo utilizan el random tape de la siguiente ronda.
+Esto garantiza que nadie pueda explotar el conocimiento de la aleatoriedad de la
+ronda actual para predecir salidas futuras. Para obtener más información sobre
+la capa de ejecución de ICP, consulta la
+[documentación de la capa de ejecución](https://internetcomputer.org/how-it-works/execution-layer/).
 
-## How to use
-Developers can directly access randomness through the `raw_rand` method in the management canister. See the examples below.
+Para conocer más detalles técnicos sobre la aleatoriedad en ICP, mira el
+[video de Community Conversations sobre aleatoriedad](https://www.youtube.com/watch?v=nl5BuiWClD0).
+
+## Cómo usarlo
+
+Los desarrolladores pueden acceder directamente a la aleatoriedad a través del
+método `raw_rand` en el management canister. Consulta los ejemplos a
+continuación.
 
 <AdornedTabs groupId="language">
 <TabItem value="motoko" label="Motoko" default>
@@ -44,7 +65,8 @@ actor {
 };
 ```
 
-In addition to the `raw_rand` method, Motoko offers a [Random module](/docs/motoko/main/base/Random) for generating random numbers.
+Además del método `raw_rand`, Motoko ofrece un
+[módulo Random](/docs/motoko/main/base/Random) para generar números aleatorios.
 
 </TabItem>
 
@@ -58,14 +80,13 @@ let (randomBytes,): (Vec<u8>,) = ic_cdk::api::management_canister::main::raw_ran
 
 <AdornedTab value={"typescript"} label="TypeScript" endAdornment={<BetaChip />}>
 
-[Learn more about Azle](https://demergent-labs.github.io/azle/timers.html).
+[Aprende más sobre Azle](https://demergent-labs.github.io/azle/timers.html).
 
 </AdornedTab>
 
 <AdornedTab value={"python"} label="Python" endAdornment={<BetaChip />}>
 
-[Learn more about Kybra](https://demergent-labs.github.io/kybra/timers.html).
+[Aprende más sobre Kybra](https://demergent-labs.github.io/kybra/timers.html).
 
 </AdornedTab>
 </AdornedTabs>
-

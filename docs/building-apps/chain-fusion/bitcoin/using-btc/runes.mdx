@@ -6,39 +6,88 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
 # Runes
 
-<MarkdownChipRow labels={["Advanced", "Bitcoin", "Tutorial"]} />
+<MarkdownChipRow labels={["Avanzado", "Bitcoin", "Tutorial"]} />
 
-Bitcoin Runes are a type of fungible asset deployed on the Bitcoin network. Runes are not reliant on the [Ordinals protocol](ordinals.mdx) unlike other Bitcoin asset standards such as BRC-20 and SRC-20. Runes are designed to be an efficient and simple asset that utilizes Bitcoin's UTXO model and the `OP_RETURN` opcode. Although Runes aren't reliant on Ordinals, the Rune protocol was created and implemented by the same creator and is part of the same open source project that Ordinals are.
+Los Runes de Bitcoin son un tipo de activo fungible desplegado en la red de
+Bitcoin.  
+A diferencia de otros estándares de activos en Bitcoin como BRC-20 y SRC-20, los
+Runes no dependen del [protocolo Ordinals](ordinals.mdx).  
+Los Runes están diseñados para ser un activo eficiente y simple que utiliza el
+modelo UTXO de Bitcoin y el código de operación `OP_RETURN`.  
+Aunque los Runes no dependen de Ordinals, el protocolo Rune fue creado e
+implementado por el mismo desarrollador y forma parte del mismo proyecto de
+código abierto que Ordinals.
 
-The UTXO transaction model enables each transaction's output to hold information and be treated as digital currency. To initiate a transaction, you must use those outputs as your transaction's input. For Runes specifically, each UTXO can hold a different amount or type of Rune, simplifying the management of tokens on Bitcoin.
+El modelo de transacción UTXO permite que cada salida de transacción contenga
+información y sea tratada como una moneda digital.  
+Para iniciar una transacción, se deben usar esas salidas como entradas de la
+transacción.  
+En el caso de los Runes, cada UTXO puede contener una cantidad o tipo diferente
+de Rune, lo que simplifica la gestión de tokens en Bitcoin.
 
-The Bitcoin opcode `OP_RETURN` enables additional information to be attached to a Bitcoin transaction, up to 80 bytes of data. Runes use this `OP_RETURN` value to store the token's data, such as name, symbol, commands, or ID. This token data is referred to as the 'Runestone.'
+El código de operación `OP_RETURN` de Bitcoin permite adjuntar información
+adicional a una transacción de Bitcoin, con un límite de 80 bytes de datos.  
+Los Runes utilizan este valor de `OP_RETURN` para almacenar los datos del token,
+como el nombre, símbolo, comandos o ID.  
+A estos datos del token se les conoce como "Runestone".
 
-Creating a Rune is done through a process called 'etching,' which refers to submitting a transaction to the Bitcoin network that specifies the Rune's data in the `OP_RETURN` output of a transaction. Once a Rune has been etched, it can be minted through open or closed mints. Open minting allows anyone to mint an instance of the Rune through a mint transaction, while closed minting refers to a set of requirements that must be met in order for the Rune to be minted. When a Rune is initially etched, the creator can set aside a portion of the Runes for themselves before others are minted.
+La creación de un Rune se realiza mediante un proceso llamado "etching"
+(grabado), que consiste en enviar una transacción a la red de Bitcoin
+especificando los datos del Rune en la salida `OP_RETURN` de una transacción.  
+Una vez que un Rune ha sido grabado, puede acuñarse a través de minting abierto
+o cerrado.  
+El minting abierto permite que cualquier persona acuñe una instancia del Rune a
+través de una transacción de minting, mientras que el minting cerrado establece
+requisitos específicos que deben cumplirse para que el Rune pueda acuñarse.  
+Cuando un Rune se graba inicialmente, su creador puede reservar una parte de los
+Runes para sí mismo antes de que otros puedan acuñarlos.
 
-## Runes on ICP
+## Runes en ICP
 
-Canisters deployed on ICP can sign and submit transactions directly to the Bitcoin network through ICP's [Bitcoin integration](../overview.mdx) and [threshold signatures](/docs/references/t-sigs-how-it-works). Specifically, for a canister to etch Runes, it must sign transactions using [threshold Schnorr signatures](/docs/references/t-sigs-how-it-works#deuterium-schnorr-release-beta) and have a [Bitcoin taproot address](/docs/building-apps/chain-fusion/bitcoin/using-btc/generate-addresses#generating-addresses-with-threshold-schnorr).
+Los canisters desplegados en ICP pueden firmar y enviar transacciones
+directamente a la red de Bitcoin a través de la
+[integración de Bitcoin en ICP](../overview.mdx) y las
+[firmas umbral](/docs/references/t-sigs-how-it-works).  
+Específicamente, para que un canister pueda grabar Runes, debe firmar
+transacciones utilizando
+[firmas umbral de Schnorr](/docs/references/t-sigs-how-it-works#deuterium-schnorr-release-beta)
+y contar con una
+[dirección de Bitcoin taproot](/docs/building-apps/chain-fusion/bitcoin/using-btc/generate-addresses#generating-addresses-with-threshold-schnorr).
 
-## Etching and minting Runes
+## Grabado y acuñación de Runes
 
-To etch a Rune through a canister on ICP, first you will need to call the `schnorr_public_key` API to obtain a Schnorr public key. This public key will be used to generate a Bitcoin taproot (P2TR) address for your canister. A taproot address is required to sign and submit Rune transactions, both etching and minting, on Bitcoin. [Learn more about Bitcoin taproot addresses](/docs/building-apps/chain-fusion/bitcoin/using-btc/generate-addresses#generating-addresses-with-threshold-schnorr).
+Para grabar un Rune a través de un canister en ICP, primero se debe llamar a la
+API `schnorr_public_key` para obtener una clave pública de Schnorr.  
+Esta clave pública se utilizará para generar una dirección taproot (P2TR) de
+Bitcoin para el canister.  
+Se requiere una dirección taproot para firmar y enviar transacciones de Rune,
+tanto de grabado como de acuñación, en Bitcoin.  
+[Aprende más sobre direcciones taproot de Bitcoin](/docs/building-apps/chain-fusion/bitcoin/using-btc/generate-addresses#generating-addresses-with-threshold-schnorr).
 
-Once you have generated a taproot address for your canister, you will need to write a canister method that creates an etching transaction, then signs that transaction with your canister's Schnorr public key. Here's an example of an etching transaction written in Rust:
+Una vez que se haya generado una dirección taproot para el canister, se debe
+escribir un método en el canister que cree una transacción de grabado y luego la
+firme con la clave pública de Schnorr del canister.  
+Aquí hay un ejemplo de una transacción de grabado escrita en Rust:
 
 ```rust reference
 https://github.com/pramitgaha21/etcher/blob/ca6c9a1423a597b5f544470eb0e6f0954279b4a4/src/etcher_backend/src/lib.rs#L284-L323
 ```
 
-## Querying Rune information
+## Consulta de información sobre Runes
 
-To query information about a Rune, you can use the [Runes Indexer canister](https://github.com/octopus-network/runes-indexer) created by [Omnity Network](https://omnity.network/). The Runes Indexer canister can be used to fetch Rune information, etching information for a specific Rune, and Rune balances. For example, to query data about a Rune using the Rune's name, you can make the following call to the Runes Indexer's `get_rune` method:
+Para consultar información sobre un Rune, se puede utilizar el  
+[canister indexador de Runes](https://github.com/octopus-network/runes-indexer)  
+creado por [Omnity Network](https://omnity.network/).  
+El canister indexador de Runes permite obtener información sobre Runes, detalles
+del grabado de un Rune específico y saldos de Runes.  
+Por ejemplo, para consultar datos sobre un Rune usando su nombre, se puede hacer
+la siguiente llamada al método `get_rune` del indexador de Runes:
 
 ```
 dfx canister call runes-indexer get_rune '("HOPE•YOU•GET•RICH")' --ic
 ```
 
-Returns:
+Retorna:
 
 ```json
 (
@@ -66,9 +115,9 @@ Returns:
 )
 ```
 
-[View the full API reference](https://github.com/octopus-network/runes-indexer?tab=readme-ov-file#api-reference) for more information.
+[Consulta la referencia completa de la API](https://github.com/octopus-network/runes-indexer?tab=readme-ov-file#api-reference)  
+para más información.
 
+## Recursos
 
-## Resources
-
-- [Runes indexer canister](https://github.com/octopus-network/runes-indexer).
+- [Canister indexador de Runes](https://github.com/octopus-network/runes-indexer).

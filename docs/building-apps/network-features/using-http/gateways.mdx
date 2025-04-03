@@ -1,5 +1,18 @@
 ---
-keywords: [advanced, tutorial, get requests, post requests, http gateways, gateways, outgoing http, incoming http, http request, http request lifecycle, http client]
+keywords:
+  [
+    advanced,
+    tutorial,
+    get requests,
+    post requests,
+    http gateways,
+    gateways,
+    outgoing http,
+    incoming http,
+    http request,
+    http request lifecycle,
+    http client,
+  ]
 ---
 
 import TabItem from "@theme/TabItem";
@@ -8,182 +21,235 @@ import { AdornedTab } from "/src/components/Tabs/AdornedTab";
 import { BetaChip } from "/src/components/Chip/BetaChip";
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# HTTPS gateways and incoming requests
+# Gateways HTTPS y solicitudes entrantes
 
-<MarkdownChipRow labels={["Advanced", "Tutorial"]} />
+<MarkdownChipRow labels={["Avanzado", "Tutorial"]} />
 
-Canisters running on ICP can use HTTP requests in two ways: incoming and outgoing. Incoming HTTP requests refer to HTTP requests that are sent to a canister and can be used to retrieve data from a canister or send new data to the canister. Outgoing HTTP requests refer to HTTP requests that the canister sends to other canisters or external services to retrieve data or send new data.
+Los canisters que se ejecutan en ICP pueden utilizar solicitudes HTTP de dos
+maneras: entrantes y salientes. Las solicitudes HTTP entrantes se refieren a las
+solicitudes HTTP enviadas a un canister. Se pueden usar para recuperar datos de
+un canister o enviar nuevos datos al mismo. Las solicitudes HTTP salientes se
+refieren a las solicitudes HTTP que un canister envía a otros canisters o
+servicios externos para recuperar o enviar datos.
 
-## HTTP request lifecycle
+## Ciclo de vida de una solicitud HTTP
 
-On ICP, an HTTP request goes through the following lifecycle:
+En ICP, una solicitud HTTP pasa por el siguiente ciclo de vida:
 
-1. An HTTP client makes an outbound request.
+1. Un cliente HTTP realiza una solicitud saliente.
+2. El HTTP gateway intercepta la solicitud y resuelve el ID del canister de
+   destino.
+3. La solicitud se codifica en Candid y se envía como una consulta
+   (`query call`) al método `http_request` del canister de destino.
+4. La solicitud es enviada a un nodo de frontera de la API de ICP, que luego la
+   reenvía a un nodo réplica en la subred correspondiente.
+5. El canister recibe y procesa la solicitud, luego devuelve la respuesta.
+6. El HTTP gateway decodifica la respuesta de Candid.
+7. Si el canister lo solicita, el gateway reenvía la solicitud mediante una
+   llamada de actualización (`update call`) al método `http_request_update` del
+   canister. Esta actualización pasa por el proceso de consenso en la subred.
+8. Si el tamaño de la respuesta
+   [excede el máximo permitido](/docs/building-apps/canister-management/resource-limits),
+   el HTTP gateway obtiene datos adicionales del cuerpo de la respuesta a través
+   de consultas (`query calls`).
+9. El HTTP gateway valida el certificado de la respuesta, si corresponde.
+10. El HTTP gateway devuelve la respuesta decodificada al cliente HTTP.
 
-2. The HTTP gateway intercepts the request and resolves the canister ID of the request's destination.
+### Terminología
 
-3. The request is encoded with Candid and sent in a query call to the destination canister's `http_request` method.
+- **Solicitud (Request)**: Un mensaje enviado a un servidor o endpoint.
+- **Cliente (Client)**: Un servicio capaz de enviar una solicitud en formato
+  HTTP y recibir una respuesta de un servidor.
+- **Gateway**: Un componente que facilita la transferencia de mensajes entrantes
+  y salientes.
 
-4. This request is sent to an ICP API boundary node, which will then forward the request to a replica node on the relevant subnet.
+## Gateways HTTP
 
-5. The canister receives and processes the request, then returns the response.
+El protocolo **HTTP gateway** de ICP permite que los clientes HTTP
+convencionales interactúen con la red de ICP. Los HTTP gateways funcionan en
+paralelo a ICP y proporcionan una conexión utilizada por navegadores web y otras
+aplicaciones para enviar y recibir solicitudes y respuestas HTTP estándar,
+incluyendo activos estáticos como HTML, JavaScript, imágenes o videos.
 
-6. The HTTP gateway decodes the Candid encoding on the response.
+El **HTTP gateway** hace posible este flujo de trabajo al traducir las
+solicitudes HTTP estándar en llamadas a la API de los canisters de ICP y
+viceversa para las respuestas HTTP.
 
-7. If the canister requests it, the gateway sends the request again via an update call to the canister's `http_request_update` method. The update call goes through consensus on the subnet.
+Existen varias instancias de **HTTP gateway** mantenidas para ICP. Sin embargo,
+es importante señalar que un **HTTP gateway es un componente centralizado**, lo
+que significa que podría verse comprometido, representando un riesgo para los
+usuarios que reciben contenido HTTP.
 
-8. If the response size [exceeds the maximum response size](/docs/building-apps/canister-management/resource-limits), the HTTP gateway fetches additional response body data through query calls.
+DFINITY controla exclusivamente los **HTTP gateways** que sirven los canisters
+en `ic0.app` y `icp0.io`. Los desarrolladores pueden configurar sus propios
+[dominios personalizados](/docs/building-apps/frontends/custom-domains/using-custom-domains)
+para apuntar a los gateways HTTP controlados por DFINITY.
 
-9. The HTTP gateway validates the response's certificate, if applicable.
+Como alternativa, los desarrolladores pueden ejecutar sus propios **HTTP
+gateways** en sus dominios personalizados en lugar de usar los gateways
+controlados por DFINITY, aunque esta opción aún no está bien soportada.
 
-10. The HTTP gateway returns the decoded response to the HTTP client.
+Para una solución más segura, es posible ejecutar una instancia local de un
+**HTTP gateway**. Se pueden encontrar más detalles en la
+[especificación del protocolo HTTP gateway](/docs/references/http-gateway-protocol-spec).
 
-### Terminology
+### Ejecutando un HTTP gateway local
 
-- **Request**: A message sent to a server or endpoint.
+Para ejecutar tu propio **HTTP gateway local**, puedes utilizar una
+implementación de prueba de concepto que permite una conexión segura de extremo
+a extremo con los canisters desplegados en ICP.
 
-- **Client**: A service that is able to send an HTTP-formatted request and receive a response from a server.
+Esta implementación incluye:
 
-- **Gateway**: Enables the transfer of inbound and outbound messages.
+- Traducción entre solicitudes de activos HTTP y llamadas a la API de ICP.
+- Detección de dominios ICP a partir de principals y registros de dominios
+  personalizados.
+- Terminación de conexiones TLS localmente.
+- Omisión de listas de denegación de gateways remotos.
+- Resolución de dominios criptográficos.
 
-## HTTP gateways
+#### Instalación
 
-The ICP HTTP gateway protocol enables conventional HTTP clients to interact with the ICP network. HTTP gateways run adjacent to ICP and provide a connection used by software such as web browsers to send and receive standard HTTP requests and responses, including static assets, such as HTML, JavaScript, images, or videos. The HTTP gateway makes this workflow possible by translating standard HTTP requests into API canister calls that ICP canisters can understand and vice versa for HTTP responses.
+Puedes descargar el paquete de instalación preconstruido para tu
+[sistema operativo](https://github.com/dfinity/http-proxy?tab=readme-ov-file#installation).
 
-There are several HTTP gateway instances maintained for ICP, but it should be noted that an HTTP gateway is a centralized component that could become compromised, creating a threat for users receiving HTTP content.
+Una vez instalado, tendrás la opción de iniciar o detener el servicio IC HTTP
+proxy. Inicia el servicio para comenzar a usarlo. Una vez que el proxy esté en
+ejecución, manejará todo el tráfico en tu computadora. Cualquier tráfico que no
+esté destinado a la ICP mainnet pasará a través del gateway, y el tráfico que
+esté destinado a ICP será interceptado por el proxy. El proxy registrará el
+tráfico en el archivo
+`$HOME/Library/Preferences/dfinity/ichttpproxy/ic-http-proxy-proxy.log` en
+máquinas macOS o en el directorio `tmp` en máquinas Windows.
 
-DFINITY exclusively controls the HTTP gateways that serve canisters on `ic0.app` and `icp0.io`. Developers can then also configure their own [custom domains](/docs/building-apps/frontends/custom-domains/using-custom-domains) to point at the DFINITY-controlled HTTP gateways.
-
-Alternatively, developers can run their own HTTP gateways on their custom domains instead of using the DFINITY-controlled gateways, but this is not well supported yet.
-
-For a more secure solution, it is possible to run your own HTTP gateway instance locally. Additional details can be found in the [HTTP gateway specification](/docs/references/http-gateway-protocol-spec).
-
-### Running a local HTTP gateway
-
-To run your own local HTTP gateway, a proof-of-concept implementation can be used that enables a secure end-to-end connection with canisters deployed on ICP.
-
-This implementation features:
-
-- Translation between HTTP asset requests and ICP API calls.
-
-- Detects ICP domains from principals and custom domain records.
-
-- Terminates TLS connections locally.
-
-- Bypasses remote gateway denylists.
-
-- Resolves crypto domains.
-
-#### Installation
-
-You can download the pre-built installation package for your [operating system](https://github.com/dfinity/http-proxy?tab=readme-ov-file#installation).
-
-Once installed, you will have the option to start or stop the IC HTTP proxy service. Start the service to begin using it. Once the proxy is running, it will handle all traffic on your computer. Any traffic that's not meant for the ICP mainnet will pass through the gateway, and traffic that is meant for ICP will be intercepted by the proxy. The proxy will log traffic in the file `$HOME/Library/Preferences/dfinity/ichttpproxy/ic-http-proxy-proxy.log` on macOS machines or in the `tmp` directory on Windows machines.
-
-For example, make the following `curl` request to the NNS:
+Por ejemplo, realiza la siguiente solicitud `curl` al NNS:
 
 ```
 curl -v https://nns.ic0.app
 ```
 
-This will result in a log entry of:
+Esto generará un registro de:
 
 ```
 {"level":30, "time": "2024-06-17T13:46:40.947Z","pid":43956,"hostname":"JessieMgeonsMBP.attlocal.net","name":"IC HTTP Proxy Server","msg":"Proxying web3 request for nns.ic0.app:443"}
 ```
 
-## Outgoing HTTP requests
+## Solicitudes HTTP salientes
 
-For outgoing HTTP requests, the [HTTPS outcalls](/docs/building-apps/network-features/using-http/https-outcalls/overview) feature should be used.
+Para solicitudes HTTP salientes, se debe usar la función
+[HTTPS outcalls](/docs/building-apps/network-features/using-http/https-outcalls/overview).
 
-## Incoming HTTP requests
+## Solicitudes HTTP entrantes
 
-Every HTTP request first goes to `http_request`, and only if you return `upgrade: true` will it be upgraded and re-called as `http_request_update`. The HTTP method (`GET`, `POST`) does not matter.
+Cada solicitud HTTP llega primero a `http_request`, y solo si se devuelve
+`upgrade: true`, será mejorada y llamada nuevamente como `http_request_update`.
+El método HTTP (`GET`, `POST`) no importa.
 
-View the [HTTP Candid interface reference](/docs/references/http-gateway-protocol-spec#canister-http-interface) for more information.
+Consulta la
+[referencia de la interfaz HTTP Candid](/docs/references/http-gateway-protocol-spec#canister-http-interface)
+para más información.
 
 ### `GET` requests
 
-HTTP `GET` requests are used to retrieve and return existing data from an endpoint. To handle a canister's incoming `GET` requests, the `http_request` method can be exposed. Users and other services can call this method using a `query` call. To return HTTP response data, the following examples display how to configure the `http_request` to return an HTTP `GET` request.
+Las solicitudes HTTP `GET` se utilizan para recuperar y devolver datos
+existentes desde un endpoint. Para manejar las solicitudes `GET` entrantes de un
+canister, se puede exponer el método `http_request`. Los usuarios y otros
+servicios pueden llamar a este método usando una llamada `query`. Para devolver
+datos en la respuesta HTTP, los siguientes ejemplos muestran cómo configurar
+`http_request` para responder a una solicitud `GET`.
 
 <AdornedTabs groupId="languages">
 <TabItem value="motoko" label="Motoko" default>
 
-In Motoko, a `case` configuration can be used to return different `GET` responses based on the endpoint.
+En Motoko, se puede usar una configuración `case` para devolver diferentes
+respuestas `GET` según el endpoint.
 
-Check out the [certified cache](https://github.com/krpeacock/certified-cache/blob/8657652c4062ef0e91ebe269843ccef1bb4796ae/src/demo.mo#L40) example project to see an example of this implementation.
+Consulta el proyecto de ejemplo
+[certified cache](https://github.com/krpeacock/certified-cache/blob/8657652c4062ef0e91ebe269843ccef1bb4796ae/src/demo.mo#L40)
+para ver una implementación.
 
 </TabItem>
 <TabItem value="rust" label="Rust" default>
 
-Rust canisters can use the `query` attribute.
+Los canisters en Rust pueden utilizar el atributo `query`.
 
-Check out the [Rust documentation](https://docs.rs/ic-cdk/latest/ic_cdk/attr.query.html) for more info on query calls.
+Consulta la
+[documentación de Rust](https://docs.rs/ic-cdk/latest/ic_cdk/attr.query.html)
+para más información sobre llamadas `query`.
 
 </TabItem>
 <AdornedTab value={"typescript"} label="TypeScript" endAdornment={<BetaChip />}>
 
-[Learn more about Azle](https://demergent-labs.github.io/azle/the_azle_book.html).
+[Aprende más sobre Azle](https://demergent-labs.github.io/azle/the_azle_book.html).
 
 </AdornedTab>
 
 <AdornedTab value={"python"} label="Python" endAdornment={<BetaChip />}>
 
-[Learn more about Kybra](https://demergent-labs.github.io/kybra/).
+[Aprende más sobre Kybra](https://demergent-labs.github.io/kybra/).
 
 </AdornedTab>
 </AdornedTabs>
 
 ### `POST` requests
 
-HTTP `POST` requests are used to send data to an endpoint with the intention of retaining that data. You cannot make direct `POST` calls to a canister's `http_request_update` method with HTTP clients such as curl. Instead, you can make a `POST` call to a canister's HTTP endpoint, then configure the canister's `http_request` method to [upgrade the call to `http_request_update`](/docs/references/http-gateway-protocol-spec#upgrade-to-update-calls).
+Las solicitudes HTTP `POST` se utilizan para enviar datos a un endpoint con la
+intención de almacenar esos datos. No se pueden hacer llamadas directas `POST`
+al método `http_request_update` de un canister con clientes HTTP como `curl`. En
+su lugar, se puede hacer una llamada `POST` al endpoint HTTP de un canister y
+luego configurar el método `http_request` del canister para
+[mejorar la llamada a `http_request_update`](/docs/references/http-gateway-protocol-spec#upgrade-to-update-calls).
 
-The following examples display how to configure the `http_request_update` method within your canister.
+Los siguientes ejemplos muestran cómo configurar el método `http_request_update`
+dentro de un canister.
 
 <AdornedTabs groupId="languages">
 <TabItem value="motoko" label="Motoko" default>
 
-In Motoko, a `case` configuration can be used to return different `POST` responses based on the endpoint.
+En Motoko, se puede usar una configuración `case` para devolver diferentes
+respuestas `POST` según el endpoint.
 
-Check out the [certified cache](https://github.com/krpeacock/certified-cache/blob/8657652c4062ef0e91ebe269843ccef1bb4796ae/src/demo.mo#L40) example project to see an example of this implementation.
+Consulta el proyecto de ejemplo
+[certified cache](https://github.com/krpeacock/certified-cache/blob/8657652c4062ef0e91ebe269843ccef1bb4796ae/src/demo.mo#L40)
+para ver una implementación.
 
 </TabItem>
 <TabItem value="rust" label="Rust" default>
 
-Rust canisters can use the `update` attribute.
+Los canisters en Rust pueden utilizar el atributo `update`.
 
-Check out the [Rust documentation](https://docs.rs/ic-cdk/latest/ic_cdk/attr.update.html) for more info on update calls.
+Consulta la
+[documentación de Rust](https://docs.rs/ic-cdk/latest/ic_cdk/attr.update.html)
+para más información sobre llamadas `update`.
 
 </TabItem>
 <AdornedTab value={"typescript"} label="TypeScript" endAdornment={<BetaChip />}>
 
-[Learn more about Azle](https://demergent-labs.github.io/azle/the_azle_book.html).
+[Aprende más sobre Azle](https://demergent-labs.github.io/azle/the_azle_book.html).
 
 </AdornedTab>
 
 <AdornedTab value={"python"} label="Python" endAdornment={<BetaChip />}>
 
-[Learn more about Kybra](https://demergent-labs.github.io/kybra/).
+[Aprende más sobre Kybra](https://demergent-labs.github.io/kybra/).
 
 </AdornedTab>
 </AdornedTabs>
 
+## Recursos
 
-## Resources
-
-- [HTTP gateway specification](/docs/references/http-gateway-protocol-spec)
+- [Especificación del HTTP gateway](/docs/references/http-gateway-protocol-spec)
 
 - [HTTPS outcalls: `GET`](/docs/building-apps/network-features/using-http/https-outcalls/get)
 
 - [HTTPS outcalls: `POST`](/docs/building-apps/network-features/using-http/https-outcalls/post)
 
-- [HTTPS outcalls: technology overview](/docs/references/https-outcalls-how-it-works)
+- [HTTPS outcalls: descripción general de la tecnología](/docs/references/https-outcalls-how-it-works)
 
-- [Motoko certified cache example](https://github.com/krpeacock/certified-cache)
+- [Ejemplo de caché certificada en Motoko](https://github.com/krpeacock/certified-cache)
 
-- [Rust documentation](https://docs.rs/ic-cdk/latest/ic_cdk/attr.query.html)
+- [Documentación de Rust](https://docs.rs/ic-cdk/latest/ic_cdk/attr.query.html)
 
-- [Azle documentation](https://demergent-labs.github.io/azle/http.html)
+- [Documentación de Azle](https://demergent-labs.github.io/azle/http.html)
 
-- [Kybra documentation](https://demergent-labs.github.io/kybra/http.html)
-
+- [Documentación de Kybra](https://demergent-labs.github.io/kybra/http.html)

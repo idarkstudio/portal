@@ -1,83 +1,142 @@
 ---
 keywords: [intermediate, ethereum, eth, icp]
 ---
+
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Understanding ICP for Ethereum developers
+# Comprendiendo ICP para desarrolladores de Ethereum
 
-<MarkdownChipRow labels={["Intermediate", "Ethereum"]} />
+<MarkdownChipRow labels={["Intermedio", "Ethereum"]} />
 
-This guide is designed to help Ethereum developers understand the core concepts of ICP, focusing on the terminology and functionalities that differ between the two protocols. While the underlying concepts might be similar, ICP utilizes different terms to describe them.
+Esta guía está diseñada para ayudar a los desarrolladores de Ethereum a
+comprender los conceptos fundamentales de ICP, centrándose en la terminología y
+funcionalidades que difieren entre los dos protocolos. Si bien los conceptos
+subyacentes pueden ser similares, ICP utiliza diferentes términos para
+describirlos.
 
-For a feature comparison between the two protocols, refer to the [quick comparison between ICP and Ethereum](/docs/building-apps/essentials/network-overview#quick-comparison-with-ethereum).
+Para una comparación de características entre los dos protocolos, consulta la
+[comparación rápida entre ICP y Ethereum](/docs/building-apps/essentials/network-overview#quick-comparison-with-ethereum).
 
-## Terminology mapping
-This table summarizes the key terminology differences between Ethereum and ICP:
+## Mapeo de terminología
 
-| Ethereum term | ICP term | Notes |
-|---------------|----------|-------|
-| Smart contract | Canister |       |
-| Gas            | Cycles   |       |
-| Shard          | Subnet   |       |
-| Node           | Replica  |       |
-| Account        | Principal |       |
-| DAO            | SNS       | An SNS refers to a DAO using ICP's [unique framework](/docs/building-apps/governing-apps/overview) However, ICP DAOs can launch without using this framework.|
-| Message        | Memo      | On Ethereum, you can encode data, often referred to as a message, as a hexadecimal in the optional `data` field of any transaction. Some tools allow you to input text, which they then convert to hexadecimal in the background. On ICP, you can encode data as an arbitrary blob, provided it is less than 32 bytes, in the optional `memo` field of any [ICRC1 transaction](/docs/references/icrc1-standard/#icrc1_transfer). |
+Esta tabla resume las principales diferencias de terminología entre Ethereum e
+ICP:
 
-In addition, ICP has implemented similar token standards as Ethereum:
+| Término de Ethereum  | Término de ICP | Notas                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| -------------------- | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Contrato inteligente | Canister       |                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| Gas                  | Ciclos         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| Shard                | Subred         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| Nodo                 | Réplica        |                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| Cuenta               | Principal      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| DAO                  | SNS            | Un SNS se refiere a un DAO que utiliza el [marco único](/docs/building-apps/governing-apps/overview) de ICP. Sin embargo, los DAO de ICP pueden lanzarse sin utilizar este marco.                                                                                                                                                                                                                                                                              |
+| Mensaje              | Memo           | En Ethereum, puedes codificar datos, a menudo conocidos como mensaje, como un hexadecimal en el campo opcional `data` de cualquier transacción. Algunas herramientas te permiten ingresar texto, que luego convierten a hexadecimal en segundo plano. En ICP, puedes codificar datos como un blob arbitrario, siempre que sea menor a 32 bytes, en el campo opcional `memo` de cualquier [transacción ICRC1](/docs/references/icrc1-standard/#icrc1_transfer). |
 
-| Ethereum standard | ICP standard |
-|-------------------|--------------|
-| ERC-20            |[ICRC-1/ICRC-2](../../../../references/icrc1-standard) |
-| ERC-721           | [ICRC-7](https://github.com/dfinity/ICRC/blob/icrc7-wg-draft/ICRCs/ICRC-7/ICRC-7.md) |
+Además, ICP ha implementado estándares de tokens similares a Ethereum:
 
+| Estándar de Ethereum | Estándar de ICP                                                                      |
+| -------------------- | ------------------------------------------------------------------------------------ |
+| ERC-20               | [ICRC-1/ICRC-2](../../../../references/icrc1-standard)                               |
+| ERC-721              | [ICRC-7](https://github.com/dfinity/ICRC/blob/icrc7-wg-draft/ICRCs/ICRC-7/ICRC-7.md) |
 
-## Smart contracts
+## Contratos inteligentes
 
-Both Ethereum and ICP allow developers to deploy programs that run onchain. These programs are referred to as smart contracts on Ethereum and canister smart contracts, or simply just [canisters](/docs/building-apps/essentials/canisters), on ICP.
+Tanto Ethereum como ICP permiten a los desarrolladores implementar programas que
+se ejecutan en la cadena. Estos programas se conocen como contratos inteligentes
+en Ethereum y como canisters en ICP.
 
-This comparison provides an overview of the key differences in smart contract development on Ethereum and ICP.
+Esta comparación proporciona una visión general de las principales diferencias
+en el desarrollo de contratos inteligentes en Ethereum e ICP.
 
-### Key differences
+### Diferencias clave
 
-#### Creation
-**Ethereum**: Smart contracts are written in Solidity and deployed immutably onto the blockchain.
-**ICP**: Canisters can be written in any language that compiles into [Wasm](https://webassembly.org/) or has an interpreter that can compile to Wasm, including [Rust](/docs/building-apps/developer-tools/cdks/rust/intro-to-rust), [Typescript](https://demergent-labs.github.io/azle/), [Motoko](/docs/motoko/main/getting-started/motoko-introduction), and [Python](https://demergent-labs.github.io/kybra/).
+#### Creación
 
-#### Accounts
-**Ethereum**: On Ethereum, there are two main types of accounts: externally owned accounts (EOAs) and contract accounts. Externally owned accounts, often referred to as wallets, are controlled by anyone with the private key. A contract account is a smart contract deployed to the network.
+**Ethereum**: Los contratos inteligentes se escriben en Solidity y se
+implementan de forma inmutable en la cadena de bloques. **ICP**: Los canisters
+se pueden escribir en cualquier lenguaje que se compile en
+[Wasm](https://webassembly.org/) o que tenga un intérprete que pueda compilar a
+Wasm, incluyendo
+[Rust](/docs/building-apps/developer-tools/cdks/rust/intro-to-rust),
+[Typescript](https://demergent-labs.github.io/azle/),
+[Motoko](/docs/motoko/main/getting-started/motoko-introduction) y
+[Python](https://demergent-labs.github.io/kybra/).
 
-**ICP**: Similar to EOA accounts, [several wallets support ICP](https://support.dfinity.org/hc/en-us/articles/4405480810644-Which-wallets-can-store-ICP-utility-tokens).
+#### Cuentas
 
-Similar to the concept of contract accounts, ICP canisters themselves can hold ICP and ICRC1/ICRC2 tokens on ICP. The canister ID serves as a principal or unique identifier that allows you to send tokens to. ICP canisters can generate multiple ECDSA-based public keys using [Threshold ECDSA](/docs/building-apps/network-features/signatures/t-ecdsa).
+**Ethereum**: En Ethereum, existen dos tipos principales de cuentas: cuentas de
+propiedad externa (EOAs) y cuentas de contrato. Las cuentas de propiedad
+externa, a menudo conocidas como billeteras, son controladas por cualquier
+persona con la clave privada. Una cuenta de contrato es un contrato inteligente
+implementado en la red.
 
-#### Deployment
-**Ethereum**: Developers typically use development frameworks like Hardhat or Truffle to compile and deploy their smart contracts.
-**ICP**: Developers use `dfx`, which is a similar development environment. [`dfx`](/docs/building-apps/getting-started/install#installing-dfx-via-dfxvm) is a command-line tool that interacts with the IC SDK and allows developers to compile and deploy their canisters.
+**ICP**: Similar a las cuentas EOA,
+[varias billeteras admiten ICP](https://support.dfinity.org/hc/en-us/articles/4405480810644-Which-wallets-can-store-ICP-utility-tokens).
 
-#### Testing
+Similar al concepto de cuentas de contrato, los propios canisters de ICP pueden
+contener ICP y tokens ICRC1/ICRC2 en ICP. El ID del canister sirve como un
+principal o identificador único que te permite enviar tokens a él. Los canisters
+de ICP pueden generar múltiples claves públicas basadas en ECDSA utilizando
+[Threshold ECDSA](/docs/building-apps/network-features/signatures/t-ecdsa).
 
-**Ethereum**: Developers can utilize testnets such as Sepolia for deploying and testing smart contracts before deploying to the mainnet.
+#### Implementación
 
-**ICP**: Currently, testing is done in the local environment. A [playground environment](/docs/building-apps/developing-canisters/deploy/) on the mainnet is available for canisters, but deployment time is limited to 20 minutes. However, the ability to upgrade and delete canisters on the mainnet allows developers greater flexibility to iterate and refine their smart contracts than on Ethereum.
+**Ethereum**: Los desarrolladores suelen utilizar frameworks de desarrollo como
+Hardhat o Truffle para compilar e implementar sus contratos inteligentes.
+**ICP**: Los desarrolladores utilizan `dfx`, que es un entorno de desarrollo
+similar.
+[`dfx`](/docs/building-apps/getting-started/install#installing-dfx-via-dfxvm) es
+una herramienta de línea de comandos que interactúa con el IC SDK y permite a
+los desarrolladores compilar e implementar sus canisters.
 
+#### Pruebas
 
-#### Paying for gas
+**Ethereum**: Los desarrolladores pueden utilizar testnets como Sepolia para
+implementar y probar contratos inteligentes antes de implementarlos en la
+mainnet.
 
-**Ethereum**: Users pay for gas fees directly using the crypto wallet they connect to the dapp.
-**ICP**: Using the [reverse gas model](/docs/building-apps/essentials/gas-cost#the-reverse-gas-model), the dapp developers, not the users, pay for the gas fees. The reverse gas model aims to provide a smoother user experience by eliminating upfront fees.
+**ICP**: Actualmente, las pruebas se realizan en el entorno local. Hay un
+entorno de prueba en la mainnet disponible para canisters, pero el tiempo de
+implementación está limitado a 20 minutos. Sin embargo, la capacidad de
+actualizar y eliminar canisters en la mainnet permite a los desarrolladores una
+mayor flexibilidad para iterar y mejorar sus contratos inteligentes en
+comparación con Ethereum.
 
-#### Updates
-**Ethereum**: Smart contracts are immutable. To update functionalities, developers need to create a new smart contract and migrate data.
-**ICP**: Developers can create upgradeable or non-upgradable (also known as "blackholed") canisters. Upgradable canisters allow updates by reinstalling the code or deploying a new version. Non-upgradable canisters are similar to Ethereum smart contracts.
+#### Pago de gas
 
-#### Consensus
+**Ethereum**: Los usuarios pagan las tarifas de gas directamente utilizando la
+billetera de criptomonedas a la que se conectan a la dApp. **ICP**: Utilizando
+el
+[modelo de gas inverso](/docs/building-apps/essentials/gas-cost#the-reverse-gas-model),
+los desarrolladores de la dApp, no los usuarios, pagan las tarifas de gas. El
+modelo de gas inverso tiene como objetivo proporcionar una experiencia de
+usuario más fluida al eliminar las tarifas por adelantado.
 
-**Ethereum**: Ethereum uses [proof of stake](https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/) as its consensus mechanism.
-**ICP**: The IC consensus protocol provides cryptographically guaranteed finality. The approach on ICP solves the drawbacks of probabilistic finality used in Bitcoin-like protocols, including slow finality times. ICP ensures faster and more secure transaction finality.
+#### Actualizaciones
 
-## Resources
+**Ethereum**: Los contratos inteligentes son inmutables. Para actualizar
+funcionalidades, los desarrolladores deben crear un nuevo contrato inteligente y
+migrar los datos. **ICP**: Los desarrolladores pueden crear canisters
+actualizables o no actualizables (también conocidos como "blackholed"). Los
+canisters actualizables permiten actualizaciones mediante la reinstalación del
+código o la implementación de una nueva versión. Los canisters no actualizables
+son similares a los contratos inteligentes de Ethereum.
 
-- The Internet Computer for Ethereum Developers [blog post](https://medium.com/dfinity/the-internet-computer-for-ethereum-developers-3331b50db31b) by Dominic Wörner
+#### Consenso
 
-- [Internet Computer Guide for Ethereum Developers](https://github.com/jennifertrin/ICEthereumGuide) by Jennifer Tran
+**Ethereum**: Ethereum utiliza
+[prueba de participación](https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/)
+como su mecanismo de consenso. **ICP**: El protocolo de consenso de IC
+proporciona una finalidad garantizada criptográficamente. El enfoque en ICP
+resuelve las desventajas de la finalidad probabilística utilizada en los
+protocolos similares a Bitcoin, incluidos los tiempos de finalidad lentos. ICP
+garantiza una finalidad de transacción más rápida y segura.
+
+## Recursos
+
+- The Internet Computer for Ethereum Developers
+  [publicación en el blog](https://medium.com/dfinity/the-internet-computer-for-ethereum-developers-3331b50db31b)
+  por Dominic Wörner
+
+- [Guía de Internet Computer para desarrolladores de Ethereum](https://github.com/jennifertrin/ICEthereumGuide)
+  por Jennifer Tran

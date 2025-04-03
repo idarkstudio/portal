@@ -1,125 +1,193 @@
 ---
-keywords: [advanced, Chain Fusion, examples, projects, samples, sample dapps, example dapps]
+keywords:
+  [
+    advanced,
+    Chain Fusion,
+    examples,
+    projects,
+    samples,
+    sample dapps,
+    example dapps,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Chain Fusion examples
+# Ejemplos de Chain Fusion
 
-<MarkdownChipRow labels={["Advanced", "Chain Fusion" ]} />
+<MarkdownChipRow labels={["Avanzado", "Chain Fusion"]} />
 
-ICP's Chain Fusion technology allows developers to build dapps that can interact seamlessly with other blockchain networks without using an intermediary, such as an oracle or a bridge.
+La tecnología Chain Fusion de ICP permite a los desarrolladores construir dapps
+que pueden interactuar sin problemas con otras redes blockchain sin necesidad de
+un intermediario, como un oráculo o un puente.
 
-ICP currently has a direct infrastructure integration with the Bitcoin network, an RPC integration with Ethereum and EVM-based chains, and support for making calls to other chains, such as Sui, through the [HTTPS outcalls](/docs/building-apps/network-features/using-http/https-outcalls/overview) and [Threshold ECDSA](/docs/building-apps/network-features/signatures/t-ecdsa) features.
+Actualmente, ICP tiene una integración directa con la red Bitcoin, una
+integración RPC con Ethereum y cadenas EVM, y soporte para realizar llamadas a
+otras cadenas, como Sui, a través de las funciones de  
+[llamadas HTTPS](/docs/building-apps/network-features/using-http/https-outcalls/overview)
+y  
+[Threshold ECDSA](/docs/building-apps/network-features/signatures/t-ecdsa).
 
-This page highlights both DFINITY-contributed and community-contributed tooling and example projects that showcase how Chain Fusion technology can be implemented for various different use cases.
+Esta página destaca herramientas y proyectos de ejemplo, tanto contribuidos por
+DFINITY como por la comunidad, que muestran cómo se puede implementar la
+tecnología Chain Fusion en diferentes casos de uso.
 
-## Bitcoin examples
+## Ejemplos de Bitcoin
 
-[Learn more about the Bitcoin integration](/docs/building-apps/chain-fusion/bitcoin/overview).
+[Aprende más sobre la integración con Bitcoin](/docs/building-apps/chain-fusion/bitcoin/overview).
 
-- [Bitcoin integration landing page](https://internetcomputer.org/bitcoin-integration): Learn more about ICP's direct Bitcoin integration.
+- [Página de integración con Bitcoin](https://internetcomputer.org/bitcoin-integration):  
+  Aprende más sobre la integración directa de ICP con Bitcoin.
 
-- [ckBTC](https://github.com/dfinity/ic/tree/master/rs/bitcoin/ckbtc): GitHub repo for ICP's canister-controlled bitcoin twin that is backed 1:1 with BTC held onchain.
+- [ckBTC](https://github.com/dfinity/ic/tree/master/rs/bitcoin/ckbtc):  
+  Repositorio de GitHub del gemelo de Bitcoin controlado por un canister en ICP,
+  respaldado 1:1 con BTC en la cadena.
 
-- [Internet Computer Bitcoin library](https://github.com/Benjamin-Loison/Internet-Computer-Bitcoin-Library): A utility library for Motoko and Rust that helps simplify building on the ICP Bitcoin integration.
+- [Biblioteca de Bitcoin para Internet Computer](https://github.com/Benjamin-Loison/Internet-Computer-Bitcoin-Library):  
+  Biblioteca de utilidades para Motoko y Rust que facilita la integración con
+  Bitcoin en ICP.
 
-- [Multi-subnet Bitcoin wallet](https://github.com/sardariuss/ic_btc_multisig): A proof of concept showcasing multi-subnet Bitcoin custody.
+- [Wallet Bitcoin multi-subred](https://github.com/sardariuss/ic_btc_multisig):  
+  Prueba de concepto que muestra la custodia de Bitcoin en múltiples subredes.
 
-- [Bitfinity wallet](https://wallet.bitfinity.network/): A browser extension, multi-chain wallet.
+- [Bitfinity Wallet](https://wallet.bitfinity.network/):  
+  Extensión de navegador y wallet multichain.
 
-- [Loka](https://github.com/lokaverse/loka_canister): A trustless, non-custodial bitcoin mining platform built on ICP.
+- [Loka](https://github.com/lokaverse/loka_canister):  
+  Plataforma de minería de Bitcoin descentralizada y sin custodia, construida en
+  ICP.
 
-- [Ordinals canister](https://github.com/sardariuss/ordinals_canister): A canister that enables the retrieval of Bitcoin Ordinals and their corresponding inscriptions.
+- [Canister de Ordinals](https://github.com/sardariuss/ordinals_canister):  
+  Canister que permite la recuperación de Bitcoin Ordinals y sus inscripciones
+  correspondientes.
 
-- [Schnorr canister](https://github.com/domwoe/schnorr_canister): A canister used to create Schnorr signatures compatible with Taproot.
+- [Canister de Schnorr](https://github.com/domwoe/schnorr_canister):  
+  Canister que crea firmas Schnorr compatibles con Taproot.
 
-- [Inscription canister](https://github.com/domwoe/inscription_canister): A canister used to create Ordinal inscriptions.
+- [Canister de Inscripciones](https://github.com/domwoe/inscription_canister):  
+  Canister utilizado para crear inscripciones de Ordinals.
 
-- Crowdfunding platforms that accept BTC, such as [Funded](https://funded.app/).
+- Plataformas de crowdfunding que aceptan BTC, como
+  [Funded](https://funded.app/).
 
-- Social applications that support sending crypto to other users, like [OpenChat](https://oc.app/).
+- Aplicaciones sociales que permiten enviar criptomonedas a otros usuarios, como
+  [OpenChat](https://oc.app/).
 
-- [Bioniq](https://bioniq.io/home/24-hours): A BTC Ordinals marketplace built on ICP.
+- [Bioniq](https://bioniq.io/home/24-hours):  
+  Mercado de Bitcoin Ordinals construido en ICP.
 
-- [Bit Basel](https://bitbasel.com/): An art marketplace that uses BTC Ordinals.
+- [Bit Basel](https://bitbasel.com/):  
+  Mercado de arte basado en Bitcoin Ordinals.
 
-- Online eCommerce platforms such as [Bitshop](https://ughim-6qaaa-aaaah-qc7qa-cai.ic0.app/).
+- Plataformas de comercio en línea como
+  [Bitshop](https://ughim-6qaaa-aaaah-qc7qa-cai.ic0.app/).
 
-[View the full list of Bitcoin ecosystem examples](https://internetcomputer.org/ecosystem?tag=Bitcoin).
+[Ver la lista completa de ejemplos del ecosistema de Bitcoin](https://internetcomputer.org/ecosystem?tag=Bitcoin).
 
-## Ethereum & EVM examples
+## Ejemplos de Ethereum y EVM
 
-[Learn more about the Ethereum integration](/docs/building-apps/chain-fusion/ethereum/overview).
+[Aprende más sobre la integración con Ethereum](/docs/building-apps/chain-fusion/ethereum/overview).
 
-- [Bitfinity EVM](https://bitfinity.network): An implementation of the Ethereum Virtual Machine (EVM) on ICP.
+- [Bitfinity EVM](https://bitfinity.network):  
+  Implementación de la Ethereum Virtual Machine (EVM) en ICP.
 
-- [CCAMP](https://github.com/usherlabs/ccamp): A general-purpose, modular, and custom data-driven cross-chain asset management protocol.
+- [CCAMP](https://github.com/usherlabs/ccamp):  
+  Protocolo modular y personalizable para la gestión de activos entre cadenas.
 
-- [ChainSight](https://docs.chainsight.network/chainsight-overview/introduction): A composable cross-chain data oracle built using HTTPS outcalls and chain-key ECDSA.
+- [ChainSight](https://docs.chainsight.network/chainsight-overview/introduction):  
+  Oráculo de datos cross-chain basado en llamadas HTTPS y firmas ECDSA de clave
+  compartida.
 
-- [ckETH](https://github.com/dfinity/ic/tree/master/rs/ethereum/cketh): GitHub repo for ICP's canister-controlled Ethereum twin that is backed 1:1 with ETH held onchain.
+- [ckETH](https://github.com/dfinity/ic/tree/master/rs/ethereum/cketh):  
+  Repositorio de GitHub del gemelo de Ethereum controlado por un canister en
+  ICP, respaldado 1:1 con ETH en la cadena.
 
-- [ckNFT](https://github.com/b3hr4d/cknft): A proof of concept to bridge ICRC-7 NFTs to ERC-1155 NFTs on EVMs.
+- [ckNFT](https://github.com/b3hr4d/cknft):  
+  Prueba de concepto para convertir NFTs ICRC-7 a ERC-1155 en redes EVM.
 
-- [ERC20-ICP](https://github.com/dfinity/erc20-icp): Smart contracts and canisters that enable ICP tokens as ERC20 tokens on Ethereum.
+- [ERC20-ICP](https://github.com/dfinity/erc20-icp):  
+  Smart contracts y canisters que permiten representar ICP tokens como ERC20 en
+  Ethereum.
 
-- [EVM RPC canister](https://github.com/internet-computer-protocol/evm-rpc-canister): GitHub repo for ICP's EVM RPC canister, used to interact with EVM blockchains from the Internet Computer.
+- [EVM RPC Canister](https://github.com/internet-computer-protocol/evm-rpc-canister):  
+  Repositorio de GitHub del canister de EVM RPC de ICP, usado para interactuar
+  con redes EVM desde el Internet Computer.
 
-- [Ethereum canister](https://github.com/eigerco/ethereum-canister): A canister running the Ethereum Light client (Helios).
+- [Ethereum Canister](https://github.com/eigerco/ethereum-canister):  
+  Canister que ejecuta un cliente ligero de Ethereum (Helios).
 
-- [EVM utility canister](https://github.com/icopen/evm_utils_ic): A utility canister used to create and parse EVM-compliant transactions.
+- [EVM Utility Canister](https://github.com/icopen/evm_utils_ic):  
+  Canister de utilidades para crear y analizar transacciones compatibles con
+  EVM.
 
-- [ic-solidity-bindgen](https://github.com/horizonx-tech/ic-solidity-bindgen): A tool to generate Rust bindings for Solidity contracts from ABIs to use on ICP.
+- [ic-solidity-bindgen](https://github.com/horizonx-tech/ic-solidity-bindgen):  
+  Herramienta para generar bindings de Rust para contratos de Solidity a partir
+  de ABIs para su uso en ICP.
 
-- [ic-eth-starter](https://github.com/dfinity/ic-eth-starter): An advanced starter project for interacting with Ethereum on ICP.
+- [ic-eth-starter](https://github.com/dfinity/ic-eth-starter):  
+  Proyecto inicial avanzado para interactuar con Ethereum en ICP.
 
-- [ic-web3-rs](https://github.com/horizonx-tech/ic-web3-rs): A utility library used to interact with EVM networks.
+- [ic-web3-rs](https://github.com/horizonx-tech/ic-web3-rs):  
+  Biblioteca de utilidades para interactuar con redes EVM.
 
-- [Oisy](https://github.com/dfinity/oisy-wallet): A novel Ethereum wallet that is hosted on ICP. Oisy is browser-based, fully onchain, and secured by chain-key cryptography and Internet Identity.
+- [Oisy](https://github.com/dfinity/oisy-wallet):  
+  Wallet de Ethereum totalmente onchain, basada en navegador y asegurada con
+  Internet Identity.
 
-- [Omnic](https://github.com/rocklabs-io/omnic): A cross-chain messaging protocol to connect EVM-compatible chains via ICP.
+- [Omnic](https://github.com/rocklabs-io/omnic):  
+  Protocolo de mensajería cross-chain para conectar cadenas EVM a través de ICP.
 
-- [Orally](https://github.com/orally-network/oracle): A cross-chain oracle factory built using HTTPS outcalls and chain-key ECDSA.
+- [Orally](https://github.com/orally-network/oracle):  
+  Fábrica de oráculos cross-chain basada en llamadas HTTPS y ECDSA de clave
+  compartida.
 
-- [Gitcoin Passport client](https://github.com/vporton/passport-client-dfinity): A sample app for securely retrieving Gitcoin Passport scores and storing them in a database.
+- [Gitcoin Passport Client](https://github.com/vporton/passport-client-dfinity):  
+  Aplicación para recuperar y almacenar puntajes de Gitcoin Passport de forma
+  segura.
 
-- [Sign in with Ethereum](https://forum.dfinity.org/t/announcing-ic-siwe-use-ethereum-wallets-to-login-to-ic/27450): Use an Ethereum wallet to sign into ICP dapps.
+- [Iniciar sesión con Ethereum](https://forum.dfinity.org/t/announcing-ic-siwe-use-ethereum-wallets-to-login-to-ic/27450):  
+  Usa una wallet de Ethereum para iniciar sesión en dapps de ICP.
 
-- [Build a cross-chain Ethereum payment platform](https://forum.dfinity.org/t/building-a-cross-chain-eth-payment-and-e-commerce-platform-on-the-internet-computer-a-step-by-step-tutorial/23938): A community tutorial for building an Ethereum payment and eCommerce platform on ICP.
+- [Construye una plataforma de pagos Ethereum cross-chain](https://forum.dfinity.org/t/building-a-cross-chain-eth-payment-and-e-commerce-platform-on-the-internet-computer-a-step-by-step-tutorial/23938):
+  Un tutorial de la comunidad para construir una plataforma de pagos y comercio
+  electrónico de Ethereum en ICP.
 
-- [EVM on ICP](https://fxa77-fiaaa-aaaae-aaana-cai.raw.ic0.app/evm/).
+- [EVM en ICP](https://fxa77-fiaaa-aaaae-aaana-cai.raw.ic0.app/evm/).
 
-- Online betting platforms like [VaultBet](https://vault-bet.com/).
+- Plataformas de apuestas en línea como [VaultBet](https://vault-bet.com/).
 
-- Digital identities that can be used to hold multi-chain assets like [NFID](https://nfid.one/).
+- Identidades digitales que se pueden utilizar para mantener activos
+  multi-cadena como [NFID](https://nfid.one/).
 
-[View the full list of Ethereum ecosystem examples](https://internetcomputer.org/ecosystem?tag=Ethereum).
+[Ver la lista completa de ejemplos del ecosistema de Ethereum](https://internetcomputer.org/ecosystem?tag=Ethereum).
 
-## Other ecosystems
+## Otros ecosistemas
 
-ICP supports communication with other ecosystems through HTTPS outcalls and threshold ECDSA signatures. Some non-EVM-based ecosystem examples include:
+ICP admite comunicación con otros ecosistemas a través de llamadas HTTPS y
+firmas ECDSA de clave compartida. Algunos ejemplos incluyen:
 
-- [Galactic bridge](https://github.com/weichain/galactic-bridge-icp): A canister-controlled Solana bridge.
+- [Galactic Bridge](https://github.com/weichain/galactic-bridge-icp):  
+  Puente controlado por canisters para Solana.
 
-- [Sui address generation](https://github.com/jennifertrin/suionicp): An example of how to generate a Sui address controlled by an ICP canister.
+- [Generación de direcciones Sui](https://github.com/jennifertrin/suionicp):  
+  Ejemplo de generación de direcciones Sui controladas por un canister de ICP.
 
-- [Sign in with Solana](https://forum.dfinity.org/t/announcing-ic-siws-use-solana-wallets-to-login-to-icp/29261): Use a Solana wallet to sign into ICP dapps.
+- [Iniciar sesión con Solana](https://forum.dfinity.org/t/announcing-ic-siws-use-solana-wallets-to-login-to-icp/29261).
 
 ## General
 
-- [Chain Fusion starter template](https://github.com/letmejustputthishere/chain-fusion-starter).
+- [Plantilla de inicio de Chain Fusion](https://github.com/letmejustputthishere/chain-fusion-starter).
 
-- [Chain-key ECDSA](https://internetcomputer.org/how-it-works/threshold-ecdsa-signing/): Learn more about the technology that allows creating transactions that can target various chains from canisters on ICP.
+- [Chain-key ECDSA](https://internetcomputer.org/how-it-works/threshold-ecdsa-signing/):
+  Aprende más sobre la tecnología que permite crear transacciones que pueden
+  apuntar a varias cadenas desde canisters en ICP.
 
-- [B3Wallet](https://github.com/B3Pay/b3-wallet): A decentralized wallet supporting multiple blockchains, including Ethereum, Bitcoin, and ICP.
+- [B3Wallet](https://github.com/B3Pay/b3-wallet): Una wallet descentralizada que
+  admite múltiples blockchains, incluyendo Ethereum, Bitcoin e ICP.
 
 ## Resources
 
 - [HTTPS outcalls](/docs/building-apps/network-features/using-http/https-outcalls/overview).
-
 - [Threshold ECDSA](/docs/building-apps/network-features/signatures/t-ecdsa).
-
-- [ICP ecosystem](https://internetcomputer.org/ecosystem).
-
+- [Ecosistema de ICP](https://internetcomputer.org/ecosystem).
 - [Awesome ICP](https://github.com/dfinity/awesome-internet-computer).

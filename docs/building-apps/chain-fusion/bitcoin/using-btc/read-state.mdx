@@ -8,48 +8,59 @@ import { AdornedTab } from "/src/components/Tabs/AdornedTab";
 import { BetaChip } from "/src/components/Chip/BetaChip";
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Reading the Bitcoin state
+# Lectura del estado de Bitcoin
 
-<MarkdownChipRow labels={["Advanced", "Bitcoin", "Tutorial"]} />
+<MarkdownChipRow labels={["Avanzado", "Bitcoin", "Tutorial"]} />
 
-To read information from the Bitcoin network's state, the Bitcoin integration API exposes the following methods:
+Para leer información del estado de la red de Bitcoin, la API de integración de
+Bitcoin expone los siguientes métodos:
 
-- `bitcoin_get_utxos`: Returns the unspent transaction outputs (UTXOs) of a Bitcoin address.
+- `bitcoin_get_utxos`: Devuelve las salidas de transacciones no gastadas (UTXOs)
+  de una dirección de Bitcoin.
+- `bitcoin_get_balance`: Devuelve el saldo de una dirección de Bitcoin.
+- `bitcoin_get_current_fee_percentiles`: Devuelve los percentiles de las tarifas
+  de las últimas 10,000 transacciones. La tarifa se devuelve en millisatoshi por
+  byte virtual.
+- `bitcoin_get_block_headers`: Devuelve los encabezados de bloque dentro de un
+  rango de altura inicial y altura final (opcional) para la red de Bitcoin
+  especificada (testnet o mainnet).
 
-- `bitcoin_get_balance`: Returns the balance of a Bitcoin address.
-
-- `bitcoin_get_current_fee_percentiles`: Returns the percentiles of the fees for the last 10_000 transactions. Returns the fee in millisatoshi per virtual byte.
-
-- `bitcoin_get_block_headers`: Returns the block headers within a provided range of start height and end height (optional) for the specified Bitcoin network (testnet or mainnet).
-
-Standard Bitcoin addresses (P2PKH, P2SH, P2WPKH, etc.) are supported.
+Se admiten direcciones estándar de Bitcoin (P2PKH, P2SH, P2WPKH, etc.).
 
 :::info
 
-To test canisters locally that use the following code snippets, you will need to enable local Bitcoin development. To do this, you can either start the local replica with `dfx start --enable-bitcoin` or you can include the following configuration in the project's `dfx.json` file:
+Para probar canisters localmente que utilicen los siguientes fragmentos de
+código, es necesario habilitar el desarrollo local de Bitcoin. Para hacerlo,
+puedes iniciar la réplica local con `dfx start --enable-bitcoin` o incluir la
+siguiente configuración en el archivo `dfx.json` del proyecto:
 
 ```json reference
 https://github.com/dfinity/examples/blob/master/motoko/basic_bitcoin/dfx.json#L9-L16
 ```
 
-[Learn more about `dfx.json` configuration options](https://internetcomputer.org/docs/building-apps/developer-tools/dfx-json-reference).
-
+[Más información sobre las opciones de configuración de `dfx.json`](https://internetcomputer.org/docs/building-apps/developer-tools/dfx-json-reference).
 
 :::
 
-## Bitcoin networks
+## Redes de Bitcoin
 
-Both the Bitcoin testnet and mainnet networks are supported. The network can be specified as a parameter in each function.
+Se admiten tanto la red testnet como la mainnet de Bitcoin. La red se puede
+especificar como un parámetro en cada función.
 
-## API costs
+## Costos de la API
 
-Each call to the API has a cost of cycles; therefore, a sufficient amount of cycles must be sent with each call.
+Cada llamada a la API tiene un costo en ciclos, por lo que se debe enviar una
+cantidad suficiente de ciclos con cada llamada.
 
-Cycles costs will vary between the Bitcoin testnet and mainnet. For a breakdown of the costs, see [Bitcoin API costs](/docs/references/bitcoin-how-it-works).
+Los costos de los ciclos varían entre la red testnet y la mainnet de Bitcoin.
+Para un desglose de los costos, consulta
+[Costos de la API de Bitcoin](/docs/references/bitcoin-how-it-works).
 
-## Reading unspent transaction outputs
+## Lectura de salidas de transacciones no gastadas
 
-To read unspent transaction outputs from the Bitcoin network, make a call to the `bitcoin_get_utxos` Bitcoin API method. You can create a function in your canister to call this method, such as:
+Para leer las salidas de transacciones no gastadas de la red de Bitcoin, realiza
+una llamada al método `bitcoin_get_utxos` de la API de Bitcoin. Puedes crear una
+función en tu canister para llamar a este método, por ejemplo:
 
 <AdornedTabs groupId="languages">
 <TabItem value="motoko" label="Motoko" default>
@@ -69,18 +80,21 @@ https://github.com/dfinity/examples/blob/master/rust/basic_bitcoin/src/basic_bit
 </TabItem>
 </AdornedTabs>
 
-
-Then make a call to this canister's function with the command:
+Luego, realiza una llamada a la función del canister con el siguiente comando:
 
 ```
 dfx canister --network ic call CANISTER_NAME get_utxos '("ADDRESS")'
 ```
 
-Replace `CANISTER_NAME` with your canister's name and replace `ADDRESS` with your Bitcoin address. [Learn more about Bitcoin addresses.](https://en.bitcoin.it/wiki/Transaction#Pay-to-PubkeyHash)
+Reemplaza `CANISTER_NAME` con el nombre de tu canister y `ADDRESS` con tu
+dirección de Bitcoin.  
+[Más información sobre direcciones de Bitcoin.](https://en.bitcoin.it/wiki/Transaction#Pay-to-PubkeyHash)
 
-## Reading current balance
+## Lectura del saldo actual
 
-To read the current balance of a Bitcoin address, make a call to the `bitcoin_get_balance` Bitcoin API method. You can create a function in your canister to call this method, such as:
+Para leer el saldo actual de una dirección de Bitcoin, realiza una llamada al
+método `bitcoin_get_balance` de la API de Bitcoin. Puedes crear una función en
+tu canister para llamar a este método, por ejemplo:
 
 <AdornedTabs groupId="languages">
 <TabItem value="motoko" label="Motoko" default>
@@ -100,20 +114,26 @@ https://github.com/dfinity/examples/blob/master/rust/basic_bitcoin/src/basic_bit
 </TabItem>
 </AdornedTabs>
 
-Then make a call to this canister's function with the command:
+Luego, realiza una llamada a la función del canister con el siguiente comando:
 
 ```
 dfx canister --network ic call CANISTER_NAME get_balance '("ADDRESS")'
 ```
 
-Replace `CANISTER_NAME` with your canister's name and replace `ADDRESS` with your Bitcoin address. [Learn more about Bitcoin addresses.](https://en.bitcoin.it/wiki/Transaction#Pay-to-PubkeyHash)
+Reemplaza `CANISTER_NAME` con el nombre de tu canister y `ADDRESS` con tu
+dirección de Bitcoin.  
+[Más información sobre direcciones de Bitcoin.](https://en.bitcoin.it/wiki/Transaction#Pay-to-PubkeyHash)
 
-## Reading the fee percentile
+## Lectura del percentil de tarifas
 
-The transaction fees in the Bitcoin network change dynamically based on the number of pending transactions. In order to get fee percentiles for the last few blocks (4 - 10), call `bitcoin_get_current_fee_percentiles`.
+Las tarifas de transacción en la red de Bitcoin cambian dinámicamente según la
+cantidad de transacciones pendientes. Para obtener los percentiles de tarifas de
+los últimos bloques (4 - 10), llama a `bitcoin_get_current_fee_percentiles`.
 
-The function returns 101 numbers that are fees measured in millisatoshi per virtual byte. The `i`-th element of the result corresponds to the `i`-th percentile fee. For example, to get the median fee over the last few blocks, look at the `50`-th element of the result.
-
+La función devuelve 101 valores numéricos que representan tarifas medidas en
+millisatoshi por byte virtual. El elemento `i`-ésimo del resultado corresponde a
+la tarifa del percentil `i`. Por ejemplo, para obtener la tarifa mediana de los
+últimos bloques, consulta el elemento `50`-ésimo del resultado.
 
 <AdornedTabs groupId="languages">
 <TabItem value="motoko" label="Motoko" default>
@@ -133,19 +153,18 @@ https://github.com/dfinity/examples/blob/master/rust/basic_bitcoin/src/basic_bit
 </TabItem>
 </AdornedTabs>
 
-
-Then make a call to this canister's function with the command:
+Luego, realiza una llamada a la función del canister con el siguiente comando:
 
 ```
 dfx canister --network ic call CANISTER_NAME get_current_fee_percentiles
 ```
 
-Replace `CANISTER_NAME` with your canister's name.
+Reemplaza `CANISTER_NAME` con el nombre de tu canister.
 
-## Resources
+## Recursos
 
-- [Basic Bitcoin example dapp - Motoko](https://github.com/dfinity/examples/tree/master/motoko/basic_bitcoin).
+- [Ejemplo básico de aplicación Bitcoin - Motoko](https://github.com/dfinity/examples/tree/master/motoko/basic_bitcoin).
 
-- [Motoko Bitcoin integration algorithms](https://github.com/tgalal/motoko-bitcoin/tree/10cf7f2efbba9bb4d077013db1b990143f193844).
+- [Algoritmos de integración de Bitcoin en Motoko](https://github.com/tgalal/motoko-bitcoin/tree/10cf7f2efbba9bb4d077013db1b990143f193844).
 
-- [Basic Bitcoin example dapp - Rust](https://github.com/dfinity/examples/tree/master/rust/basic_bitcoin).
+- [Ejemplo básico de aplicación Bitcoin - Rust](https://github.com/dfinity/examples/tree/master/rust/basic_bitcoin).

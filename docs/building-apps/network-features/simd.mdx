@@ -11,48 +11,104 @@ import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
 # WebAssembly SIMD
 
-<MarkdownChipRow labels={["Advanced", "Concept"]} />
+<MarkdownChipRow labels={["Avanzado", "Concepto"]} />
 
-ICP supports deterministic WebAssembly SIMD support. This is a significant milestone for smart contracts demanding top onchain performance, such as artificial intelligence (AI), image processing (NFTs), games, scientific decentralized applications (dapps), and more.
+ICP admite WebAssembly SIMD de forma determinista. Esto representa un hito
+importante  
+para los contratos inteligentes que requieren el máximo rendimiento en la
+cadena,  
+como inteligencia artificial (IA), procesamiento de imágenes (NFTs), juegos,  
+aplicaciones descentralizadas científicas (dapps) y más.
 
-However, a significant performance boost is also possible for "classical" blockchain operations implemented in canisters. For example, reward distribution or cryptographic operations might benefit from the new WebAssembly SIMD instructions.
+Sin embargo, también es posible lograr una mejora significativa en el
+rendimiento  
+de operaciones "clásicas" de blockchain implementadas en canisters. Por
+ejemplo,  
+la distribución de recompensas o las operaciones criptográficas podrían
+beneficiarse  
+de las nuevas instrucciones SIMD de WebAssembly.
 
-### What is WebAssembly SIMD?
+### ¿Qué es WebAssembly SIMD?
 
-WebAssembly SIMD (single instruction, multiple data) is a set of more than 200 deterministic vector instructions defined in the [WebAssembly core specification](https://webassembly.github.io/spec/core/syntax/instructions.html#vector-instructions). This parallel processing significantly accelerates specific tasks within canisters running on ICP.
+WebAssembly SIMD (instrucción única, múltiples datos) es un conjunto de más de
+200  
+instrucciones vectoriales deterministas definidas en la  
+[especificación central de WebAssembly](https://webassembly.github.io/spec/core/syntax/instructions.html#vector-instructions).  
+Este procesamiento en paralelo acelera significativamente tareas específicas
+dentro  
+de los canisters que se ejecutan en ICP.
 
-The SIMD functionality is available on every ICP node.
+La funcionalidad SIMD está disponible en cada nodo de ICP.
 
-### Developer benefits
+### Beneficios para desarrolladores
 
-WebAssembly SIMD support enables a new level of performance on ICP. Developers can:
+La compatibilidad con WebAssembly SIMD permite un nuevo nivel de rendimiento en
+ICP.  
+Los desarrolladores pueden:
 
-- **Optimize code for computationally heavy tasks:** Identify areas within their canisters that can benefit from SIMD instructions and tailor their code for accelerated performance.
-- **Unlock new possibilities:** Explore novel functionalities and complex applications that were previously limited by processing power.
-- **Build a future-proof foundation:** Positions developers at the forefront of blockchain innovation.
+- **Optimizar el código para tareas computacionalmente exigentes:** Identificar
+  áreas  
+  dentro de sus canisters que pueden beneficiarse de las instrucciones SIMD y
+  adaptar  
+  su código para un mejor rendimiento.
+- **Desbloquear nuevas posibilidades:** Explorar funcionalidades novedosas y
+  aplicaciones  
+  complejas que antes estaban limitadas por la potencia de procesamiento.
+- **Construir una base preparada para el futuro:** Posicionarse a la vanguardia
+  de la  
+  innovación en blockchain.
 
-## Using WebAssembly SIMD
+## Uso de WebAssembly SIMD
 
-There are two main ways to benefit from WebAssembly SIMD in a smart contract:
+Existen dos formas principales de aprovechar WebAssembly SIMD en un contrato
+inteligente:
 
-1. **Loop auto-vectorization:** Just enabling the WebAssembly SIMD and recompiling the project might be enough to get a significant performance boost. This is usually simple, error-proof, and can be a one-line change. This is often the recommended first step, but the result depends heavily on the used algorithms, libraries, and compilers.
+1. **Auto-vectorización de bucles:** Solo habilitar WebAssembly SIMD y
+   recompilar el proyecto  
+   puede ser suficiente para obtener un aumento significativo en el
+   rendimiento.  
+   Esto suele ser simple, sin errores y puede requerir solo un cambio de una
+   línea.  
+   A menudo es el primer paso recomendado, pero el resultado depende en gran
+   medida de  
+   los algoritmos utilizados, las bibliotecas y los compiladores.
 
-2. **SIMD intrinsics:** Some computation-heavy functions may be rewritten using direct SIMD instructions. This exposes the full SIMD potential, but in many cases some core canister algorithms must be completely rewritten using new instructions.
+2. **Intrínsecos SIMD:** Algunas funciones con alta carga computacional pueden
+   reescribirse  
+   utilizando instrucciones SIMD directas. Esto expone todo el potencial de
+   SIMD, pero en  
+   muchos casos, algunos algoritmos principales del canister deben reescribirse
+   por  
+   completo usando nuevas instrucciones.
 
-## Using loop auto-vectorization
+## Uso de la auto-vectorización de bucles
 
-To leverage the loop auto-vectorization, the WebAssembly SIMD instructions should be enabled globally for the entire workspace or locally for specific functions within the canister. Once the instructions are available to the compiler, it automatically converts some normal loops into loops with parallel computations.
+Para aprovechar la auto-vectorización de bucles, las instrucciones SIMD de
+WebAssembly  
+deben habilitarse globalmente para todo el espacio de trabajo o localmente para
+funciones  
+específicas dentro del canister. Una vez que las instrucciones están disponibles
+para el  
+compilador, este convierte automáticamente algunos bucles normales en bucles con
+cálculos  
+paralelos.
 
-While the change is easy and error-proof, the result in practice depends on many factors, like the algorithm itself, the compiler optimization level and options, project dependencies, etc.
+Si bien el cambio es fácil y libre de errores, el resultado en la práctica
+depende de  
+muchos factores, como el propio algoritmo, el nivel de optimización del
+compilador y  
+sus opciones, las dependencias del proyecto, etc.
 
-### Example
+### Ejemplo
 
-To enable WebAssembly SIMD instructions globally for the whole workspace and all its dependencies:
+Para habilitar las instrucciones SIMD de WebAssembly globalmente para todo el
+espacio de trabajo  
+y todas sus dependencias:
 
-<AdornedTabs groupId="languages">
+<AdornedTabs groupId="languages">  
 <TabItem value="rust" label="Rust" default>
 
-Create the `.cargo/config.toml` file with the following content:
+Crea el archivo `.cargo/config.toml` con el siguiente contenido:
 
 ```toml
 [build]
@@ -65,7 +121,8 @@ rustflags = ["-C", "target-feature=+simd128"]
 </TabItem>
 </AdornedTabs>
 
-To enable WebAssembly SIMD instructions just for a specific function within a canister:
+Para habilitar las instrucciones SIMD de WebAssembly solo en una función
+específica dentro de un canister:
 
 <AdornedTabs groupId="languages">
 <TabItem value="rust" label="Rust" default>
@@ -78,14 +135,23 @@ https://github.com/dfinity/examples/blob/master/rust/simd/mat_mat_mul/src/lib.rs
 </AdornedTabs>
 
 :::info
-WebAssembly SIMD instructions may be enabled by default in future `dfx` versions, so enabling it for a specific function within a canister might have no effect.
+
+Las instrucciones SIMD de WebAssembly pueden habilitarse por defecto en futuras
+versiones de `dfx`,  
+por lo que activarlas para una función específica dentro de un canister podría
+no tener efecto.
+
 :::
 
-## Using WebAssembly SIMD intrinsics
+## Uso de intrínsecos SIMD de WebAssembly
 
-WebAssembly SIMD instructions are available as platform-specific intrinsics for the `wasm32` platform. To use the intrinsics, the WebAssembly SIMD instructions should be enabled as described in the previous section.
+Las instrucciones SIMD de WebAssembly están disponibles como intrínsecos
+específicos  
+de la plataforma `wasm32`. Para utilizar los intrínsecos, las instrucciones
+SIMD  
+deben habilitarse como se describió en la sección anterior.
 
-### Example
+### Ejemplo
 
 <AdornedTabs groupId="languages">
 <TabItem value="rust" label="Rust" default>
@@ -97,19 +163,33 @@ https://github.com/dfinity/examples/blob/master/rust/simd/mat_mat_mul/src/lib.rs
 </TabItem>
 </AdornedTabs>
 
-## Frequently asked questions
+## Preguntas frecuentes
 
-### How to measure performance speedup of a canister?
+### ¿Cómo medir la mejora de rendimiento de un canister?
 
-ICP provides the `ic0.performance_counter` [system API call](/docs/references/ic-interface-spec#system-api-performance-counter) to measure a canister's performance.
+ICP proporciona la llamada `ic0.performance_counter`  
+[API del sistema](/docs/references/ic-interface-spec#system-api-performance-counter)  
+para medir el rendimiento de un canister.
 
-There is also the `canbench` [benchmarking framework](https://github.com/dfinity/canbench).
+También existe el marco de referencia de pruebas `canbench`  
+[benchmarking framework](https://github.com/dfinity/canbench).
 
-### Are there any libraries for artificial intelligence (AI) inferences?
+### ¿Existen bibliotecas para inferencias de inteligencia artificial (IA)?
 
-The Sonos `tract` is a tiny, self-contained TensorFlow and ONNX inference [Rust library](https://github.com/sonos/tract). DFINITY [contributed WebAssembly SIMD support](https://github.com/sonos/tract/pull/1420) to the library. The library is used in some DFINITY AI [demos](https://www.youtube.com/watch?v=6qLvIXiCGcM) and [examples](https://github.com/dfinity/examples/tree/master/rust/image-classification).
+La biblioteca `tract` de Sonos es una pequeña y autónoma biblioteca de
+inferencia  
+de TensorFlow y ONNX en [Rust](https://github.com/sonos/tract). DFINITY  
+[contribuyó con soporte para WebAssembly SIMD](https://github.com/sonos/tract/pull/1420)  
+a la biblioteca. Esta biblioteca se usa en algunas demostraciones de IA de
+DFINITY  
+[demos](https://www.youtube.com/watch?v=6qLvIXiCGcM) y  
+[ejemplos](https://github.com/dfinity/examples/tree/master/rust/image-classification).
 
-## Resources and examples
+## Recursos y ejemplos
 
-* [WebAssembly SIMD Rust example](https://github.com/dfinity/examples/tree/master/rust/simd) compares the performance of a naive, optimized, auto-vectorized, and SIMD intrinsic matrix multiplication running on ICP.
-* [WebAssembly core specification](https://webassembly.github.io/spec/core/syntax/instructions.html#vector-instructions) for SIMD instructions.
+- [Ejemplo de WebAssembly SIMD en Rust](https://github.com/dfinity/examples/tree/master/rust/simd)  
+  que compara el rendimiento de una multiplicación de matrices ingenua,
+  optimizada,  
+  auto-vectorizada y con intrínsecos SIMD ejecutándose en ICP.
+- [Especificación central de WebAssembly](https://webassembly.github.io/spec/core/syntax/instructions.html#vector-instructions)  
+  para instrucciones SIMD.

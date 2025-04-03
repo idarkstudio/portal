@@ -8,25 +8,30 @@ import { AdornedTab } from "/src/components/Tabs/AdornedTab";
 import { BetaChip } from "/src/components/Chip/BetaChip";
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Submitting transactions
+# Enviar transacciones
 
-<MarkdownChipRow labels={["Advanced", "Bitcoin", "Tutorial"]} />
+<MarkdownChipRow labels={["Avanzado", "Bitcoin", "Tutorial"]} />
 
-To submit transactions to the Bitcoin network, the Bitcoin integration API exposes the `bitcoin_send_transaction` method.
+Para enviar transacciones a la red de Bitcoin, la API de integración de Bitcoin
+expone el método `bitcoin_send_transaction`.
 
 :::info
 
-To test canisters locally that use the following code snippets, you will need to enable local Bitcoin development. To do this, you can either start the local replica with `dfx start --enable-bitcoin` or you can include the following configuration in the project's `dfx.json` file:
+Para probar canisters localmente que utilicen los siguientes fragmentos de
+código, es necesario habilitar el desarrollo local de Bitcoin. Para hacerlo,
+puedes iniciar la réplica local con `dfx start --enable-bitcoin` o incluir la
+siguiente configuración en el archivo `dfx.json` del proyecto:
 
 ```json reference
 https://github.com/dfinity/examples/blob/master/motoko/basic_bitcoin/dfx.json#L9-L16
 ```
 
-[Learn more about `dfx.json` configuration options](https://internetcomputer.org/docs/building-apps/developer-tools/dfx-json-reference).
+[Más información sobre las opciones de configuración de `dfx.json`](https://internetcomputer.org/docs/building-apps/developer-tools/dfx-json-reference).
 
 :::
 
-The following snippet shows how to send a signed transaction to the Bitcoin network:
+El siguiente fragmento muestra cómo enviar una transacción firmada a la red de
+Bitcoin:
 
 <AdornedTabs groupId="languages">
 <TabItem value="motoko" label="Motoko" default>
@@ -46,11 +51,10 @@ https://github.com/dfinity/examples/blob/0f0ca7df352a1b7953d80ac8ec19767deea359d
 </TabItem>
 </AdornedTabs>
 
+## Recursos
 
-## Resources
+- [Ejemplo básico de aplicación Bitcoin - Motoko](https://github.com/dfinity/examples/tree/master/motoko/basic_bitcoin).
 
-- [Basic Bitcoin example dapp - Motoko](https://github.com/dfinity/examples/tree/master/motoko/basic_bitcoin).
+- [Algoritmos de integración de Bitcoin en Motoko](https://github.com/tgalal/motoko-bitcoin/tree/10cf7f2efbba9bb4d077013db1b990143f193844).
 
-- [Motoko Bitcoin integration algorithms](https://github.com/tgalal/motoko-bitcoin/tree/10cf7f2efbba9bb4d077013db1b990143f193844).
-
-- [Basic Bitcoin example dapp - Rust](https://github.com/dfinity/examples/tree/master/rust/basic_bitcoin).
+- [Ejemplo básico de aplicación Bitcoin - Rust](https://github.com/dfinity/examples/tree/master/rust/basic_bitcoin).

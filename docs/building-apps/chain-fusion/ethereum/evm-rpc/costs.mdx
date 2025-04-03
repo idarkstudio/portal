@@ -1,5 +1,17 @@
 ---
-keywords: [advanced, ethereum, evm rpc, evm, costs, evm rpc, cost of evm rpc, evm rpc canister, cost of evm canister, ethereum virtual machine]
+keywords:
+  [
+    advanced,
+    ethereum,
+    evm rpc,
+    evm,
+    costs,
+    evm rpc,
+    cost of evm rpc,
+    evm rpc canister,
+    cost of evm canister,
+    ethereum virtual machine,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
@@ -7,22 +19,35 @@ import TabItem from "@theme/TabItem";
 import { AdornedTabs } from "/src/components/Tabs/AdornedTabs";
 import { AdornedTab } from "/src/components/Tabs/AdornedTab";
 
-# EVM RPC costs
+# Costos de EVM RPC
 
-<MarkdownChipRow labels={["Advanced", "Ethereum", "Tutorial"]} />
+<MarkdownChipRow labels={["Avanzado", "Ethereum", "Tutorial"]} />
 
-Each call made to the EVM RPC canister costs [cycles](/docs/building-apps/getting-started/tokens-and-cycles).
+Cada llamada realizada al canister EVM RPC tiene un costo en
+[cycles](/docs/building-apps/getting-started/tokens-and-cycles).
 
-JSON-RPC requests typically cost between 10^8 and 10^9 cycles, which is equivalent to approximately $0.0001 - $0.001 USD.
+Las solicitudes JSON-RPC generalmente cuestan entre 10^8 y 10^9 cycles, lo que
+equivale aproximadamente a $0.0001 - $0.001 USD.
 
-Because the Candid-RPC methods of the EVM RPC canister use built-in retries and multiple providers, the amount of cycles required for each RPC call isn't predictable beforehand. The idea for these methods is to send a maximum cycles budget to perform the request.
+Debido a que los métodos Candid-RPC del canister EVM RPC utilizan reintentos
+incorporados y múltiples proveedores, la cantidad de cycles requeridos para cada
+llamada RPC no es predecible de antemano. La idea de estos métodos es enviar un
+presupuesto máximo de cycles para realizar la solicitud.
 
 :::info
-The EVM RPC canister will continue retrying the request until it runs out of cycles sent with the request. This is important for requests such as `eth_getLogs`, where one request might return 100x as much data as the same request a few days earlier if there is a spike in smart contract activity. As a result, the optimal cycles budget is different for each use case. It is suggested to send 10_000_000_000 cycles as a starting point and adjust from there.
+
+El canister EVM RPC seguirá reintentando la solicitud hasta que se queden sin
+cycles enviados con la solicitud. Esto es importante para solicitudes como
+`eth_getLogs`, donde una solicitud puede devolver 100 veces más datos que la
+misma solicitud unos días antes si hay un aumento en la actividad de contratos
+inteligentes. Como resultado, el presupuesto óptimo de cycles es diferente para
+cada caso de uso. Se sugiere enviar 10_000_000_000 cycles como punto de partida
+y ajustar a partir de ahí.
+
 :::
 
-
-The following formula shows how to calculate the cycles cost for an RPC request:
+La siguiente fórmula muestra cómo calcular el costo en cycles para una solicitud
+RPC:
 
 ```
 (
@@ -34,23 +59,38 @@ The following formula shows how to calculate the cycles cost for an RPC request:
   * rpc_services // Number of RPC services used to check consistency
 ```
 
-The total cost for an RPC request (assuming a 1kB request, 1kB response, 34-node subnet, and 1 [XDR](/docs/building-apps/essentials/gas-cost) = $1.336610 USD)
-is ~ $0.00051 USD.
+El costo total de una solicitud RPC (asumiendo una solicitud de 1 kB, una
+respuesta de 1 kB, una subred de 34 nodos y 1
+[XDR](/docs/building-apps/essentials/gas-cost) = $1.336610 USD) es de
+aproximadamente $0.00051 USD.
 
-Note that the cost is multiplied by the number of RPC services used for the consistency logic. If you specify three different services, it will cost three times as much as a call to a single RPC provider.
+Tenga en cuenta que el costo se multiplica por el número de servicios RPC
+utilizados para la lógica de consistencia. Si especifica tres servicios
+diferentes, costará tres veces más que una llamada a un solo proveedor de RPC.
 
-In addition, it's necessary to send `10_000_000 * nodes_in_subnet * rpc_services` additional cycles, which will be refunded, as they serve as a buffer for any future increases in third-party JSON-RPC API costs.
+Además, es necesario enviar `10_000_000 * nodes_in_subnet * rpc_services` cycles
+adicionales, que serán reembolsados, ya que sirven como un búfer para cualquier
+aumento futuro en los costos de la API JSON-RPC de terceros.
 
-The EVM RPC canister automatically refunds any cycles sent beyond the cost of the RPC request, so it's possible to send more cycles than necessary without consequence.
-Sending extra cycles will also provide a budget to retry the request with a larger maximum response size for Candid-RPC methods such as `eth_getLogs` and `eth_getBlockByNumber`.
+El canister EVM RPC reembolsa automáticamente cualquier ciclo enviado más allá
+del costo de la solicitud RPC, por lo que es posible enviar más cycles de los
+necesarios sin consecuencias. El envío de cycles adicionales también
+proporcionará un presupuesto para volver a intentar la solicitud con un tamaño
+de respuesta máxima más grande para los métodos Candid-RPC como `eth_getLogs` y
+`eth_getBlockByNumber`.
 
-## Collateral cycles
+## cycles de garantía
 
-In addition to the cost of the RPC request itself, callers must also pass at least 0.00028 TC of "collateral cycles" to account for possible future downstream API price increases. The canister currently refunds all of these cycles, but this may change in the future.
+Además del costo de la solicitud RPC en sí, los llamadores también deben pasar
+al menos 0.00028 TC de "cycles de garantía" para tener en cuenta posibles
+futuros aumentos de precios de la API aguas abajo. Actualmente, el canister
+reembolsa todos estos cycles, pero esto puede cambiar en el futuro.
 
-## Attaching the correct amount of cycles
+## Adjuntando la cantidad correcta de ciclos
 
-To determine how many cycles need to be sent with your RPC call, you can use the `requestCost` query method. This is used to predict costs for calls to the `request` method:
+Para determinar cuántos ciclos deben enviarse con su llamada RPC, puede usar el
+método de consulta `requestCost`. Esto se utiliza para predecir los costos de
+las llamadas al método `request`:
 
 ```
 `requestCost`
@@ -64,9 +104,13 @@ requestCost : (
 ) query;
 ```
 
-This query method accepts the same arguments as the canister's [`request`](evm-rpc-canister.mdx#custom-json-rpc-requests) method and returns the number of cycles to send with an equivalent call.
+Este método de consulta acepta los mismos argumentos que el método
+[`request`](evm-rpc-canister.mdx#custom-json-rpc-requests) del canister y
+devuelve el número de ciclos necesarios para realizar una llamada equivalente.
 
-Once you have determined how many cycles your call will need, you can send them in your call through a CDK or using `dfx` with the `--with-cycles` flag.
+Una vez que hayas determinado cuántos ciclos necesitará tu llamada, puedes
+enviarlos en tu solicitud a través de un CDK o usando `dfx` con la bandera
+`--with-cycles`.
 
 <AdornedTabs groupId="languages">
 <TabItem value="motoko" label="Motoko" default>
@@ -184,17 +228,36 @@ dfx canister call evm_rpc eth_getBlockByNumber "(variant {$CANDID_SOURCE}, $RPC_
 </TabItem>
 </AdornedTabs>
 
+Para medir con precisión el costo de las llamadas HTTPS y protegerse de
+respuestas accidentalmente grandes, el llamador debe especificar el número
+máximo esperado de bytes. Debido al costo potencialmente alto de realizar
+llamadas con un tamaño de respuesta máximo subóptimo, generalmente es mejor
+interés del llamador elegir un valor para `maxResponseBytes` caso por caso para
+cada situación. Los desarrolladores pueden determinar este valor midiendo el
+tamaño de las respuestas JSON esperadas desde un entorno de prueba de API como
+[Alchemy Sandbox](https://sandbox.alchemy.com/).
 
-In order to accurately measure the HTTPS outcalls cost and protect from an accidental large response, the caller must specify the maximum expected number of bytes. Due to the potentially high cost of performing outcalls with a suboptimal max response size, it’s generally in the caller’s best interest to choose a value for `maxResponseBytes` on a case-by-case basis for each situation. Developers can determine this value by measuring the size of expected JSON responses from an API playground such as [Alchemy Sandbox](https://sandbox.alchemy.com/).
+Los métodos Candid RPC utilizan un valor predeterminado incorporado para el
+tamaño de respuesta, que se puede anular con el valor `RpcConfig`.
 
-The Candid RPC methods use a built-in default response bytes, which you can override with the `RpcConfig` value.
+Puede optar por llamar repetidamente al método `request` con un valor cada vez
+mayor para `maxResponseBytes` para manejar tamaños de respuesta variables.
+Dejamos esta elección de estrategia al llamador para las llamadas JSON-RPC sin
+procesar. Para los métodos de conveniencia de Candid-RPC, el canister duplica el
+tamaño máximo de respuesta y vuelve a intentarlo hasta que el tamaño de
+respuesta sea suficiente, comenzando con un valor predeterminado razonable para
+cada método RPC. En contraste, el canister JSON-RPC solo realiza una solicitud,
+dejando la lógica de reintento al llamador. Vale la pena señalar que el llamador
+paga efectivamente por cada llamada como si estuviera enviando estas solicitudes
+desde su propio canister.
 
-You may choose to repeatedly call the `request` method with an increasingly large value for `maxResponseBytes` to handle variable response sizes. We defer this choice of strategy to the caller for raw JSON-RPC calls. For Candid-RPC convenience methods, the canister doubles the max response size and retries until the response size is sufficient, starting with a reasonable default for each RPC method. In contrast, the JSON-RPC canister only ever makes one request, deferring the retry logic to the caller. It’s worth noting that the caller essentially pays for each outcall as though they are sending these requests from their own canister.
+El canister EVM RPC vuelve a intentar la llamada si:
 
-The EVM RPC canister retries the call if:
+- Quedan suficientes cycles enviados por el llamador.
 
-- There are enough cycles left that have been sent by the caller.
+- La llamada falla debido a que `maxResponseBytes` se establece demasiado bajo.
+  Cada método RPC tiene una configuración predeterminada de `maxResponseBytes`
+  que se puede anular.
 
-- The call fails due to `maxResponseBytes` being set too low. Each RPC method has a built-in default `maxResponseBytes` setting that can be overridden.
-
-Additionally, the `RpcConfig` parameter supports an optional `responseSizeEstimate` that can be fine-tuned to reduce the cost of the RPC requests.
+Además, el parámetro `RpcConfig` admite una `responseSizeEstimate` opcional que
+se puede ajustar para reducir el costo de las solicitudes RPC.

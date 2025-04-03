@@ -7,32 +7,43 @@ import TabItem from "@theme/TabItem";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Creating Bitcoin transactions
+# Creando transacciones de Bitcoin
 
-<MarkdownChipRow labels={["Advanced", "Bitcoin"]} />
+<MarkdownChipRow labels={["Avanzado", "Bitcoin"]} />
 
-A Bitcoin transaction spends a number of unspent transaction outputs (UTXOs) and
-creates new UTXOs. In order to create a Bitcoin transaction, you need to:
+Una transacción de Bitcoin gasta una cantidad de salidas de transacción no
+gastadas (UTXOs) y crea nuevas UTXOs. Para crear una transacción de Bitcoin,
+debes:
 
-1. Get the available UTXOs corresponding to a Bitcoin address controlled by the canister using the `bitcoin_get_utxos` API endpoint.
-2. Calculate an appropriate transaction fee using the `bitcoin_get_current_fee_percentiles` API endpoint.
-3. Select a subset of the available UTXOs to spend that covers the transaction amount and fee.
-4. Create a transaction that spends the selected UTXOs and creates new UTXOs. At
-   least one for the recipient, and in most cases, one to collect the change.
+1. Obtener los UTXOs disponibles correspondientes a una dirección de Bitcoin
+   controlada por el canister utilizando el endpoint `bitcoin_get_utxos` de la
+   API.
+2. Calcular una tarifa de transacción adecuada usando el endpoint
+   `bitcoin_get_current_fee_percentiles` de la API.
+3. Seleccionar un subconjunto de los UTXOs disponibles que cubran el monto de la
+   transacción y la tarifa.
+4. Crear una transacción que gaste los UTXOs seleccionados y cree nuevos UTXOs.
+   Al menos uno para el destinatario y, en la mayoría de los casos, uno para
+   recolectar el cambio.
 
-## Get available UTXOs
+## Obtener UTXOs disponibles
 
-The following snippet shows how to get the available UTXOs corresponding to `own_address`. Note that a canister can control many addresses, and each of them can have multiple UTXOs associated with it.
+El siguiente fragmento de código muestra cómo obtener los UTXOs disponibles
+correspondientes a `own_address`. Ten en cuenta que un canister puede controlar
+muchas direcciones, y cada una de ellas puede tener múltiples UTXOs asociados.
 
 :::info
 
-To test canisters locally that use the following code snippets, you will need to enable local Bitcoin development. To do this, you can either start the local replica with `dfx start --enable-bitcoin` or you can include the following configuration in the project's `dfx.json` file:
+Para probar canisters localmente con los siguientes fragmentos de código,
+necesitarás habilitar el desarrollo local de Bitcoin. Para hacerlo, puedes
+iniciar la réplica local con `dfx start --enable-bitcoin` o incluir la siguiente
+configuración en el archivo `dfx.json` del proyecto:
 
 ```json reference
 https://github.com/dfinity/examples/blob/master/motoko/basic_bitcoin/dfx.json#L9-L16
 ```
 
-[Learn more about `dfx.json` configuration options](https://internetcomputer.org/docs/building-apps/developer-tools/dfx-json-reference).
+[Más información sobre las opciones de configuración de `dfx.json`](https://internetcomputer.org/docs/building-apps/developer-tools/dfx-json-reference).
 
 :::
 
@@ -53,26 +64,25 @@ https://github.com/dfinity/examples/blob/6c9e0a6b6d12978869cbf9ea294345251890972
 </TabItem>
 </Tabs>
 
-An UTXO has the following structure:
+Un UTXO tiene la siguiente estructura:
 
 <Tabs groupId="language">
 <TabItem value="motoko" label="Motoko" default>
 
 ```motoko no-repl
 
-/// An unspent transaction output.
+/// Una salida de transacción no gastada.
 public type Utxo = {
     outpoint : OutPoint;
     value : Satoshi;
     height : Nat32;
 };
 
-/// A reference to a transaction output.
+/// Una referencia a una salida de transacción.
 public type OutPoint = {
     txid : Blob;
     vout : Nat32;
 };
-
 
 ```
 
@@ -81,21 +91,21 @@ public type OutPoint = {
 
 ```rust
 
-/// Unspent transaction output (UTXO).
+/// Salida de transacción no gastada (UTXO).
 pub struct Utxo {
-    /// See [Outpoint].
+    /// Ver [Outpoint].
     pub outpoint: Outpoint,
-    /// Value in the units of satoshi.
+    /// Valor en satoshis.
     pub value: Satoshi,
-    /// Height in the chain.
+    /// Altura en la cadena de bloques.
     pub height: u32,
 }
 
-/// Identifier of [Utxo].
+/// Identificador de [Utxo].
 pub struct Outpoint {
-    /// Transaction Identifier.
+    /// Identificador de transacción.
     pub txid: Vec<u8>,
-    /// A implicit index number.
+    /// Número de índice implícito.
     pub vout: u32,
 }
 
@@ -104,12 +114,18 @@ pub struct Outpoint {
 </TabItem>
 </Tabs>
 
-To create a transaction that sends `X` satoshis to a destination address, you need to select a subset of the available UTXOs that cover the amount `X` plus the transaction fee.
+Para crear una transacción que envíe `X` satoshis a una dirección de destino,
+debes seleccionar un subconjunto de los UTXOs disponibles que cubran el monto
+`X` más la tarifa de la transacción.
 
-## Calculate transaction fee per byte
+## Calcular la tarifa de transacción por byte
 
-The transaction fee of a Bitcoin transaction is calculated based on the size of the transaction in bytes. An appropriate fee per byte can be determined by looking at the fees of recent transactions that were included in the blockchain.
-The following snippet shows how to estimate the fee per byte for a transaction using the `bitcoin_get_current_fee_percentiles` API endpoint and choosing the 50th percentile.
+La tarifa de una transacción de Bitcoin se calcula en función del tamaño de la
+transacción en bytes. Una tarifa adecuada por byte se puede determinar
+observando las tarifas de las transacciones recientes que se incluyeron en la
+cadena de bloques. El siguiente fragmento de código muestra cómo estimar la
+tarifa por byte de una transacción utilizando el endpoint
+`bitcoin_get_current_fee_percentiles` de la API y eligiendo el percentil 50.
 
 <Tabs groupId="language">
 <TabItem value="motoko" label="Motoko" default>
@@ -129,11 +145,16 @@ https://github.com/dfinity/examples/blob/6c9e0a6b6d12978869cbf9ea294345251890972
 </TabItem>
 </Tabs>
 
-## Build the transaction
+## Construir la transacción
 
-Next, the transaction can be built. The following snippet shows a simplified version of how to build a transaction that sends `amount` satoshis to the `dst_address`, and returns the change to the `own_address`.
+A continuación, se puede construir la transacción. El siguiente fragmento de
+código muestra una versión simplificada de cómo construir una transacción que
+envía `amount` satoshis a `dst_address` y devuelve el cambio a `own_address`.
 
-Since the fee of a transaction is based on its size, the transaction has to be built iteratively and signed with a mock signer that just adds the respective size of the signature. Each selected UTXO is used as an input for the transaction and requires a signature.
+Dado que la tarifa de una transacción se basa en su tamaño, la transacción debe
+construirse de forma iterativa y firmarse con un firmante simulado que
+simplemente agregue el tamaño respectivo de la firma. Cada UTXO seleccionado se
+usa como entrada para la transacción y requiere una firma.
 
 <Tabs groupId="language">
 <TabItem value="motoko" label="Motoko" default>
@@ -149,9 +170,7 @@ https://github.com/dfinity/examples/blob/6c9e0a6b6d12978869cbf9ea294345251890972
 https://github.com/dfinity/examples/blob/6c9e0a6b6d12978869cbf9ea2943452518909728/rust/basic_bitcoin/src/basic_bitcoin/src/bitcoin_wallet.rs#L116-L160
 ```
 
-[Learn more about constructing Bitcoin transactions with the Rust Bitcoin Cookbook](https://rust-bitcoin.org/book/intro.html).
-
+[Más información sobre la construcción de transacciones de Bitcoin con el Rust Bitcoin Cookbook](https://rust-bitcoin.org/book/intro.html).
 
 </TabItem>
 </Tabs>
-

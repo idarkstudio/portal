@@ -1,52 +1,99 @@
 ---
 keywords: [intermediate, bitcoin, btc, icp]
 ---
+
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Understanding ICP for Bitcoin developers
+# Comprendiendo ICP para desarrolladores de Bitcoin
 
-<MarkdownChipRow labels={["Intermediate", "Bitcoin"]} />
+<MarkdownChipRow labels={["Intermedio", "Bitcoin"]} />
 
-This guide is designed to help Bitcoin developers understand the core concepts of ICP in order to properly use ICP as a Layer-2 solution for Bitcoin.
+Esta guía está diseñada para ayudar a los desarrolladores de Bitcoin a
+comprender los conceptos fundamentales de ICP para poder utilizarlo
+correctamente como una solución de Capa 2 para Bitcoin.
 
-## Terminology mapping
+## Mapeo de terminología
 
-ICP uses different terminology for concepts similar to those in Bitcoin. This table summarizes the key terminology differences between Bitcoin and ICP:
+ICP utiliza una terminología diferente para conceptos similares a los de
+Bitcoin. Esta tabla resume las principales diferencias terminológicas entre
+Bitcoin e ICP:
 
-|Bitcoin term   | ICP term |
-|---------------|----------|
-| Account       | Principal|
+| Término de Bitcoin | Término de ICP |
+| ------------------ | -------------- |
+| Account            | Principal      |
 
-In addition, ICP has implemented similar token standards as Bitcoin:
+Además, ICP ha implementado estándares de tokens similares a los de Bitcoin:
 
-| Bitcoin standard | ICP standard |
-|------------------|--------------|
-| BRC-20           | [ICRC-1/ICRC-2](../../../../references/icrc1-standard) |
-| BRC-721          | [ICRC-7](https://github.com/dfinity/ICRC/blob/icrc7-wg-draft/ICRCs/ICRC-7/ICRC-7.md)|
+| Estándar de Bitcoin | Estándar de ICP                                                                      |
+| ------------------- | ------------------------------------------------------------------------------------ |
+| BRC-20              | [ICRC-1/ICRC-2](../../../../references/icrc1-standard)                               |
+| BRC-721             | [ICRC-7](https://github.com/dfinity/ICRC/blob/icrc7-wg-draft/ICRCs/ICRC-7/ICRC-7.md) |
 
 ## Smart contracts
 
-Bitcoin’s scripting language, Script, makes complex smart contracts rather difficult to deploy directly on the Bitcoin mainnet due to the language's limited capabilities.
+El lenguaje de script de Bitcoin, Script, hace que los contratos inteligentes
+complejos sean difíciles de implementar directamente en la red principal de
+Bitcoin debido a las capacidades limitadas del lenguaje.
 
-Bitcoin developers who are looking to build complex smart contracts will need to use a Bitcoin smart contract layer (referred to as a Layer-2 or L2), such as ICP. Each L2 solution offers a unique set of developer tools.
+Los desarrolladores de Bitcoin que deseen construir contratos inteligentes
+complejos deberán utilizar una capa de contrato inteligente de Bitcoin
+(denominada Capa 2 o L2), como ICP. Cada solución L2 ofrece un conjunto único de
+herramientas para desarrolladores.
 
-Canister smart contracts on ICP have special properties that allow developers to develop scalable services. Canisters can be written in any language that compiles into Wasm, including [Rust](/docs/building-apps/developer-tools/cdks/rust/intro-to-rust), [Typescript](https://demergent-labs.github.io/azle/), [Motoko](/docs/motoko/main/getting-started/motoko-introduction), and [Python](https://demergent-labs.github.io/kybra/). This allows for greater complexity in smart contract development compared to Bitcoin's Script language.
+Los contratos inteligentes de canister en ICP tienen propiedades especiales que
+permiten a los desarrolladores desarrollar servicios escalables. Los canisters
+pueden estar escritos en cualquier lenguaje que se compile en Wasm, incluyendo
+[Rust](/docs/building-apps/developer-tools/cdks/rust/intro-to-rust),
+[Typescript](https://demergent-labs.github.io/azle/),
+[Motoko](/docs/motoko/main/getting-started/motoko-introduction) y
+[Python](https://demergent-labs.github.io/kybra/). Esto permite una mayor
+complejidad en el desarrollo de contratos inteligentes en comparación con el
+lenguaje de script de Bitcoin.
 
-To learn more about full canister smart contract functionality, refer to the [smart contracts documentation](/docs/building-apps/essentials/canisters).
+Para obtener más información sobre la funcionalidad completa de los contratos
+inteligentes de canister, consulta la
+[documentación de contratos inteligentes](/docs/building-apps/essentials/canisters).
 
-Specifically, through protocol-level integration of ICP with the [Bitcoin network](/docs/building-apps/chain-fusion/bitcoin/overview), ICP smart contracts can interact with the Bitcoin network directly. Canister smart contracts can run [queries against the full Bitcoin UTXO](/docs/building-apps/chain-fusion/bitcoin/using-btc/read-state) set, including finding the balance of any Bitcoin address. They can [hold](/docs/building-apps/chain-fusion/bitcoin/using-btc/generate-addresses), [sign](/docs/building-apps/chain-fusion/bitcoin/using-btc/sign-transactions), and [submit transactions](/docs/building-apps/chain-fusion/bitcoin/using-btc/submit-transactions) to the Bitcoin network.
+Específicamente, a través de la integración a nivel de protocolo de ICP con la
+[red de Bitcoin](/docs/building-apps/chain-fusion/bitcoin/overview), los
+contratos inteligentes de ICP pueden interactuar directamente con la red de
+Bitcoin. Los contratos inteligentes de canister pueden ejecutar
+[consultas contra el conjunto completo de UTXO de Bitcoin](/docs/building-apps/chain-fusion/bitcoin/using-btc/read-state),
+incluyendo encontrar el saldo de cualquier dirección de Bitcoin. Pueden
+[realizar](/docs/building-apps/chain-fusion/bitcoin/using-btc/generate-addresses)
+transacciones,
+[firmar](/docs/building-apps/chain-fusion/bitcoin/using-btc/sign-transactions) y
+[enviar](/docs/building-apps/chain-fusion/bitcoin/using-btc/submit-transactions)
+transacciones a la red de Bitcoin.
 
-The [Threshold Schnorr integration](/docs/building-apps/network-features/signatures/t-schnorr) allows developers to interact with Runes and Ordinals directly in canisters. A [Schnorr canister example](https://github.com/dfinity/examples/tree/master/motoko/threshold-schnorr) is available in Motoko and Rust.
+La integración de Threshold Schnorr permite a los desarrolladores interactuar
+directamente con Runes y Ordinals en los canisters. Un ejemplo de canister
+Schnorr está disponible en Motoko y Rust.
 
-To learn more about the Bitcoin integration on ICP, refer to the [Bitcoin integration documentation](/docs/building-apps/chain-fusion/bitcoin/overview).
+Para obtener más información sobre la integración de Bitcoin en ICP, consulta la
+[documentación de integración de Bitcoin](/docs/building-apps/chain-fusion/bitcoin/overview).
 
-## Consensus
-Bitcoin uses proof of work as its consensus mechanism. Using proof of work, the Bitcoin blockchain waits for ten minutes before validating transactions one block at a time, posing challenges to security and scalability.
+## Consenso
 
-Instead of imposing time constraints, ICP relies on cryptographic signatures to finalize a block. A block maker selects available messages, merging them into a block. The consensus protocol maintains a tree of notarized blocks. Each replica creates a distinct finalization share for every notarized block, serving as a definitive indicator that consensus has been achieved. This entire process could take less than two seconds.
+Bitcoin utiliza la prueba de trabajo como su mecanismo de consenso. Utilizando
+la prueba de trabajo, la cadena de bloques de Bitcoin espera diez minutos antes
+de validar transacciones bloque por bloque, lo que plantea desafíos en cuanto a
+seguridad y escalabilidad.
 
-To enhance scalability, ICP divides canisters into smaller groups, each running within a subnet with a diverse set of replicas. This approach allows for additional subnets as needed.
+En lugar de imponer restricciones de tiempo, ICP se basa en firmas
+criptográficas para finalizar un bloque. Un fabricante de bloques selecciona
+mensajes disponibles, fusionándolos en un bloque. El protocolo de consenso
+mantiene un árbol de bloques notarizados. Cada réplica crea una participación de
+finalización distinta para cada bloque notarizado, sirviendo como un indicador
+definitivo de que se ha logrado el consenso. Todo este proceso podría llevar
+menos de dos segundos.
 
-To learn more about the consensus mechanism of ICP, refer to the [consensus resource](https://internetcomputer.org/how-it-works/consensus).
+Para mejorar la escalabilidad, ICP divide los canisters en grupos más pequeños,
+cada uno ejecutándose dentro de una subred con un conjunto diverso de réplicas.
+Este enfoque permite agregar subredes adicionales según sea necesario.
 
-The enhanced ICP enhanced security and scalability make it suitable as a Layer 2 solution for Bitcoin.
+Para obtener más información sobre el mecanismo de consenso de ICP, consulta el
+[recurso de consenso](https://internetcomputer.org/how-it-works/consensus).
+
+La mayor seguridad y escalabilidad mejoradas de ICP lo hacen adecuado como una
+solución de Capa 2 para Bitcoin.

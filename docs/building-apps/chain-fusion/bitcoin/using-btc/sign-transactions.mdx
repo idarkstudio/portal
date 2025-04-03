@@ -6,30 +6,37 @@ import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Signing transactions
+# Firmar transacciones
 
-<MarkdownChipRow labels={["Advanced", "Bitcoin", "Tutorial"]} />
+<MarkdownChipRow labels={["Avanzado", "Bitcoin", "Tutorial"]} />
 
-Before a transaction can be sent to the Bitcoin network, each input must be signed.
+Antes de que una transacción pueda enviarse a la red de Bitcoin, cada entrada
+debe estar firmada.
 
-## Threshold ECDSA
+## ECDSA de umbral
 
-Canisters can sign transactions with threshold ECDSA through the
-`sign_with_ecdsa` method.
+Los canisters pueden firmar transacciones con ECDSA de umbral mediante el método
+`sign_with_ecdsa`.
 
 :::info
 
-To test canisters locally that use the following code snippets, you will need to enable local Bitcoin development. To do this, you can either start the local replica with `dfx start --enable-bitcoin` or you can include the following configuration in the project's `dfx.json` file:
+Para probar canisters localmente que utilicen los siguientes fragmentos de
+código, es necesario habilitar el desarrollo local de Bitcoin. Para hacerlo,
+puedes iniciar la réplica local con `dfx start --enable-bitcoin` o incluir la
+siguiente configuración en el archivo `dfx.json` del proyecto:
 
 ```json reference
 https://github.com/dfinity/examples/blob/master/motoko/basic_bitcoin/dfx.json#L9-L16
 ```
 
-[Learn more about `dfx.json` configuration options](https://internetcomputer.org/docs/building-apps/developer-tools/dfx-json-reference).
+[Más información sobre las opciones de configuración de `dfx.json`](https://internetcomputer.org/docs/building-apps/developer-tools/dfx-json-reference).
 
 :::
 
-The following snippet shows a simplified example of how to sign a Bitcoin transaction for the special case where all the inputs are referencing outpoints that are owned by `own_address` and `own_address` is a `P2PKH` address.
+El siguiente fragmento muestra un ejemplo simplificado de cómo firmar una
+transacción de Bitcoin en el caso especial donde todas las entradas hacen
+referencia a `outpoints` que pertenecen a `own_address`, y `own_address` es una
+dirección `P2PKH`.
 
 <Tabs groupId="languages">
 <TabItem value="motoko" label="Motoko" default>
@@ -48,16 +55,17 @@ https://github.com/dfinity/examples/blob/c4cbbfc72c4262c7aad34268ac48e85f3851b40
 </TabItem>
 </Tabs>
 
-## Threshold Schnorr
+## Schnorr de umbral
 
-Canisters can sign transactions with threshold Schnorr through the
-`sign_with_schnorr` method.
+Los canisters pueden firmar transacciones con Schnorr de umbral mediante el
+método `sign_with_schnorr`.
 
-### Signing P2TR key path transactions
+### Firmar transacciones P2TR con clave de ruta
 
-The following snippet shows a simplified example of how to sign a Bitcoin
-transaction for the special case where all the inputs are referencing outpoints
-that are owned by `own_address` and `own_address` is a `P2TR` address.
+El siguiente fragmento muestra un ejemplo simplificado de cómo firmar una
+transacción de Bitcoin en el caso especial donde todas las entradas hacen
+referencia a `outpoints` que pertenecen a `own_address`, y `own_address` es una
+dirección `P2TR`.
 
 <Tabs groupId="languages">
 <TabItem value="rust" label="Rust" default>
@@ -69,12 +77,12 @@ https://github.com/dfinity/examples/blob/2e748ec113f3c829c076fd3733264aa0ab9e5b6
 </TabItem>
 </Tabs>
 
-### Signing P2TR script path transactions
+### Firmar transacciones P2TR con script de ruta
 
-The following snippet shows a simplified example of how to sign a Bitcoin
-transaction for the special case where all the inputs are referencing outpoints
-that are owned by `own_address` and `own_address` is a `P2TR` script path
-address.
+El siguiente fragmento muestra un ejemplo simplificado de cómo firmar una
+transacción de Bitcoin en el caso especial donde todas las entradas hacen
+referencia a `outpoints` que pertenecen a `own_address`, y `own_address` es una
+dirección `P2TR` con script de ruta.
 
 <Tabs groupId="languages">
 <TabItem value="rust" label="Rust" default>
@@ -86,8 +94,8 @@ https://github.com/dfinity/examples/blob/8ccaf6ce9fbd2d39e44b7bbc7f339606e1ac123
 </TabItem>
 </Tabs>
 
-## Learn more
+## Más información
 
-[Learn more about threshold ECDSA](/docs/building-apps/network-features/signatures/t-ecdsa).
+[Más información sobre ECDSA de umbral](/docs/building-apps/network-features/signatures/t-ecdsa).
 
-[Learn more about threshold Schnorr](/docs/building-apps/network-features/signatures/t-schnorr).
+[Más información sobre Schnorr de umbral](/docs/building-apps/network-features/signatures/t-schnorr).

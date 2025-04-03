@@ -1,68 +1,102 @@
 ---
-keywords: [advanced, bitcoin, btc,  chain fusion, bitcoin integration, btc integration]
+keywords:
+  [advanced, bitcoin, btc,  chain fusion, bitcoin integration, btc integration]
 ---
 
 import useBaseUrl from "@docusaurus/useBaseUrl";
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Bitcoin integration
+# Integración de Bitcoin
 
-<MarkdownChipRow labels={["Advanced", "Bitcoin" ]} />
+<MarkdownChipRow labels={["Avanzado", "Bitcoin"]} />
 
-The integration of the Internet Computer with Bitcoin allows ICP smart contracts to directly interact with the Bitcoin network.
+La integración de Internet Computer con Bitcoin permite que los contratos
+inteligentes de ICP interactúen directamente con la red de Bitcoin.
 
-## Why is an integration with Bitcoin important?
+## ¿Por qué es importante la integración con Bitcoin?
 
-The Bitcoin integration is important because it brings smart contract functionality to Bitcoin, which does not have a native smart contract platform itself, opening up new possibilities for DeFi and dapp development. For example, ICP smart contracts can directly hold, receive, and send BTC. It also facilitates the creation of a ckBTC token that is backed 1:1 by BTC.
+La integración de Bitcoin es importante porque brinda funcionalidad de contratos
+inteligentes a Bitcoin, que no tiene una plataforma nativa de contratos
+inteligentes en sí, abriendo nuevas posibilidades para DeFi y el desarrollo de
+aplicaciones descentralizadas. Por ejemplo, los contratos inteligentes de ICP
+pueden mantener, recibir y enviar BTC directamente. También facilita la creación
+de un token ckBTC respaldado 1:1 por BTC.
 
-# How it works
+# Cómo funciona
 
-Smart contracts running on ICP can directly interact with the Bitcoin network without using bridges.
-This is possible because ICP nodes can fetch and validate the Bitcoin network's blocks and then make them available for smart contracts to query and read.
-Smart contracts can also sign and send Bitcoin transactions, allowing them to directly hold BTC.
+Los contratos inteligentes que se ejecutan en ICP pueden interactuar
+directamente con la red de Bitcoin sin utilizar puentes. Esto es posible porque
+los nodos de ICP pueden obtener y validar los bloques de la red de Bitcoin y
+luego ponerlos a disposición de los contratos inteligentes para consultar y
+leer. Los contratos inteligentes también pueden firmar y enviar transacciones de
+Bitcoin, lo que les permite mantener BTC directamente.
 
-This direct Bitcoin integration uses two features:
+Esta integración directa de Bitcoin utiliza dos características:
 
-- **[Threshold ECDSA](/docs/building-apps/network-features/signatures/t-ecdsa)** and **[threshold Schnorr](/docs/building-apps/network-features/signatures/t-schnorr)**: A smart contract can have a secret key that is stored in a secure and decentralized way using chain-key cryptography. This key can be used to digitally sign messages. ECDSA and Schnorr are compatible with the Bitcoin blockchain, enabling smart contracts to sign Bitcoin transactions.
+- **[Threshold ECDSA](/docs/building-apps/network-features/signatures/t-ecdsa)**
+  y
+  **[threshold Schnorr](/docs/building-apps/network-features/signatures/t-schnorr)**:
+  Un contrato inteligente puede tener una clave secreta que se almacena de
+  manera segura y descentralizada utilizando criptografía de clave de cadena.
+  Esta clave se puede utilizar para firmar digitalmente mensajes. ECDSA y
+  Schnorr son compatibles con la cadena de bloques de Bitcoin, lo que permite
+  que los contratos inteligentes firmen transacciones de Bitcoin.
 
-- **Bitcoin adapter**: ICP has one subnet whose nodes participate in the Bitcoin network. These nodes are used to fetch the Bitcoin state and blocks and send transactions to the network.
+- **Adaptador de Bitcoin**: ICP tiene una subred cuyos nodos participan en la
+  red de Bitcoin. Estos nodos se utilizan para obtener el estado y los bloques
+  de Bitcoin y enviar transacciones a la red.
 
-The diagram below shows the flow of interacting with the Bitcoin network from a smart contract.
+El diagrama a continuación muestra el flujo de interacción con la red de Bitcoin
+desde un contrato inteligente.
 
 <div class="text--center">
-  <img
-    src={useBaseUrl("/img/docs/bitcoin-overview.png")}
-    alt="Bitcoin overview"
-    width="500"
-  />
+  <img
+    src={useBaseUrl("/img/docs/bitcoin-overview.png")}
+    alt="Visión general de Bitcoin"
+    width="500"
+  />
 </div>
 
-At the protocol level, both the Bitcoin adapter and chain-key ECDSA features expose an API on the [management canister](/docs/references/system-canisters/management-canister).
+A nivel de protocolo, tanto el adaptador de Bitcoin como las características de
+ECDSA de clave de cadena exponen una API en el
+[canister de gestión](/docs/references/system-canisters/management-canister).
 
-When a canister wants to make a Bitcoin transaction, a request is sent to the Bitcoin subnet that hosts a Bitcoin canister that contains ICP's onchain Bitcoin state. The request is sent to the Bitcoin network through the Bitcoin adapter and is processed by Bitcoin asynchronously.
+Cuando un canister desea realizar una transacción de Bitcoin, se envía una
+solicitud a la subred de Bitcoin que aloja un canister de Bitcoin que contiene
+el estado de Bitcoin en la cadena de ICP. La solicitud se envía a la red de
+Bitcoin a través del adaptador de Bitcoin y se procesa de forma asincrónica por
+Bitcoin.
 
 ## ckBTC
 
-The primary value of chain-key tokens, such as ckBTC, is that they can be transferred with a low finality time (within seconds) and for a fraction of the cost of a transaction on the token's native network (in this instance, a BTC transaction on Bitcoin).
+El valor principal de los tokens de clave de cadena, como ckBTC, es que se
+pueden transferir con un tiempo de finalización bajo (en cuestión de segundos) y
+a una fracción del costo de una transacción en la red nativa del token (en este
+caso, una transacción de BTC en Bitcoin).
 
-## Use cases and sample dapps
+## Casos de uso y aplicaciones de muestra
 
-The Bitcoin integration supports both basic and advanced use cases, such as decentralized exchanges or working with Bitcoin inscriptions.
+La integración de Bitcoin admite casos de uso básicos y avanzados, como
+intercambios descentralizados o trabajar con inscripciones de Bitcoin.
 
-The ckBTC token is suitable for the common use cases of holding, transferring, and trading BTC.
+El token ckBTC es adecuado para los casos de uso comunes de mantener, transferir
+y negociar BTC.
 
-Sample apps:
+Aplicaciones de muestra:
 
-- Crowdfunding platforms that accept BTC, such as [Funded](https://funded.app/).
+- Plataformas de financiación colectiva que aceptan BTC, como
+  [Funded](https://funded.app/).
 
-- Social applications that support sending crypto to other users, like [OpenChat](https://oc.app/).
+- Aplicaciones sociales que admiten el envío de criptomonedas a otros usuarios,
+  como [OpenChat](https://oc.app/).
 
-- Online eCommerce platforms. [Bitshop](https://ughim-6qaaa-aaaah-qc7qa-cai.ic0.app/) is one example.
+- Plataformas de comercio electrónico en línea.
+  [Bitshop](https://ughim-6qaaa-aaaah-qc7qa-cai.ic0.app/) es un ejemplo.
 
-[View the full list of Bitcoin ecosystem examples](https://internetcomputer.org/ecosystem?tag=Bitcoin).
+[Ver la lista completa de ejemplos del ecosistema de Bitcoin](https://internetcomputer.org/ecosystem?tag=Bitcoin).
 
-## Resources
+## Recursos
 
-- [ICP Chain Fusion Educate - Bitcoin Edition: Introduction to ICP and Chain Fusion](https://www.youtube.com/watch?v=A0K9GXsfw74&list=PLfEHHr3qexv_L0t6KrCyJ-l2ZaHaO-m85).
+- [ICP Chain Fusion Educate - Bitcoin Edition: Introducción a ICP y Chain Fusion](https://www.youtube.com/watch?v=A0K9GXsfw74&list=PLfEHHr3qexv_L0t6KrCyJ-l2ZaHaO-m85).
 
-- [Learn about the Bitcoin developer workflow on ICP](./using-btc/btc-dev-workflow.mdx).
+- [Aprende sobre el flujo de trabajo del desarrollador de Bitcoin en ICP](./using-btc/btc-dev-workflow.mdx).

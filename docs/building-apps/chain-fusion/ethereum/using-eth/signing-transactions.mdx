@@ -1,45 +1,69 @@
 ---
-keywords: [advanced, bitcoin, eth, tutorial, sign transactions, sign eth transactions, eth transactions, ethereum transactions]
+keywords:
+  [
+    advanced,
+    bitcoin,
+    eth,
+    tutorial,
+    sign transactions,
+    sign eth transactions,
+    eth transactions,
+    ethereum transactions,
+  ]
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Signing transactions
+# Firmando transacciones
 
-<MarkdownChipRow labels={["Advanced", "Ethereum", "Tutorial"]} />
+<MarkdownChipRow labels={["Avanzado", "Ethereum", "Tutorial"]} />
 
-Before a transaction can be sent to the Ethereum network, it must be signed and formatted into a raw ETH transaction. Transactions are signed with [threshold ECDSA](/docs/building-apps/network-features/signatures/t-ecdsa). For this example, the transaction standard EIP1559 will be used.
+Antes de que una transacción pueda enviarse a la red de Ethereum, debe ser
+firmada y formateada en una transacción ETH sin procesar. Las transacciones se
+firman utilizando
+[ECDSA umbral](/docs/building-apps/network-features/signatures/t-ecdsa). Para
+este ejemplo, se utilizará el estándar de transacción EIP-1559.
 
-## Build a transaction
+## Construcción de una transacción
 
-First, a raw EIP1559 ETH transaction must be built containing the transaction's metadata, such as gas fee, sender, receiver, and transaction data. Below is a programmatic example of how to build a transaction using Rust:
+Primero, se debe construir una transacción ETH EIP-1559 sin procesar que
+contenga los metadatos de la transacción, como la tarifa de gas, el remitente,
+el receptor y los datos de la transacción. A continuación, se muestra un ejemplo
+programático de cómo construir una transacción usando Rust:
 
 ```rust reference
 https://github.com/letmejustputthishere/icp-evm-coprocessor-starter/blob/main/packages/ic-evm-utils/src/eth_send_raw_transaction.rs#L45-L77
 ```
 
-## Format, hash, and sign a transaction
+## Formatear, hashear y firmar una transacción
 
-Ethereum EIP1559 transactions are first hashed with the Keccak256 algorithm and then signed using the private key. Below is an example written in Rust demonstrating how to format a raw ETH transaction, hash it using Keccak256 and sign the hash using threshold ECDSA. This code snippet accomplishes the following:
+Las transacciones Ethereum EIP1559 primero se hashean con el algoritmo Keccak256
+y luego se firman utilizando la clave privada. A continuación se muestra un
+ejemplo escrito en Rust que demuestra cómo formatear una transacción ETH sin
+procesar, hashearla con Keccak256 y firmar el hash utilizando ECDSA umbral. Este
+fragmento de código realiza lo siguiente:
 
-- Formats the transaction.
+- Formatea la transacción.
 
-- Hashes the transaction using Keccak256.
+- Hashea la transacción utilizando Keccak256.
 
-- Signs the Keccak hash.
+- Firma el hash de Keccak.
 
-- Rebuilds the transaction using the VRS signature.
+- Reconstruye la transacción utilizando la firma VRS.
 
 ```rust reference
 https://github.com/letmejustputthishere/chain-fusion-starter/blob/main/packages/ic-evm-utils/src/evm_signer.rs#L56-L94
 ```
 
-Additional examples of signing transactions with threshold ECDSA can be found in the [threshold ECDSA documentation](/docs/building-apps/network-features/signatures/t-ecdsa).
+Puedes encontrar más ejemplos sobre cómo firmar transacciones con ECDSA umbral
+en la
+[documentación de ECDSA umbral](/docs/building-apps/network-features/signatures/t-ecdsa).
 
-## Submit transaction
+## Enviar la transacción
 
-Now that your transaction is signed, it can be submitted to Ethereum to be executed.
+Ahora que tu transacción está firmada, puedes enviarla a la red de Ethereum para
+que se ejecute.
 
-[Learn how to submit Ethereum transactions](./submit-transactions.mdx).
+[Aprende cómo enviar transacciones en Ethereum](./submit-transactions.mdx).

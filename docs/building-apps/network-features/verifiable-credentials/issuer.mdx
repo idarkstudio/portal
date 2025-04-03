@@ -1,135 +1,200 @@
 ---
-keywords: [intermediate, tutorial, identity, credentials, verifiable credentials, issuer]
+keywords:
+  [
+    intermediate,
+    tutorial,
+    identity,
+    credentials,
+    verifiable credentials,
+    issuer,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 
-# Become an issuer
+# Convertirse en un emisor
 
-<MarkdownChipRow labels={["Intermediate", "Tutorial"]} />
+<MarkdownChipRow labels={["Intermedio", "Tutorial"]} />
 
-An **issuer** is a service or app that can issue a verifiable credential (VC) to a user. On ICP, an issuer is an exposed API that receives calls from an identity provider and does not trigger any workflows itself. To become an issuer, your canister must implement the issuer API as described in the [verifiable credential spec](https://github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md).
+Un **emisor** es un servicio o aplicación que puede emitir una credencial
+verificable (VC) a un usuario. En ICP, un emisor es una API expuesta que recibe
+llamadas de un proveedor de identidad y no activa ningún flujo de trabajo por sí
+mismo. Para convertirse en un emisor, tu canister debe implementar la API del
+emisor según lo descrito en la  
+[especificación de credenciales verificables](https://github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md).
 
-Issuers receive credentials requests from relying parties through an identity provider such as Internet Identity (II). The end user must allow or revoke the communication before the credential is issued.
+Los emisores reciben solicitudes de credenciales de partes dependientes a través
+de un proveedor de identidad como Internet Identity (II). El usuario final debe
+permitir o revocar la comunicación antes de que la credencial sea emitida.
 
-Internet Identity is used as the identity provider in this tutorial.
+En este tutorial, Internet Identity se utiliza como proveedor de identidad.
 
-## Development of the issuer API
+## Desarrollo de la API del emisor
 
-The issuer API consists of four endpoints:
+La API del emisor consta de cuatro endpoints:
 
-1. [`vc_consent_message`](https://github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md#1-consent-message): Responds with a message of consent to be displayed to the user to receive their approval of issuing the credentials.
+1. [`vc_consent_message`](https://github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md#1-consent-message):  
+   Responde con un mensaje de consentimiento para mostrar al usuario y obtener
+   su aprobación para la emisión de la credencial.
 
-2. [`derivation_origin`](https://github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md#2-derivation-origin): Returns the URL used to derive the user's principal for the issuer.
+2. [`derivation_origin`](https://github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md#2-derivation-origin):  
+   Devuelve la URL utilizada para derivar el principal del usuario para el
+   emisor.
 
-3. [`prepare_credential`](https://github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md#3-prepare-credential): Checks the validity of the request and prepares the actual credential requested.
+3. [`prepare_credential`](https://github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md#3-prepare-credential):  
+   Verifica la validez de la solicitud y prepara la credencial solicitada.
 
-4. [`get_credential`](https://github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md#4-get-credential): Issues the actual credential requested by the user.
+4. [`get_credential`](https://github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md#4-get-credential):  
+   Emite la credencial solicitada por el usuario.
 
-### Step 1: Obtain a consent message (`vc_consent_message`)
+### Paso 1: Obtener un mensaje de consentimiento (`vc_consent_message`)
 
-First, the identity provider sends a request to the issuer API endpoint `vc_consent_message` to get the consent message to show the user. A consent message is text shown to the user to confirm that they allow the issuing of a VC.
+Primero, el proveedor de identidad envía una solicitud al endpoint
+`vc_consent_message` de la API del emisor para obtener el mensaje de
+consentimiento que se mostrará al usuario.  
+Un mensaje de consentimiento es un texto que el usuario debe aceptar para
+confirmar la emisión de una credencial verificable.
 
 ```rust reference
 https://github.com/dfinity/vc-playground/blob/b2f8cd5f5397b7b355b6503df5af3789834b79e9/issuer/src/main.rs#L677-L689
 ```
 
-### Step 2: Implement a derivation origin (`derivation_origin`)
+### Paso 2: Implementar un origen de derivación (`derivation_origin`)
 
-Next, the issuer API endpoint `derivation_origin` is called by the identity provider to obtain a URL to be used as the derivation origin for the user's principal.
+Luego, el proveedor de identidad llama al endpoint `derivation_origin` del
+emisor para obtener la URL que se usará como origen de derivación para el
+principal del usuario.
 
-If the issuer doesn't rely on alternative derivation origins, then it must return the canister's URL: `https://<issuer-canister-id>.icp0.io`.
+Si el emisor no utiliza orígenes de derivación alternativos, debe devolver la
+URL del canister:  
+`https://<issuer-canister-id>.icp0.io`.
 
-If the issuer relies on the [alternative derivation origins](/docs/references/ii-spec#alternative-frontend-origins) feature, the endpoint must return the same value for the `derivationOrigin` when logging in.
+Si el emisor sí usa  
+[orígenes de derivación alternativos](/docs/references/ii-spec#alternative-frontend-origins),  
+el endpoint debe devolver el mismo valor de `derivationOrigin` que se usó al
+iniciar sesión.
 
-The returned value is subject to verification via .well-known/ii-alternative-origins, as described in the [alternative origins documentation](/docs/references/ii-spec#alternative-frontend-origins).
+El valor devuelto está sujeto a verificación mediante
+`.well-known/ii-alternative-origins`, como se describe en la  
+[documentación sobre orígenes alternativos](/docs/references/ii-spec#alternative-frontend-origins).
 
 ```rust reference
 https://github.com/dfinity/vc-playground/blob/b2f8cd5f5397b7b355b6503df5af3789834b79e9/issuer/src/main.rs#L659-L675
 ```
 
 :::info
-The returned derivation origin is subject to verification via `.well-known/ii-alternative-origins`, as described in the [feature description](/docs/references/ii-spec#alternative-frontend-origins).
+
+El origen de derivación devuelto está sujeto a verificación mediante
+`.well-known/ii-alternative-origins`,  
+como se describe en la  
+[documentación de la funcionalidad](/docs/references/ii-spec#alternative-frontend-origins).
+
 :::
 
-### Step 3: Prepare the credentials (`prepare_credential`)
+### Paso 3: Preparar la credencial (`prepare_credential`)
 
-Before a credential can be issued, the request for the credential must be checked for validity using the `prepare_credential` API endpoint. The objective of this endpoint is to check the validity of the request and update the `certified_data` with a new root hash that includes the signature on the credential. Upon success, the actual credential is prepared.
+Antes de emitir una credencial, la solicitud debe ser validada a través del
+endpoint `prepare_credential`.  
+El objetivo de este endpoint es verificar la solicitud y actualizar el
+`certified_data` con un nuevo hash raíz  
+que incluya la firma en la credencial.  
+Si la solicitud es válida, la credencial se prepara.
 
-For more details on how to validate the request or create the actual credential, check out the [VC specification](https://github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md).
+Para más detalles sobre cómo validar la solicitud o generar la credencial,
+revisa la  
+[especificación de credenciales verificables](https://github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md).
 
 ```rust reference
 https://github.com/dfinity/vc-playground/blob/b2f8cd5f5397b7b355b6503df5af3789834b79e9/issuer/src/main.rs#L557-L585
 ```
 
 :::info
-The value of `prepared_context` is used to transfer information between the `prepare_credential` and `get_credential` steps. It is up to the issuer API to decide on the content of this field since the issuer API creates `prepared_context` and is the only entity that consumes it.
 
-For example, when using [canister signatures](/docs/references/ic-interface-spec#canister-signatures)
-`prepared_context` contains a time-stamped and unsigned VC, for which the canister signature will be available through the `get_credential` call.
+El valor de `prepared_context` se usa para transferir información entre
+`prepare_credential` y `get_credential`.  
+El contenido de este campo lo define el emisor, ya que es el único que lo genera
+y consume.
+
+Por ejemplo, cuando se usan  
+[firmas de canisters](/docs/references/ic-interface-spec#canister-signatures),  
+`prepared_context` puede contener una credencial verificable con marca de tiempo
+pero sin firmar.  
+La firma del canister estará disponible en la llamada `get_credential`.
+
 :::
 
-### Step 4: Issue the credential (`get_credential`)
+### Paso 4: Emitir la credencial (`get_credential`)
 
-Lastly, the issuer API endpoint `get_credential` is used to issue the credential requested by the user. The same checks used to prepare the credential are run again, with an additional verify step to confirm that `prepared_context` is consistent with `prepare_credential`. If successful, the issuer API returns the signed credential in JWT format.
+Finalmente, el endpoint `get_credential` se usa para emitir la credencial
+solicitada por el usuario.  
+Se ejecutan nuevamente las validaciones realizadas en `prepare_credential`, con
+una verificación adicional  
+para confirmar que `prepared_context` es consistente con la solicitud original.
 
-An example implementation can be found in the [verifiable credentials playground example](
+Si todo es válido, el emisor devuelve la credencial firmada en formato JWT.
+
+Puedes ver una implementación en el  
+[ejemplo del playground de credenciales verificables](
 
 ```rust reference
 https://github.com/dfinity/vc-playground/blob/b2f8cd5f5397b7b355b6503df5af3789834b79e9/issuer/src/main.rs#L601-L649
 ```
 
-## Recommended conventions
+## Convenciones recomendadas
 
-An issuer may follow the convention below for an easier verification of the returned credentials.
+Un emisor puede seguir la siguiente convención para facilitar la verificación de
+las credenciales emitidas.
 
-Given a credential specification such as:
+Dado un esquema de credencial como:
 
 ```json
 "credentialSpec": {
-    "credentialType": "SomeVerifiedProperty",
-    "arguments": {
-        "argument_1": "value_1",
-        "another_argument": 42,
-    }
+    "credentialType": "SomeVerifiedProperty",
+    "arguments": {
+        "argument_1": "value_1",
+        "another_argument": 42
+    }
 }
 ```
 
-The returned JWT should contain a property named by the value of `credentialType` in `credentialSubject` from the specification, with key-value entries listing the arguments from the specification, namely:
+El JWT devuelto debe contener una propiedad con el valor de `credentialType`  
+en `credentialSubject`, con las claves y valores de los argumentos de la
+credencial:
 
 ```json
 "SomeVerifiedProperty": {
-    "argument_1": "value_1",
-    "another_argument": 42,
+    "argument_1": "value_1",
+    "another_argument": 42
 }
 ```
 
-For example, for a `VerifiedAdult` credential, you would use the following credential specification:
+Por ejemplo, para una credencial `VerifiedAdult`, la especificación sería:
 
 ```json
 "credentialSpec": {
-    "credentialType": "VerifiedAdult",
-    "arguments": {
-        "minAge": 18,
-    }
+    "credentialType": "VerifiedAdult",
+    "arguments": {
+        "minAge": 18
+    }
 }
 ```
 
-A compliant issuer would issue a VC that contains `credentialSubject` with the property:
+Un emisor compatible emitiría una credencial con `credentialSubject`
+estructurado así:
 
 ```json
 "VerifiedAdult": {
-    "minAge": 18,
+    "minAge": 18
 }
 ```
 
-## Resources
+## Recursos
 
-- [Verifiable credentials specification](https://github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md).
+- [Especificación de credenciales verificables](https://github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md).
 
-- [Relying party and issuer demo](https://github.com/dfinity/vc-playground/blob/main/issuer/src/main.rs).
+- [Demo de partes dependientes y emisores](https://github.com/dfinity/vc-playground/blob/main/issuer/src/main.rs).
 
-- [Verifiable credentials playground: Issuer](https://metaissuer.vc/).
+- [Playground de credenciales verificables: Emisor](https://metaissuer.vc/).
 
-- [Verifiable credentials playground: Relying party](https://relyingparty.vc/).
+- [Playground de credenciales verificables: Parte dependiente](https://relyingparty.vc/).

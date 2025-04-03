@@ -1,5 +1,16 @@
 ---
-keywords: [advanced, tutorial, vetkeys, vetkd, encryption, onchain encryption, vetkey, vet KD, vetkeys example]
+keywords:
+  [
+    advanced,
+    tutorial,
+    vetkeys,
+    vetkd,
+    encryption,
+    onchain encryption,
+    vetkey,
+    vet KD,
+    vetkeys example,
+  ]
 ---
 
 import TabItem from "@theme/TabItem";
@@ -7,74 +18,104 @@ import { BetaChip } from "/src/components/Chip/BetaChip";
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import Tabs from "@theme/Tabs";
 
-# vetKeys example
+# Ejemplo de vetKeys
 
-<MarkdownChipRow labels={["Advanced", "Encryption"]} />
+<MarkdownChipRow labels={["Avanzado", "Encriptación"]} />
 
-This example provides a canister (`src/chainkey_testing_canister`) that demonstrates how the [proposed vetKD system API](https://github.com/dfinity/portal/pull/3763) can be used to encrypt, transfer, and decrypt a file sent to an Ethereum address.
+Este ejemplo proporciona un canister (`src/chainkey_testing_canister`) que
+demuestra cómo la
+[API del sistema vetKD propuesta](https://github.com/dfinity/portal/pull/3763)
+puede utilizarse para encriptar, transferir y desencriptar un archivo enviado a
+una dirección de Ethereum.
 
-The [GitHub repo for this example](https://github.com/kristoferlund/send_file_to_eth_demo) is a public template, and there is a live demo available: https://h62xu-2iaaa-aaaal-qshoq-cai.icp0.io/
+El
+[repositorio de GitHub para este ejemplo](https://github.com/kristoferlund/send_file_to_eth_demo)
+es una plantilla pública, y hay una demostración en vivo disponible:
+https://h62xu-2iaaa-aaaal-qshoq-cai.icp0.io/
 
-It uses [`ic-siwe`](https://github.com/kristoferlund/ic-siwe) and [`ic-siwe-js`](https://www.npmjs.com/package/ic-siwe-js) to facilitate signing in with Ethereum, sending a file to an Ethereum address, and using the recipient's address to to identify the [IBE scheme](/docs/references/vetkeys-overview) used to generate a public key for the recipient.
+Utiliza [`ic-siwe`](https://github.com/kristoferlund/ic-siwe) y
+[`ic-siwe-js`](https://www.npmjs.com/package/ic-siwe-js) para facilitar el
+inicio de sesión con Ethereum, el envío de un archivo a una dirección de
+Ethereum y el uso de la dirección del destinatario para identificar el
+[esquema IBE](/docs/references/vetkeys-overview) utilizado para generar una
+clave pública para el destinatario.
 
-Other examples available are:
+Otros ejemplos disponibles son:
 
-- [Rust encryption app](https://github.com/dfinity/examples/tree/master/rust/vetkd).
-- [Encrypted notes dapp](https://github.com/dfinity/examples/tree/master/motoko/encrypted-notes-dapp-vetkd).
+- [Aplicación de encriptación en Rust](https://github.com/dfinity/examples/tree/master/rust/vetkd).
+- [Dapp de notas encriptadas](https://github.com/dfinity/examples/tree/master/motoko/encrypted-notes-dapp-vetkd).
 
-## Encrypt and store a file
+## Encriptar y almacenar un archivo
 
-### Step 1: Retrieve recipient's public key
+### Paso 1: Obtener la clave pública del destinatario
 
-First, identify the Ethereum address of the recipient you'd like to send a file to. Then, define a `vetkd_public_key` method that will retrieve the recipient's public key using their Ethereum address to identify the IBE scheme that generates the public key. This method will call the `chainkey_testing_canister`:
+Primero, identifica la dirección de Ethereum del destinatario al que deseas
+enviar un archivo. Luego, define un método `vetkd_public_key` que recuperará la
+clave pública del destinatario utilizando su dirección de Ethereum para
+identificar el esquema IBE que genera la clave pública. Este método llamará al
+`chainkey_testing_canister`:
 
 ```rust reference
 https://github.com/kristoferlund/send_file_to_eth_demo/blob/main/src/backend/src/vetkd/controller/vetkd_public_key.rs#L1-L23
 ```
 
 :::info
-This example uses a local test vetKeys canister. When the feature is available, this should be replaced with the actual vetKeys API.
+
+Este ejemplo usa un canister de prueba local de vetKeys. Cuando la funcionalidad
+esté disponible, esto debe reemplazarse con la API oficial de vetKeys.
+
 :::
 
-### Step 2: Encrypt a file in the frontend
+### Paso 2: Encriptar un archivo en el frontend
 
-Next, define a request in the application's frontend that uses the recipient's public key and the `vetkd.IBECiphertext.encrypt` method from the `ic-vetkd-utils` package. This request will take the file uploaded by the user and encrypt it.
+A continuación, define una solicitud en el frontend de la aplicación que utilice
+la clave pública del destinatario y el método `vetkd.IBECiphertext.encrypt` del
+paquete `ic-vetkd-utils`. Esta solicitud tomará el archivo subido por el usuario
+y lo encriptará.
 
 ```typescript reference
 https://github.com/kristoferlund/send_file_to_eth_demo/blob/main/src/frontend/src/transfer/hooks/useTransferCreate.tsx#L1-L46
 ```
 
-### Step 3: Store the encrypted file in the backend
+### Paso 3: Almacenar el archivo encriptado en el backend
 
-In the backend canister, create a `transfer_create` method that verifies the frontend request's `from` and `to` parameters, then stores the encrypted file:
+En el canister del backend, crea un método `transfer_create` que verifique los
+parámetros `from` y `to` de la solicitud del frontend y luego almacene el
+archivo encriptado:
 
 ```rust reference
 https://github.com/kristoferlund/send_file_to_eth_demo/blob/main/src/backend/src/transfer/controller/transfer_create.rs#L1-L35
 ```
 
-## Receive and decrypt a file
+## Recibir y desencriptar un archivo
 
-### Step 1: Obtain a list of available encrypted file transfers
+### Paso 1: Obtener una lista de transferencias de archivos encriptados disponibles
 
-The file has now been encrypted with the intended recipient's Ethereum address and corresponding private key. In order for the recipient to receive the file, they must login to the application with their Ethereum address. The frontend will call the backend's `transfer_list` method and receive the application's existing file transfers.
+El archivo ahora ha sido encriptado con la dirección de Ethereum del
+destinatario y su clave privada correspondiente. Para que el destinatario reciba
+el archivo, debe iniciar sesión en la aplicación con su dirección de Ethereum.
+El frontend llamará al método `transfer_list` del backend y recibirá las
+transferencias de archivos existentes en la aplicación.
 
 ```rust reference
 https://github.com/kristoferlund/send_file_to_eth_demo/blob/main/src/backend/src/transfer/controller/transfer_list.rs#L1-L15
 ```
 
-### Step 2: Obtain the recipient's private key
+### Paso 2: Obtener la clave privada del destinatario
 
-Then the backend obtains the encrypted private key of the user's Ethereum address in a similar manner to how it obtained the public key to encrypt the file:
+Luego, el backend obtiene la clave privada encriptada de la dirección de
+Ethereum del usuario de manera similar a como obtuvo la clave pública para
+encriptar el archivo:
 
 ```rust reference
 https://github.com/kristoferlund/send_file_to_eth_demo/blob/main/src/backend/src/vetkd/controller/vetkd_encrypted_key.rs#L1-L31
 ```
 
-### Step 3: Decrypt the private key and file
+### Paso 3: Desencriptar la clave privada y el archivo
 
-Finally, the frontend decrypts the private key, uses it to decrypt the file, and returns the file to the user:
+Finalmente, el frontend desencripta la clave privada, la usa para desencriptar
+el archivo y lo devuelve al usuario:
 
 ```typescript reference
 https://github.com/kristoferlund/send_file_to_eth_demo/blob/main/src/frontend/src/transfer/hooks/useTransferGet.tsx#L1-L46
 ```
-

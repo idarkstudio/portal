@@ -1,90 +1,136 @@
 ---
-keywords: [intermediate, concept, identity, credentials, verifiable credentials, vcs, vc]
+keywords:
+  [
+    intermediate,
+    concept,
+    identity,
+    credentials,
+    verifiable credentials,
+    vcs,
+    vc,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 
-# How verifiable credentials work
+# Cómo funcionan las credenciales verificables
 
-<MarkdownChipRow labels={["Intermediate", "Concept"]} />
+<MarkdownChipRow labels={["Intermedio", "Concepto"]} />
 
-Verifiable credentials (VCs) on ICP rely on Internet Identity (II), which provides distinct identities that preserve unlinkability for each dapp. A dapp utilizing verifiable credentials can’t ask for a user's credentials from the [issuer](/docs/building-apps/network-features/verifiable-credentials/overview#terminology) of the verifiable credential directly. When a [relying party](/docs/building-apps/network-features/verifiable-credentials/overview#terminology) wants to obtain a credential from an issuer, it must request it through an [identity provider](/docs/building-apps/network-features/verifiable-credentials/overview#terminology) such as Internet Identity.
+Las credenciales verificables (VCs) en ICP dependen de Internet Identity (II),
+que proporciona identidades distintas para cada dapp, preservando la no
+vinculabilidad.
 
-Internet Identity acts as a communication link between the relying party and issuer API, connecting with the issuer API and asking for the credentials for the user. After receiving the credentials, they are forwarded to the relying party.
+Una dapp que utiliza credenciales verificables no puede solicitar directamente
+las credenciales del  
+[emisor](/docs/building-apps/network-features/verifiable-credentials/overview#terminology).
 
-<div class="text--center">
-  <img
-    src={useBaseUrl("/img/docs/vcs-1.png")}
-    alt="Verifiable Credential Workflow"
-    width="800"
-  />
-</div>
+Cuando una  
+[parte dependiente](/docs/building-apps/network-features/verifiable-credentials/overview#terminology)  
+quiere obtener una credencial de un emisor, debe solicitarla a través de un  
+[proveedor de identidad](/docs/building-apps/network-features/verifiable-credentials/overview#terminology),  
+como Internet Identity.
 
-## User's perspective
-
-From the user's perspective, the relying party opens a new window to allow the credential, which is closed when the flow finishes.
-
-<div class="text--center">
-  <img
-    src={useBaseUrl("/img/docs/vcs-2.png")}
-    alt="Verifiable Credential Workflow"
-    width="800"
-  />
-</div>
-
-## Developer's perspective
-
-From the developer’s perspective, the interaction between dapps uses window messages and calls to canisters:
-
-1. The user accesses the relying party and starts the process to request credentials. This may be an action such as logging into a dapp or accessing a private service that requires authorization.
-
-2. The relying party starts the flow with Internet Identity (II):
-
-    a. The relying party opens a new II window and waits for a window message.
-
-    b. The frontend of II sends a window message to start the request process.
-
-    c. The relying party replies with the credentials request and issuer data for the request.
-
-3. The II frontend calls the issuer canister to retrieve the consent message.
-
-4. The II frontend shows all the details to the user: the relying party, the consent message, and the issuer URL, then waits for the user action.
-
-5. The user decides whether to allow or revoke the action.
-
-    a. If allowed, the II frontend requests the ID alias for the II backend.
-
-6. The II backend calculates an ID alias, which is an opaque identifier to keep unlinkability between the issuer and the relying party.
-
-7. The II frontend requests the credential from the issuer.
-
-8. The issuer receives the request for the credential, validates the call from II, and replies with a verifiable presentation if the user fulfills the credential's requirements.
-
-9. The II frontend receives the credential from the issuer and forwards it to the relying party, closing the window.
-
-10. The relying party verifies the credentials.
+Internet Identity actúa como un enlace de comunicación entre la parte
+dependiente y la API del emisor, conectándose con la API del emisor y
+solicitando las credenciales del usuario. Una vez recibidas, las credenciales se
+reenvían a la parte dependiente.
 
 <div class="text--center">
-  <img
-    src={useBaseUrl("/img/docs/vcs-3.png")}
-    alt="Verifiable Credential Workflow"
-    width="800"
-  />
+  <img
+    src={useBaseUrl("/img/docs/vcs-1.png")}
+    alt="Flujo de trabajo de Credenciales Verificables"
+    width="800"
+  />
 </div>
 
-For more details, check out the [specification in Internet Identity’s repository](https://github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md).
+## Perspectiva del usuario
 
-## Test verifiable credentials
+Desde la perspectiva del usuario, la parte dependiente abre una nueva ventana
+para permitir la credencial, que se cierra cuando el proceso finaliza.
 
-There is a demo relying party deployed on ICP available for testing: [https://l7rua-raaaa-aaaap-ahh6a-cai.icp0.io/](https://l7rua-raaaa-aaaap-ahh6a-cai.icp0.io/).
+<div class="text--center">
+  <img
+    src={useBaseUrl("/img/docs/vcs-2.png")}
+    alt="Flujo de trabajo de Credenciales Verificables"
+    width="800"
+  />
+</div>
 
-You first need to log in with an identity provider. To avoid using real users, it is recommended to use the staging instance of Internet Identity: [https://fgte5-ciaaa-aaaad-aaatq-cai.ic0.app/](https://fgte5-ciaaa-aaaad-aaatq-cai.ic0.app/).
+## Perspectiva del desarrollador
 
-There is a demo issuer deployed on ICP available for testing. It will issue any requested credential. Feel free to use it when testing the flow: [https://qdiif-2iaaa-aaaap-ahjaq-cai](https://dashboard.internetcomputer.org/canister/qdiif-2iaaa-aaaap-ahjaq-cai).
+Desde la perspectiva del desarrollador, la interacción entre dapps utiliza
+mensajes de ventana y llamadas a canisters:
 
-## Resources
+1. El usuario accede a la parte dependiente e inicia el proceso para solicitar
+   credenciales.  
+   Esto puede ocurrir al iniciar sesión en una dapp o al acceder a un servicio
+   privado que requiera autorización.
 
-- [Learn how to become an issuer](issuer.mdx).
+2. La parte dependiente inicia el flujo con Internet Identity (II):
 
-- [Learn how to become a relying party](relying-party.mdx).
+   a. La parte dependiente abre una nueva ventana de II y espera un mensaje de
+   ventana.
+
+   b. El frontend de II envía un mensaje de ventana para iniciar la solicitud.
+
+   c. La parte dependiente responde con la solicitud de credenciales y los datos
+   del emisor.
+
+3. El frontend de II llama al canister del emisor para recuperar el mensaje de
+   consentimiento.
+
+4. El frontend de II muestra al usuario todos los detalles:  
+   la parte dependiente, el mensaje de consentimiento y la URL del emisor,  
+   y luego espera la acción del usuario.
+
+5. El usuario decide si permite o revoca la acción.
+
+   a. Si se permite, el frontend de II solicita el alias de ID al backend de II.
+
+6. El backend de II calcula un **alias de ID**, un identificador opaco que
+   mantiene la no vinculabilidad entre el emisor y la parte dependiente.
+
+7. El frontend de II solicita la credencial al emisor.
+
+8. El emisor recibe la solicitud de credencial, valida la llamada de II y
+   responde con una **presentación verificable**, si el usuario cumple con los
+   requisitos de la credencial.
+
+9. El frontend de II recibe la credencial del emisor y la reenvía a la parte
+   dependiente, cerrando la ventana.
+
+10. La parte dependiente verifica las credenciales.
+
+<div class="text--center">
+  <img
+    src={useBaseUrl("/img/docs/vcs-3.png")}
+    alt="Flujo de trabajo de Credenciales Verificables"
+    width="800"
+  />
+</div>
+
+Para más detalles, consulta la  
+[especificación en el repositorio de Internet Identity](https://github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md).
+
+## Prueba de credenciales verificables
+
+Hay una **parte dependiente de demostración** desplegada en ICP disponible para
+pruebas:  
+[https://l7rua-raaaa-aaaap-ahh6a-cai.icp0.io/](https://l7rua-raaaa-aaaap-ahh6a-cai.icp0.io/).
+
+Primero, debes iniciar sesión con un **proveedor de identidad**.  
+Para evitar el uso de usuarios reales, se recomienda utilizar la instancia de
+prueba de Internet Identity:  
+[https://fgte5-ciaaa-aaaad-aaatq-cai.ic0.app/](https://fgte5-ciaaa-aaaad-aaatq-cai.ic0.app/).
+
+También hay un **emisor de demostración** en ICP disponible para pruebas.  
+Emitirá cualquier credencial solicitada, por lo que puedes usarlo para probar el
+flujo:  
+[https://qdiif-2iaaa-aaaap-ahjaq-cai](https://dashboard.internetcomputer.org/canister/qdiif-2iaaa-aaaap-ahjaq-cai).
+
+## Recursos
+
+- [Aprende cómo convertirte en un emisor](issuer.mdx).
+- [Aprende cómo convertirte en una parte dependiente](relying-party.mdx).

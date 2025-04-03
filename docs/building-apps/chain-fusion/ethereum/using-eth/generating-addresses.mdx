@@ -1,5 +1,5 @@
 ---
-keywords: [advanced, ethereum, addresses, eth address ]
+keywords: [advanced, ethereum, addresses, eth address]
 ---
 
 import useBaseUrl from "@docusaurus/useBaseUrl";
@@ -8,17 +8,24 @@ import { AdornedTab } from "/src/components/Tabs/AdornedTab";
 import { BetaChip } from "/src/components/Chip/BetaChip";
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Generating an Ethereum address
+# Generando una dirección de Ethereum
 
-<MarkdownChipRow labels={["Advanced", "Ethereum" ]} />
+<MarkdownChipRow labels={["Avanzado", "Ethereum"]} />
 
-On Ethereum, there are two types of addresses: wallet addresses for holding assets and contract addresses. Wallet addresses are public accounts that can send and receive ETH tokens. Contract addresses refer to a smart contract that has been executed on Ethereum and the transactions associated with that contract.
+En Ethereum, existen dos tipos de direcciones: direcciones de billetera para
+almacenar activos y direcciones de contrato. Las direcciones de billetera son
+cuentas públicas que pueden enviar y recibir tokens ETH. Las direcciones de
+contrato se refieren a un contrato inteligente que se ha ejecutado en Ethereum y
+las transacciones asociadas con ese contrato.
 
-Wallet and contract addresses can be queried using the [EVM RPC canister](../evm-rpc/evm-rpc-canister.mdx).
+Las direcciones de billetera y contrato se pueden consultar utilizando el
+[Canister EVM RPC](../evm-rpc/evm-rpc-canister.mdx).
 
-## Canister ETH addresses
+## Direcciones ETH de Canister
 
-To create an ETH address for your canister, first you will need to obtain an ECDSA public key associated with your canister. You can get this key by calling the `ecdsa_public_key` API method of the management canister:
+Para crear una dirección ETH para tu canister, primero necesitarás obtener una
+clave pública ECDSA asociada con tu canister. Puedes obtener esta clave llamando
+al método de API `ecdsa_public_key` del canister de gestión:
 
 <AdornedTabs groupId="language">
 <TabItem value="motoko" label="Motoko" default>
@@ -40,14 +47,16 @@ https://github.com/dfinity/examples/blob/master/rust/threshold-ecdsa/src/ecdsa_e
 </TabItem>
 </AdornedTabs>
 
-Then, convert the public key bytes to an Ethereum address. An example in Rust can be found below:
+Luego, convierte los bytes de la clave pública en una dirección de Ethereum. Un
+ejemplo en Rust se puede encontrar a continuación:
 
 ```rust reference
 https://github.com/letmejustputthishere/icp-evm-coprocessor-starter/blob/main/packages/ic-evm-utils/src/evm_signer.rs#L105-L119
 ```
 
-## Resources
+## Recursos
 
-You can use this address to make Ethereum transactions from your canister.
+Puedes usar esta dirección para realizar transacciones de Ethereum desde tu
+canister.
 
-[Learn how to sign Ethereum transactions](signing-transactions.mdx).
+[Aprende cómo firmar transacciones de Ethereum](signing-transactions.mdx).

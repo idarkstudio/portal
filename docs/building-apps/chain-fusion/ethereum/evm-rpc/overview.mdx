@@ -1,83 +1,146 @@
 ---
-keywords: [advanced, ethereum, evm rpc, evm, tutorial, evm rpc canister, what is the evm rpc canister, evm, rpc, ethereum integration, ethereum evm]
+keywords:
+  [
+    advanced,
+    ethereum,
+    evm rpc,
+    evm,
+    tutorial,
+    evm rpc canister,
+    what is the evm rpc canister,
+    evm,
+    rpc,
+    ethereum integration,
+    ethereum evm,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# EVM RPC canister
+# Canister EVM RPC
 
-<MarkdownChipRow labels={["Advanced", "Ethereum", "Tutorial"]} />
+<MarkdownChipRow labels={["Avanzado", "Ethereum", "Tutorial"]} />
 
-The **EVM RPC** canister is used for communicating with [Ethereum](https://ethereum.org/en/) and other [EVM blockchains](https://chainlist.org/?testnets=true) using an onchain API. Communication with EVM-compatible chains includes obtaining and sending information such as:
+El canister **EVM RPC** se utiliza para comunicarse con
+[Ethereum](https://ethereum.org/en/) y otras
+[blockchains EVM](https://chainlist.org/?testnets=true) utilizando una API en la
+cadena. La comunicación con cadenas compatibles con EVM incluye obtener y enviar
+información como:
 
-- The logs of a specific block or transaction.
+- Los registros de un bloque o transacción específica.
 
-- Information about a block.
+- Información sobre un bloque.
 
-- Details about a transaction.
+- Detalles sobre una transacción.
 
-- Historical data regarding the network's gas fee.
+- Datos históricos sobre la tarifa de gas de la red.
 
-- Transactions for a specific address.
+- Transacciones para una dirección específica.
 
-- Submitting a signed transaction.
+- Envío de una transacción firmada.
 
-- Querying the state of a smart contract.
+- Consulta del estado de un contrato inteligente.
 
-To use the EVM RPC canister, you can send requests to the [instance deployed on the mainnet](https://dashboard.internetcomputer.org/canister/7hfb6-caaaa-aaaar-qadga-cai), or you can fork the source code and deploy your own instance of the canister.
+Para utilizar el canister EVM RPC, puedes enviar solicitudes al
+[instancia desplegada en la red principal](https://dashboard.internetcomputer.org/canister/7hfb6-caaaa-aaaar-qadga-cai),
+o puedes bifurcar el código fuente y desplegar tu propia instancia del canister.
 
-The source code for this project is available on GitHub ([internet-computer-protocol/evm-rpc-canister](https://github.com/internet-computer-protocol/evm-rpc-canister) ⭐️) under the Apache 2.0 license.
+El código fuente de este proyecto está disponible en GitHub
+([internet-computer-protocol/evm-rpc-canister](https://github.com/internet-computer-protocol/evm-rpc-canister)
+⭐️) bajo la licencia Apache 2.0.
 
-## Goal
+## Objetivo
 
-The goal of the EVM RPC canister is to act as a gateway between canisters on ICP and EVM-compatible networks through RPC services such as Alchemy, Ankr, or Cloudflare. The EVM RPC canister provides the necessary methods for other ICP canisters to send requests to the Ethereum JSON-RPC API and receive responses.
+El objetivo del canister EVM RPC es actuar como una puerta de enlace entre los
+canisters en ICP y las redes compatibles con EVM a través de servicios RPC como
+Alchemy, Ankr o Cloudflare. El canister EVM RPC proporciona los métodos
+necesarios para que otros canisters de ICP envíen solicitudes a la API JSON-RPC
+de Ethereum y reciban respuestas.
 
-## Terminology
+## Terminología
 
-Below is a list of terms used to describe different aspects of using the EVM RPC canister:
+A continuación se muestra una lista de términos utilizados para describir
+diferentes aspectos del uso del canister EVM RPC:
 
-- **RPC service**: An IPv6 service such as Alchemy, Gateway.fm, or CloudFlare that offers access to the Ethereum JSON-RPC API over HTTPS. Note that other EVM blockchains are often covered by such a JSON-RPC API as well.
+- **Servicio RPC**: Un servicio IPv6 como Alchemy, Gateway.fm o CloudFlare que
+  ofrece acceso a la API JSON-RPC de Ethereum a través de HTTPS. Tenga en cuenta
+  que otros Las blockchains EVM a menudo también están cubiertas por esta API
+  JSON-RPC.
 
-- **network**: An EVM blockchain such as the Ethereum mainnet, Sepolia testnet, or [layer-2 chain](https://www.investopedia.com/what-are-layer-1-and-layer-2-blockchain-scaling-solutions-7104877).
+- **red**: Una blockchain EVM como la red principal de Ethereum, la red de
+  prueba de Sepolia, o
+  [cadena de capa 2](https://www.investopedia.com/what-are-layer-1-and-layer-2-blockchain-scaling-solutions-7104877).
 
-- **chain id**: A well-known unique numeric identifier for an EVM network.
+- **ID de cadena**: Un identificador numérico único y conocido de una red EVM.
 
-- **provider**: A specific JSON-RPC service registered in the EVM RPC canister. Every chain ID for a particular service requires a different provider and typically also requires a different API key. Multiple providers can be registered for a service/chain ID combination.
+- **proveedor**: Un servicio JSON-RPC específico registrado en el canister EVM
+  RPC. Cada ID de cadena para un servicio particular requiere un proveedor
+  diferente y típicamente también requiere una clave de API diferente. Se pueden
+  registrar varios proveedores para una combinación de servicio/ID de cadena.
 
-## Supported JSON-RPC providers
+## Proveedores JSON-RPC admitidos
 
+|             | Ethereum Mainnet   | Arbitrum One   | Base Mainnet   | Optimism Mainnet   |
+| ----------- | ------------------ | -------------- | -------------- | ------------------ |
+| Alchemy     | ✅                 | ✅             | ✅             | ✅                 |
+| Ankr        | ✅                 | ✅             | ✅             | ✅                 |
+| BlockPi     | ✅                 | ✅             | ✅             | ✅                 |
+| Cloudflare  | ✅                 |                |                |                    |
+| LlamaNodes  | ✅                 | ✅             | ✅             | ✅                 |
+| PublicNode  | ✅                 | ✅             | ✅             | ✅                 |
 
-|            | Ethereum Mainnet | Arbitrum One | Base Mainnet | Optimism Mainnet |
-|------------|------------------|--------------|--------------|------------------|
-| Alchemy    | ✅                | ✅            | ✅            | ✅                |
-| Ankr       | ✅                | ✅            | ✅            | ✅                |
-| BlockPi    | ✅                | ✅            | ✅            | ✅                |
-| Cloudflare | ✅                |              |              |                  |
-| LlamaNodes | ✅                | ✅            | ✅            | ✅                |
-| PublicNode | ✅                | ✅            | ✅            | ✅                |
+## Gestión de claves de API
 
-## Management of API keys
+Los proveedores de RPC a menudo requieren el uso de claves de API para
+autenticar las solicitudes de RPC. Las solicitudes autenticadas ayudan a mitigar
+posibles ataques de denegación de servicio que agotan la límites de velocidad de
+solicitud establecidos por los proveedores de RPC. El uso de una clave de API
+puede presentar desafíos para los desarrolladores, como:
 
-RPC providers often require API keys be used to authenticate RPC requests. Authenticated requests help mitigate potential DoS attacks that exhaust the request rate limits set by RPC providers. Using an API key can come with challenges for developers, such as:
+- Las claves de API para los proveedores de RPC a menudo requieren una
+  suscripción paga y/o créditos de cómputo más allá de un cierto número de
+  solicitudes por mes.
 
-- API keys for RPC providers often require a paid subscription and/or compute credits beyond a certain number of requests per month.
+- Para los desarrolladores que desean construir un prototipo rápido, puede que
+  no valga la pena adquirir múltiples claves de API hasta más adelante en el
+  desarrollo.
 
-- For developers who want to build a quick prototype, it may not be worth procuring multiple API keys until later in development.
+- Cuando un desarrollador de dapp controla una clave de API, se considera que la
+  dapp es menos descentralizada.
 
-- When a dapp developer controls an API key, the dapp is considered less decentralized.
+- El almacenamiento seguro de las claves de API no está soportado a nivel de
+  plataforma y requiere que los desarrolladores utilicen sus propias estrategias
+  para proteger sus claves, lo que crea una complejidad adicional para los
+  desarrolladores que desean utilizar compilaciones reproducibles. Las claves
+  personales también son visibles para todos los nodos en la subred ICP.
+  [Más información sobre la autenticación](how-it-works.mdx#authentication).
 
-- Storing API keys securely is not supported at the platform level and requires developers to use their own strategies for protecting their keys, creating an additional complexity for developers who want to use reproducible builds. Personal keys are also visible to all nodes on the ICP subnet. [Learn more about authentication](how-it-works.mdx#authentication).
+Para proporcionar una solución a los desarrolladores, el canister EVM RPC de
+producción está configurado con las claves de API requeridas. Sin embargo, si un
+desarrollador desea utilizar sus propios proveedores con sus propias claves de
+API, pueden [pasar sus propias claves](evm-rpc-canister.mdx#replacing-api-keys)
+al canister EVM RPC. Las variaciones de prueba del canister EVM RPC no utilizan
+claves de API.
 
-To provide a solution for developers, the production EVM RPC canister is configured with the required API keys. If a developer wants to use their own providers with their own API keys, however, they can [pass their own keys](evm-rpc-canister.mdx#replacing-api-keys) to the EVM RPC canister. Test variations of the EVM RPC canister do not use API keys.
+## Costos
 
-## Costs
+Las llamadas realizadas al canister EVM RPC tienen un costo en
+[ciclos](/docs/building-apps/getting-started/tokens-and-cycles). El costo por
+solicitud es generalmente similar al de realizar las llamadas equivalentes
+[HTTPS](/docs/references/https-outcalls-how-it-works#pricing) en tu propio
+canister.
 
-Calls made to the EVM RPC canister cost [cycles](/docs/building-apps/getting-started/tokens-and-cycles). The cost per request is generally similar to making the equivalent [HTTPS outcalls](/docs/references/https-outcalls-how-it-works#pricing) in your own canister.
+Obtén más información sobre los
+[costos de las solicitudes de EVM RPC](costs.mdx).
 
-Learn more about the [costs of EVM RPC requests](costs.mdx).
+## Canister desplegado
 
-## Deployed canister
+El canister EVM RPC se ejecuta en la subred de 34 nodos
+[fiduciary](/docs/building-apps/developing-canisters/create) con el siguiente
+principal:
+[`7hfb6-caaaa-aaaar-qadga-cai`](https://dashboard.internetcomputer.org/canister/7hfb6-caaaa-aaaar-qadga-cai).
 
-The EVM RPC canister runs on the 34-node [fiduciary subnet](/docs/building-apps/developing-canisters/create) with the following principal: [`7hfb6-caaaa-aaaar-qadga-cai`](https://dashboard.internetcomputer.org/canister/7hfb6-caaaa-aaaar-qadga-cai).
-
-Refer to the [GitHub repository](https://github.com/internet-computer-protocol/evm-rpc-canister?tab=readme-ov-file#reproducible-builds) for information on how to verify the hash of the deployed WebAssembly module.
+Consulta el
+[repositorio de GitHub](https://github.com/internet-computer-protocol/evm-rpc-canister?tab=readme-ov-file#reproducible-builds)
+para obtener información sobre cómo verificar el hash del módulo WebAssembly
+desplegado.

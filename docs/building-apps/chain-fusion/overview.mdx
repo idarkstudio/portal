@@ -1,5 +1,16 @@
 ---
-keywords: [advanced, Chain Fusion, overview, what is chain fusion, chain, fusion, ethereum, bitcoin, multi-chain]
+keywords:
+  [
+    advanced,
+    Chain Fusion,
+    overview,
+    what is chain fusion,
+    chain,
+    fusion,
+    ethereum,
+    bitcoin,
+    multi-chain,
+  ]
 ---
 
 import useBaseUrl from "@docusaurus/useBaseUrl";
@@ -8,87 +19,173 @@ import TabItem from "@theme/TabItem";
 import { AdornedTabs } from "/src/components/Tabs/AdornedTabs";
 import { AdornedTab } from "/src/components/Tabs/AdornedTab";
 
-# What is Chain Fusion?
+# ¿Qué es Chain Fusion?
 
-<MarkdownChipRow labels={["Advanced", "Chain Fusion"]} />
+<MarkdownChipRow labels={["Avanzado", "Chain Fusion"]} />
 
-Chain Fusion allows the Internet Computer Protocol to interconnect with multiple blockchains in a decentralized manner, eliminating the need for a single trusted intermediary such as a bridge. This is possible through **decentralized bi-directional communication** of the Internet Computer with other chains and the ability of ICP smart contracts to **sign and submit transactions** to other chains.
+Chain Fusion permite al Internet Computer Protocol interconectarse con múltiples
+blockchains de manera descentralizada, eliminando la necesidad de un único
+intermediario de confianza como un puente. Esto es posible gracias a la
+**comunicación bidireccional descentralizada** del Internet Computer con otras
+cadenas y la capacidad de los smart contracts de ICP para **firmar y enviar
+transacciones** a otras cadenas.
 
-Chain Fusion augments smart contracts and decentralized applications (dapps) on other chains with the unique capabilities of ICP, including:
+Chain Fusion potencia los smart contracts y aplicaciones descentralizadas
+(dapps) en otras cadenas con las capacidades únicas de ICP, incluyendo:
 
-- **Web2-like user experience**: Due to low cost, fast finality, and the reverse gas model, interacting with a smart contract on ICP closely resembles the user experience of traditional web services. By complementing non-ICP smart contracts with user interfaces served from ICP, the user can interact with these smart contracts using a standard browser, without installing a crypto wallet or relying on a single point of trust.
+- **Experiencia de usuario similar a Web2**: Debido a su bajo costo, finalidad
+  rápida y modelo de gas inverso, interactuar con un contrato inteligente en ICP
+  se asemeja estrechamente a la experiencia de usuario de los servicios web
+  tradicionales. Al complementar contratos inteligentes no-ICP con interfaces de
+  usuario servidas desde ICP, el usuario puede interactuar con estos contratos
+  inteligentes utilizando un navegador estándar, sin instalar una billetera de
+  criptomonedas o depender de un único punto de confianza.
 
-- **Performance**: Smart contracts on the IC possess the power to support a vast range of web services, from social networks to full-fledged AI models. Thus, Chain Fusion allows building more powerful dapps by combining non-ICP smart contracts with the decentralized compute power of ICP.
+- **Rendimiento**: Los contratos inteligentes en IC poseen la capacidad de
+  soportar una amplia gama de servicios web, desde redes sociales hasta modelos
+  de IA completos. Por lo tanto, Chain Fusion permite construir dapps más
+  potentes combinando contratos inteligentes no-ICP con el poder de cómputo
+  descentralizado de ICP.
 
-- **Storage**: Using a competitive pricing model, a single smart contract on ICP offers up to 500GiB of storage, enabling all application data to be stored onchain. Through Chain Fusion, these decentralized storage capacities are made available to non-ICP dapps.
+- **Almacenamiento**: Utilizando un modelo de precios competitivo, un solo
+  contrato inteligente en ICP ofrece hasta 500 GiB de almacenamiento, lo que
+  permite almacenar todos los datos de la aplicación en la cadena. A través de
+  Chain Fusion, estas capacidades de almacenamiento descentralizado están
+  disponibles para dapps no-ICP.
 
-- **Autonomy**: Unlike traditional blockchains, smart contracts on ICP are capable of scheduling messages for themselves at any given interval. This functionality allows smart contracts to operate without the need for user inputs or arbitrage to maintain their services. Chain Fusion provides this autonomy to non-ICP smart contracts without sacrificing decentralization.
+- **Autonomía**: A diferencia de las blockchains tradicionales, los contratos
+  inteligentes en ICP son capaces de programar mensajes para sí mismos en
+  cualquier intervalo dado. Esta funcionalidad permite que los contratos
+  inteligentes operen sin la necesidad de entradas de usuario o arbitraje para
+  mantener sus servicios. Chain Fusion proporciona esta autonomía a los
+  contratos inteligentes no-ICP sin sacrificar la descentralización.
 
-- **Interoperability with Web2**: ICP’s HTTPS outcalls feature permits canisters to reach out to any web service in a replicated fashion, using deterministic response results. Chain Fusion brings this Web2-Web3 interoperability to non-ICP dapps.
+- **Interoperabilidad con Web2**: La función de llamadas HTTPS de ICP permite
+  que los canisters se conecten a cualquier servicio web de manera replicada,
+  utilizando resultados de respuesta deterministas. Chain Fusion lleva esta
+  interoperabilidad Web2-Web3 a las dapps no-ICP.
 
-The following examples illustrate the variety of use cases enabled by Chain Fusion:
+Los siguientes ejemplos ilustran la variedad de casos de uso habilitados por
+Chain Fusion:
 
-- **Trustless cronjob service**: Many Ethereum smart contracts depend on periodic activation of certain functions (such as loan liquidations, batching, etc.). These activations usually occur via arbitrageurs or external centralized services like Gelato.
+- **Servicio de cronjob sin confianza**: Muchos contratos inteligentes de
+  Ethereum dependen de la activación periódica de ciertas funciones (como
+  liquidaciones de préstamos, lotificación, etc.). Estas activaciones suelen
+  ocurrir a través de arbitrajistas o servicios centralizados externos como
+  Gelato.
 
-- **A decentralized borrowing protocol**: A DeFi protocol issuing a stablecoin backed by the world-class asset Bitcoin as collateral.
+- **Un protocolo de préstamo descentralizado**: Un protocolo DeFi que emite una
+  stablecoin respaldada por el activo de clase mundial Bitcoin como garantía.
 
-- **Multi-chain asset DEX**: A decentralized exchange providing a uniform user experience, facilitating effortless and efficient trading of assets from different blockchains.
+- **DEX de activos multi-cadena**: Un intercambio descentralizado que
+  proporciona una experiencia de usuario uniforme, facilitando el comercio sin
+  esfuerzo y eficiente de activos de diferentes blockchains.
 
-- **In-browser multi-chain wallet**: Similar to a DEX, a single browser-based wallet that manages assets from different and unrelated blockchains.
+- **Billetera multi-cadena en el navegador**: Similar a un DEX, una sola
+  billetera basada en el navegador que administra activos de blockchains
+  diferentes y no relacionadas.
 
-- **Onchain frontend**: Hosting an immutable or DAO-managed frontend for a smart contract on another blockchain.
+- **Frontend en la cadena**: Alojar un frontend inmutable o gestionado por DAO
+  para un contrato inteligente en otra blockchain.
 
-- **Decentralized oracle**: Linking Web2 services and smart contracts on other blockchains via HTTPS outcalls.
+- **Oráculo descentralizado**: Vincular servicios Web2 y contratos inteligentes
+  en otras blockchains a través de llamadas HTTPS.
 
-## How does it work and why is it secure?
+## ¿Cómo funciona y por qué es seguro?
 
 <div class="text-center">
-  <img
-    src={useBaseUrl("/img/docs/chain-fusion-overview.png")}
-    alt="Chain Fusion overview"
-    width="800"
-  />
+  <img
+    src={useBaseUrl("/img/docs/chain-fusion-overview.png")}
+    alt="Chain Fusion overview"
+    width="800"
+  />
 </div>
 
 ### ICP smart contracts
 
-Smart contracts on ICP are called canisters. In addition to unparalleled compute and storage capabilities (see above), canisters can make use of protocol primitives that are not natively available on other chains. For example:
+Los contratos inteligentes en ICP se llaman canisters. Además de capacidades de
+cálculo y almacenamiento sin igual (ver arriba), los canisters pueden hacer uso
+de primitivas de protocolo que no están disponibles nativamente en otras
+cadenas. Por ejemplo:
 
-- Canisters can request [randomness](/docs/references/system-canisters/management-canister/#retrieving-randomness) from the protocol, which is useful in applications where fairness or unpredictability is required.
+- Los canisters pueden solicitar
+  [aleatoriedad](/docs/references/system-canisters/management-canister/#retrieving-randomness)
+  al protocolo, lo cual es útil en aplicaciones donde se requiere equidad o
+  imprevisibilidad.
 
-- [Timers](/docs/building-apps/network-features/periodic-tasks-timers) let canisters manage their tasks by initiating specific actions periodically without depending on any external actors.
+- Los
+  [temporizadores](/docs/building-apps/network-features/periodic-tasks-timers)
+  permiten a los canisters administrar sus tareas iniciando acciones específicas
+  periódicamente sin depender de actores externos.
 
-- Full Web 2 integration allows canisters to both expose [HTTP interfaces](/docs/building-apps/network-features/using-http/https-outcalls/overview) and call [HTTP APIs hosted on the web](/docs/building-apps/network-features/using-http/https-outcalls/overview).
+- La integración completa con Web 2 permite a los canisters tanto exponer
+  [interfaces HTTP](/docs/building-apps/network-features/using-http/https-outcalls/overview)
+  como llamar
+  [APIs HTTP alojadas en la web](/docs/building-apps/network-features/using-http/https-outcalls/overview).
 
-### Key management and signing
+### Gestión de claves y firmado
 
-A key feature of the ICP’s Chain Fusion capabilities is [threshold signing](/docs/building-apps/network-features/signatures/t-ecdsa/). This feature allows canisters to control accounts on other blockchains. The private keys that are used to sign transactions are never accessible in a single physical place but are securely distributed as shares among a group of nodes performing a threshold signing protocol to generate signatures on behalf of a canister.
+Una característica clave de las capacidades de Chain Fusion de ICP es la
+[firma de umbral](/docs/building-apps/network-features/signatures/t-ecdsa/).
+Esta característica permite a los canisters controlar cuentas en otras
+blockchains. Las claves privadas que se utilizan para firmar transacciones nunca
+son accesibles en un solo lugar físico, sino que se distribuyen de forma segura
+como partes entre un grupo de nodos que realizan un protocolo de firma de umbral
+para generar firmas en nombre de un canister.
 
 :::info
-Threshold signing is also referred to as [chain-key cryptography](/docs/references/glossary#c).
+
+La firma de umbral también se conoce como
+[criptografía de clave encadenada](/docs/references/glossary#c).
+
 :::
 
-### Integrations
+### Integraciones
 
-A canister’s interaction with external blockchains requires submitting transactions and reading the state of the other chain. ICP offers two types of such integrations:
+La interacción de un canister con blockchains externas requiere enviar
+transacciones y leer el estado de la otra cadena. ICP ofrece dos tipos de
+integraciones:
 
-- **Direct integration**: In the case of the Bitcoin integration, ICP nodes utilize a special component called the Bitcoin adapter to connect to the Bitcoin p2p network securely and independently. A set of ICP nodes effectively constitutes a native Bitcoin node.
+- **Integración directa**: En el caso de la integración con Bitcoin, los nodos
+  de ICP utilizan un componente especial llamado adaptador de Bitcoin para
+  conectarse a la red Bitcoin de igual a igual de forma segura e independiente.
+  Un conjunto de nodos de ICP constituye efectivamente un nodo Bitcoin nativo.
 
-- **Decentralized RPC integration**: When it comes to Ethereum integration, IC utilizes HTTPS outcalls to contact three separate JSON RPC providers (such as Ankr, BlockPI, Alchemy, and others) to retrieve the chain state and submit signed transactions.
+- **Integración RPC descentralizada**: En lo que respecta a la integración de
+  Ethereum, IC utiliza llamadas HTTPS para contactar a tres proveedores
+  separados de JSON RPC (como Ankr, BlockPI, Alchemy y otros) para obtener el
+  estado de la cadena y enviar transacciones firmadas.
 
-### Whom do users trust?
+### ¿En quién confían los usuarios?
 
-A key question we must answer to fully understand the security of ICP's Chain Fusion capabilities is: whom do users place trust in when using the presented infrastructure?
+Una pregunta clave que debemos responder para comprender completamente la
+seguridad de las capacidades de Chain Fusion de ICP es: ¿en quién confían los
+usuarios al utilizar la infraestructura presentada?
 
-ICP’s decentralization is rooted in the replicated execution and state of canisters which depends on the honesty of a supermajority of subnet [nodes](/docs/building-apps/essentials/network-overview#nodes). These nodes are sourced from various identifiable and DAO-approved providers that operate in globally distributed data centers.
+La descentralización de ICP se basa en la ejecución y el estado replicados de
+los canisters, que depende de la honestidad de una supermayoría de nodos de
+subred. Estos nodos provienen de varios proveedores identificables y aprobados
+por DAO que operan en centros de datos distribuidos globalmente.
 
-In the case of direct chain integration, the only trust assumption needed is that a supermajority of subnet nodes are honest and in consensus. In case of integration via RPC, users additionally need to trust RPC node providers. While this is seen as less secure than a direct integration that involves running a full node, it's currently deemed an acceptable trade-off (due to a reliance on replicated results from multiple independent providers).
+En el caso de la integración directa de cadenas, la única suposición de
+confianza necesaria es que una supermayoría de nodos de subred sean honestos y
+estén en consenso. En caso de integración a través de RPC, los usuarios también
+deben confiar en los proveedores de nodos RPC. Si bien esto se considera menos
+seguro que una integración directa que implica ejecutar un nodo completo,
+actualmente se considera un compromiso aceptable (debido a la dependencia de
+resultados replicados de múltiples proveedores independientes).
 
-## How to build applications using Chain Fusion
+## Cómo construir aplicaciones utilizando Chain Fusion
 
-To showcase how powerful Chain Fusion is, here is a simple example that shows three chains interacting in one smart contract: a single **ICP** smart contract that can have custody of **bitcoin** and programmatically trigger sending it based on events observed on an **Ethereum** DeFi smart contract.
+Para mostrar el poder de Chain Fusion, aquí hay un ejemplo simple que muestra
+tres cadenas interactuando en un contrato inteligente: un solo contrato
+inteligente de **ICP** que puede tener la custodia de **bitcoin** y desencadenar
+programáticamente su envío en función de eventos observados en un contrato
+inteligente de **Ethereum** DeFi.
 
-This code snippet is written in both Rust and Motoko, but a similar example can also be written in TypeScript, Python, and other languages.
+Este fragmento de código está escrito tanto en Rust como en Motoko, pero un
+ejemplo similar también se puede escribir en TypeScript, Python y otros
+lenguajes.
 
 <AdornedTabs groupId="languages">
 <TabItem value="motoko" label="Motoko" default>
@@ -382,30 +479,51 @@ pub enum MultiGetLogsResult {
 </AdornedTabs>
 
 :::caution
-This code snippet is for demonstration purposes only as it contains placeholder values. For example, the Bitcoin transaction value must updated with an actual signed transaction, and the Ethereum address and topic values must be replaced.
 
-For a fully working example, view the [Chain Fusion starter project](https://github.com/letmejustputthishere/chain-fusion-starter).
+Este fragmento de código es solo para fines de demostración, ya que contiene
+valores de marcador de posición. Por ejemplo, el valor de la transacción de
+Bitcoin debe actualizarse con una transacción firmada real, y la dirección de
+Ethereum y los valores de los temas deben ser reemplazados.
+
+Para obtener un ejemplo completamente funcional, consulta el proyecto de inicio
+de [Chain Fusion](https://github.com/letmejustputthishere/chain-fusion-starter).
+
 :::
 
-### Building blocks
+### Bloques de construcción
 
-There are several building blocks available to augment non-ICP smart contracts with ICP’s Chain Fusion capabilities or to leverage Chain Fusion in existing ICP dapps:
+Hay varios bloques de construcción disponibles para mejorar los contratos
+inteligentes no ICP con las capacidades de Chain Fusion de ICP o aprovechar
+Chain Fusion en las dapps existentes de ICP:
 
-- **Chain-key tokens**: Using the primitives described above, DFINITY has built canisters implementing the [ICRC-2](https://github.com/dfinity/ICRC) token standard to represent native Bitcoin, Ethereum, and ERC-20 tokens on ICP: [ckBTC](/docs/defi/chain-key-tokens/ckbtc/overview), [ckETH](/docs/defi/chain-key-tokens/cketh/overview), and [ckERC20](/docs/defi/chain-key-tokens/ckerc20/overview). These tokens are digital twins of their corresponding native token and are backed 1:1 by the native assets which are managed 100% onchain through a canister smart contract without any intermediaries.
+- **Tokens de clave de cadena**: Utilizando los primitivos descritos
+  anteriormente, DFINITY ha construido canisters que implementan el estándar de
+  tokens [ICRC-2](https://github.com/dfinity/ICRC) para representar tokens
+  nativos de Bitcoin, Ethereum y ERC-20 en ICP:
+  [ckBTC](/docs/defi/chain-key-tokens/ckbtc/overview),
+  [ckETH](/docs/defi/chain-key-tokens/cketh/overview) y
+  [ckERC20](/docs/defi/chain-key-tokens/ckerc20/overview). Estos tokens son
+  réplicas digitales de sus respectivos tokens nativos y están respaldados 1:1
+  por los activos nativos que se gestionan al 100% en la cadena a través de un
+  contrato inteligente de canister sin intermediarios.
 
-- **[EVM RPC canister](/docs/building-apps/chain-fusion/ethereum/evm-rpc/evm-rpc-canister)**: A canister smart contract providing an onchain API for communicating with [Ethereum](https://ethereum.org/en/) or any other [EVM blockchain](https://chainlist.org/?testnets=true).
+- **[Canister RPC de EVM](/docs/building-apps/chain-fusion/ethereum/evm-rpc/evm-rpc-canister)**:
+  Un contrato inteligente de canister que proporciona una API en la cadena para
+  comunicarse con [Ethereum](https://ethereum.org/en/) u otra
+  [blockchain EVM](https://chainlist.org/?testnets=true).
 
-- **[Threshold signatures](/docs/references/t-sigs-how-it-works)**: An ICP service implementing the threshold ECDSA and threshold Schnorr protocols.
+- **[Firmas de umbral](/docs/references/t-sigs-how-it-works)**: Un servicio de
+  ICP que implementa los protocolos de firma de umbral ECDSA y Schnorr.
 
-- **[HTTPS outcalls](/docs/building-apps/network-features/using-http/https-outcalls/overview)**: Replicated calls into external web services.
+- **[Llamadas HTTPS externas](/docs/building-apps/network-features/using-http/https-outcalls/overview)**:
+  Llamadas replicadas a servicios web externos.
 
-- **[Bitcoin API](/docs/references/bitcoin-how-it-works)**: A protocol API that allows canisters to interact with the Bitcoin blockchain directly.
+- **[API de Bitcoin](/docs/references/bitcoin-how-it-works)**: Una API de
+  protocolo que permite a los canisters interactuar directamente con la cadena
+  de bloques de Bitcoin.
 
-## Resources
+## Recursos
 
-- [ICP Chain Fusion Educate - Bitcoin Edition: Introduction to ICP and Chain Fusion](https://www.youtube.com/watch?v=A0K9GXsfw74&list=PLfEHHr3qexv_L0t6KrCyJ-l2ZaHaO-m85).
+- [ICP Chain Fusion Educate - Edición de Bitcoin: Introducción a ICP y Chain Fusion](https://www.youtube.com/watch?v=A0K9GXsfw74&list=PLfEHHr3qexv_L0t6KrCyJ-l2ZaHaO-m85).
 
 - [ICP Chain Fusion Educate Powered by Encode Club](https://www.youtube.com/playlist?list=PLfEHHr3qexv9bjbFNp3ItK7yBZ5IQVXjf).
-
-
-

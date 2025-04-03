@@ -1,78 +1,130 @@
 ---
-keywords: [intermediate, tutorial, verifying signatures, verifying a signature, signature verification, verify, signature, cryptographic signature]
+keywords:
+  [
+    intermediate,
+    tutorial,
+    verifying signatures,
+    verifying a signature,
+    signature verification,
+    verify,
+    signature,
+    cryptographic signature,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Verifying signatures
+# Verificación de firmas
 
-<MarkdownChipRow labels={["Intermediate", "Signatures"]} />
+<MarkdownChipRow labels={["Intermedio", "Firmas"]} />
 
-Every call made on ICP requires a cryptographic `Signature` and `Principal`. These are typically attached in the form of an identity that can either be authenticated or anonymous. An identity includes both the private and public keys. The public key is sent along with the identity that is encoded as a `Principal` and signed with a `Signature`. Canisters use this identity to respond to the call and process authentication-based workflows. When a [delegation identity](#transaction-delegation) is sent, the same workflow is used, except a delegation chain is included as well.
+Cada llamada en ICP requiere una `Firma` y un `Principal` criptográficos. Estos
+generalmente se adjuntan en forma de una identidad que puede ser autenticada o
+anónima. Una identidad incluye tanto la clave privada como la clave pública. La
+clave pública se envía junto con la identidad codificada como un `Principal` y
+se firma con una `Firma`. Los canisters utilizan esta identidad para responder a
+la llamada y procesar flujos de autenticación. Cuando se envía una
+[identidad delegada](#delegación-de-transacciones), se usa el mismo flujo de
+trabajo, pero se incluye una cadena de delegación.
 
-For some workflows, it can be beneficial to verify the identity's signature independently from the automatic verification done on ICP as an additional layer of validation.
+En algunos flujos de trabajo, puede ser beneficioso verificar la firma de la
+identidad de forma independiente de la verificación automática de ICP como una
+capa adicional de validación.
 
-When a canister call is made via the HTTPS interface, the following fields are present:
+Cuando se realiza una llamada a un canister a través de la interfaz HTTPS, los
+siguientes campos están presentes:
 
-- `nonce` (`blob`, optional): Randomly generated user-provided data; can be used to create distinct calls with otherwise identical fields.
+- `nonce` (`blob`, opcional): Datos generados aleatoriamente por el usuario; se
+  pueden usar para crear llamadas distintas con los mismos campos.
 
-- `ingress_expiry` (`nat`, required): An upper limit on the call's validity, expressed in nanoseconds, which avoids replay attacks since ICP will not accept calls or transition calls if their expiry date is in the past. Additionally, calls may be refused with an ingress expiry date too far in the future.
+- `ingress_expiry` (`nat`, requerido): Límite superior de validez de la llamada,
+  expresado en nanosegundos, lo que previene ataques de repetición, ya que ICP
+  rechazará llamadas cuya fecha de expiración haya pasado o sea demasiado
+  futura.
 
-- `sender` (`Principal`, required): The entity who issued the call.
+- `sender` (`Principal`, requerido): La entidad que realiza la llamada.
 
-The call's authentication includes the following fields:
+La autenticación de la llamada incluye los siguientes campos:
 
-- `content` (`record`): The call's content.
+- `content` (`record`): Contenido de la llamada.
 
-- `sender_pubkey` (`blob`, optional): The public key used to authenticate the call.
+- `sender_pubkey` (`blob`, opcional): Clave pública utilizada para autenticar la
+  llamada.
 
-- `sender_delegation` (`array of maps`, optional): A chain of delegations that begins with one signed by the `sender_pubkey` and ends with the delegation to the key relating to the `sender_sig`; every public key should appear exactly once.
+- `sender_delegation` (`array de mapas`, opcional): Cadena de delegaciones
+  comenzando con una firmada por `sender_pubkey` y terminando con la delegación
+  a la clave relacionada con `sender_sig`; cada clave pública debe aparecer una
+  sola vez.
 
-- `sender_sig` (`blob`, optional): The signature used to authenticate the call.
+- `sender_sig` (`blob`, opcional): Firma utilizada para autenticar la llamada.
 
-The public key must authenticate the sender principal if the principal is a self-authenticating ID that is derived from that public key.
+La clave pública debe autenticar el `sender` si el `Principal` es un ID
+autoautenticado derivado de esa clave pública.
 
-The fields `sender_pubkey`, `sender_sig`, and `sender_delegation` should be omitted if the sender is an anonymous principal. If the sender is authenticated, the `sender_pubkey` and `sender_sig` must be set.
+Si el `sender` es un principal anónimo, los campos `sender_pubkey`, `sender_sig`
+y `sender_delegation` deben omitirse. Si el `sender` está autenticado,
+`sender_pubkey` y `sender_sig` deben estar presentes.
 
-The call is calculated using the content record, which allows the signature to be based on the request ID.
+La autenticación de la llamada se basa en el contenido del `record`, lo que
+permite que la firma se genere a partir del ID de la solicitud.
 
-## Transaction delegation
+## Delegación de transacciones
 
-A transaction's signature can be delegated from one key to another. If delegation is used, the `sender_delegation` field contains an array of delegations with the following fields:
+La firma de una transacción puede ser delegada de una clave a otra. Si se usa
+delegación, el campo `sender_delegation` contiene un array de delegaciones con
+los siguientes campos:
 
-`delegation` (`map`): A map containing the fields:
+`delegation` (`map`): Un mapa con los campos:
 
-   - `pubkey` (`blob`): A public key.
+    - `pubkey` (`blob`): Clave pública.
 
-   - `expiration` (`nat`): The delegation's expiration, defined in nanoseconds analogously to the `ingress_expiry`.
+    - `expiration` (`nat`): Expiración de la delegación, en nanosegundos, similar a
+    `ingress_expiry`.
 
-   - `targets` (`array` of `CanisterId`, optional): Sets the delegation to apply only for requests sent to the canisters within the canister list; has a maximum of 1_000 canisters.
+    - `targets` (`array` de `CanisterId`, opcional): Limita la delegación a
+    solicitudes enviadas a los canisters especificados; máximo 1_000 canisters.
 
-   - `senders` (`array` of `Principal`, optional): Sets the delegation to only apply for requests originating from the principals in the list.
+    - `senders` (`array` de `Principal`, opcional): Limita la delegación a
+    solicitudes originadas por los `Principals` en la lista.
 
-   - `signature` (`blob`): The signature for the 32-byte delegation field map, using the 27 bytes `\x1Aic-request-auth-delegation` as the domain separator.
+    - `signature` (`blob`): Firma del mapa de delegación de 32 bytes, usando los 27
+    bytes `\x1Aic-request-auth-delegation` como separador de dominio.
 
-The first delegation in the array has a signature created using the public key corresponding to the `sender_pubkey` field. All subsequent delegations are signed with the public key corresponding to the key contained in the preceding delegation.
+La primera delegación en el array tiene una firma creada con la clave pública
+correspondiente a `sender_pubkey`. Todas las delegaciones posteriores son
+firmadas con la clave pública contenida en la delegación anterior.
 
-The `sender_sig` field is calculated by concatenating the domain separator, `\x0Aic-request`, which is 11 bytes, with the 32-byte request ID, using the private key that belongs to the public key specified in the last delegation. If no delegations are present, the public key specified in `sender_pubkey` is used. If the delegation field is present, it should contain no more than 20 delegations.
+El campo `sender_sig` se calcula concatenando el separador de dominio
+`\x0Aic-request` (11 bytes) con el ID de solicitud de 32 bytes, usando la clave
+privada correspondiente a la clave pública en la última delegación. Si no hay
+delegaciones, se usa la clave pública de `sender_pubkey`. El campo de delegación
+no debe contener más de 20 delegaciones.
 
-## Verifying signatures with agent
+## Verificación de firmas con un agente
 
-To verify a signature with an agent, an accepted identity is required. The following are accepted identity and signature types:
+Para verificar una firma con un agente, se requiere una identidad aceptada. Las
+siguientes identidades y tipos de firma son compatibles:
 
-- Ed25519 and ECDSA signatures: Plain signatures are supported for these schemes.
+- Firmas Ed25519 y ECDSA: Se admiten firmas simples para estos esquemas.
 
-- Ed25519 or ECDSA on curve P-256 (also known as secp256r1): Support for using SHA-256 as a hash function or using the Koblitz curve in secp256k1.
+- Ed25519 o ECDSA en la curva P-256 (secp256r1): Se admite el uso de SHA-256
+  como función hash o la curva Koblitz en secp256k1.
 
-When these identities are encoded as a `Principal`, an agent will attach a suffix byte, which indicates whether the identity is anonymous or self-authenticating.
+Cuando estas identidades se codifican como un `Principal`, el agente adjunta un
+byte de sufijo que indica si la identidad es anónima o autoautenticada.
 
-Self-authenticating identities using an Ed25519 or ECDSA curve will have a suffix of `2`, while an anonymous identity has a single byte of `4`.
+Las identidades autoautenticadas con Ed25519 o ECDSA tienen un sufijo `2`,
+mientras que una identidad anónima tiene un solo byte `4`.
 
-## Verifying signatures with the Rust `ic-validator-ingress-message` crate
+## Verificación de firmas con la biblioteca Rust `ic-validator-ingress-message`
 
-The Rust [ic-validator-ingress-message](https://github.com/dfinity/ic/tree/master/rs/validator) crate has been developed specifically for validating message signatures. Within this crate, the `IngressMessageVerifier` class containing the `InternetIdentityAuthResponse` can be validated as a whole using the delegation chain.
+La biblioteca Rust
+[ic-validator-ingress-message](https://github.com/dfinity/ic/tree/master/rs/validator)
+se desarrolló específicamente para validar firmas de mensajes. La clase
+`IngressMessageVerifier` permite validar `InternetIdentityAuthResponse` junto
+con la cadena de delegación.
 
-The following example displays an example of how ingress messages can be verified. This example uses a hardcoded root of trust that is set to be the NNS root public key and uses system time to derive the current time.
+Ejemplo de verificación de mensajes de entrada:
 
 ```rust
 use ic_types::messages::{HttpCallContent, HttpRequest, SignedIngressContent};
@@ -113,47 +165,55 @@ match result {
 }
 ```
 
-[Reference the crate's implementation logic](https://sourcegraph.com/github.com/dfinity/ic/-/blob/rs/validator/src/ingress_validation.rs?L605) for additional context.
+[Consulta la implementación de la biblioteca](https://sourcegraph.com/github.com/dfinity/ic/-/blob/rs/validator/src/ingress_validation.rs?L605)
+para más detalles.
 
-## Verifying signatures with the JavaScript/TypeScript wrapper `@dfinity/standalone-sig-verifier-web`
+## Verificación de firmas con `@dfinity/standalone-sig-verifier-web`
 
-An `npm` library has been created as a JavaScript/TypeScript wrapper for the [`ic-standalone-sig-verifier`](https://github.com/dfinity/ic/tree/master/rs/crypto/standalone-sig-verifier) Rust crate.
+Existe una biblioteca `npm` como wrapper en JavaScript/TypeScript para la
+biblioteca Rust
+[`ic-standalone-sig-verifier`](https://github.com/dfinity/ic/tree/master/rs/crypto/standalone-sig-verifier).
 
-The following is an example of how this library can be used:
+Ejemplo de uso:
 
 ```javascript
-import initSigVerifier, {verifyIcSignature} from '@dfinity/standalone-sig-verifier-web';
+import initSigVerifier, {
+  verifyIcSignature,
+} from "@dfinity/standalone-sig-verifier-web";
 
 async function example(dataRaw, signatureRaw, derPublicKey, root_key) {
-    // load wasm module
-    await initSigVerifier();
-    try {
-        // call the signature verification wasm function
-        verifyIcSignature(dataRaw, signatureRaw, derPublicKey, root_key);
-        console.log('signature verified successfully')
-    } catch (error) {
-        // the library throws an error if the signature is invalid
-        console.error('signature verification failed', error)
-    }
+  // load wasm module
+  await initSigVerifier();
+  try {
+    // call the signature verification wasm function
+    verifyIcSignature(dataRaw, signatureRaw, derPublicKey, root_key);
+    console.log("signature verified successfully");
+  } catch (error) {
+    // the library throws an error if the signature is invalid
+    console.error("signature verification failed", error);
+  }
 }
 ```
 
 :::caution
 
-When using this library, you should keep the following in mind:
+- Verificar firmas en el frontend es inseguro, ya que el código puede ser
+  modificado por actores malintencionados. Se recomienda su uso en backends o
+  entornos controlados.
 
-- Verifying signatures on the frontend is unsafe, as malicious actors could modify the frontend code in order to bypass signature verification. Therefore, it is recommended that this library be used for demos, backends, or other situations where the code either cannot be modified or where modifications do not create a security risk.
+- Esta biblioteca se compila desde la rama `master` de IC, lo que puede hacer
+  que la API cambie.
 
-- This library is built from the IC `master` branch, meaning the API used may change.
-
-- This library's resulting Wasm module is large (400 KiB when gzipped); this should be taken into consideration for your project.
+- Su módulo Wasm es grande (400 KiB comprimido con gzip).
 
 :::
 
-You can [download the library](https://www.npmjs.com/package/@dfinity/standalone-sig-verifier-web).
+[Descargar la biblioteca](https://www.npmjs.com/package/@dfinity/standalone-sig-verifier-web).
 
-## Resources
+## Recursos
 
-- Rust [ic-validator-ingress-message](https://github.com/dfinity/ic/tree/master/rs/validator) crate.
-- [IC specification](/docs/references/ic-interface-spec).
-- [Using agents](/docs/building-apps/interact-with-canisters/agents/overview).
+- Rust
+  [`ic-validator-ingress-message`](https://github.com/dfinity/ic/tree/master/rs/validator)
+  crate.
+- [Especificación de IC](/docs/references/ic-interface-spec).
+- [Uso de agentes](/docs/building-apps/interact-with-canisters/agents/overview).

@@ -1,74 +1,204 @@
 ---
-
-keywords: [advanced, concept, vetkd, vetkeys, encryption, threshold decryption, encrypted threshold key derivation]
-
+keywords:
+  [
+    advanced,
+    concept,
+    vetkd,
+    vetkeys,
+    encryption,
+    threshold decryption,
+    encrypted threshold key derivation,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# What are vetKeys?
+# ¿Qué son vetKeys?
 
-<MarkdownChipRow labels={["Advanced", "Encryption"]} />
+<MarkdownChipRow labels={["Avanzado", "Encriptación"]} />
 
-vetKeys on the Internet Computer allow developers to more easily perform encryption, threshold decryption, and signing when building dapps on ICP. It is powered by a protocol called vetKD (Verifiably Encrypted Threshold Key Derivation) that allows deriving decryption keys on demand. vetKeys enable a public blockchain to hold secret data.
+vetKeys en Internet Computer permiten a los desarrolladores realizar con mayor
+facilidad  
+encriptación, desencriptación por umbral y firma al construir dapps en ICP. Está
+impulsado  
+por un protocolo llamado vetKD (Verifiably Encrypted Threshold Key Derivation),
+que permite  
+derivar claves de desencriptación bajo demanda. vetKeys habilitan a una
+blockchain pública  
+para almacenar datos secretos.
 
-The goal of vetKeys is to ease the burden of using security and privacy tools on ICP. Encrypting information locally on a device and storing it on a blockchain is easy, as the secret key material always remaining on the local device and not being exposed. Without a solution like vetKeys, difficulties arise when a user wants to retrieve the encrypted information from a different device or share it with a different user, as there is no straightforward way to pass secret key material across public channels in a privacy-friendly way.
+El objetivo de vetKeys es reducir la complejidad de utilizar herramientas de
+seguridad y  
+privacidad en ICP. Encriptar información localmente en un dispositivo y
+almacenarla en una  
+blockchain es fácil, ya que la clave secreta siempre permanece en el dispositivo
+local y no  
+se expone. Sin una solución como vetKeys, surgen dificultades cuando un usuario
+quiere  
+recuperar la información encriptada desde otro dispositivo o compartirla con
+otro usuario,  
+pues no hay una forma sencilla de transferir material de clave secreta a través
+de canales  
+públicos de manera privada.
 
-vetKeys leverages the fact that BLS signatures, the native signature scheme on ICP, are unique and therefore ideally suited to be used as cryptographic decryption keys. As BLS signatures are computed in a distributed way on ICP, there is no central authority deriving keys for users. Furthermore, following standard practices in [IBE schemes,](/docs/references/vetkeys-overview) the derived key can be transported to the user in an encrypted manner. As such, nodes and the network never have access to a user’s keys.
+vetKeys aprovecha el hecho de que las firmas BLS, el esquema de firma nativo en
+ICP, son  
+únicas y, por lo tanto, ideales para usarse como claves criptográficas de
+desencriptación.  
+Dado que las firmas BLS se calculan de forma distribuida en ICP, no hay una
+autoridad  
+central que derive claves para los usuarios. Además, siguiendo prácticas
+estándar en  
+[esquemas IBE](/docs/references/vetkeys-overview), la clave derivada puede
+transportarse al  
+usuario de forma encriptada. De este modo, los nodos y la red nunca tienen
+acceso a las  
+claves de un usuario.
 
-## vetKeys use cases and applications
+## Casos de uso y aplicaciones de vetKeys
 
-The availability of vetKeys allows for a series of applications, including but not limited to those covered in the following sections.
+La disponibilidad de vetKeys permite diversas aplicaciones, incluyendo pero no
+limitadas a  
+las siguientes:
 
-### End-to-end encryption
+### Encriptación de extremo a extremo
 
-The main use case is to enable a blockchain to host threshold-encrypted data in a way that scales to millions of users and billions of secrets, using just a single threshold-shared secret key. BLS signatures are unique, making them immediately useful as symmetric keys.
+El principal caso de uso es permitir que una blockchain aloje datos encriptados
+por umbral  
+de manera escalable para millones de usuarios y miles de millones de secretos,
+utilizando  
+solo una única clave secreta compartida por umbral. Las firmas BLS son únicas,
+lo que las  
+hace inmediatamente útiles como claves simétricas.
 
-Think, for example, of a secure file storage dapp: a user could use the BLS signature on their identity as the root secret under which they encrypt their files before storing them in the dapp. The dapp enforces that only the authenticated user is allowed to recover the root key and hence decrypt the files. The nodes in the blockchain assist a user in recovering their root key but never see that key or the content of the files.
+Por ejemplo, en una dapp de almacenamiento de archivos seguro, un usuario podría
+usar la  
+firma BLS en su identidad como la clave raíz bajo la cual encripta sus archivos
+antes de  
+almacenarlos en la dapp. La dapp garantiza que solo el usuario autenticado puede
+recuperar  
+la clave raíz y, por lo tanto, desencriptar los archivos. Los nodos en la
+blockchain  
+asisten al usuario en la recuperación de su clave raíz, pero nunca ven dicha
+clave ni el  
+contenido de los archivos.
 
-### More sophisticated access policies
+### Políticas de acceso más sofisticadas
 
-In a secure messaging dapp, the conversation between two users can be encrypted using the BLS signature on their pair of identities, to which only those users are given access by the dapp. A secure decentralized social network could let users encrypt posts using a key that is related to the post, e.g., the BLS signature on a unique identifier for the post. The SocialFi dapp then ensures that only the author and the users that the post is shared with get access to that key.
+En una dapp de mensajería segura, la conversación entre dos usuarios puede
+encriptarse  
+usando la firma BLS de su par de identidades, a la cual solo esos usuarios
+tienen acceso a  
+través de la dapp. Una red social descentralizada segura podría permitir a los
+usuarios  
+encriptar publicaciones usando una clave relacionada con el post, por ejemplo,
+la firma BLS  
+en un identificador único para la publicación. La dapp SocialFi se aseguraría de
+que solo el  
+autor y los usuarios con quienes se comparte la publicación puedan acceder a esa
+clave.
 
-### Blockchain-issued signatures and cross-chain bridges
+### Firmas emitidas por blockchain y puentes cross-chain
 
-The key derivation of an IBE automatically yields a signature scheme; the resulting decryption keys can also be used as signatures issued by the blockchain. This is especially useful for blockchains that don't have a built-in certification feature enabling dapps to sign statements.
+La derivación de claves en un esquema IBE produce automáticamente un esquema de
+firma; las  
+claves de desencriptación resultantes también pueden usarse como firmas emitidas
+por la  
+blockchain. Esto es especialmente útil para blockchains que no tienen una
+función de  
+certificación incorporada que permita a las dapps firmar declaraciones.
 
-It can also be used to efficiently bridge blockchains, e.g., to swap assets in a DeFi application. A dapp on one blockchain can verify signed statements issued by a second blockchain without having to implement a complete light client of that second chain.
+También puede usarse para conectar blockchains de manera eficiente, por ejemplo,
+para  
+intercambiar activos en una aplicación DeFi. Una dapp en una blockchain puede
+verificar  
+declaraciones firmadas emitidas por una segunda blockchain sin necesidad de
+implementar un  
+cliente ligero completo de esa segunda cadena.
 
-### Verifiable randomness
+### Aleatoriedad verificable
 
-Because of their uniqueness, BLS signatures can also act as a verifiable random function (VRF). Trusted, verifiable randomness is important for applications such as trustless online lotteries and casinos, fair decentralized games (GameFi), and selecting random features for non-fungible tokens (NFTs).
+Debido a su unicidad, las firmas BLS también pueden actuar como una función de
+aleatoriedad  
+verificable (VRF). La aleatoriedad confiable y verificable es importante para
+aplicaciones  
+como loterías y casinos en línea sin confianza, juegos descentralizados justos
+(GameFi) y  
+selección de atributos aleatorios para tokens no fungibles (NFTs).
 
-### "Dead man's switch"
+### "Interruptor de hombre muerto"
 
-Journalists or whistleblowers could ensure that compromising information in their possession is automatically published if they were to become incapacitated. They can store the information in a dapp, encrypted under a BLS signature that the dapp automatically and publicly recovers when a certain amount of time passes after it last received an authenticated ping from its owner.
+Periodistas o denunciantes podrían garantizar que información comprometida en su
+posesión  
+se publique automáticamente si llegan a quedar incapacitados. Pueden almacenar
+la  
+información en una dapp, encriptada bajo una firma BLS que la dapp recupere
+automáticamente  
+y haga pública cuando pase un determinado período de tiempo sin recibir una
+confirmación  
+autenticada del propietario.
 
-### Secret-bid auctions and MEV protection
+### Subastas de ofertas secretas y protección contra MEV
 
-A vetKey-equipped blockchain can also cover use cases where many ciphertexts need to be decrypted at the same time.
+Una blockchain equipada con vetKeys también puede abordar casos de uso donde
+muchas  
+cifras encriptadas necesitan ser desencriptadas al mismo tiempo.
 
-In a secret-bid auction dapp, users can submit bids that are IBE-encrypted under an identifier so that at the end of the auction, the dapp can decrypt all bids with a single vetKey evaluation. A similar technique can be used to prevent front-running, also known as miner-extracted value (MEV), on a decentralized exchange (DEX). Users submit their IBE-encrypted transactions under a predictable batch identifier. The DEX orders the transactions in encrypted form and, when all transactions for a particular batch have been ordered, triggers the recovery of the decryption key for that batch and executes the decrypted transactions in the fixed order. Note that all of the symmetric-encryption use cases listed above can be modified to encrypt using an IBE instead of a symmetric-key encryption, thereby eliminating the need to perform a vetKey derivation for encryption. Decryption, of course, still requires a vetKey evaluation.
+En una dapp de subastas de ofertas secretas, los usuarios pueden enviar ofertas
+encriptadas  
+bajo un identificador específico para que, al final de la subasta, la dapp pueda
+desencriptar  
+todas las ofertas con una única evaluación de vetKey. Una técnica similar puede
+usarse para  
+prevenir el front-running, también conocido como extracción de valor por mineros
+(MEV), en  
+un exchange descentralizado (DEX). Los usuarios envían sus transacciones
+encriptadas bajo  
+un identificador de lote predecible. El DEX ordena las transacciones en su
+forma  
+encriptada y, cuando todas las transacciones para un lote determinado han sido
+ordenadas,  
+activa la recuperación de la clave de desencriptación y ejecuta las
+transacciones en el  
+orden fijado.
 
-### Time-lock encryption
+### Encriptación con bloqueo temporal
 
-Time-lock encryption enables a sender to encrypt a message for the future, ensuring that it will get decrypted at a given time, but no earlier than that time. Existing solutions rely on centralized trusted parties, witness encryption, or gradual release through puzzle solving. Time-lock encryption can be achieved via IBE by letting a centralized authority release IBE decryption keys corresponding to the current time at regular intervals and letting the sender IBE-encrypt its message using the desired decryption time as identity. The authority's functionality can be run in a dapp on a vetKey-equipped blockchain, eliminating the need for a trusted central party.
+La encriptación con bloqueo temporal permite a un remitente encriptar un mensaje
+para el  
+futuro, asegurando que se desencripte en un momento determinado, pero no antes
+de ese  
+momento. Las soluciones existentes dependen de entidades centralizadas de
+confianza,  
+encriptación de testigos o liberación gradual mediante resolución de acertijos.
+Con vetKeys,  
+esto puede lograrse en una blockchain eliminando la necesidad de una autoridad
+central  
+de confianza.
 
-### Witness encryption
+### Encriptación de testigos
 
-A witness encryption scheme for a language (L) with a witness relationship (R) lets a sender encrypt a message to an instance (x) in L that can only be decrypted using a witness (w) such that R(x,w). The only current implementations are based on indistinguishability obfuscation, of which few instantiations are known based on well-founded assumptions. Witness encryption is almost trivial to implement on a vetKey-enabled blockchain: anyone can IBE-encrypt their message using the instance x as identity, while a witness-verifying dapp lets anyone who provides a valid witness w for x (or a valid zero-knowledge proof of knowledge of w, if it should remain private) to obtain the decryption key for x. The primitive may sound rather theoretical at first, but it actually covers quite practical use cases, as it enables one to encrypt to any verifiable future event, e.g., the price of a stock going above or below a certain level, information escrow, or break-the-glass policies.
+Un esquema de encriptación de testigos para un lenguaje (L) con una relación de
+testigo (R)  
+permite que un remitente encripte un mensaje a una instancia (x) en L que solo
+pueda  
+desencriptarse usando un testigo (w) que cumpla con R(x,w). vetKeys permite
+implementar esto  
+de manera sencilla en una blockchain.
 
-### One-time programs
+### Programas de ejecución única
 
-Another cryptographic primitive with few instantiations are one-time programs that can be executed only once on a single input and that don't leak anything about the program other than the result of the computation. The only currently known instance relies on trusted hardware or on witness encryption on a blockchain. Given that witness encryption is easy to build on a vetKey-enabled blockchain, it should not come as a surprise that one-time programs are as well. The creator of the program garbles the circuit and IBE-encrypts the input wire keys, using the wire index and the value as the identity. A dapp assists users in recovering the IBE decryption corresponding to their input, making sure that only a single value for each wire is ever recovered.
+Los programas de ejecución única son aquellos que pueden ejecutarse solo una vez
+sobre una  
+entrada única y que no filtran ninguna información sobre el programa, excepto el
+resultado  
+de la computación. vetKeys facilita la implementación de este tipo de programas
+en una  
+blockchain sin necesidad de hardware de confianza.
 
-## Resources
+## Recursos
 
-- [Forum discussion](https://forum.dfinity.org/t/threshold-key-derivation-privacy-on-the-ic/16560).
-
-- [The first Community Conversation](https://youtu.be/baM6jHnmMq8).
-
-- [vetKeys reference](/docs/references/vetkeys-overview).
-
-- [Research paper](https://eprint.iacr.org/2023/616.pdf).
-
+- [Discusión en el foro](https://forum.dfinity.org/t/threshold-key-derivation-privacy-on-the-ic/16560).
+- [Primera Community Conversation](https://youtu.be/baM6jHnmMq8).
+- [Referencia de vetKeys](/docs/references/vetkeys-overview).
+- [Documento de investigación](https://eprint.iacr.org/2023/616.pdf).

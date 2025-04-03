@@ -4,48 +4,82 @@ keywords: [intermediate, concept, identity, credentials, verifiable credentials]
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# What are verifiable credentials?
+# ¿Qué son las credenciales verificables?
 
-<MarkdownChipRow labels={["Intermediate", "Concept"]} />
+<MarkdownChipRow labels={["Intermedio", "Concepto"]} />
 
-A credential is a document or certificate that validates an individual's identity or qualifications. Credentials are a part of daily life, with common examples including:
+Una credencial es un documento o certificado que valida la identidad o las
+calificaciones de una persona. Las credenciales forman parte de la vida diaria,
+con ejemplos comunes como:
 
-- A driver's license that qualifies an individual to operate a motor vehicle.
-- A university degree that can be used to assert a level of education.
-- A government-issued passport enabling travel between countries.
+- Una licencia de conducir que califica a una persona para operar un vehículo
+  motorizado.
+- Un título universitario que certifica un nivel de educación.
+- Un pasaporte emitido por el gobierno que permite viajar entre países.
 
-These are examples of physical credentials, as they have a physical component that must be presented for validation. Credentials can also be digital, relying on authentication using cryptographic signatures such as canister signatures on ICP.
+Estos son ejemplos de credenciales físicas, ya que requieren un componente
+físico que debe presentarse para su validación. Sin embargo, las credenciales
+también pueden ser digitales, confiando en la autenticación mediante firmas
+criptográficas, como las firmas de canister en ICP.
 
-Verifiable credentials (VCs) are a type of digital credential that enables individuals, organizations, or things (such as devices) to authenticate cryptographically.
+Las credenciales verificables (VCs) son un tipo de credencial digital que
+permite a individuos, organizaciones o dispositivos autenticarse
+criptográficamente.
 
-The technical implementation of VCs on ICP can be found in the [specification](https://github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md). It is recommended you first read the rest of this documentation, as it includes technical details.
+La implementación técnica de las credenciales verificables en ICP se encuentra
+en la  
+[especificación](https://github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md).  
+Se recomienda leer primero esta documentación, ya que incluye detalles técnicos.
 
-## Benefits
+## Beneficios
 
-Verifiable credentials are designed to be tamper-evident, privacy-preserving, and interoperable across different systems and contexts, such as from one ICP dapp to another or from an ICP dapp to a web2 application. By using verifiable credentials, you will have a mechanism to express these sorts of credentials on ICP in a way that is cryptographically secure, privacy-preserving, and machine-verifiable.
+Las credenciales verificables están diseñadas para ser a prueba de manipulación,
+proteger la privacidad y ser interoperables en diferentes sistemas y contextos,
+como entre una dapp en ICP y una aplicación web2.
 
-## Terminology
+Al utilizar credenciales verificables, obtienes un mecanismo para expresar estas
+credenciales en ICP de manera criptográficamente segura, privada y verificable
+por máquinas.
 
-When learning about and using VCs, there are four primary terms to familiarize yourself with:
+## Terminología
 
-- **User**: Users earn credentials, a piece of data that certifies information about the user, from an issuer.
+Al aprender y utilizar credenciales verificables, es importante familiarizarse
+con cuatro términos clave:
 
-- **Issuer**: An issuer is an entity (a dapp, organization, government, etc.) that verifies information about the user.
+- **Usuario**: Obtiene credenciales, que son datos que certifican información
+  sobre él, emitidos por un **emisor**.
 
-- **Relying party**: A different dapp (organization, government, etc.) that requests certified credentials for that user from the issuer. Since the relying party must verify the received credentials, it is also commonly referred to as the "verifier."
+- **Emisor**: Una entidad (dapp, organización, gobierno, etc.) que verifica y
+  emite credenciales sobre el usuario.
 
-- **Identity provider**: An entity that (in this case, Internet Identity) creates a temporary identifier for the user when the issuer passes the credential to the relying party, so that the relying party and the issuer never learn the user's identifier on the other entity's service.
+- **Parte dependiente**: Una dapp, organización, gobierno u otra entidad que
+  solicita credenciales verificadas del usuario al emisor.  
+  Como esta entidad debe verificar las credenciales recibidas, también se le
+  conoce como **verificador**.
 
-## How to use verifiable credentials
+- **Proveedor de identidad**: Entidad (en este caso, Internet Identity) que crea
+  un identificador temporal para el usuario cuando el emisor envía la credencial
+  a la parte dependiente.  
+  De esta manera, ni la parte dependiente ni el emisor pueden conocer el
+  identificador del usuario en el servicio de la otra entidad.
 
-To use verifiable credentials, there are two workflows. First, you can [become an issuer](issuer.mdx) of verifiable credentials. By issuing verifiable credentials, you can empower users to control and share their credentials selectively, enhancing privacy and giving users greater autonomy over their digital identity.
+## ¿Cómo usar credenciales verificables?
 
-The second workflow allows you to [become a relying party](relying-party.mdx) for verifiable credentials. By requiring verifiable credentials from your application's users, you can ensure that the claims users make are verified by parties (issuers) that you trust while preserving the user’s privacy.
+Para usar credenciales verificables, existen dos flujos de trabajo. Primero,
+puedes [convertirte en un emisor](issuer.mdx) de credenciales verificables. Al
+emitir credenciales verificables, puedes permitir que los usuarios controlen y
+compartan selectivamente sus credenciales, mejorando la privacidad y brindando a
+los usuarios un mayor control sobre su identidad digital.
 
-## Resources
+El segundo flujo de trabajo te permite
+[convertirte en una parte dependiente](relying-party.mdx) de credenciales
+verificables. Al requerir credenciales verificables de los usuarios de tu
+aplicación, puedes asegurarte de que las afirmaciones que los usuarios hacen
+sean verificadas por partes (emisores) en los que confías, al mismo tiempo que
+preservas la privacidad del usuario.
 
-- [Learn how verifiable credentials work](how-it-works.mdx).
+## Recursos
 
-- [Learn how to become an issuer](issuer.mdx).
-
-- [Learn how to become a relying party](relying-party.mdx).
+- [Aprende cómo funcionan las credenciales verificables](how-it-works.mdx).
+- [Aprende cómo convertirte en un emisor](issuer.mdx).
+- [Aprende cómo convertirte en una parte dependiente](relying-party.mdx).

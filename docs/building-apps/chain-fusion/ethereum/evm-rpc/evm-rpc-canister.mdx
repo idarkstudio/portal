@@ -1,5 +1,17 @@
 ---
-keywords: [advanced, ethereum, evm rpc, evm, tutorial, evm rpc canister, rpc canister, evm canister, evm integration, ethereum integration]
+keywords:
+  [
+    advanced,
+    ethereum,
+    evm rpc,
+    evm,
+    tutorial,
+    evm rpc canister,
+    rpc canister,
+    evm canister,
+    evm integration,
+    ethereum integration,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
@@ -7,55 +19,73 @@ import TabItem from "@theme/TabItem";
 import { AdornedTabs } from "/src/components/Tabs/AdornedTabs";
 import { AdornedTab } from "/src/components/Tabs/AdornedTab";
 
-# Using the EVM RPC canister
+# Usando el canister EVM RPC
 
-<MarkdownChipRow labels={["Advanced", "Ethereum", "Tutorial"]} />
+<MarkdownChipRow labels={["Avanzado", "Ethereum", "Tutorial"]} />
 
-## Supported RPC methods
+## Métodos RPC compatibles
 
-The following JSON-RPC methods are available as part of the canister's [Candid interface](https://github.com/dfinity/candid#readme):
+Los siguientes métodos JSON-RPC están disponibles como parte de la interfaz
+Candid del canister:
 
-- [`eth_feeHistory`](https://docs.alchemy.com/reference/eth-feehistory): Queries the historical fee data to estimate gas prices for transactions.
-- [`eth_getLogs`](https://docs.alchemy.com/reference/eth-getlogs): Queries the logs of a specified block or transaction.
-- [`eth_getBlockByNumber`](https://docs.alchemy.com/reference/eth-getblockbynumber): Queries information about a given block.
-- [`eth_getTransactionCount`](https://docs.alchemy.com/reference/eth-gettransactioncount): Queries the number of transactions for a specified address.
-- [`eth_getTransactionReceipt`](https://docs.alchemy.com/reference/eth-gettransactionreceipt): Queries details about a submitted transaction.
-- [`eth_sendRawTransaction`](https://docs.alchemy.com/reference/eth-sendrawtransaction): Submits a signed transaction to the Ethereum network.
-- [`eth_call`](https://docs.alchemy.com/reference/eth-call): Query the state of a smart contract.
+- [`eth_feeHistory`](https://docs.alchemy.com/reference/eth-feehistory):
+  Consulta los datos históricos de tarifas para estimar los precios de gas para
+  transacciones.
+- [`eth_getLogs`](https://docs.alchemy.com/reference/eth-getlogs): Consulta los
+  registros de un bloque o transacción especificados.
+- [`eth_getBlockByNumber`](https://docs.alchemy.com/reference/eth-getblockbynumber):
+  Consulta información sobre un bloque dado.
+- [`eth_getTransactionCount`](https://docs.alchemy.com/reference/eth-gettransactioncount):
+  Consulta el número de transacciones para una dirección especificada.
+- [`eth_getTransactionReceipt`](https://docs.alchemy.com/reference/eth-gettransactionreceipt):
+  Consulta detalles sobre una transacción enviada.
+- [`eth_sendRawTransaction`](https://docs.alchemy.com/reference/eth-sendrawtransaction):
+  Envía una transacción firmada a la red de Ethereum.
+- [`eth_call`](https://docs.alchemy.com/reference/eth-call): Consulta el estado
+  de un contrato inteligente.
 
-Other RPC methods, including those specific to non-Ethereum networks, may be accessed using the canister's `request` method.
+Otros métodos RPC, incluidos los específicos de redes no Ethereum, se pueden
+acceder utilizando el método `request` del canister.
 
-## Supported RPC providers
+## Proveedores RPC compatibles
 
-The EVM RPC canister has built-in support for the following [Ethereum JSON-RPC providers](https://ethereum.org/developers/docs/apis/json-rpc):
+El canister EVM RPC tiene soporte incorporado para los siguientes proveedores de
+Ethereum JSON-RPC:
 
-- [Alchemy](https://docs.alchemy.com/docs/how-to-read-data-with-json-rpc): Ethereum mainnet, Sepolia testnet, L2 chains.
-- [Ankr](https://www.ankr.com/infrastructure/build-on-ethereum/): Ethereum mainnet, Sepolia testnet, L2 chains.
+- [Alchemy](https://docs.alchemy.com/docs/how-to-read-data-with-json-rpc):
+  Ethereum mainnet, Sepolia testnet, L2 chains.
+- [Ankr](https://www.ankr.com/infrastructure/build-on-ethereum/): Ethereum
+  mainnet, Sepolia testnet, L2 chains.
 - [BlockPI](https://blockpi.io/): Ethereum mainnet, Sepolia testnet, L2 chains.
-- [Cloudflare Web3](https://www.cloudflare.com/application-services/products/web3/): Ethereum mainnet.
-- [Public Node](https://www.publicnode.com/): Ethereum mainnet, Sepolia testnet, L2 chains.
-- [LlamaNodes](https://llamanodes.com/): Ethereum mainnet, Sepolia testnet, L2 chains.
+- [Cloudflare Web3](https://www.cloudflare.com/application-services/products/web3/):
+  Ethereum mainnet.
+- [Public Node](https://www.publicnode.com/): Ethereum mainnet, Sepolia testnet,
+  L2 chains.
+- [LlamaNodes](https://llamanodes.com/): Ethereum mainnet, Sepolia testnet, L2
+  chains.
 
-Many of the providers on [ChainList.org](https://chainlist.org/) can be called using the canister's `request` method.
+Muchos de los proveedores en [ChainList.org](https://chainlist.org/) se pueden
+llamar utilizando el método `request` del canister.
 
-## Importing or deploying the EVM RPC canister
+## Importar o desplegar el canister EVM RPC
 
-### Using `dfx deps`
+### Usando `dfx deps`
 
-To use the EVM RPC canister, you can pull it into your project using `dfx deps` by configuring your project's `dfx.json` file:
+Para usar el canister EVM RPC, puedes importarlo a tu proyecto usando `dfx deps`
+configurando el archivo `dfx.json` de tu proyecto:
 
 ```json
 {
-  "canisters": {
-    "evm_rpc": {
-      "type": "pull",
-      "id": "7hfb6-caaaa-aaaar-qadga-cai",
-    }
-  }
+  "canisters": {
+    "evm_rpc": {
+      "type": "pull",
+      "id": "7hfb6-caaaa-aaaar-qadga-cai"
+    }
+  }
 }
 ```
 
-Then, run the commands:
+Luego, ejecuta los siguientes comandos:
 
 ```
 # Start the local replica
@@ -67,28 +97,31 @@ dfx deps init evm_rpc --argument '(record {})'
 dfx deps deploy
 ```
 
-### Using Candid and Wasm files
+### Usando Candid y archivos Wasm
 
-Alternatively, you can include the EVM RPC canister by specifying the Candid and Wasm files in your `dfx.json` file:
+Alternativamente, puedes incluir el canister EVM RPC especificando los archivos
+Candid y Wasm en tu archivo `dfx.json`:
 
 ```json
 {
-  "canisters": {
-    "evm_rpc": {
-      "type": "custom",
-      "candid": "https://github.com/internet-computer-protocol/evm-rpc-canister/releases/latest/download/evm_rpc.did",
-      "wasm": "https://github.com/internet-computer-protocol/evm-rpc-canister/releases/latest/download/evm_rpc.wasm.gz",
-      "remote": {
-        "id": {
-          "ic": "7hfb6-caaaa-aaaar-qadga-cai"
-        }
-      }
-    }
-  }
+  "canisters": {
+    "evm_rpc": {
+      "type": "custom",
+      "candid": "https://github.com/internet-computer-protocol/evm-rpc-canister/releases/latest/download/evm_rpc.did",
+      "wasm": "https://github.com/internet-computer-protocol/evm-rpc-canister/releases/latest/download/evm_rpc.wasm.gz",
+      "remote": {
+        "id": {
+          "ic": "7hfb6-caaaa-aaaar-qadga-cai"
+        }
+      }
+    }
+  }
 }
 ```
 
-Then start the local replica and deploy the canister locally with a specified number of nodes (`31` for the [fiduciary subnet](/docs/building-apps/developing-canisters/create)):
+Luego, inicia la réplica local y despliega el canister localmente con un número
+especificado de nodos (`31` para la
+[subred fiduciaria](/docs/building-apps/developing-canisters/create)):
 
 ```
 dfx start --clean --background
@@ -103,23 +136,30 @@ Another option is to create a fork of the EVM RPC canister:
 git clone https://github.com/internet-computer-protocol/evm-rpc-canister
 ```
 
-To deploy your own canister on the mainnet, run the `dfx deploy` command with the `--network ic` flag:
+Para desplegar tu propio canister en la red principal, ejecuta el comando
+`dfx deploy` con la flag `--network ic`:
 
 ```
 dfx deploy evm_rpc --network ic --argument '(record {})'
 ```
 
-Note that when deploying your own canister, you may encounter API rate limits. Refer to the [replacing API keys](#replacing-api-keys) section to learn how to configure API credentials.
+Ten en cuenta que, al desplegar tu propio canister, podrías encontrarte con
+límites en la tasa de solicitudes de la API. Consulta la sección
+[reemplazar claves de API](#replacing-api-keys) para aprender cómo configurar
+las credenciales de la API.
 
 ### `ic-alloy`
 
-The [`ic-alloy`](https://github.com/ic-alloy) Rust crate can be used to interact with the EVM RPC canister from Rust code. It simplifies the code necessary to perform common EVM operations.
+El crate de Rust [`ic-alloy`](https://github.com/ic-alloy) se puede utilizar
+para interactuar con el canister EVM RPC desde código en Rust. Este crate
+simplifica el código necesario para realizar operaciones comunes en la EVM.
 
-The `ic-alloy-toolkit` includes a collection of examples demonstrating how `ic-alloy` can be used.
+El `ic-alloy-toolkit` incluye una colección de ejemplos que muestran cómo se
+puede utilizar `ic-alloy`.
 
-[View the `ic-alloy` documentation for more information](https://o7kje-7yaaa-aaaal-qnaua-cai.icp0.io).
+[Consulta la documentación de `ic-alloy` para más información](https://o7kje-7yaaa-aaaal-qnaua-cai.icp0.io).
 
-## Get event logs
+## Obtener registros de eventos
 
 <AdornedTabs groupId="languages">
 <TabItem value="motoko" label="Motoko" default>
@@ -179,15 +219,18 @@ actor {
 };
 ```
 
-As described in the official [Ethereum JSON-RPC documentation](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getlogs), the topics field is an order-dependent two-dimensional array that encodes the boolean logic for the relevant topics.
+Como se describe en la documentación oficial de
+[Ethereum JSON-RPC](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getlogs),
+el campo de temas es una matriz bidimensional dependiente del orden que codifica
+la lógica booleana para los temas relevantes.
 
-For example:
+Por ejemplo:
 
-- `[[A], [B]]` corresponds to `A and B`.
+- `[[A], [B]]` corresponde a `A y B`.
 
-- `[[A, B]]` corresponds to `A or B`.
+- `[[A, B]]` corresponde a `A o B`.
 
-- `[[A], [B, C]]` corresponds to `A and (B or C)`.
+- `[[A], [B, C]]` corresponde a `A y (B o C)`.
 
 </TabItem>
 <TabItem value="rust" label="Rust">
@@ -215,7 +258,6 @@ async fn get_logs(get_logs_args: GetLogsArgs) -> Vec<evm_rpc::LogEntry> {
 }
 ```
 
-
 </TabItem>
 <TabItem value="dfx" label="dfx">
 
@@ -234,9 +276,12 @@ dfx canister call evm_rpc eth_getLogs "(variant {$RPC_SOURCE}, $RPC_CONFIG, reco
 </TabItem>
 </AdornedTabs>
 
-This example use case displays a caveat that comes with mapping the `eth_getLogs` spec to Candid, where a topic can either be a single value or an array of topics. A single-element array is equivalent to passing a string.
+Este ejemplo de caso de uso muestra una advertencia que viene con el mapeo de la
+especificación `eth_getLogs` a Candid, donde un tema puede ser un solo valor o
+una matriz de temas. Una matriz de un solo elemento es equivalente a pasar una
+cadena.
 
-## Get the latest Ethereum block info
+## Obtener la información del último bloque de Ethereum
 
 <AdornedTabs groupId="languages">
 <TabItem value="motoko" label="Motoko" default>
@@ -304,7 +349,6 @@ let (results,): (MultiGetBlockByNumberResult,) = call_with_payment128(
 .unwrap();
 ```
 
-
 </TabItem>
 <TabItem value="dfx" label="dfx">
 
@@ -323,7 +367,7 @@ dfx canister call evm_rpc eth_getBlockByNumber "(variant {$RPC_SOURCE}, $RPC_CON
 </TabItem>
 </AdornedTabs>
 
-## Get receipt for transaction
+## Obtener el recibo de una transacción
 
 <AdornedTabs groupId="languages">
 <TabItem value="motoko" label="Motoko" default>
@@ -393,7 +437,6 @@ let (results,): (MultiGetTransactionReceiptResult,) = call_with_payment128(
 .unwrap();
 ```
 
-
 </TabItem>
 <TabItem value="dfx" label="dfx">
 
@@ -412,7 +455,7 @@ dfx canister call evm_rpc eth_getTransactionReceipt "(variant {$RPC_SOURCE}, $RP
 </TabItem>
 </AdornedTabs>
 
-## Call an Ethereum smart contract
+## Llamar a un contrato inteligente de Ethereum
 
 <AdornedTabs groupId="languages">
 <TabItem value="motoko" label="Motoko" default>
@@ -547,7 +590,7 @@ pub async fn eth_call(
 </TabItem>
 </AdornedTabs>
 
-## Get number of transactions for a contract
+## Obtener el número de transacciones para un contrato
 
 <AdornedTabs groupId="languages">
 <TabItem value="motoko" label="Motoko" default>
@@ -627,7 +670,6 @@ let (results,): (MultiGetTransactionCountResult,) = call_with_payment128(
 .unwrap();
 ```
 
-
 </TabItem>
 <TabItem value="dfx" label="dfx">
 
@@ -646,7 +688,7 @@ dfx canister call evm_rpc eth_getTransactionCount "(variant {$RPC_SOURCE}, $RPC_
 </TabItem>
 </AdornedTabs>
 
-## Get the fee history
+## Obtener el historial de fee
 
 <AdornedTabs groupId="languages">
 <TabItem value="motoko" label="Motoko" default>
@@ -740,7 +782,6 @@ pub async fn fee_history(
 }
 ```
 
-
 </TabItem>
 <TabItem value="dfx" label="dfx">
 
@@ -759,9 +800,12 @@ dfx canister call evm_rpc eth_feeHistory "(variant {$RPC_SOURCE}, $RPC_CONFIG, r
 </TabItem>
 </AdornedTabs>
 
-## Send a raw transaction
+## Enviar una transacción sin procesar (raw transaction)
 
-The EVM RPC canister can also be used to send raw transactions to the Ethereum and other EVM-compatible chains. Examples for using the EVM RPC canister can be found below, or you can view the [documentation for sending a raw ETH transaction](/docs/building-apps/chain-fusion/ethereum/using-eth/submit-transactions).
+El canister EVM RPC también se puede utilizar para enviar transacciones sin
+procesar a Ethereum y otras cadenas compatibles con EVM. A continuación se
+muestran ejemplos de cómo utilizar el canister EVM RPC, o puedes consultar la
+[documentación para enviar una transacción ETH sin procesar](/docs/building-apps/chain-fusion/ethereum/using-eth/submit-transactions).
 
 <AdornedTabs groupId="languages">
 <TabItem value="motoko" label="Motoko" default>
@@ -840,7 +884,6 @@ pub async fn send_raw_transaction(network: String, raw_tx: String) -> SendRawTra
 }
 ```
 
-
 </TabItem>
 <TabItem value="dfx" label="dfx">
 
@@ -860,26 +903,42 @@ dfx canister call evm_rpc eth_sendRawTransaction "(variant {$RPC_SOURCE}, $RPC_C
 </TabItem>
 </AdornedTabs>
 
+Algunas API JSON-RPC pueden devolver solo un estado `NonceTooLow` al enviar una
+transacción con éxito. Esto ocurre porque, durante el consenso de las llamadas
+HTTPS outcall, solo la primera solicitud se procesa correctamente, mientras que
+las demás responden con un estado de transacción duplicada.
 
-Some JSON-RPC APIs may only return a `NonceTooLow` status when successfully submitting a transaction. This is because during the HTTP outcall consensus, only the first request is successful, while the others reply with a duplicate transaction status.
-If you encounter this issue, one possible workaround is to use a deduplicating proxy server such as the community-built C-ATTS EVM RPC proxy ([source code](https://github.com/c-atts/catts-evm-rpc-proxy)).
+Si te encuentras con este problema, una posible solución es utilizar un servidor
+proxy que elimine duplicados, como el proxy EVM RPC C-ATTS desarrollado por la
+comunidad ([código fuente](https://github.com/c-atts/catts-evm-rpc-proxy)).
 
 ### Error "already known"
 
-Sending a transaction to the Ethereum network is a state changing operation. Since the EVM-RPC canister sends a transaction to some JSON-RPC providers via HTTPs outcalls, each contacted provider will receive the same transaction multiple times.
+Enviar una transacción a la red de Ethereum es una operación que cambia el
+estado. Como el canister EVM-RPC envía la transacción a varios proveedores
+JSON-RPC a través de llamadas HTTPS outcall, cada proveedor recibe la misma
+transacción varias veces.
 
-Therefore, it is possible that the contacted provider may return the following error:
+Por lo tanto, es posible que algunos proveedores respondan con el siguiente
+error:
 
 ```
 "{ code: -32603, message: \"already known\" }"
 ```
 
-Assuming the sent transaction is valid, one node of the contacted provider should accept the transaction, while the others should return some error such as the one displayed above. Note that the exact error returned is EVM-client specific, as the Ethereum JSON-RPC API itself doesn't specify errors, meaning that other errors could occur, such as an error indicating that consensus on the IC could not be reached.
+Si la transacción enviada es válida, al menos un nodo del proveedor la aceptará,
+mientras que los demás podrían devolver un error como el mostrado arriba. Ten en
+cuenta que el error exacto depende del cliente EVM que esté en uso, ya que la
+API JSON-RPC de Ethereum no especifica errores exactos. Esto significa que
+podrías encontrarte con otros errores, como uno que indique que no se alcanzó
+consenso en el IC.
 
-Note that even if an error is returned, you should assume that your transaction is known to the Ethereum network. You can verify whether your transaction was included in a block by querying the transaction count (via `eth_getTransactionCount`) at the `Latest` block height.
+Incluso si se devuelve un error, debes asumir que tu transacción ha sido
+registrada en la red de Ethereum. Puedes verificar si tu transacción fue
+incluida en un bloque consultando el número de transacciones
+(`eth_getTransactionCount`) en la altura de bloque más reciente (`Latest`).
 
-
-## Send a raw JSON-RPC request
+## Enviar una solicitud JSON-RPC sin procesar
 
 <AdornedTabs groupId="languages">
 <TabItem value="motoko" label="Motoko" default>
@@ -950,7 +1009,6 @@ match result {
 }
 ```
 
-
 </TabItem>
 <TabItem value="dfx" label="dfx">
 
@@ -979,7 +1037,6 @@ let services = #EthMainnet;
 let config = null;
 ```
 
-
 </TabItem>
 <TabItem value="rust" label="Rust">
 
@@ -991,7 +1048,6 @@ let config = null;
         1000 as u64,
     );
 ```
-
 
 </TabItem>
 <TabItem value="dfx" label="dfx">
@@ -1005,9 +1061,11 @@ dfx canister call evm_rpc --wallet $(dfx identity get-wallet) --with-cycles 1000
 </TabItem>
 </AdornedTabs>
 
-## Specifying RPC services
+## Especificando servicios RPC
 
-`RpcServices` is used to specify which HTTPS outcalls APIs to use in the request. There are several ways to use specific JSON-RPC services:
+`RpcServices` se utiliza para especificar qué APIs de llamadas HTTPS se deben
+utilizar en la solicitud. Hay varias formas de utilizar servicios JSON-RPC
+específicos:
 
 ```candid
 // Used for Candid-RPC canister methods (`eth_getLogs`, `eth_getBlockByNumber`, etc.)
@@ -1037,18 +1095,23 @@ type RpcService = variant {
 };
 ```
 
-## Replacing API keys
+## Reemplazo de claves API
 
-If you are a controller or a principal autorized to manage API keys (given upon canister initialization in the `manageApiKeys` field), you can replace the API keys used by the EVM RPC canister.
-The first step is to determine the relevant `providerId` that identifies a supported JSON RPC provider.
+Si eres un controlador o un principal autorizado para administrar claves API
+(definido en el campo `manageApiKeys` al inicializar el canister), puedes
+reemplazar las claves API utilizadas por el canister EVM RPC.
 
-Run the following command to view all registered providers:
+El primer paso es identificar el `providerId` correspondiente a un proveedor
+JSON-RPC compatible.
+
+Ejecuta el siguiente comando para ver todos los proveedores registrados:
 
 ```bash
 dfx canister call evm_rpc getProviders
 ```
 
-You should see a list of values. Look for the `providerId`, which in this case is `0`:
+Deberías ver una lista de valores. Busca el `providerId`, que en este caso es
+`0`:
 
 ```
 record {
@@ -1064,13 +1127,14 @@ record {
 };
 ```
 
-Update the configuration for an existing provider using the `updateApiKeys` method:
+Actualiza la configuración de un proveedor existente usando el método
+`updateApiKeys`:
 
 ```bash
-dfx canister call evm_rpc updateApiKeys '(vec { record { 0 : nat64;  opt "YOUR-API-KEY" } } )'
+dfx canister call evm_rpc updateApiKeys '(vec { record { 0 : nat64;  opt "TU-API-KEY" } } )'
 ```
 
-## Error messages
+## Mensajes de error
 
 ### Error "TooFewCycles"
 
@@ -1078,76 +1142,95 @@ dfx canister call evm_rpc updateApiKeys '(vec { record { 0 : nat64;  opt "YOUR-
 "ProviderError(TooFewCycles { expected: 798336000, received: 307392000 })"
 ```
 
-You may receive this error if multiple JSON-RPC providers were queried and one did not receive enough cycles for the request. You can safely attach more cycles to your query, since unused cycles will be refunded.
+Este error puede ocurrir si se consultaron varios proveedores JSON-RPC y uno de
+ellos no recibió suficientes ciclos para la solicitud. Puedes adjuntar más
+ciclos sin problemas, ya que los ciclos no utilizados serán reembolsados.
 
-## Filtering logs
+## Filtrado de registros (logs)
 
-The `consoleFilter` argument can be passed to the EVM RPC canister to filter what log messages are shown.
+El argumento `consoleFilter` puede pasarse al canister EVM RPC para filtrar qué
+mensajes de registro se muestran.
 
-The default configuration is to show all logs:
+La configuración predeterminada muestra todos los registros:
 
-```
+```bash
 dfx deploy evm_rpc --argument "(record { consoleFilter = opt variant { ShowAll } })"
 ```
 
-Hide all logs:
+Para ocultar todos los registros:
 
-```
+```bash
 dfx deploy evm_rpc --argument "(record { consoleFilter = opt variant { HideAll } })"
 ```
 
-The `ShowPattern` and `HidePattern` arguments can be used to filter out regular expressions, such as filtering out logs tagged with `INFO`:
+Los argumentos `ShowPattern` y `HidePattern` pueden usarse para filtrar
+registros con expresiones regulares. Por ejemplo, para filtrar registros
+etiquetados con `INFO`:
 
 ```
 dfx deploy evm_rpc --argument "(record { consoleFilter = opt variant { ShowPattern = "^INFO" } })"
 ```
 
-Or, hide logs tagged with `TRACE_HTTP`:
+O para ocultar registros etiquetados con `TRACE_HTTP`:
 
+```bash
+dfx deploy evm_rpc --argument "(record { consoleFilter = opt variant { HidePattern = \"^TRACE_HTTP\" } })"
 ```
-dfx deploy evm_rpc --argument "(record { consoleFilter = opt variant { HidePattern = "^TRACE_HTTP" } })"
-```
 
-`ShowPattern` and `HidePattern` are evaluated using the [regex](https://docs.rs/regex/latest/regex/) crate.
+`ShowPattern` y `HidePattern` se evalúan usando la librería
+[regex](https://docs.rs/regex/latest/regex/).
 
-## Important notes
+## Notas importantes
 
-### RPC result consistency
+### Consistencia de resultados RPC
 
-When calling RPC methods directly through the Candid interface (rather than via the `request` method), the canister will compare results from several JSON-RPC APIs and return a `Consistent` or `Inconsistent` variant based on whether the APIs agree on the result.
+Cuando se llaman métodos RPC directamente a través de la interfaz Candid (en
+lugar de usar el método `request`), el canister compara los resultados de varias
+API JSON-RPC y devuelve una variante `Consistent` o `Inconsistent`, según si las
+APIs coinciden en el resultado.
 
-By default, the canister uses three different RPC providers, which may change depending on availability. It's possible to specify which providers to use for this consistency check. For example:
+Por defecto, el canister utiliza tres proveedores RPC diferentes, los cuales
+pueden cambiar dependiendo de la disponibilidad. Es posible especificar qué
+proveedores usar para esta verificación de consistencia. Por ejemplo:
 
 ```bash
 dfx canister call evm_rpc eth_getTransactionCount '(variant {EthMainnet = opt vec {Cloudflare; PublicNode}}, record {address = "0xdAC17F958D2ee523a2206206994597C13D831ec7"; block = variant {Tag = variant {Latest}}})' --with-cycles 100000000000 --wallet=$(dfx identity get-wallet)
 ```
 
-### HTTPS outcalls consensus
+### Consenso en llamadas HTTPS outcall
 
-Be sure to verify that RPC requests work as expected on the ICP mainnet. HTTPS outcalls performed in the `request` method only reach consensus if the JSON-RPC response is the same each call.
+Asegúrate de verificar que las solicitudes RPC funcionen como se espera en la
+mainnet de ICP. Las llamadas HTTPS outcall realizadas en el método `request`
+solo alcanzan consenso si la respuesta JSON-RPC es la misma en cada solicitud.
 
-If you encounter an issue with consensus, [please let us know](https://github.com/internet-computer-protocol/evm-rpc-canister) and we will look into whether it's possible to add official support for your use case.
+Si encuentras un problema con el consenso,
+[infórmanos aquí](https://github.com/internet-computer-protocol/evm-rpc-canister)
+para analizar si es posible agregar soporte oficial para tu caso de uso.
 
-### Response size estimates
+### Estimaciones del tamaño de respuesta
 
-In some cases, it's necessary to perform multiple HTTPS outcalls with increasing maximum response sizes to complete a request. This is relatively common for the `eth_getLogs` method and may increase the time and cost of performing an RPC call. One solution is to specify an initial response size estimate (in bytes):
+En algunos casos, es necesario realizar múltiples llamadas HTTPS outcall con
+tamaños de respuesta máximos crecientes para completar una solicitud. Esto es
+común para el método `eth_getLogs` y puede aumentar el tiempo y costo de
+realizar una llamada RPC.
+
+Una solución es especificar una estimación inicial del tamaño de respuesta (en
+bytes):
 
 ```bash
 dfx canister call evm_rpc eth_getLogs "(variant {EthMainnet}, record {responseSizeEstimate = 5000}, record {addresses = vec {\"0xdAC17F958D2ee523a2206206994597C13D831ec7\"}})" --with-cycles=1000000000 --wallet=$(dfx identity get-wallet)
 ```
 
-If the response is larger than the estimate, the canister will double the max response size and retry until either receiving a response or running out of cycles given by the `--with-cycles` flag.
+Si la respuesta es más grande que la estimación, el canister duplicará el tamaño
+máximo de respuesta y reintentará hasta recibir una respuesta o agotar los
+ciclos asignados con la bandera `--with-cycles`.
 
-## EVM RPC canister samples
+## Ejemplos de uso del canister EVM RPC
 
-Here are some example projects using the EVM RPC canister:
+Aquí hay algunos proyectos de ejemplo que utilizan el canister EVM RPC:
 
-- [Vite + React + Motoko  + EVM RPC](https://github.com/rvanasa/vite-react-motoko/tree/evm-rpc)
-
+- [Vite + React + Motoko + EVM RPC](https://github.com/rvanasa/vite-react-motoko/tree/evm-rpc)
 - [Vite + React + Rust + EVM RPC](https://github.com/fxgst/evm-rpc-rust/tree/main)
-
 - [ICP ETH Coprocessor](https://github.com/domwoe/icp-eth-coprocessor/tree/main)
-
-- [Chain Fusion starter project](https://github.com/letmejustputthishere/chainfusion-starter/tree/main)
-
-- [B4B Web3 marketing protocol](https://gitlab.com/b4b-world/b4b-icp)
+- [Proyecto inicial de Chain Fusion](https://github.com/letmejustputthishere/chainfusion-starter/tree/main)
+- [Protocolo de marketing Web3 B4B](https://gitlab.com/b4b-world/b4b-icp)
