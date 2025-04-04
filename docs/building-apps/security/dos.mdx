@@ -4,60 +4,166 @@ keywords: [security, concept, denial of service, dos, cycles, captcha]
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Security best practices: Denial of service
+# Mejores prácticas de seguridad: Denegación de servicio
 
-<MarkdownChipRow labels={["Security", "Best practices"]} />
+<MarkdownChipRow labels={["Seguridad", "Mejores prácticas"]} />
 
-## Protect against DoS and DDoS attacks
+## Protección contra ataques de denegación de servicio (DoS) y denegación de servicio distribuida (DDoS)
 
-### Security concern
+### Preocupación de seguridad
 
-A denial of service (DoS) attack aims to make a system unavailable by overwhelming it with requests or data. A Distributed Denial of Service (DDoS) attack is a more sophisticated version, where the attack originates from multiple sources, making it harder to block. An attacker will typically search for operations that are free to be executed by anyone but which are expensive for the application in terms of certain resources such as storage, memory usage, network bandwidth, computing resources, etc. In the case of canisters, such attacks can aim to deplete cycles, making the canister unable to process legitimate requests. The reverse gas model means that a dapp needs to implement strategies to deal with this.
+Un ataque de denegación de servicio (DoS) tiene como objetivo hacer que un
+sistema no esté disponible al abrumarlo con solicitudes o datos. Una versión más
+sofisticada de este ataque es la denegación de servicio distribuida (DDoS), en
+la que el ataque proviene de múltiples fuentes, lo que dificulta su bloqueo. Un
+atacante generalmente buscará operaciones que sean gratuitas para que cualquiera
+las ejecute, pero que sean costosas para la aplicación en términos de ciertos
+recursos, como almacenamiento, uso de memoria, ancho de banda de red, recursos
+de cómputo, etc. En el caso de los contenedores, estos ataques pueden apuntar a
+agotar los ciclos, lo que hace que el contenedor no pueda procesar solicitudes
+legítimas. El modelo de gas inverso significa que una aplicación descentralizada
+(dapp) debe implementar estrategias para lidiar con esto.
 
-### Recommendation
+### Recomendación
 
-To protect your canisters from DoS and DDoS attacks, consider the following strategies:
-* **Bot prevention techniques**: Use methods like captchas or proof of work to ensure only legitimate users can access your canister. CAPTCHAs help verify that the user is human, while proof of work requires the user to spend computational resources to proceed, deterring automated attacks. [Internet Identity](https://github.com/dfinity/internet-identity) has a [captcha implementation](https://github.com/dfinity/internet-identity/blob/2bf92dc16371428a3dcc1115580a691842ec76df/src/internet_identity/src/main.rs#L517) that can serve as an example for implementing this in other projects.
-* **Monitor cycles usage**: Regularly track your canisters cycles consumption and set alerts for any sudden spikes that may indicate an attack.
-* **Ingress message charging**: While charging for ingress messages (external requests to the canister) is not natively supported, custom solutions could be implemented to make sure that any expensive actions have costs associated with them.
-* **Filter ingress messages using inspect message**: Certain non-critical checks can be placed in the inspect message function to filter out ingress update messages before they are executed by all nodes of a subnet. Since this code only runs on a single node, the execution does not consume cycles, but it also shouldn't be relied upon for security-critical checks such as access control. However, they can efficiently reject certain ingress messages early. Read the corresponding [documentation](/docs/references/ic-interface-spec#system-api-inspect-message) and [security best practice](/docs/building-apps/security/iam) carefully for the caveats.
+Para proteger tus contenedores de ataques de denegación de servicio (DoS) y
+denegación de servicio distribuida (DDoS), considera las siguientes estrategias:
 
-## Protect against noisy neighbors
+- **Técnicas de prevención de bots**: Utiliza métodos como captchas o pruebas de
+  trabajo (proof of work) para asegurarte de que solo los usuarios legítimos
+  puedan acceder a tus contenedores. Los captchas ayudan a verificar que el
+  usuario es humano, mientras que la prueba de trabajo requiere que el usuario
+  gaste recursos computacionales para proceder, lo que disuade los ataques
+  automatizados.
+  [Internet Identity](https://github.com/dfinity/internet-identity) tiene una
+  [implementación de captcha](https://github.com/dfinity/internet-identity/blob/2bf92dc16371428a3dcc1115580a691842ec76df/src/internet_identity/src/main.rs#L517)
+  que puede servir como ejemplo para implementar esto en otros proyectos.
+- **Monitoreo del uso de ciclos**: Realiza un seguimiento regular del consumo de
+  ciclos de tus contenedores y establece alertas para cualquier aumento
+  repentino que pueda indicar un ataque.
+- **Cobro por mensajes de ingreso**: Si bien el cobro por mensajes de ingreso
+  (solicitudes externas al contenedor) no es compatible de forma nativa, se
+  podrían implementar soluciones personalizadas para asegurarse de que las
+  acciones costosas tengan costos asociados.
+- **Filtrar mensajes de ingreso utilizando la función inspect message**: Se
+  pueden colocar ciertas verificaciones no críticas en la función inspect
+  message para filtrar los mensajes de actualización de ingreso antes de que
+  sean ejecutados por todos los nodos de una subred. Dado que este código solo
+  se ejecuta en un solo nodo, la ejecución no consume ciclos, pero tampoco se
+  debe confiar en él para verificaciones críticas de seguridad, como el control
+  de acceso. Sin embargo, pueden rechazar eficientemente ciertos mensajes de
+  ingreso temprano. Lee la documentación correspondiente
+  [aquí](/docs/references/ic-interface-spec#system-api-inspect-message) y la
+  [mejor práctica de seguridad](/docs/building-apps/security/iam) cuidadosamente
+  para conocer las advertencias.
 
-### Security concern
+## Protección contra vecinos ruidosos
 
-In a shared resource environment like the Internet Computer, multiple canisters can run on the same subnet. If one canister consumes too many resources (CPU, memory, etc.), it can negatively impact the performance of others on the same subnet. This is known as the "noisy neighbor" problem.
+### Preocupación de seguridad
 
-### Recommendation
+En un entorno de recursos compartidos como Internet Computer, varios
+contenedores pueden ejecutarse en la misma subred. Si un contenedor consume
+demasiados recursos (CPU, memoria, etc.), puede afectar negativamente el
+rendimiento de otros contenedores en la misma subred. Esto se conoce como el
+problema del "vecino ruidoso".
 
-To mitigate the "noisy neighbor" issue, manage your canister's resource allocation effectively:
-* **Memory allocation**: Memory can be reserved per canister by setting `memory_allocation`, ensuring that your canister can always allocate memory up to the requested `memory_allocation` and preventing other canisters from using up the subnet's available memory. Note that this also reduces the upper bound of memory the canister can allocate to the same value. Monitoring actual memory usage against this value is important to avoid availability issues.
-* **Compute reservation**: Similar to memory, computing power can also be reserved by setting `compute_allocation` to a value between 0 and 100, which denotes the percentage of one CPU core to be reserved for this canister. A value of 50 means that every 2 rounds, the canister will be scheduled to execute a message. This guarantees the minimal progress your canister can make, which protects against noisy neighbors. Both allocations are reserving resources for your canister on the subnet, which prevents the other canisters from using them. Hence, they come at a cost. Memory allocation is charged as if all that memory would be allocated. Compute allocation is currently charged at 10M cycles per percentage point.
-Learn more about managing memory and compute resources in the [storage](/docs/building-apps/essentials/gas-cost) and [compute](/docs/building-apps/essentials/gas-cost) guides.
-* **Subnet and canister distribution**: Implement a smart canister deployment strategy by monitoring the load on subnets. You can choose to deploy new canisters on less busy subnets or adopt a multi-canister architecture that balances the load across subnets. Be mindful to minimize inter-subnet communication for canisters that frequently interact with each other. Additionally, avoid deploying to known high-traffic subnets where possible, though keep in mind that resource usage can change unexpectedly with new dapps.
+### Recomendación
+
+Para mitigar el problema del "vecino ruidoso", administra la asignación de
+recursos de tu contenedor de manera efectiva:
+
+- **Asignación de memoria**: Se puede reservar memoria por contenedor
+  estableciendo `memory_allocation`, lo que garantiza que tu contenedor siempre
+  pueda asignar memoria hasta la `memory_allocation` solicitada y evita que
+  otros contenedores utilicen la memoria disponible en la subred. Ten en cuenta
+  que esto también reduce el límite superior de memoria que el contenedor puede
+  asignar al mismo valor. Es importante monitorear el uso real de memoria en
+  comparación con este valor para evitar problemas de disponibilidad.
+- **Reserva de cómputo**: Al igual que con la memoria, también se puede reservar
+  capacidad de cómputo estableciendo `compute_allocation` en un valor entre 0 y
+  100, que denota el porcentaje de un núcleo de CPU que se reservará para este
+  contenedor. Un valor de 50 significa que cada 2 rondas, el contenedor se
+  programará para ejecutar un mensaje. Esto garantiza el progreso mínimo que
+  puede hacer tu contenedor, lo que lo protege de los vecinos ruidosos. Ambas
+  asignaciones reservan recursos para tu contenedor en la subred, lo que evita
+  que los otros contenedores los utilicen. Por lo tanto, tienen un costo. La
+  asignación de memoria se cobra como si se asignara toda esa memoria. La
+  asignación de cómputo se cobra actualmente a 10M ciclos por punto porcentual.
+  Obtén más información sobre cómo administrar los recursos de memoria y cómputo
+  en las guías de [almacenamiento](/docs/building-apps/essentials/gas-cost) y
+  [cómputo](/docs/building-apps/essentials/gas-cost).
+- **Distribución de subred y contenedores**: Implementa una estrategia
+  inteligente de implementación de contenedores mediante el monitoreo de la
+  carga en las subredes. Puedes elegir implementar nuevos contenedores en
+  subredes menos ocupadas o adoptar una arquitectura de múltiples contenedores
+  que equilibre la carga en las subredes. Ten en cuenta minimizar la
+  comunicación entre subredes para los contenedores que interactúan con
+  frecuencia entre sí. Además, evita implementar en subredes conocidas de alto
+  tráfico cuando sea posible, aunque ten en cuenta que el uso de recursos puede
+  cambiar inesperadamente con nuevas dapps.
 
 :::info
-When the subnet grows above 450GiB, then the new reservation mechanism activates. Every time a canister allocates new storage bytes, the system sets aside some amount of cycles from the main balance of the canister. These reserved cycles will be used to cover future payments for the newly allocated bytes. The reserved cycles are not transferable, and the amount of reserved cycles depends on how full the subnet is. For example, it may cover days, months, or even years of payments for the newly allocated bytes. It is important to note that the reservation mechanism applies only to the newly allocated bytes and does not apply to the storage already in use by the canister. See more at [resource reservations](https://forum.dfinity.org/t/increasing-subnet-storage-capacity-and-introducing-resource-reservation-mechanism/23447).
+
+Cuando la subred crece por encima de 450 GiB, se activa el nuevo mecanismo de
+reserva. Cada vez que un contenedor asigna nuevos bytes de almacenamiento, el
+sistema reserva una cierta cantidad de ciclos del saldo principal del
+contenedor. Estos ciclos reservados se utilizarán para cubrir los pagos futuros
+de los bytes recién asignados. Los ciclos reservados no se pueden transferir y
+la cantidad de ciclos reservados depende de qué tan llena esté la subred. Por
+ejemplo, puede cubrir días, meses o incluso años de pagos para los bytes recién
+asignados. Es importante tener en cuenta que el mecanismo de reserva se aplica
+solo a los bytes recién asignados y no se aplica al almacenamiento que ya está
+en uso por el contenedor. Obtén más información en
+[reservas de recursos](https://forum.dfinity.org/t/increasing-subnet-storage-capacity-and-introducing-resource-reservation-mechanism/23447).
+
 :::
 
-## Handle expensive calls
+## Manejo de llamadas costosas
 
-### Security concern
+### Preocupación de seguridad
 
-Some calls (update or query) might be expensive in terms of the memory or cycles they consume. For example, any function using chain-key signing or HTTPS outcalls is relatively expensive. See the [additional documentation](/docs/building-apps/essentials/gas-cost) on cycles cost details and for other examples.
+Algunas llamadas (actualización o consulta) pueden ser costosas en términos de
+memoria o ciclos que consumen. Por ejemplo, cualquier función que use firmas de
+clave de cadena o llamadas HTTPS es relativamente costosa. Consulta la
+[documentación adicional](/docs/building-apps/essentials/gas-cost) sobre los
+detalles de los costos de ciclos y otros ejemplos.
 
-An attacker will target expensive calls to drain the cycles balance or available memory quickly.
+Un atacante apuntará a llamadas costosas para agotar rápidamente el saldo de
+ciclos o la memoria disponible.
 
-### Recommendation
+### Recomendación
 
-* **Use captchas**: Expensive operations should require a captcha to be solved. Try to use a library to implement a captcha instead of a cloud service, as such a service would require HTTPS outcalls and isn't decentralized.
-* **Use PoW (proof-of-work)**: Require a proof-of-work challenge to be solved by the client for any expensive operation. The parameters need to be carefully chosen to require sufficient computation per call to the expensive operation without creating too much impact for legitimate clients. Don't forget to consider clients on slow and older mobile devices while protecting against attackers on modern multi-GPU systems. Certain algorithms can limit the performance increase of GPUs to improve this uneven battlefield.
-* **Charge for expensive calls**: You can require that certain expensive calls from other canisters include cycles to compensate for the resources consumed. In addition, one can charge for ingress messages. However, that is not currently supported by the protocol itself, and a custom solution, such as pre-paying a certain amount, would need to be designed.
-* **Differentiate between update and query calls**: Expensive computations should generally be avoided for update calls unless absolutely necessary. While query calls are not authenticated, they are faster and less resource-intensive. To check whether a method was called as a query or update call, you can use `ic0.in_replicated_execution()`.
+- **Utiliza captchas**: Las operaciones costosas deben requerir resolver un
+  captcha. Intenta utilizar una biblioteca para implementar un captcha en lugar
+  de un servicio en la nube, ya que este último requeriría llamadas HTTPS y no
+  es descentralizado.
+- **Utiliza PoW (proof-of-work)**: Requiere un desafío de prueba de trabajo que
+  el cliente debe resolver para cualquier operación costosa. Los parámetros
+  deben elegirse cuidadosamente para requerir suficiente computación por llamada
+  a la operación costosa sin crear demasiado impacto para los clientes
+  legítimos. No olvides considerar a los clientes en dispositivos móviles lentos
+  y antiguos mientras te proteges contra atacantes en sistemas modernos con
+  múltiples GPU. Ciertos algoritmos pueden limitar el aumento de rendimiento de
+  las GPU para mejorar este campo de batalla desigual.
+- **Cobra por llamadas costosas**: Puedes requerir que ciertas llamadas costosas
+  de otros contenedores incluyan ciclos para compensar los recursos consumidos.
+  Además, se puede cobrar por mensajes de ingreso. Sin embargo, esto no es
+  compatible actualmente con el protocolo en sí, y se necesitaría una solución
+  personalizada, como prepagar una cierta cantidad.
+- **Diferencia entre llamadas de actualización y consulta**: En general, se
+  deben evitar las computaciones costosas para las llamadas de actualización a
+  menos que sea absolutamente necesario. Si bien las llamadas de consulta no
+  están autenticadas, son más rápidas y requieren menos recursos. Para verificar
+  si un método se llamó como una llamada de consulta o actualización, puedes
+  usar `ic0.in_replicated_execution()`.
 
-### Further recommendations
+### Otras recomendaciones
 
-- Automatically monitor cycles consumption and set appropriate alerts for cycles consumption rate and balance. Sudden spikes in cycles consumption could indicate an attack.
-- Implement early authentication and rate limiting for your canisters.
-- Be aware of attacks targeting high cycles-consuming calls.
-- See the "Cycle balance drain attacks section" in [How to audit an ICP canister](https://www.joachim-breitner.de/blog/788-How_to_audit_an_Internet_Computer_canister).
+- Monitorea automáticamente el consumo de ciclos y establece alertas apropiadas
+  para la tasa de consumo y el saldo de ciclos. Los aumentos repentinos en el
+  consumo de ciclos podrían indicar un ataque.
+- Implementa autenticación temprana y límites de velocidad para tus
+  contenedores.
+- Ten en cuenta los ataques dirigidos a llamadas que consumen muchos ciclos.
+- Consulta la sección "Cycle balance drain attacks" en
+  [Cómo auditar un contenedor de Internet Computer](https://www.joachim-breitner.de/blog/788-How_to_audit_an_Internet_Computer_canister).

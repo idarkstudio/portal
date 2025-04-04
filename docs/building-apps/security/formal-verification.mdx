@@ -1,35 +1,85 @@
 ---
-keywords: [security, concept, formal verification, TLA, TLA+ ]
+keywords: [security, concept, formal verification, TLA, TLA+]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Formal verification
+# Verificación formal
 
-<MarkdownChipRow labels={["Security"]} />
+<MarkdownChipRow labels={["Seguridad"]} />
 
-Formal verification is the highest form of quality assurance for software. Given a specification of what the system should do, formal verification tools check whether this specification is satisfied by a model of the system. The unique advantage of formal verification is that it can not only find bugs but also formally **prove** their absence—including the absence of security bugs. This goes beyond what testing or manual audits can achieve.
+La verificación formal es la forma más alta de garantía de calidad para el
+software. Dada una especificación de lo que el sistema debe hacer, las
+herramientas de verificación formal verifican si esta especificación es
+satisfecha por un modelo del sistema. La ventaja única de la verificación formal
+es que no solo puede encontrar errores, sino también demostrar formalmente su
+ausencia, incluida la ausencia de errores de seguridad. Esto va más allá de lo
+que las pruebas o las auditorías manuales pueden lograr.
 
-The proof is always relative to the model and the specification. Any simplifications and assumptions in the model, or omissions in the specification, may hide bugs and attacks. On the other hand, verification can require a lot of effort, and model simplifications can make it significantly easier.
+La prueba siempre es relativa al modelo y la especificación. Cualquier
+simplificación y suposición en el modelo, u omisiones en la especificación,
+pueden ocultar errores y ataques. Por otro lado, la verificación puede requerir
+mucho esfuerzo y las simplificaciones del modelo pueden facilitarla
+significativamente.
 
-For a concrete example, when verifying the ckBTC minter canister, the DFINITY team used models that exclude the possibility of calling the `update_balance` canister method more than 2 times concurrently. This potentially misses attacks that require 3 or more concurrent calls to `update_balance` to trigger a bug. But we considered such bugs highly unlikely, and, in return, we were able to run a fully automatic verification process, which was much cheaper than other verification methods.
+Como ejemplo concreto, al verificar el canister minter de ckBTC, el equipo de
+DFINITY utilizó modelos que excluyen la posibilidad de llamar al método del
+canister `update_balance` más de 2 veces concurrentemente. Esto potencialmente
+omite ataques que requieren 3 o más llamadas concurrentes a `update_balance`
+para desencadenar un error. Pero consideramos que estos errores son altamente
+improbables y, a cambio, pudimos ejecutar un proceso de verificación
+completamente automático, que fue mucho más barato que otros métodos de
+verificación.
 
-There are many existing formal verification tools. While none of them take into account the specifics of ICP yet, many of them are general enough that they can be applied to canisters. In particular, the DFINITY team has made good use of the TLA+ toolkit to combat reentrancy bugs, a type of concurrency bug where one method of a particular canister is called while another one is still executing.
+Existen muchas herramientas de verificación formal existentes. Si bien ninguna
+de ellas tiene en cuenta los detalles específicos de ICP todavía, muchas de
+ellas son lo suficientemente generales como para poder aplicarse a canisters. En
+particular, el equipo de DFINITY ha hecho un buen uso del conjunto de
+herramientas TLA+ para combatir errores de reentrancia, un tipo de error de
+concurrencia en el que se llama a un método de un canister mientras otro aún se
+está ejecutando.
 
-These bugs are particularly difficult to find, as they can involve unexpected interactions of code scattered throughout a canister or even in different canisters. The number of such code interactions may be huge and thus difficult for humans to detect. These interactions are usually difficult to test automatically and systematically, which TLA+ can do.
+Estos errores son particularmente difíciles de encontrar, ya que pueden
+involucrar interacciones inesperadas de código disperso en todo un canister o
+incluso en diferentes canisters. La cantidad de estas interacciones de código
+puede ser enorme y, por lo tanto, difícil de detectar para los humanos. Estas
+interacciones suelen ser difíciles de probar de forma automática y sistemática,
+algo que TLA+ puede hacer.
 
 ## TLA+
 
-The Temporal Logic of Actions (TLA+) is a language for specifying and verifying complex systems. TLA+ comes with a set of tools for lightweight formal verification in the form of so-called model checking. Through model checking, it exhaustively (within bounds, such as the aforementioned 2 concurrent calls bound) explores all possible concurrent interactions of a model of the code—exactly the domain that is difficult to test—and finds bugs.
+La Lógica Temporal de Acciones (TLA+) es un lenguaje para especificar y
+verificar sistemas complejos. TLA+ viene con un conjunto de herramientas para la
+verificación formal ligera en forma de lo que se llama verificación de modelos.
+A través de la verificación de modelos, explora exhaustivamente (dentro de
+límites, como el mencionado límite de 2 llamadas concurrentes) todas las
+posibles interacciones concurrentes de un modelo del código, exactamente el
+dominio que es difícil de probar, y encuentra errores.
 
-Importantly, after building the model of the code, model checking runs with virtually no further human input, making it highly cost-effective. To illustrate with some made-up numbers: if the industry standard practices (such as testing and security reviews) eliminate 80% of the bugs, and “heavyweight” formal verification eliminates 99.99%, with TLA+ you can eliminate 90% with a fraction of the effort of the heavyweight verification.
+Es importante destacar que, después de construir el modelo del código, la
+verificación de modelos se ejecuta prácticamente sin más aportes humanos, lo que
+la hace altamente rentable. Para ilustrar con algunos números inventados: si las
+prácticas estándar de la industria (como las pruebas y las revisiones de
+seguridad) eliminan el 80% de los errores, y la verificación formal "pesada"
+elimina el 99.99%, con TLA+ puedes eliminar el 90% con una fracción del esfuerzo
+de la verificación pesada.
 
-We have used TLA+ to create the following models that can be interesting for dapp developers:
+Hemos utilizado TLA+ para crear los siguientes modelos que pueden ser
+interesantes para los desarrolladores de dapps:
 
-- NNS and SNS governance (focusing on interactions with the ledger canister).
-- ICP ledger (focusing on block archival).
-- ckBTC minter.
-- SNS swap canister.
-- People parties dapp.
+- Gobernanza de NNS y SNS (centrándose en las interacciones con el canister de
+  contabilidad).
+- Contabilidad de ICP (centrándose en el archivo de bloques).
+- Canister minter de ckBTC.
+- Canister de intercambio de SNS.
+- Dapp de fiestas de personas.
 
-To find out more on why and how you can apply TLA+ to your canisters and dapps, including an in-depth guide to modeling canisters, refer to our series of blog posts ([1](https://medium.com/dfinity/eliminating-smart-contract-bugs-with-tla-e986aeb6da24), [2](https://medium.com/dfinity/weeding-out-the-bugs-with-tla-models-3606045bf24e), [3](https://mynosefroze.com/blog/2023-08-09-tla_for_canisters)). You can also look at the [DFINITY-produced TLA+ models](https://github.com/dfinity/formal-models) for examples and techniques.
+Para obtener más información sobre por qué y cómo puedes aplicar TLA+ a tus
+canisters y dapps, incluida una guía detallada para modelar canisters, consulta
+nuestra serie de publicaciones en el blog
+([1](https://medium.com/dfinity/eliminating-smart-contract-bugs-with-tla-e986aeb6da24),
+[2](https://medium.com/dfinity/weeding-out-the-bugs-with-tla-models-3606045bf24e),
+[3](https://mynosefroze.com/blog/2023-08-09-tla_for_canisters)). También puedes
+echar un vistazo a los
+[TLA+ models producidos por DFINITY](https://github.com/dfinity/formal-models)
+para ver ejemplos y técnicas.

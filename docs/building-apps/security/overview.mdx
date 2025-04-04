@@ -4,20 +4,42 @@ keywords: [security, concept]
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# What are security best practices?
+# ¿Cuáles son las mejores prácticas de seguridad?
 
-<MarkdownChipRow labels={["Security", "Best practices"]} />
+<MarkdownChipRow labels={["Seguridad", "Mejores prácticas"]} />
 
-This document provides security best practices for developing canisters and web apps served by canisters on ICP. These best practices are mostly inspired by issues found in security reviews.
+Este documento proporciona las mejores prácticas de seguridad para desarrollar
+canisters y aplicaciones web servidas por canisters en ICP. Estas mejores
+prácticas están principalmente inspiradas en problemas encontrados en revisiones
+de seguridad.
 
-The goal of these best practices is to enable developers to identify and address potential issues early during the development of new dapps, and not only in the end when (if at all) a security review is done. Ideally, this will make the development of secure dapps more efficient.
+El objetivo de estas mejores prácticas es permitir a los desarrolladores
+identificar y abordar posibles problemas temprano durante el desarrollo de
+nuevas dapps, y no solo al final cuando (si acaso) se realiza una revisión de
+seguridad. Idealmente, esto hará que el desarrollo de dapps seguras sea más
+eficiente.
 
-Some excellent canister best practices linked here are from [effective Rust canisters](https://mmapped.blog/posts/01-effective-rust-canisters.html) and [how to audit an ICP canister](https://www.joachim-breitner.de/blog/788-How_to_audit_an_Internet_Computer_canister). The relevant sections are linked in the individual best practices.
+Algunas excelentes mejores prácticas de canisters vinculadas aquí son de
+[canisters de Rust efectivos](https://mmapped.blog/posts/01-effective-rust-canisters.html)
+y
+[cómo auditar un canister de ICP](https://www.joachim-breitner.de/blog/788-How_to_audit_an_Internet_Computer_canister).
+Las secciones relevantes están vinculadas en las mejores prácticas individuales.
 
-## Target audience
+## Audiencia objetivo
 
-The target audience for these documents is any developer working on ICP canisters or web apps and anyone who reviews such code.
+La audiencia objetivo de estos documentos son los desarrolladores que trabajan
+en canisters de ICP o aplicaciones web y cualquier persona que revise dicho
+código.
 
-## Disclaimers and limitations
+## Avisos y limitaciones
 
-The collection of best practices may grow over time. While it is useful to improve the security of dapps on ICP, such a list will never be complete and will never cover all potential security concerns. For example, there will always be attack vectors very specific to a dapp's use cases that cannot be covered by general best practices. Thus, following the best practices can complement, but not replace, security reviews. Especially for security-critical dapps, it is recommended to perform security reviews or audits. Furthermore, please note that the best practices are currently not ordered according to risk or priority.
+La colección de mejores prácticas puede crecer con el tiempo. Si bien es útil
+para mejorar la seguridad de las dapps en ICP, dicha lista nunca será completa y
+nunca cubrirá todas las posibles preocupaciones de seguridad. Por ejemplo,
+siempre habrá vectores de ataque muy específicos de los casos de uso de una dapp
+que no pueden ser cubiertos por las mejores prácticas generales. Por lo tanto,
+seguir las mejores prácticas puede complementar, pero no reemplazar, las
+revisiones de seguridad. Es recomendable realizar revisiones o auditorías de
+seguridad, especialmente para dapps críticas en términos de seguridad. Además,
+tenga en cuenta que las mejores prácticas actualmente no están ordenadas según
+el riesgo o la prioridad.

@@ -4,94 +4,138 @@ keywords: [security, concept, storage, stable memory, encryption, backup]
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Security best practices: Data storage
+# Mejores prácticas de seguridad: Almacenamiento de datos
 
-<MarkdownChipRow labels={["Security", "Best practices"]} />
+<MarkdownChipRow labels={["Seguridad", "Mejores prácticas"]} />
 
-## Rust: Use `thread_local!` with `Cell/RefCell` for state variables and put all your globals in one basket
+## Rust: Utiliza `thread_local!` con `Cell/RefCell` para variables de estado y coloca todas tus variables globales en una sola cesta
 
-### Security concern
+### Preocupación de seguridad
 
-Canisters need a global mutable state. In Rust, there are several ways to achieve this. However, some options can lead to vulnerabilities such as memory corruption.
+Los canisters necesitan un estado mutable global. En Rust, hay varias formas de
+lograr esto. Sin embargo, algunas opciones pueden llevar a vulnerabilidades como
+la corrupción de memoria.
 
-### Recommendation
+### Recomendación
 
-- [Use `thread_local!` with `Cell/RefCell` for state variables](https://mmapped.blog/posts/01-effective-rust-canisters.html#use-threadlocal) (from [effective Rust canisters](https://mmapped.blog/posts/01-effective-rust-canisters.html)).
+- [Utiliza `thread_local!` con `Cell/RefCell` para variables de estado](https://mmapped.blog/posts/01-effective-rust-canisters.html#use-threadlocal)
+  (de
+  [canisters Rust efectivos](https://mmapped.blog/posts/01-effective-rust-canisters.html)).
 
-- [Put all your globals in one basket](https://mmapped.blog/posts/01-effective-rust-canisters.html#clear-state) (from [effective Rust canisters](https://mmapped.blog/posts/01-effective-rust-canisters.html)).
+- [Coloca todas tus variables globales en una sola cesta](https://mmapped.blog/posts/01-effective-rust-canisters.html#clear-state)
+  (de
+  [canisters Rust efectivos](https://mmapped.blog/posts/01-effective-rust-canisters.html)).
 
-## Limit the amount of data that can be stored in a canister per user
+## Limita la cantidad de datos que se pueden almacenar en un canister por usuario
 
-### Security concern
+### Preocupación de seguridad
 
-If a user is able to store a big amount of data on a canister, this may be abused to fill up the canister storage and make the canister unusable.
+Si un usuario puede almacenar una gran cantidad de datos en un canister, esto
+puede ser abusado para llenar el almacenamiento del canister y hacerlo
+inutilizable.
 
-### Recommendation
+### Recomendación
 
-Limit the amount of data that can be stored in a canister per user. This limit has to be checked whenever data is stored for a user in an update call.
+Limita la cantidad de datos que se pueden almacenar en un canister por usuario.
+Este límite debe verificarse cada vez que se almacenan datos para un usuario en
+una llamada de actualización.
 
-## Consider using stable memory, version it, and test it
+## Considera utilizar memoria estable, versionarla y probarla
 
-### Security concern
+### Preocupación de seguridad
 
-Canister memory is not persisted across upgrades. If data needs to be kept across upgrades, you may serialize the canister memory in `pre_upgrade` and deserialize it in `post_upgrade`. Using `pre_upgrade` and `post_upgrade` methods is not recommended and should be avoided. The available number of instructions for these methods is limited. If the memory grows too big, the canister can no longer be updated.
+La memoria del canister no se mantiene a través de las actualizaciones. Si los
+datos deben mantenerse a través de las actualizaciones, puedes serializar la
+memoria del canister en `pre_upgrade` y deserializarla en `post_upgrade`. El uso
+de los métodos `pre_upgrade` y `post_upgrade` no se recomienda y se debe evitar.
+El número disponible de instrucciones para estos métodos es limitado. Si la
+memoria crece demasiado, el canister ya no se puede actualizar.
 
-### Recommendation
+### Recomendación
 
-- Stable memory is persisted across upgrades and can be used to address this issue.
+- La memoria estable se mantiene a través de las actualizaciones y se puede
+  utilizar para abordar este problema.
 
-- [Consider using stable memory](https://mmapped.blog/posts/01-effective-rust-canisters.html#stable-memory-main) (from [effective Rust canisters](https://mmapped.blog/posts/01-effective-rust-canisters.html)). Take note of the discussed disadvantages.
+- [Considera utilizar memoria estable](https://mmapped.blog/posts/01-effective-rust-canisters.html#stable-memory-main)
+  (de
+  [canisters Rust efectivos](https://mmapped.blog/posts/01-effective-rust-canisters.html)).
+  Ten en cuenta las desventajas discutidas.
 
-- [Version stable memory](https://mmapped.blog/posts/01-effective-rust-canisters.html#version-stable-memory) (from [effective Rust canisters](https://mmapped.blog/posts/01-effective-rust-canisters.html)).
+- [Versiona la memoria estable](https://mmapped.blog/posts/01-effective-rust-canisters.html#version-stable-memory)
+  (de
+  [canisters Rust efectivos](https://mmapped.blog/posts/01-effective-rust-canisters.html)).
 
-- [Test the upgrade hooks](https://mmapped.blog/posts/01-effective-rust-canisters.html#test-upgrades) (from [effective Rust canisters](https://mmapped.blog/posts/01-effective-rust-canisters.html)).
+- [Prueba los ganchos de actualización](https://mmapped.blog/posts/01-effective-rust-canisters.html#test-upgrades)
+  (de
+  [canisters Rust efectivos](https://mmapped.blog/posts/01-effective-rust-canisters.html)).
 
-- See also the section on upgrades in [how to audit an ICP canister](https://www.joachim-breitner.de/blog/788-How_to_audit_an_Internet_Computer_canister) (focused on Motoko canisters).
+- Consulta también la sección sobre actualizaciones en
+  [cómo auditar un canister de ICP](https://www.joachim-breitner.de/blog/788-How_to_audit_an_Internet_Computer_canister)
+  (centrado en los canisters de Motoko).
 
-- Write tests for stable memory to avoid bugs.
+- Escribe pruebas para la memoria estable para evitar errores.
 
-- Some libraries commonly used are:
+- Algunas bibliotecas comúnmente utilizadas son:
 
-    - [https://github.com/dfinity/stable-structures](https://github.com/dfinity/stable-structures)
+  - [https://github.com/dfinity/stable-structures](https://github.com/dfinity/stable-structures)
 
-    - HashMap: [https://github.com/dfinity/stable-structures/pull/1](https://github.com/dfinity/stable-structures/pull/1) (currently not production ready.)
+  - HashMap:
+    [https://github.com/dfinity/stable-structures/pull/1](https://github.com/dfinity/stable-structures/pull/1)
+    (actualmente no está listo para producción).
 
-    - [https://github.com/seniorjoinu/ic-stable-memory](https://github.com/seniorjoinu/ic-stable-memory)
+  - [https://github.com/seniorjoinu/ic-stable-memory](https://github.com/seniorjoinu/ic-stable-memory)
 
 :::caution
-Please note some of these libraries may be partially unfinished.
+
+Ten en cuenta que algunas de estas bibliotecas pueden estar parcialmente
+incompletas.
+
 :::
 
-- See [current limitations of the Internet Computer](https://wiki.internetcomputer.org/wiki/Current_limitations_of_the_Internet_Computer), sections "Long running upgrades" and "\[de\]serializer requiring additional Wasm memory.".
+- Consulta las
+  [limitaciones actuales del Internet Computer](https://wiki.internetcomputer.org/wiki/Current_limitations_of_the_Internet_Computer),
+  secciones "Actualizaciones de larga duración" y "Serializador/Deserializador
+  que requiere memoria Wasm adicional".
 
-- For example, [Internet Identity](https://github.com/dfinity/internet-identity) uses stable memory directly to store user data.
+- Por ejemplo, [Internet Identity](https://github.com/dfinity/internet-identity)
+  utiliza memoria estable directamente para almacenar datos de usuario.
 
-## Consider encrypting sensitive data on canisters
+## Considera cifrar datos sensibles en los canisters
 
-### Security concern
+### Preocupación de seguridad
 
-By default, canisters provide integrity but not confidentiality. Data stored on canisters can be read by nodes/replicas.
+Por defecto, los canisters proporcionan integridad pero no confidencialidad. Los
+datos almacenados en los canisters pueden ser leídos por nodos/replicas.
 
-### Recommendation
+### Recomendación
 
-- Consider end-to-end encrypting any private or personal data (e.g., a user’s personal or private information) on canisters.
+- Considera cifrar de extremo a extremo cualquier dato privado o personal (por
+  ejemplo, información personal o privada de un usuario) en los canisters.
 
-- The example dapp [encrypted notes](https://github.com/dfinity/examples/tree/master/motoko/encrypted-notes-dapp) illustrates how end-to-end encryption can be done.
+- El ejemplo de dapp
+  [notas cifradas](https://github.com/dfinity/examples/tree/master/motoko/encrypted-notes-dapp)
+  ilustra cómo se puede realizar el cifrado de extremo a extremo.
 
-## Create backups
+## Crea copias de seguridad
 
-### Security concern
+### Preocupación de seguridad
 
-A canister could be rendered unusable and impossible to upgrade. For example, due to one of the following reasons:
+Un canister podría quedar inutilizable e imposible de actualizar. Por ejemplo,
+debido a una de las siguientes razones:
 
-- It has a faulty upgrade process due to some bug from the dapp developer.
+- Tiene un proceso de actualización defectuoso debido a algún error del
+  desarrollador de la dapp.
 
-- The state becomes inconsistent or corrupt because of a bug in the code that persists data.
+- El estado se vuelve inconsistente o corrupto debido a un error en el código
+  que persiste los datos.
 
-### Recommendation
+### Recomendación
 
-- Make sure methods used in upgrading are tested, or the canister becomes immutable.
+- Asegúrate de que los métodos utilizados en la actualización estén probados, o
+  el canister se vuelve inmutable.
 
-- It may be useful to have a disaster recovery strategy that makes it possible to reinstall the canister.
+- Puede ser útil tener una estrategia de recuperación ante desastres que permita
+  reinstalar el canister.
 
-- See the "Backup and recovery" section in [how to audit an Internet Computer canister](https://www.joachim-breitner.de/blog/788-How_to_audit_an_Internet_Computer_canister)
+- Consulta la sección "Copia de seguridad y recuperación" en
+  [cómo auditar un canister del Internet Computer](https://www.joachim-breitner.de/blog/788-How_to_audit_an_Internet_Computer_canister)

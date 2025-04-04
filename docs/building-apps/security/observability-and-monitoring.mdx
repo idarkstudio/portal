@@ -4,26 +4,39 @@ keywords: [security, concept, observability, monitoring]
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Security best practices: Observability and monitoring
+# Mejores prácticas de seguridad: Observabilidad y monitoreo
 
-<MarkdownChipRow labels={["Security", "Best practices"]} />
+<MarkdownChipRow labels={["Seguridad", "Mejores prácticas"]} />
 
-## Expose metrics from your canister
+## Exponer métricas desde tu canister
 
-### Security concern
+### Preocupación de seguridad
 
-In case of attacks, it is great to be able to obtain relevant metrics from canisters, such as the number of accounts, size of internal data structures, stable memory, etc.
+En caso de ataques, es importante poder obtener métricas relevantes de los
+canisters, como el número de cuentas, el tamaño de las estructuras de datos
+internas, la memoria estable, etc.
 
-### Recommendation
+### Recomendación
 
-[Expose metrics from your canister](https://mmapped.blog/posts/01-effective-rust-canisters.html#expose-metrics) (from [effective Rust canisters](https://mmapped.blog/posts/01-effective-rust-canisters.html)).
+[Exponer métricas desde tu canister](https://mmapped.blog/posts/01-effective-rust-canisters.html#expose-metrics)
+(de
+[canisters de Rust efectivos](https://mmapped.blog/posts/01-effective-rust-canisters.html)).
 
-## Do not publicly reveal a canister's cycles balance
+## No revelar públicamente el saldo de ciclos de un canister
 
-### Security concern
+### Preocupación de seguridad
 
-Publicly revealing the canister's cycles balance allows an attacker to measure the number of instructions spent by executing the canister methods on the attacker's input. Then the attacker might be able to learn which code paths were taken during execution and derive secret information based on that. Moreover, the attacker can learn which methods and their inputs consume a lot of cycles to mount a cycles-draining attack (see also [protect against draining the cycles balance](/docs/building-apps/security/dos#protect-against-draining-the-cycles-balance)).
+Revelar públicamente el saldo de ciclos de un canister permite a un atacante
+medir la cantidad de instrucciones gastadas al ejecutar los métodos del canister
+en la entrada del atacante. Luego, el atacante podría ser capaz de aprender qué
+rutas de código se tomaron durante la ejecución y derivar información secreta
+basada en eso. Además, el atacante puede aprender qué métodos y sus entradas
+consumen muchos ciclos para llevar a cabo un ataque de agotamiento de ciclos
+(ver también
+[protegerse contra el agotamiento del saldo de ciclos](/docs/building-apps/security/dos#protect-against-draining-the-cycles-balance)).
 
-### Recommendation
+### Recomendación
 
-Your canisters should not publicly expose their cycles balance (available through the system API), i.e., they should only expose their cycles balance to their controllers or other trusted principals.
+Tus canisters no deben exponer públicamente su saldo de ciclos (disponible a
+través de la API del sistema), es decir, solo deben exponer su saldo de ciclos a
+sus controladores u otros principios de confianza.

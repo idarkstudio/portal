@@ -1,130 +1,239 @@
 ---
-keywords: [security, concept, identity, authentication, anonymous principal, message inspection, agent]
+keywords:
+  [
+    security,
+    concept,
+    identity,
+    authentication,
+    anonymous principal,
+    message inspection,
+    agent,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Security best practices: Identity and access management
+# Mejores prácticas de seguridad: Gestión de identidad y acceso
 
-<MarkdownChipRow labels={["Security", "Best practices"]} />
+<MarkdownChipRow labels={["Seguridad", "Mejores prácticas"]} />
 
-## Make sure specific user actions require authentication
+## Asegúrate de que ciertas acciones del usuario requieran autenticación
 
-### Security concern
+### Preocupación de seguridad
 
-If this is not the case, an attacker may be able to perform sensitive actions on behalf of a user, compromising their account.
+Si esto no se cumple, un atacante podría realizar acciones sensibles en nombre
+de un usuario, comprometiendo su cuenta.
 
-### Recommendation
+### Recomendación
 
-- The caller of every canister call the caller can be identified. The calling [principal](/docs/references/ic-interface-spec#principal) can be accessed using the system API’s methods [`ic0.msg_caller_size` and `ic0.msg_caller_copy`](/docs/references/ic-interface-spec#system-api-imports). If an identity provider such as Internet Identity is used, [the principal is the user identity for this specific origin](/docs/references/ii-spec#identity-design-and-data-model). If some actions (e.g., access to user’s account data or account-specific operations) should be restricted to a principal or a set of principals, then this must be explicitly checked in the canister call. An example in Rust can be found below:
+- El llamador de cada llamada al canister puede ser identificado. El
+  [principal](/docs/references/ic-interface-spec#principal) que realiza la
+  llamada puede accederse usando los métodos de la API del sistema
+  [`ic0.msg_caller_size` y `ic0.msg_caller_copy`](/docs/references/ic-interface-spec#system-api-imports).  
+  Si se utiliza un proveedor de identidad como Internet Identity,  
+  [el principal es la identidad del usuario para ese origen específico](/docs/references/ii-spec#identity-design-and-data-model).  
+  Si algunas acciones (por ejemplo, el acceso a los datos de una cuenta o
+  ciertas operaciones específicas de usuario) deben restringirse a un principal
+  o a un conjunto de principales, esto debe verificarse explícitamente en la
+  llamada al canister. A continuación se muestra un ejemplo en Rust:
 
 ```rust
-// Let pk be the public key of a principal that is allowed to perform
-// this operation. This pk could be stored in the canister's state.
-if caller() != Principal::self_authenticating(pk) {  ic_cdk::trap(...) }
+// Supongamos que pk es la clave pública de un principal autorizado para realizar esta operación.
+// Este pk podría almacenarse en el estado del canister.
+if caller() != Principal::self_authenticating(pk) { ic_cdk::trap(...) }
 
-// Alternatively, if the canister keeps data for different principals
-// in e.g., a map such as BTreeMap<Principal, UserData>, then the canister
-// must ensure that each caller can only access and perform operations
-// on their own data:
+// Alternativamente, si el canister mantiene datos para diferentes principales
+// en un mapa como BTreeMap<Principal, UserData>, entonces el canister
+// debe asegurarse de que cada llamador solo acceda y realice operaciones
+// sobre sus propios datos:
 if let Some(user_data) = user_data_store.get_mut(&caller()) {
-    // perform operations on the user's data
+    // realizar operaciones sobre los datos del usuario
 }
 ```
-- In Rust, the `ic_cdk` crate can be used to authenticate the caller using `ic_cdk::api::caller`. Make sure the returned principal is of type `Principal::self_authenticating` and identify the user’s account using the public key of that principal. See the example code above.
 
-- Do authentication as early as possible in the call to avoid unauthenticated actions and potentially expensive operations before authentication. It is also a good idea to [deny service to anonymous users](#disallow-the-anonymous-principal-in-authenticated-calls).
+- En Rust, se puede usar el crate `ic_cdk` para autenticar al llamador usando
+  `ic_cdk::api::caller`. Asegúrate de que el principal retornado sea del tipo
+  `Principal::self_authenticating` e identifica la cuenta del usuario usando la
+  clave pública de ese principal. Mira el ejemplo anterior.
 
-- Do not rely on authentication performed during [ingress message inspection](#do-not-rely-on-ingress-message-inspection).
+- Haz la autenticación lo antes posible dentro de la llamada para evitar
+  acciones no autenticadas u operaciones costosas antes de la autenticación.  
+  También es una buena idea
+  [denegar el servicio a usuarios anónimos](#disallow-the-anonymous-principal-in-authenticated-calls).
 
-## Disallow the anonymous principal in authenticated calls
+- No confíes en la autenticación realizada durante la
+  [inspección de mensajes de ingreso](#do-not-rely-on-ingress-message-inspection).
 
-### Security concern
+## Rechaza al principal anónimo en llamadas autenticadas
 
-The caller from the system API (e.g., `ic0::api::caller` in Rust) may also return `Principal::anonymous()`. In authenticated calls, this is probably undesired and could have security implications since this would behave like a shared account for anyone that does unauthenticated calls.
+### Preocupación de seguridad
 
-### Recommendation
+El llamador obtenido desde la API del sistema (por ejemplo, `ic0::api::caller`
+en Rust) podría devolver `Principal::anonymous()`.  
+En llamadas autenticadas, esto es probablemente indeseado y podría tener
+implicaciones de seguridad, ya que se comportaría como una cuenta compartida
+para cualquiera que haga llamadas sin autenticarse.
 
-In authenticated calls, make sure the caller is not anonymous and return an error or trap if it is. This could be done centrally by using a helper method. An example in Rust can be found below:
+### Recomendación
+
+En llamadas autenticadas, asegúrate de que el llamador no sea anónimo y devuelve
+un error o _trap_ si lo es. Esto puede hacerse de forma centralizada usando una
+función auxiliar. Aquí hay un ejemplo en Rust:
+
 ```rust
 fn caller() -> Result<Principal, String> {
-    let caller = ic0::api::caller();
-    // The anonymous principal is not allowed to interact with the canister.
-    if caller == Principal::anonymous() {
-        Err(String::from(
-            "Anonymous principal not allowed to make calls.",
-        ))
-    } else {
-        Ok(caller)
-    }
+    let caller = ic0::api::caller();
+    // No se permite que el principal anónimo interactúe con el canister.
+    if caller == Principal::anonymous() {
+        Err(String::from(
+            "No se permite que el principal anónimo realice llamadas.",
+        ))
+    } else {
+        Ok(caller)
+    }
 }
 ```
 
-## Do not rely on ingress message inspection
+## No confíes en la inspección de mensajes de ingreso
 
-### Security concern
+### Preocupación de seguridad
 
-The correct execution of [`canister_inspect_message`](/docs/references/ic-interface-spec#system-api-inspect-message) is not guaranteed because it is executed by a single node, and if that node is malicious, it can simply skip this check. In that case the update call would be executed without any message inspection checks.
+La ejecución correcta de
+[`canister_inspect_message`](/docs/references/ic-interface-spec#system-api-inspect-message)
+no está garantizada, ya que es ejecutada por un único nodo, y si ese nodo es
+malicioso, podría simplemente omitir la verificación.  
+En ese caso, la llamada de actualización se ejecutaría sin ningún control de
+inspección del mensaje.
 
-Also note that for inter-canister calls, `canister_inspect_message` is not invoked.
+Además, en las llamadas entre canisters, `canister_inspect_message` **no se
+invoca**.
 
-### Recommendation
+### Recomendación
 
-Your canisters should not rely on the correct execution of `canister_inspect_message`. This in particular means that no security-critical code, such as [access control checks](#make-sure-any-action-that-only-a-specific-user-should-be-able-to-do-requires-authentication), should be solely performed in that method. Such checks **must** be performed as part of an update method to guarantee reliable execution. Ideally, they are executed both in the `canister_inspect_message` function and a guard function.
+Tus canisters no deben confiar en la ejecución correcta de
+`canister_inspect_message`.  
+Esto significa en particular que ningún código crítico para la seguridad, como
+los
+[controles de acceso](#make-sure-specific-user-actions-require-authentication),
+debe realizarse solo en ese método.  
+Dichos controles **deben** implementarse como parte de un método de
+actualización para garantizar una ejecución confiable.  
+Idealmente, se ejecutan tanto en la función `canister_inspect_message` como en
+una función de verificación adicional.
 
-## Use a well-audited authentication service and client-side ICP libraries
+## Usa un servicio de autenticación bien auditado y bibliotecas ICP del lado cliente
 
-### Security concern
+### Preocupación de seguridad
 
-Implementing user authentication and canister calls yourself in your web app is error-prone and risky. For example, if canister calls are implemented from scratch, there may be bugs around signature creation or verification.
+Implementar la autenticación de usuarios y las llamadas a canisters por tu
+cuenta en una aplicación web es propenso a errores y riesgoso.  
+Por ejemplo, si las llamadas a canisters se implementan desde cero, puede haber
+errores en la creación o verificación de firmas.
 
-### Recommendation
+### Recomendación
 
--   Consider using an identity provider such as [Internet Identity](https://github.com/dfinity/internet-identity) for authentication, use [the ICP JavaScript agent](https://github.com/dfinity/agent-js) for making canister calls, and the [auth-client](https://github.com/dfinity/agent-js/tree/main/packages/auth-client) for interacting with Internet Identity from your dapp.
+- Considera usar un proveedor de identidad como
+  [Internet Identity](https://github.com/dfinity/internet-identity) para la
+  autenticación,  
+  utiliza el [agente de JavaScript de ICP](https://github.com/dfinity/agent-js)
+  para hacer llamadas a canisters,  
+  y el
+  [auth-client](https://github.com/dfinity/agent-js/tree/main/packages/auth-client)  
+  para interactuar con Internet Identity desde tu dapp.
 
--   You may consider alternative authentication frameworks on ICP for authentication.
+- Puedes considerar frameworks alternativos de autenticación en ICP.
 
-## Set an appropriate session timeout
+## Configura un tiempo de expiración de sesión apropiado
 
-### Security concern
+### Preocupación de seguridad
 
-Currently, Internet Identity issues delegations with an expiry time. This expiry time can be set in the [auth-client](https://github.com/dfinity/agent-js/tree/main/packages/auth-client). After a delegation expires, the user has to re-authenticate. Setting a good value is a trade-off between security and usability.
+Actualmente, Internet Identity emite delegaciones con un tiempo de expiración.  
+Este tiempo de expiración puede configurarse en el
+[auth-client](https://github.com/dfinity/agent-js/tree/main/packages/auth-client).  
+Una vez que expira la delegación, el usuario debe volver a autenticarse.  
+Establecer un buen valor implica un equilibrio entre seguridad y usabilidad.
 
-### Recommendation
+### Recomendación
 
-See the [OWASP recommendations](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html#session-expiration). A timeout of 30 minutes should be set for security-sensitive applications.
+Consulta las
+[recomendaciones de OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html#session-expiration).  
+Para aplicaciones sensibles a la seguridad, debería establecerse un tiempo de
+expiración de 30 minutos.
 
-The [auth-client](https://github.com/dfinity/agent-js/tree/main/packages/auth-client) supports [idle timeouts](https://github.com/dfinity/agent-js/tree/main/packages/auth-client#idle-management).
+El
+[auth-client](https://github.com/dfinity/agent-js/tree/main/packages/auth-client)
+soporta
+[timeouts por inactividad](https://github.com/dfinity/agent-js/tree/main/packages/auth-client#idle-management).
 
-## Don’t use fetchRootKey in the ICP JavaScript agent in production
+## No uses `fetchRootKey` en el agente JavaScript de ICP en producción
 
-### Security concern
+### Riesgo de seguridad
 
-`agent.fetchRootKey()` can be used in the [ICP JavaScript agent](https://github.com/dfinity/agent-js) to fetch the root subnet threshold public key from a status call in test environments. This key is used to verify threshold signatures on certified data received through canister update calls. Using this method in a production web app gives an attacker the option to supply their own public key, invalidating all authenticity guarantees of update responses.
+`agent.fetchRootKey()` puede ser usado en el  
+[agente JavaScript de ICP](https://github.com/dfinity/agent-js) para obtener la
+clave pública de umbral del _root subnet_ mediante una llamada de estado en
+entornos de prueba. Esta clave se usa para verificar firmas de umbral sobre
+datos certificados recibidos a través de llamadas de actualización a
+_canisters_. Usar este método en una aplicación web en producción le da al
+atacante la posibilidad de suministrar su propia clave pública, invalidando
+todas las garantías de autenticidad de las respuestas de actualización.
 
-### Recommendation
+### Recomendación
 
-Never use `agent.fetchRootKey()` in production builds, only in test builds. Not calling this method will result in the hardcoded root subnet public key of the mainnet being used for signature verification, which is the desired behavior in production.
+Nunca uses `agent.fetchRootKey()` en entornos de producción, solo en entornos de
+prueba. Si no se llama a este método, se usará la clave pública del _root
+subnet_ del mainnet, la cual está codificada directamente en el agente, lo que
+es el comportamiento deseado en producción.
 
-## Integrating Internet Identity on mobile devices
+## Integración de Internet Identity en dispositivos móviles
 
-A [short presentation](https://www.youtube.com/watch?v=iRmpCkzC6iI&t=1863s) can be found as part of the November 2024 global R&D.
+Una [presentación breve](https://www.youtube.com/watch?v=iRmpCkzC6iI&t=1863s)
+está disponible como parte del R&D global de noviembre 2024.
 
-### Security concern
+### Riesgo de seguridad
 
-Internet Identity has a standardized way for web applications to request authentication of a user. This [client authentication protocol](/docs/references/ic-interface-spec#client-authentication-protocol) allows a client dapp frontend to obtain a delegation signed by the Internet Identity for a locally generated session key pair. Using this delegation in combination with the session key allows the dapp frontend to make authenticated calls towards the backend canister. Such calls need to be digitally signed by the session private key. The IC will verify the signature and verify if there is a delegation (or chain of delegations) from the II key to the session public key.
+Internet Identity (II) proporciona una forma estandarizada para que las
+aplicaciones web soliciten la autenticación de un usuario. Este  
+[protocolo de autenticación del cliente](/docs/references/ic-interface-spec#client-authentication-protocol)  
+permite a una dapp frontend obtener una delegación firmada por II para un par de
+claves de sesión generado localmente. Esta delegación, combinada con la clave
+privada de sesión, permite que la dapp realice llamadas autenticadas al canister
+backend. Estas llamadas deben estar firmadas digitalmente por la clave privada
+de sesión. El IC verificará la firma y también si existe una delegación (o
+cadena de delegaciones) desde la clave de II hasta la clave pública de sesión.
 
-The II client authentication protocol leverages the browser’s `postMessage` API to communicate between the client origin and the II origin. This protocol allows II to authenticate the origin of the authorization request using the hostname.
+El protocolo usa la API `postMessage` del navegador para comunicarse entre el
+origen del cliente y el de II. Esto permite a II autenticar el origen de la
+solicitud usando el nombre del host.
 
 :::info
-Note that as part of the client authentication protocol, a dapp can specify an alternative origin by following the [alternative frontend origins](/docs/references/ii-spec#alternative-frontend-origins) requirements.
+
+Como parte del protocolo, una dapp puede especificar un origen alternativo si
+cumple con los requisitos de  
+[orígenes alternativos de frontend](/docs/references/ii-spec#alternative-frontend-origins).
+
 :::
 
-Upon successful authentication, II will return a delegation for the principal derived from the users’ II for the specific frontend origin. This serves two purposes. First, a client dapp can’t use this delegation on other dapps to impersonate the user. Second, multiple client dapps can’t correlate user behavior across dapps, thereby reducing privacy. A dapp with a different frontend origin won’t be able to request authentication for your dapp, which provides protection against certain phishing attacks.
+Tras una autenticación exitosa, II retorna una delegación para el _principal_
+derivado del II del usuario para el origen de frontend específico. Esto cumple
+dos propósitos:
 
-When integrating a mobile application with II, the implementation is not straightforward since a mobile app can’t call the `postMessage` API. It is tempting to create a simple “proxy” web frontend served by the dapp as shown in the sequence diagram below. The mobile application can load this proxy to complete the normal II authorization flow. Upon completion, this proxy web app provides the delegation back to the mobile app.
+1. Una dapp no puede usar esa delegación en otras dapps para hacerse pasar por
+   el usuario.
+2. Múltiples dapps no pueden correlacionar el comportamiento del usuario entre
+   ellas, mejorando así la privacidad.
 
-**Naive implementation sequence diagram:**
+Una dapp con un origen diferente no podrá solicitar autenticación para tu
+aplicación, lo que protege contra ciertos ataques de _phishing_.
+
+Integrar una aplicación móvil con II no es tan sencillo, ya que una app móvil no
+puede usar la API `postMessage`. Es tentador crear un “proxy” web simple,
+servido por la dapp, como se muestra en el siguiente diagrama de secuencia. La
+app móvil puede cargar este proxy para completar el flujo de autorización
+normal. Al finalizar, este proxy web devuelve la delegación a la app móvil.
+
+**Diagrama de secuencia de una implementación ingenua:**
+
 ```mermaid
 sequenceDiagram
     actor U as User
@@ -163,87 +272,185 @@ sequenceDiagram
     deactivate U
 ```
 
-However, without any precautions, this proxy would happily accept malicious requests to authenticate the user and might return the delegation back to an attacker.
+Sin precauciones, este proxy aceptaría solicitudes maliciosas para autenticar al
+usuario y podría devolver la delegación a un atacante.
 
-Such an attack would start by phishing the user by means of a malicious mobile or web application. The user is asked to authenticate through II. However, instead of using II directly, the attacker abuses the open proxy to authenticate the user for the dapp, under which the vulnerable proxy is running. The attacker would generate a session key and ask the proxy to use the session public key in the II authentication protocol. Through this method, II issues a signed delegation for the user's II derived for the frontend origin of the proxy. This delegation could leak to the attacker, who can use it to impersonate the user. For example, if the attacker can trick the proxy to redirect to the malicious application (e.g., by registering Android deep links or iOS custom schemes), it could directly obtain the delegation. Furthermore, the delegation could leak through an insecure communication channel between the proxy and the mobile app or through observation of the IC state.
+El ataque funcionaría así: el atacante lanza una app móvil/web maliciosa y
+convence al usuario de autenticarse usando Internet Identity (II). En lugar de
+usar II directamente, el atacante utiliza un proxy vulnerable. Genera una clave
+de sesión y solicita al proxy que la use en el flujo de autenticación. II emite
+una delegación firmada para el II del usuario, pero atada al origen del frontend
+del proxy. Esta delegación podría filtrarse al atacante y usarse para hacerse
+pasar por el usuario.
 
-The attack requires four conditions:
-1. An attacker can provide a session key to be used in the II client authentication protocol.
-2. The client authentication protocol is initiated for a target frontend hostname.
-3. The user completes the II authentication protocol.
-4. The attacker can obtain the delegation, which is signed by the II canister.
+Por ejemplo, si el atacante logra que el proxy redirija a su app maliciosa (por
+medio de _deep links_ en Android o _custom schemes_ en iOS), obtendría la
+delegación directamente. También podría filtrarse a través del canal inseguro
+entre el proxy y la app móvil, o por la observación del estado del IC.
 
-Conditions 1, 2, and 3 can be satisfied by convincing the user to initiate an authentication flow with a session public key that is chosen by the attacker by loading the proxy from an attacker-controlled mobile or web application. Concretely, an attacker would execute a phishing attack where a victim is directed to the proxy from an unsuspicious application. For example, the victim is convinced that the attacker is issuing an airdrop. The victim has to download a corresponding malicious mobile app that requires II authentication. This malicious mobile app would load the proxy (step 3) similarly to how the legitimate mobile app would. The malicious app would ask the proxy to authenticate the user for an Condition 2 is met for any dapp that exposes such an open II authentication proxy on their domain. session key. The victim might not realize they are completing an authorization flow for a different dapp origin.
+Este ataque requiere cuatro condiciones:
 
-Condition 4 can be satisfied by controlling a replica or boundary node that can observe the delegation in step 7. Alternatively, the delegation could leak in step 9 by using an HTTP GET parameter in a URI pointing to the IC. In such cases, if the mobile app that should receive the URI isn’t installed, the browser loads the web app by making a request to the URI. Boundary and replica nodes would again receive the delegation as part of the URI. Condition 4 can also be met if the mobile app issues a request to the IC in step 11 without verifying the delegation obtained in step 9.
+1. El atacante proporciona una clave de sesión que se usa en el protocolo de II.
+2. El protocolo se inicia para un `hostname` de frontend específico.
+3. El usuario completa el flujo de autenticación con II.
+4. El atacante obtiene la delegación firmada por II.
 
-Finally, condition 4 can also be satisfied if the delegation is returned insecurely from the proxy frontend to the mobile app. For example, by using Android deep links or iOS custom schemes, which can be intercepted by a malicious app.
+Las condiciones 1 a 3 pueden cumplirse mediante un ataque de _phishing_, usando
+una app falsa que redirige al proxy desde una fuente aparentemente legítima. La
+víctima cree participar en un _airdrop_, instala una app que solicita
+autenticación con II y carga el proxy como lo haría una app legítima. El proxy
+inicia el flujo para el origen de la dapp vulnerable, usando la clave de sesión
+del atacante.
 
-### Recommendation
+La condición 4 puede cumplirse si el atacante controla un nodo _boundary_ o una
+réplica, y observa la delegación en el paso 7. También puede filtrarse en el
+paso 9 si se usa un parámetro GET en la URI hacia el IC. Si la app móvil que
+debería manejar la URI no está instalada, el navegador abre la URI y los nodos
+podrían ver la delegación. También se puede filtrar si la app móvil hace una
+llamada al IC en el paso 11 sin verificar adecuadamente la delegación del
+paso 9.
 
-In the standard integration between a client web app and the II web frontend, the origin of the client is verified **before** starting the client authentication protocol. Unfortunately, loading the URI of the proxy app in step 3 does not provide any information about the mobile application. Therefore, the proxy frontend is unable to authenticate the client. This creates an open endpoint for attackers to use, as described in the previous section.
+Finalmente, la condición 4 también se puede cumplir si la delegación se devuelve
+de manera insegura desde el frontend del proxy a la aplicación móvil. Por
+ejemplo, mediante el uso de deep links en Android o esquemas personalizados en
+iOS, que pueden ser interceptados por una aplicación maliciosa.
 
-This risk can be addressed by adopting the following remediations shown in the sequence diagram and explained further below.
+### Recomendación
 
-**Secure integration sequence diagram:**
+En la integración estándar entre una app web y el frontend de II, el origen del
+cliente se verifica **antes** de iniciar el protocolo de autenticación.  
+Desafortunadamente, en el paso 3 del primer diagrama, al cargar el proxy no se
+transmite ninguna información sobre la app móvil, por lo que el proxy no puede
+autenticar al cliente. Esto lo convierte en un punto vulnerable, como se explicó
+anteriormente.
+
+Este riesgo puede mitigarse adoptando las siguientes soluciones, que se ilustran
+en el siguiente diagrama de una integración segura:
+
+**Diagrama de secuencia de una integración segura:**
+
 ```mermaid
 sequenceDiagram
-    actor U as User
-    participant MA as Mobile App
-    participant PWA as Secure Proxy web app
-    participant II_FE as II Front-end
-    participant II_BE as II Back-end
-    participant BE as Back-end
+    actor U as Usuario
+    participant MA as App Móvil
+    participant PWA as App Web Proxy Segura
+    participant II_FE as Frontend de II
+    participant II_BE as Backend de II
+    participant BE as Backend
 
     activate U
-    U -> MA : 1. Login
+    U -> MA : 1. Iniciar sesión
     activate MA
-    MA ->> MA : 2. Generate session key pair
+    MA ->> MA : 2. Generar par de claves de sesión
     activate PWA
-    MA ->> PWA: 3. Load /?sessionPublicKey=<br/><SessionPublicKey>
-    PWA ->> PWA: 4. Generate intermediate session key
-    Note over PWA: This key never<br/>leaves the proxy<br/>front-end
+    MA ->> PWA: 3. Cargar /?sessionPublicKey=<br/><SessionPublicKey>
+    PWA ->> PWA: 4. Generar clave de sesión intermedia
+    Note over PWA: Esta clave nunca<br/>sale del frontend del proxy
     activate II_FE
-    PWA ->> II_FE: 5. Standard II client auth protocol<br/>using intermediate session key
-    Note over PWA,II_FE: II will create a delegation for the<br/>intermediate key and not for the attacker<br/>chosen session key.
-    U ->> II_FE: 6. Authenticate with passkey
+    PWA ->> II_FE: 5. Protocolo estándar de autenticación de II<br/>usando la clave de sesión intermedia
+    Note over PWA,II_FE: II generará una delegación para la clave<br/>intermedia, no para la clave proporcionada por el atacante
+    U ->> II_FE: 6. Autenticarse con passkey
     activate II_BE
     II_FE ->> II_BE: 7. getDelegation(frontEndHostname)
     II_BE -->> II_FE: 8. <<delegation>>
-    II_FE ->> II_FE: 9. Construct the delegation chain
-    Note over II_FE: The proxy front-end creates a<br/>delegation from the intermediate<br/> key to the mobile app session key<br/>and combines it with the<br/>delegation from the II canister key<br/>to the intermediate key.
-    II_FE -->> PWA: 10. Return the delegation<br/>using the postMessage API
+    II_FE ->> II_FE: 9. Construir la cadena de delegación
+    Note over II_FE: El frontend del proxy crea una delegación<br/>de la clave intermedia hacia la clave de sesión<br/>de la app móvil y la combina con la delegación<br/>emitida por II hacia la clave intermedia
+    II_FE -->> PWA: 10. Retornar la delegación<br/>usando la API postMessage
     deactivate II_FE
-    PWA -->> MA: 11. Return the delegation chain using<br/>an app link (Android)<br/>or universal link (iOS)<br/>as part of the fragment<br/>using associated domains
-    Note over MA,PWA: Protect the delegation chain<br/>from being leaked to the web<br/> server by using a URI fragment<br/>instead of a GET parameter.
-    MA ->> MA: 12 Verify the delegation chain<br/>against the session<br/>key from step 2
-    Note over MA: Verify the delegation chain before using it<br/> to avoid leaking a delegation with an<br/>attacker controlled session key to the IC
-MA -->> U: <<Success>>
-    U ->> MA: 13. Authenticated call
+    PWA -->> MA: 11. Retornar la cadena de delegación usando<br/>un app link (Android) o universal link (iOS),<br/>dentro del fragmento de la URI
+    Note over MA,PWA: Proteger la cadena de delegación<br/>usando un fragmento de URI (#) en lugar<br/>de un parámetro GET
+    MA ->> MA: 12. Verificar la cadena de delegación<br/>contra la clave de sesión del paso 2
+    Note over MA: Verificar antes de usarla para evitar<br/>filtraciones al IC si la clave no corresponde
+    MA -->> U: <<Éxito>>
+    U ->> MA: 13. Llamada autenticada
     activate BE
-    MA ->> BE: 14. Update call using the verified delegation chain
-    BE -->> MA: <<Response>>
+    MA ->> BE: 14. Llamada de actualización usando la cadena verificada
+    BE -->> MA: <<Respuesta>>
     deactivate BE
     deactivate MA
     deactivate U
 ```
 
-* Introduce an intermediate session key that is generated and stored by the web app proxy frontend.
-* Initiate the II client authentication protocol using this intermediate session key. By using a new session key that the attacker can’t control, the delegation issued by II would no longer be usable by the attacker if it were stolen in step 8, as the attacker doesn’t have access to the intermediate session private key.
-* [Create a delegation chain](/docs/references/ic-interface-spec#authentication) to allow the mobile application to use their session key. The delegation chain consists of two delegations as shown in the figure below. The first one delegates from the II canister key to the intermediate key and is generated by the II canister. The second one delegates from the intermediate key to the mobile app public key and is signed by the proxy frontend’s intermediate session private key. Note, this means the intermediate key can impersonate the user. Since the proxy frontend is served from the IC, it can be trusted to handle this key properly. It is up to the developer to ensure the confidentiality of this key. For example, using the WebCrypto API to create unextractable keys as is used internally by the [ICP JavaScript agent](https://www.npmjs.com/package/@dfinity/agent). Ideally, this intermediate key is short-lived to reduce the risk of exposure.
+- Introduce una clave de sesión intermedia que se genera y almacena en el
+  frontend del proxy de la aplicación web.
+- Iniciar el protocolo de autenticación del cliente de II utilizando esta clave
+  de sesión intermedia. Al utilizar una nueva clave de sesión que el atacante no
+  puede controlar, la delegación emitida por II ya no sería utilizable por el
+  atacante si se robara en el paso 8, ya que el atacante no tiene acceso a la
+  clave privada de sesión intermedia.
+- [Crear una cadena de delegación](/docs/references/ic-interface-spec#authentication)
+  para permitir que la aplicación móvil utilice su clave de sesión. La cadena de
+  delegación consta de dos delegaciones, como se muestra en la figura a
+  continuación. La primera delega desde la clave del canister de II a la clave
+  intermedia y es generada por el canister de II. La segunda delega desde la
+  clave intermedia a la clave pública de la aplicación móvil y está firmada por
+  la clave privada de sesión intermedia del frontend del proxy. Tenga en cuenta
+  que esto significa que la clave intermedia puede hacerse pasar por el usuario.
+  Dado que el frontend del proxy se sirve desde el IC, se puede confiar en que
+  maneje correctamente esta clave. Depende del desarrollador garantizar la
+  confidencialidad de esta clave. Por ejemplo, utilizando la API WebCrypto para
+  crear claves no extraíbles, como se utiliza internamente por el
+  [agente JavaScript ICP](https://www.npmjs.com/package/@dfinity/agent).
+  Idealmente, esta clave intermedia tiene una duración corta para reducir el
+  riesgo de exposición.
 
 ![Delegation Chain](./_attachments/ii_mobile_delegation_chain.png)
-* Return the delegation chain to the mobile app using [app links](https://developer.android.com/training/app-links) on Android and [universal links](https://developer.apple.com/documentation/xcode/allowing-apps-and-websites-to-link-to-your-content) on iOS. These mechanisms bind the domain name/hostname to the mobile app, which prevents an attacker from using a malicious mobile app to receive the delegation chain. The domain-to-mobile app binding occurs through a JSON file that has to be hosted under the `/.well-known` directory of your web application. See [iOS](https://developer.apple.com/documentation/xcode/supporting-associated-domains)
-and [Android](https://developer.android.com/training/app-links/verify-android-applinks) documentation for details.
-* Return the delegation chain to the mobile app using a [URI fragment](https://www.w3.org/DesignIssues/Fragment.html) (everything following the # in the URI). The browser will load the URI if the mobile app linked to the app/universal link isn't installed on the mobile device. The benefit of URI fragments is that they are not included in the request to the server if the browser were to resolve the URI. A URL parameter or path would be included in such a request, and therefore it would leak the delegation chain to the proxy app backend (most likely the IC boundary and replica nodes). A URI fragment is still available to the mobile app for extraction.
-* Verify the delegation chain in the mobile application before using it in an IC message. The mobile application likely uses an agent that does not verify whether the session key generated in step 2 corresponds to the delegation found in the delegation chain returned in step 11. Using such an agent to make a signed update call would simply create a message with the provided delegation chain and sign it with a mismatching key. Obviously, the IC would reject such a message as the signature does not correspond to the delegation chain, but the delegation chain would already have leaked to the boundary and potentially replica nodes where an attacker could steal it.
-* Optionally, the proxy frontend could explicitly warn the user that it is about to sign in with II for your dapp. It could include the dapp’s name and logo. This might alarm the user who is being phished since the pretense used by the attacker would likely not match with the purpose of your dapp. For example, the attacker claims the authentication is required as part of an airdrop while you are running an unrelated decentralized exchange. When the proxy dapp is opened, the user would see your dapp’s logo and abort the sign-in.
 
-For more information, view an [example implementation in the form of a Unity app](https://github.com/dfinity/examples/tree/main/native-apps/unity_ii_deeplink). The following pieces of that codebase are most important:
+- Devuelve la cadena de delegación a la aplicación móvil utilizando
+  [app links](https://developer.android.com/training/app-links) en Android y
+  [universal links](https://developer.apple.com/documentation/xcode/allowing-apps-and-websites-to-link-to-your-content)
+  en iOS. Estos mecanismos vinculan el nombre de dominio/host al app móvil, lo
+  que evita que un atacante use una app móvil maliciosa para recibir la cadena
+  de delegación. La vinculación de dominio a app móvil se realiza a través de un
+  archivo JSON que debe alojarse en el directorio `/.well-known` de tu
+  aplicación web. Consulta la documentación de
+  [iOS](https://developer.apple.com/documentation/xcode/supporting-associated-domains)
+  y
+  [Android](https://developer.android.com/training/app-links/verify-android-applinks)
+  para obtener más detalles.
+- Devuelve la cadena de delegación a la aplicación móvil utilizando un
+  [fragmento de URI](https://www.w3.org/DesignIssues/Fragment.html) (todo lo que
+  sigue al # en el URI). El navegador cargará el URI si la app móvil vinculada
+  al app/universal link no está instalada en el dispositivo móvil. La ventaja de
+  los fragmentos de URI es que no se incluyen en la solicitud al servidor si el
+  navegador resolviera el URI. Un parámetro de URL o una ruta se incluirían en
+  dicha solicitud y, por lo tanto, filtrarían la cadena de delegación al backend
+  de la app proxy (probablemente los nodos boundary y réplica del IC). Un
+  fragmento de URI sigue estando disponible para su extracción por parte de la
+  app móvil.
+- Verifica la cadena de delegación en la aplicación móvil antes de usarla en un
+  mensaje del IC. Es probable que la aplicación móvil utilice un agente que no
+  verifique si la clave de sesión generada en el paso 2 corresponde a la
+  delegación encontrada en la cadena de delegación devuelta en el paso 11.
+  Utilizar dicho agente para realizar una llamada de actualización firmada
+  simplemente crearía un mensaje con la cadena de delegación proporcionada y la
+  firmaría con una clave que no coincide. Obviamente, el IC rechazaría dicho
+  mensaje, ya que la firma no corresponde a la cadena de delegación, pero la
+  cadena de delegación ya se habría filtrado al boundary y potencialmente a los
+  nodos réplica donde un atacante podría robarla.
+- Opcionalmente, el frontend del proxy podría advertir explícitamente al usuario
+  que está a punto de iniciar sesión con II para tu dapp. Podría incluir el
+  nombre y el logotipo de tu dapp. Esto podría alarmar al usuario que está
+  siendo víctima de un ataque de phishing, ya que el pretexto utilizado por el
+  atacante probablemente no coincidiría con el propósito de tu dapp. Por
+  ejemplo, el atacante afirma que la autenticación es necesaria como parte de un
+  airdrop mientras tú estás ejecutando un intercambio descentralizado no
+  relacionado. Cuando se abre la app proxy, el usuario vería el logotipo de tu
+  dapp y abortaría la sesión.
 
-* Generation of the intermediate session key [in index.js](https://github.com/dfinity/examples/blob/main/native-apps/unity_ii_deeplink/ii_integration_dapp/src/greet_frontend/src/index.js#L25).
-* [Authentication using the intermediate session key](https://github.com/dfinity/examples/blob/main/native-apps/unity_ii_deeplink/ii_integration_dapp/src/greet_frontend/src/index.js#L26-L36) instead of the mobile app public key.
-* [Generating the delegation chain](https://github.com/dfinity/examples/blob/main/native-apps/unity_ii_deeplink/ii_integration_dapp/src/greet_frontend/src/index.js#L48-L57) by combining the delegation obtained from II with a delegation created by the frontend.
-* [Returning the delegation chain using an applink/universal link](https://github.com/dfinity/examples/blob/main/native-apps/unity_ii_deeplink/ii_integration_dapp/src/greet_frontend/src/index.js#L71)
-* Returning the delegation chain [using a URI fragment](https://github.com/dfinity/examples/blob/main/native-apps/unity_ii_deeplink/ii_integration_dapp/src/greet_frontend/src/index.js#L73).
-* The example is currently being improved whereby the delegation chain will also be verified in the mobile app before using it.
+Para obtener más información, consulta una
+[implementación de ejemplo en forma de app Unity](https://github.com/dfinity/examples/tree/main/native-apps/unity_ii_deeplink).
+Las siguientes partes de esa base de código son las más importantes:
+
+- Generación de la clave de sesión intermedia
+  [en index.js](https://github.com/dfinity/examples/blob/main/native-apps/unity_ii_deeplink/ii_integration_dapp/src/greet_frontend/src/index.js#L25).
+- [Autenticación utilizando la clave de sesión intermedia](https://github.com/dfinity/examples/blob/main/native-apps/unity_ii_deeplink/ii_integration_dapp/src/greet_frontend/src/index.js#L26-L36)
+  en lugar de la clave pública de la app móvil.
+- [Generación de la cadena de delegación](https://github.com/dfinity/examples/blob/main/native-apps/unity_ii_deeplink/ii_integration_dapp/src/greet_frontend/src/index.js#L48-L57)
+  combinando la delegación obtenida de II con una delegación creada por el
+  frontend.
+- [Devolver la cadena de delegación utilizando un app link/universal link](https://github.com/dfinity/examples/blob/main/native-apps/unity_ii_deeplink/ii_integration_dapp/src/greet_frontend/src/index.js#L71)
+- Devolver la cadena de delegación
+  [utilizando un fragmento de URI](https://github.com/dfinity/examples/blob/main/native-apps/unity_ii_deeplink/ii_integration_dapp/src/greet_frontend/src/index.js#L73).
+- Actualmente, se está mejorando el ejemplo para verificar también la cadena de
+  delegación en la app móvil antes de usarla.

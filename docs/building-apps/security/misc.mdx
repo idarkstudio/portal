@@ -4,47 +4,139 @@ keywords: [security, concept]
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Security best practices: Miscellaneous
+# Mejores prácticas de seguridad: Misceláneos
 
-<MarkdownChipRow labels={["Security", "Best practices"]} />
+<MarkdownChipRow labels={["Seguridad", "Mejores prácticas"]} />
 
-## Data confidentiality on ICP
+## Confidencialidad de datos en ICP
 
-### Security concern
+### Problema de seguridad
 
-When storing data on ICP, there are two levels of data access.
+Al almacenar datos en ICP, existen dos niveles de acceso a los datos.
 
-1. Nodes are able to read all data that is stored on a subnet. This includes all messages sent to or from a canister, along with all data stored in a canister. This means a node could extract all data available to a canister. This will change with the implementation of TEE-based security for nodes.
+1. Los nodos pueden leer todos los datos almacenados en una subred. Esto incluye
+   todos  
+   los mensajes enviados hacia o desde un canister, junto con todos los datos
+   almacenados  
+   en un canister. Esto significa que un nodo podría extraer todos los datos
+   disponibles  
+   para un canister. Esto cambiará con la implementación de seguridad basada en
+   TEE para los nodos.
 
-2. End user clients can only access whatever data that nodes and canisters have made available to them. If the subnet's nodes do not misbehave and leak data, clients can only read the responses to ingress messages and queries that they have sent. The canister decides what data is exposed to the client.
+2. Los clientes finales solo pueden acceder a los datos que los nodos y
+   canisters hayan  
+   puesto a su disposición. Si los nodos de la subred no se comportan mal y no
+   filtran datos,  
+   los clientes solo pueden leer las respuestas a los mensajes de ingreso y
+   consultas que  
+   ellos mismos han enviado. El canister decide qué datos se exponen al cliente.
 
-Partial information on data that is stored in the subnet state tree will always leak. Therefore, data with a low-entropy value may entirely leak and be fully exposed, such as a Boolean value that can only be either "True" or "False." Leakage on data with high entropy is negligible.
+La información parcial de los datos almacenados en el árbol de estado de la
+subred siempre  
+se filtrará. Por lo tanto, los datos con valores de baja entropía pueden
+filtrarse por completo  
+y quedar completamente expuestos, como un valor Booleano que solo puede ser
+"True" o "False".  
+La filtración de datos con alta entropía es despreciable.
 
-There are two types of user-related data that may be stored in the subnet state tree. The first is when a user sends an ingress message to a canister; the message hash and the response are both stored in the subnet state tree to be retrieved securely by the client. The ingress message should contain a high-entropy nonce that is implemented by the agent and typically not exposed to the user. The message response is determined by the canister and may not contain a high-entropy value. If the canister response consists of a low-entropy value, then the data may be leaked to users other than the ingress message sender.
+Existen dos tipos de datos relacionados con el usuario que pueden almacenarse en
+el  
+árbol de estado de la subred. El primero es cuando un usuario envía un mensaje
+de ingreso  
+a un canister; el hash del mensaje y la respuesta se almacenan en el árbol de
+estado de la  
+subred para ser recuperados de forma segura por el cliente. El mensaje de
+ingreso debe  
+contener un nonce de alta entropía que es implementado por el agente y
+normalmente no se  
+expone al usuario. La respuesta del mensaje es determinada por el canister y
+puede que  
+no contenga un valor de alta entropía. Si la respuesta del canister consiste en
+un valor  
+de baja entropía, entonces los datos pueden filtrarse a usuarios que no sean el
+emisor  
+del mensaje de ingreso.
 
-The second type of user-related data is certified variables maintained by a canister that are also exposed through the subnet state tree. If a canister places low-entropy data into the state tree, then the data may leak to users who should not have access to that piece of data.
+El segundo tipo de datos relacionados con el usuario son las variables
+certificadas  
+mantenidas por un canister que también se exponen a través del árbol de estado
+de la subred.  
+Si un canister coloca datos de baja entropía en el árbol de estado, estos datos
+pueden filtrarse  
+a usuarios que no deberían tener acceso a ellos.
 
-### Recommendation
+### Recomendación
 
-For developers that need to protect the confidentiality of their data against external users, they should ensure that data in the subnet state tree has a sufficient level of entropy. 128 bits is recommended. If the data does not have enough entropy itself, then adding some artificial data using randomness would be recommended.
+Para los desarrolladores que necesiten proteger la confidencialidad de sus datos
+contra  
+usuarios externos, deben asegurarse de que los datos en el árbol de estado de la
+subred  
+tengan un nivel suficiente de entropía. Se recomienda un mínimo de 128 bits. Si
+los datos no  
+tienen suficiente entropía por sí solos, entonces se recomienda agregar algunos
+datos  
+artificiales usando aleatoriedad.
 
-In particular, a canister can ensure that responses to ingress messages do not leak data to external users, other than the sender, by including high-entropy data in the response. Or, a canister can ensure that data in certified variables is not leaked by adding high-entropy data to the variables that should be kept confidential.
+En particular, un canister puede asegurarse de que las respuestas a los mensajes
+de ingreso  
+no filtren datos a usuarios externos (que no sean el remitente) incluyendo datos
+de alta  
+entropía en la respuesta. O, un canister puede asegurarse de que los datos en
+las variables  
+certificadas no se filtren agregando datos de alta entropía a las variables que
+deben  
+mantenerse confidenciales.
 
-Additionally, similarly to ingress message responses, a canister's private custom sections that contain low-entropy data could leak to unauthorized users. Therefore, a sufficient level of entropy for canister private custom sections should be used. 128 bits is recommended. If the data does not have enough entropy itself, then adding some artificial data using randomness would be recommended.
+Además, al igual que las respuestas de los mensajes de ingreso, las secciones
+personalizadas  
+privadas del canister que contengan datos de baja entropía podrían filtrarse a
+usuarios  
+no autorizados. Por lo tanto, se debe usar un nivel suficiente de entropía para
+las secciones  
+personalizadas privadas del canister. Se recomienda un mínimo de 128 bits. Si
+los datos no  
+tienen suficiente entropía por sí solos, entonces se recomienda agregar algunos
+datos  
+artificiales usando aleatoriedad.
 
-## Using secure randomness in canisters
+## Uso de aleatoriedad segura en canisters
 
-Canister developers often require access to secure randomness in their canisters to perform certain operations. The requirements for a secure randomness source include
-* **Unbiased:** The value shouldn't be influenced by anyone.
-* **Unpredictable:** The value is unknown to anyone before it is generated.
+Los desarrolladores de canisters a menudo requieren acceso a aleatoriedad segura
+en sus  
+canisters para realizar ciertas operaciones. Los requisitos para una fuente
+segura de  
+aleatoriedad incluyen:
 
-ICP exposes the system API [`raw_rand`](/docs/references/ic-interface-spec#ic-raw_rand) for this exact purpose, which accepts no input and returns 32 bytes of cryptographically secure randomness. The secure randomness guarantees of `raw_rand` are achieved by the cryptographic properties of the [RandomTape](https://internetcomputer.org/how-it-works/execution-layer/#random-number-generation). It is always recommended to use `raw_rand` as a source of randomness in canisters and **avoid** using other sources with low entropy, such as current time.
+- **Imparcialidad:** El valor no debe estar influenciado por nadie.
+- **Impredecibilidad:** El valor debe ser desconocido para todos antes de
+  generarse.
 
-To illustrate the usage of `raw_rand`, two examples in Motoko and Rust can be found below, including the benefits and caveats around using them.
+ICP expone la API del sistema  
+[`raw_rand`](/docs/references/ic-interface-spec#ic-raw_rand) para este
+propósito  
+específico, la cual no acepta entrada alguna y retorna 32 bytes de
+aleatoriedad  
+criptográficamente segura. Las garantías de aleatoriedad segura de `raw_rand` se
+logran  
+gracias a las propiedades criptográficas del  
+[RandomTape](https://internetcomputer.org/how-it-works/execution-layer/#random-number-generation).  
+Siempre se recomienda usar `raw_rand` como fuente de aleatoriedad en canisters
+y  
+**evitar** el uso de otras fuentes con baja entropía, como el tiempo actual.
 
-### 1. Direct usage of `raw_rand` as the random number generator
+Para ilustrar el uso de `raw_rand`, se pueden encontrar a continuación dos
+ejemplos  
+en Motoko y Rust, incluyendo sus beneficios y advertencias.
 
-In this Motoko example, the canister provides the requested size of random bytes by calling `raw_rand`. However, it can only generate 32 bytes of secure randomness in a single message, and thus subsequent calls to the system API are required to fill the requested size.
+### 1. Uso directo de `raw_rand` como generador de números aleatorios
+
+En este ejemplo de Motoko, el canister proporciona el tamaño solicitado de bytes
+aleatorios  
+mediante la llamada a `raw_rand`. Sin embargo, solo puede generar 32 bytes de
+aleatoriedad  
+segura en un solo mensaje, por lo que se requieren llamadas subsiguientes a la
+API del sistema  
+para llenar el tamaño solicitado.
 
 ```motoko
 import Random "mo:base/Random";
@@ -76,15 +168,23 @@ actor Randomness {
 };
 ```
 
-#### Benefits:
-- The random bytes is guaranteed to be secure.
+#### Beneficios:
 
-#### Caveats:
-- The method doesn't scale when a large amount of random bytes is requested, as `raw_rand` must be called for every 32 bytes.
+- Los bytes aleatorios están garantizados como seguros.
 
-### 2. Using `raw_rand` as seed for a pseudo random number generator (PRNG)
+#### Advertencias:
 
-In this Rust example, we seed the output from `raw_rand` in a known PRNG like ChaCha20 in the `init` and `post_upgrade` hooks and generate randomness by calling the `random_bytes` method.
+- El método no escala bien cuando se solicita una gran cantidad de bytes
+  aleatorios, ya que  
+  se debe llamar a `raw_rand` por cada 32 bytes.
+
+### 2. Usar `raw_rand` como semilla para un generador de números pseudoaleatorios (PRNG)
+
+En este ejemplo en Rust, usamos la salida de `raw_rand` como semilla en un PRNG
+conocido  
+como ChaCha20 en los hooks de `init` y `post_upgrade`, y generamos aleatoriedad
+llamando  
+al método `random_bytes`.
 
 ```rust
 use candid::{CandidType, Principal};
@@ -151,26 +251,68 @@ fn random_bytes(size: u32) -> RandomBytesResult {
 }
 ```
 
-#### Benefits:
-- This method scales for large random bytes, as `raw_rand` needs to be called only once, and subsequent PRNG computation is local to the canister.
+#### Beneficios:
 
-#### Caveats:
-- The `setup_randomness` must **always** be initialized in both the `init` and `post_upgrade` hook as `init` [is not invoked during a canister upgrade](/docs/references/ic-interface-spec#system-api-upgrades).
-- The `init` and `post_upgrade` methods don't allow async calls, and thus a timer is immediately scheduled to seed the randomness.
-- Once the seed is initialized, the outcome of all future `random_bytes` is predictable to anyone having the seed (node providers), as the PRNG is deterministic. This breaks the unpredictable property of secure randomness. Hence, to balance security vs. performance, we recommend frequently reseeding the PRNG on a timer. The example above already does this with a duration of **1 hour**. However, based on the sensitivity of their dapp, developers can choose an appropriate reseeding interval by setting `SEEDING_INTERVAL`.
-- The `random_bytes` must **always** be an `update` method, so the PRNG can preserve the state and offer unique randomness on every request.
+- Este método escala para grandes cantidades de bytes aleatorios, ya que
+  `raw_rand` necesita  
+  ser llamado solo una vez, y el cálculo posterior del PRNG es local al
+  canister.
 
-## Test your canister code even in the presence of system API calls
+#### Advertencias:
 
-### Security concern
+- `setup_randomness` debe **siempre** ser inicializado tanto en el hook `init`
+  como en el  
+  `post_upgrade`, ya que `init`  
+  [no se invoca durante una actualización del canister](/docs/references/ic-interface-spec#system-api-upgrades).
+- Los métodos `init` y `post_upgrade` no permiten llamadas async, por lo que se
+  programa un  
+  temporizador inmediatamente para inicializar la semilla de aleatoriedad.
+- Una vez que se ha inicializado la semilla, el resultado de todas las llamadas
+  futuras a  
+  `random_bytes` será predecible para cualquiera que tenga la semilla
+  (proveedores de nodos),  
+  ya que el PRNG es determinista. Esto rompe la propiedad de imprevisibilidad de
+  la aleatoriedad  
+  segura. Por lo tanto, para equilibrar seguridad y rendimiento, se recomienda
+  volver a sembrar  
+  frecuentemente el PRNG mediante un temporizador. El ejemplo anterior ya hace
+  esto con una  
+  duración de **1 hora**. Sin embargo, dependiendo de la sensibilidad de su
+  dapp, los  
+  desarrolladores pueden elegir un intervalo de resiembra apropiado configurando
+  `SEEDING_INTERVAL`.
+- `random_bytes` debe ser **siempre** un método `update`, para que el PRNG
+  pueda  
+  preservar el estado y ofrecer aleatoriedad única en cada solicitud.
 
-Since canisters interact with the system API, it is harder to test the code because unit tests cannot call the system API. This may lead to a lack of unit tests.
+## Prueba tu código de canister incluso con llamadas a la API del sistema
 
-### Recommendation
+### Problema de seguridad
 
-- Create loosely coupled modules that do not depend on the system API and unit test those. See this [recommendation](https://mmapped.blog/posts/01-effective-rust-canisters.html#target-independent) (from [effective Rust canisters](https://mmapped.blog/posts/01-effective-rust-canisters.html)).
+Dado que los canisters interactúan con la API del sistema, es más difícil probar
+el código  
+porque las pruebas unitarias no pueden llamar a la API del sistema. Esto puede
+llevar a una  
+falta de pruebas unitarias.
 
-- For the parts that still interact with the system API, create a thin abstraction of the system API that is faked in unit tests. See the [recommendation](https://mmapped.blog/posts/01-effective-rust-canisters.html#target-independent) (from [effective Rust canisters](https://mmapped.blog/posts/01-effective-rust-canisters.html)). For example, one can implement a ‘Runtime’ as follows and then use the ‘MockRuntime’ in tests (code by Dimitris Sarlis):
+### Recomendación
+
+- Crea módulos poco acoplados que no dependan de la API del sistema y realiza
+  pruebas unitarias  
+  sobre ellos. Consulta esta  
+  [recomendación](https://mmapped.blog/posts/01-effective-rust-canisters.html#target-independent)  
+  (de  
+  [effective Rust canisters](https://mmapped.blog/posts/01-effective-rust-canisters.html)).
+
+- Para las partes que aún interactúan con la API del sistema, crea una
+  abstracción ligera de la  
+  API del sistema que sea simulada en las pruebas unitarias. Consulta la  
+  [recomendación](https://mmapped.blog/posts/01-effective-rust-canisters.html#target-independent)  
+  (de  
+  [effective Rust canisters](https://mmapped.blog/posts/01-effective-rust-canisters.html)).  
+  Por ejemplo, se puede implementar un ‘Runtime’ como el siguiente y luego
+  usar  
+  ‘MockRuntime’ en las pruebas (código de Dimitris Sarlis):
 
 ```rust
 use ic_cdk::api::{
@@ -240,32 +382,61 @@ impl Runtime for MockRuntime {
 }
 ```
 
-## Make canister builds reproducible
+## Haz que las compilaciones del canister sean reproducibles
 
-### Security concern
+### Problema de seguridad
 
-It should be possible to verify that a canister does what it claims to do. ICP provides a SHA256 hash of the deployed WASM module. In order for this to be useful, the canister build has to be reproducible.
+Debe ser posible verificar que un canister hace lo que dice hacer. ICP  
+proporciona un hash SHA256 del módulo WASM desplegado. Para que esto sea útil,  
+la compilación del canister debe ser reproducible.
 
-### Recommendation
+### Recomendación
 
-Make canister builds reproducible. See this [recommendation](https://mmapped.blog/posts/01-effective-rust-canisters.html#reproducible-builds) (from [effective Rust canisters](https://mmapped.blog/posts/01-effective-rust-canisters.html)). See also the [developer docs on this](/docs/building-apps/best-practices/reproducible-builds).
+Haz que las compilaciones del canister sean reproducibles. Consulta esta  
+[recomendación](https://mmapped.blog/posts/01-effective-rust-canisters.html#reproducible-builds)  
+(de  
+[effective Rust canisters](https://mmapped.blog/posts/01-effective-rust-canisters.html)).  
+Consulta también la  
+[documentación para desarrolladores al respecto](/docs/building-apps/best-practices/reproducible-builds).
 
-## Don’t rely on time being strictly monotonic
+## No confíes en que el tiempo sea estrictamente monotónico
 
-### Security concern
+### Problema de seguridad
 
-The time read from the system API is monotonic but not strictly monotonic. Thus, two subsequent calls can return the same time, which could lead to security bugs when the time API is used.
+El tiempo leído desde la API del sistema es monotónico pero no estrictamente  
+monotónico. Por lo tanto, dos llamadas consecutivas pueden devolver el mismo  
+tiempo, lo cual podría causar errores de seguridad cuando se utiliza la API de  
+tiempo.
 
-### Recommendation
+### Recomendación
 
-See the "Time is not strictly monotonic" section in [How to audit an ICP canister](https://www.joachim-breitner.de/blog/788-How_to_audit_an_Internet_Computer_canister).
+Consulta la sección "Time is not strictly monotonic" en  
+[How to audit an ICP canister](https://www.joachim-breitner.de/blog/788-How_to_audit_an_Internet_Computer_canister).
 
-## Rust: Avoid floating point arithmetic for financial information
+## Rust: Evita la aritmética de punto flotante para información financiera
 
-### Security concern
+### Problema de seguridad
 
-Floats in Rust may behave unexpectedly. There can be undesirable loss of precision under certain circumstances. When dividing by zero, the result could be `-inf`, `inf`, or `NaN`. When converting to an integer, this can lead to unexpected results. (There is no `checked_div` for floats.)
+Los números flotantes en Rust pueden comportarse de forma inesperada. Puede  
+haber pérdida de precisión no deseada en ciertas circunstancias. Al dividir
+por  
+cero, el resultado podría ser `-inf`, `inf` o `NaN`. Al convertir a entero,  
+esto puede llevar a resultados inesperados. (No existe `checked_div` para  
+números flotantes.)
 
-### Recommendation
+### Recomendación
 
-Use [`rust_decimal::Decimal`](https://docs.rs/rust_decimal/latest/rust_decimal/) or [`num_rational::Ratio`](https://docs.rs/num-rational/latest/num_rational/). Decimal uses a fixed-point representation with base 10 denominators, and Ratio represents rational numbers. Both implement `checked_div` to handle division by zero, which is not available for floats. Numbers in common use, like 0.1 and 0.2, can be represented more intuitively with Decimal and can be represented exactly with Ratio. Rounding oddities like `0.1 + 0.2 != 0.3`, which happen with floats in Rust, do not arise with Decimal (see https://0.30000000000000004.com/ ). With Ratio, the desired precision can be made explicit. With either Decimal or Ratio, although one still has to manage precision, the above makes arithmetic easier to reason about.
+Usa
+[`rust_decimal::Decimal`](https://docs.rs/rust_decimal/latest/rust_decimal/)  
+o [`num_rational::Ratio`](https://docs.rs/num-rational/latest/num_rational/).  
+Decimal usa una representación de punto fijo con denominadores en base 10, y  
+Ratio representa números racionales. Ambos implementan `checked_div` para  
+manejar la división por cero, cosa que no está disponible con floats. Números  
+de uso común como 0.1 y 0.2 pueden representarse de forma más intuitiva con  
+Decimal y exactamente con Ratio. Rarezas de redondeo como `0.1 + 0.2 != 0.3`,  
+que ocurren con floats en Rust, no suceden con Decimal  
+(ver https://0.30000000000000004.com/). Con Ratio, se puede establecer de
+forma  
+explícita la precisión deseada. Con Decimal o Ratio, aunque aún es necesario  
+gestionar la precisión, todo lo anterior hace que la aritmética sea más fácil  
+de razonar.

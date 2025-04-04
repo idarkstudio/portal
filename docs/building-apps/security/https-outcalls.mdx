@@ -4,98 +4,160 @@ keywords: [security, concept, https outcall]
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Security best practices: HTTPS outcalls
+# Mejores prácticas de seguridad: llamadas salientes HTTPS
 
-<MarkdownChipRow labels={["Security", "Best practices"]} />
+<MarkdownChipRow labels={["Seguridad", "Mejores prácticas"]} />
 
-## Do not store sensitive data such as API keys in canisters
+## No almacenes datos sensibles como claves de API en los canisters
 
-### Security concern
+### Preocupación de seguridad
 
-Sensitive data is a broad term that varies depending on your application logic and behavior. Here is a non-exhaustive list of secrets that are typically considered sensitive, such as API keys or tokens:
-* Secrets that allow interaction with non-public endpoints.
-* Secrets that allow querying or modifying endpoints with confidential data.
-* API tokens that are fee-based.
+Los datos sensibles son un término amplio que varía según la lógica y el
+comportamiento de tu aplicación. Aquí tienes una lista no exhaustiva de secretos
+que generalmente se consideran sensibles, como claves de API o tokens:
 
-By default, the data stored inside your canister is unencrypted. Therefore, if your canister is installed on a malicious replica, it can easily retrieve and steal your keys, tokens, and secrets in plain text.
+- Secretos que permiten la interacción con puntos finales no públicos.
+- Secretos que permiten consultar o modificar puntos finales con datos
+  confidenciales.
+- Tokens de API que tienen un costo.
 
-### Recommendation
+Por defecto, los datos almacenados dentro de tu canister no están encriptados.
+Por lo tanto, si tu canister se instala en una réplica maliciosa, puede
+recuperar y robar tus claves, tokens y secretos en texto plano.
 
-Make sure you don’t store sensitive data inside your canister.
+### Recomendación
 
-[More information.](/docs/references/https-outcalls-how-it-works#compromised-replicas)
+Asegúrate de no almacenar datos sensibles dentro de tu canister.
 
-[Data confidentiality security recommendations.](/docs/building-apps/security/misc#data-confidentiality-on-the-internet-computer)
+[Más información.](/docs/references/https-outcalls-how-it-works#compromised-replicas)
 
-## Ensure your canisters have a sufficiently large quota with the HTTP server
+[Recomendaciones de seguridad para la confidencialidad de datos.](/docs/building-apps/security/misc#data-confidentiality-on-the-internet-computer)
 
-### Security concern
+## Asegúrate de que tus canisters tengan una cuota suficientemente grande con el servidor HTTP
 
-When an HTTPS outcall is performed, it is amplified by the number of replicas in the subnet. The target web server will receive not only one request but as many requests as the number of nodes in the subnet.
+### Preocupación de seguridad
 
-Most web servers implement some sort of rate limiting; this is a mechanism used to restrict the number of requests a client can make to a web server within a specific time period, preventing abuse or excessive usage of their API(s).
+Cuando se realiza una llamada saliente HTTPS, se amplifica por el número de
+réplicas en la subred. El servidor web de destino recibirá no solo una
+solicitud, sino tantas solicitudes como el número de nodos en la subred.
 
-### Recommendation
+La mayoría de los servidores web implementan algún tipo de límite de velocidad;
+este es un mecanismo utilizado para restringir el número de solicitudes que un
+cliente puede realizar a un servidor web dentro de un período de tiempo
+específico, evitando el abuso o el uso excesivo de sus API.
 
-You should consider such rate limits when designing and implementing your canisters. Rate limits are enforced using different time granularities, e.g., seconds or minutes. For second-granularity enforcement, make sure that the simultaneous requests by all subnet replicas do not violate the quota. Violations may lead to temporary or permanent bans.
+### Recomendación
 
-[More information.](/docs/references/https-outcalls-how-it-works#rate-limiting-by-servers)
+Debes tener en cuenta estos límites de velocidad al diseñar e implementar tus
+canisters. Los límites de velocidad se aplican utilizando diferentes
+granularidades de tiempo, por ejemplo, segundos o minutos. Para la aplicación de
+límites de velocidad a nivel de segundo, asegúrate de que las solicitudes
+simultáneas de todas las réplicas de la subred no violen la cuota. Las
+violaciones pueden llevar a prohibiciones temporales o permanentes.
 
-## Only make HTTPS outcall requests to idempotent endpoints
+[Más información.](/docs/references/https-outcalls-how-it-works#rate-limiting-by-servers)
 
-### Security concern
+## Realiza solicitudes salientes HTTPS solo a puntos finales idempotentes
 
-As mentioned before, if an HTTPS outcall is performed, it is amplified by the number of replicas in the subnet. That means the queried endpoint will receive the same request several times. This is especially risky in requests that change the endpoint state, given that one HTTPS outcall could lead to unintentionally changing the endpoint state several times.
+### Preocupación de seguridad
 
-### Recommendation
+Como se mencionó anteriormente, si se realiza una llamada saliente HTTPS, se
+amplifica por el número de réplicas en la subred. Esto significa que el punto
+final consultado recibirá la misma solicitud varias veces. Esto es especialmente
+arriesgado en solicitudes que cambian el estado del punto final, dado que una
+llamada saliente HTTPS podría llevar a cambiar el estado del punto final de
+manera no intencionada varias veces.
 
-Make sure the endpoints, called by an HTTPS outcall, are idempotent, such that the queried endpoint has the same behavior with the same request payload, no matter the number of times it is called.
+### Recomendación
 
-Some servers support the use of idempotency keys. These keys are random unique strings submitted in the HTTP request as headers. If used with the HTTPS outcalls feature, all requests sent by each honest replica will contain the same idempotency key. This allows the server to recognize duplicated requests (i.e., requests with the same idempotency key), handle just one, and modify the server state only once. Note that this is a feature that must be supported by the server.
+Asegúrate de que los puntos finales llamados por una llamada saliente HTTPS sean
+idempotentes, de modo que el punto final consultado tenga el mismo
+comportamiento con la misma carga útil de solicitud, sin importar el número de
+veces que se llame.
 
-[More information.](/docs/references/https-outcalls-how-it-works#post-requests-must-be-idempotent)
+Algunos servidores admiten el uso de claves de idempotencia. Estas claves son
+cadenas únicas aleatorias enviadas en la solicitud HTTP como encabezados. Si se
+utilizan con la función de llamadas salientes HTTPS, todas las solicitudes
+enviadas por cada réplica honesta contendrán la misma clave de idempotencia.
+Esto permite que el servidor reconozca las solicitudes duplicadas (es decir,
+solicitudes con la misma clave de idempotencia), maneje solo una y modifique el
+estado del servidor solo una vez. Ten en cuenta que esta es una función que debe
+ser compatible con el servidor.
 
-## Ensure HTTPS responses are identical
+[Más información.](/docs/references/https-outcalls-how-it-works#post-requests-must-be-idempotent)
 
-### Security concern
+## Asegúrate de que las respuestas HTTPS sean idénticas
 
-When replicas of a subnet receive HTTP responses, these responses must be identical. Otherwise, consensus won’t be achieved, and the HTTP response will be rejected but still charged.
+### Preocupación de seguridad
 
-### Recommendation
+Cuando las réplicas de una subred reciben respuestas HTTP, estas respuestas
+deben ser idénticas. De lo contrario, no se logrará el consenso y la respuesta
+HTTP será rechazada pero aún se cobrará.
 
-Make sure the HTTP responses sent to the consensus layer are identical.
+### Recomendación
 
-Ideally, the HTTP responses returned by the queried endpoint would always be the same. However, most of the time this is not possible to control, and the responses include random data (e.g., the response includes timestamps, cookie values, or some sort of identifiers). In those cases, make sure to use the [transformation functions](/docs/references/https-outcalls-how-it-works#transformation-function) to guarantee that the responses received by each replica are identical by removing any random data or extracting only the relevant data.
+Asegúrate de que las respuestas HTTP enviadas a la capa de consenso sean
+idénticas.
 
-This applies to the HTTP response body and headers. Make sure to consider both when applying the transformation functions. Response headers are often overlooked and lead to failure because of failed consensus.
+Idealmente, las respuestas HTTP devueltas por el punto final consultado siempre
+serían las mismas. Sin embargo, la mayoría de las veces esto no es posible de
+controlar y las respuestas incluyen datos aleatorios (por ejemplo, la respuesta
+incluye marcas de tiempo, valores de cookies o algún tipo de identificadores).
+En esos casos, asegúrate de utilizar las
+[funciones de transformación](/docs/references/https-outcalls-how-it-works#transformation-function)
+para garantizar que las respuestas recibidas por cada réplica sean idénticas al
+eliminar cualquier dato aleatorio o extraer solo los datos relevantes.
 
-[More information.](/docs/references/https-outcalls-how-it-works#responses-must-be-similar)
+Esto se aplica al cuerpo y a los encabezados de la respuesta HTTP. A menudo se
+pasa por alto los encabezados de respuesta y esto lleva a fallos debido a un
+consenso fallido.
 
-## Be aware of HTTP request and response sizes
+[Más información.](/docs/references/https-outcalls-how-it-works#responses-must-be-similar)
 
-### Security concern
+## Ten en cuenta los tamaños de las solicitudes y respuestas HTTP
 
-The [pricing](/docs/references/https-outcalls-how-it-works#pricing) of HTTPS outcalls is determined by the size of the HTTP request and the maximal response size, among other variables. Thus, if big requests are made, this could quickly drain the canister’s cycles balance. This can be risky in scenarios where HTTPS outcalls are triggered by user actions (rather than a heartbeat or timer invocation).
+### Preocupación de seguridad
 
-### Recommendation
+El [precio](/docs/references/https-outcalls-how-it-works#pricing) de las
+llamadas salientes HTTPS se determina por el tamaño de la solicitud HTTP y el
+tamaño máximo de la respuesta, entre otras variables. Por lo tanto, si se
+realizan solicitudes grandes, esto podría agotar rápidamente el saldo de ciclos
+del canister. Esto puede ser arriesgado en escenarios donde las llamadas
+salientes HTTPS se desencadenan por acciones del usuario (en lugar de una
+invocación de latido o temporizador).
 
-When using HTTPS outcalls, be mindful of the HTTP request and response sizes. Ensure that the size of the request issued and the size of the HTTP response coming from the server are reasonable.
+### Recomendación
 
-When making an HTTPS outcall, it is possible—and highly recommended—to define the `max_response_bytes` parameter, which allows you to set the maximum allowed response size. If this parameter is not defined, it defaults to the hard response size limit of the HTTPS outcalls feature, which is 2MiB. The cycle cost of the response is always charged based on the `max_response_bytes` or 2MB if not set.
+Al utilizar llamadas salientes HTTPS, ten en cuenta los tamaños de las
+solicitudes y respuestas HTTP. Asegúrate de que el tamaño de la solicitud
+emitida y el tamaño de la respuesta HTTP que proviene del servidor sean
+razonables.
 
-Finally, be aware that users may incur cycles costs for HTTPS outcalls in case these calls can be triggered by user actions.
+Cuando se realiza una llamada saliente HTTPS, es posible y muy recomendable
+definir el parámetro `max_response_bytes`, que te permite establecer el tamaño
+máximo permitido de la respuesta. Si este parámetro no está definido, se
+establece de forma predeterminada en el límite de tamaño de respuesta duro de la
+función de llamadas salientes HTTPS, que es de 2 MiB. El costo de ciclos de la
+respuesta siempre se cobra en función de `max_response_bytes` o 2 MB si no se
+establece.
 
-[More information.](/docs/references/https-outcalls-how-it-works#recipe-for-coding-a-canister-http-call)
+Por último, ten en cuenta que los usuarios pueden incurrir en costos de ciclos
+por las llamadas salientes HTTPS en caso de que estas llamadas puedan ser
+desencadenadas por acciones del usuario.
 
-## Perform input validation in HTTPS outcalls
+[Más información.](/docs/references/https-outcalls-how-it-works#recipe-for-coding-a-canister-http-call)
 
-### Security concern
+## Realiza validación de entrada en las llamadas salientes HTTPS
 
-HTTPS outcalls that use user-submitted data are susceptible to various injection attacks. This may lead to several issues, such as the ones previously mentioned.
+### Preocupación de seguridad
 
-### Recommendation
+Las llamadas salientes HTTPS que utilizan datos enviados por el usuario son
+susceptibles a varios ataques de inyección. Esto puede llevar a varios
+problemas, como los mencionados anteriormente.
 
-Perform input validation when using user-submitted data in the HTTPS outcalls.
+### Recomendación
 
-[More information.](https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html)
+Realiza validación de entrada al utilizar datos enviados por el usuario en las
+llamadas salientes HTTPS.
 
+[Más información.](https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html)

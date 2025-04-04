@@ -4,38 +4,90 @@ keywords: [security, concept, web security, crypto]
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Security best practices: Important resources and further reading
+# Mejores prácticas de seguridad: recursos importantes y lecturas adicionales
 
-<MarkdownChipRow labels={["Security", "Best practices"]} />
+<MarkdownChipRow labels={["Seguridad", "Mejores prácticas"]} />
 
-
-Below are resources which cover security best practices for technologies you are likely using in your dapp. These best practices are equally important as our Internet Computer specific guidelines and should be studied carefully. They can be useful to reference when developing secure dapps or executing security reviews.
+A continuación se presentan recursos que cubren las mejores prácticas de
+seguridad para las tecnologías que probablemente estés utilizando en tu
+aplicación descentralizada (dapp). Estas mejores prácticas son igualmente
+importantes que nuestras pautas específicas de Internet Computer y deben
+estudiarse cuidadosamente. Pueden ser útiles como referencia al desarrollar
+dapps seguras o al realizar revisiones de seguridad.
 
 ## General
-* [How to audit an Internet Computer canister](https://www.joachim-breitner.de/blog/788-How_to_audit_an_Internet_Computer_canister) by Joachim Breitner
-* [OWASP application security verification standard](https://owasp.org/www-project-application-security-verification-standard/)
-* [OWASP top ten](https://owasp.org/www-project-top-ten/)
+
+- [Cómo auditar un canister de Internet Computer](https://www.joachim-breitner.de/blog/788-How_to_audit_an_Internet_Computer_canister)
+  por Joachim Breitner
+- [Estándar de verificación de seguridad de aplicaciones OWASP](https://owasp.org/www-project-application-security-verification-standard/)
+- [OWASP top ten](https://owasp.org/www-project-top-ten/)
 
 ## Rust
-* [Secure Rust guidelines](https://anssi-fr.github.io/rust-guide/01_introduction.html), in particular [unsafe code](https://anssi-fr.github.io/rust-guide/04_language.html#unsafe-code), [overflows](https://anssi-fr.github.io/rust-guide/04_language.html#integer-overflows) and [Cargo-audit](https://anssi-fr.github.io/rust-guide/03_libraries.html#cargo-audit)
-  * For overflowing operations, consider using `saturated` or `checked` variants of these operations, such as `saturated_add`, `saturated_sub`, `checked_add` , `checked_sub`, etc. See e.g. the [Rust docs](https://doc.rust-lang.org/std/primitive.u32.html#method.saturating_add) for `u32`.
 
-## Crypto
-* [OWASP cryptographic failures](https://owasp.org/Top10/A02_2021-Cryptographic_Failures/) points out issues related to cryptography, or the lack thereof.
-* [OWASP application security verification standard](https://owasp.org/www-project-application-security-verification-standard/) (see Section V6)
-* **Use the [Web Crypto API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API).** Storing key material in the browser storage (such as [sessionStorage](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API) or [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API)) is considered unsafe because these keys can be accessed by JavaScript code, e.g. in an XSS attack. To protect the private key from direct access, use Web Crypto's [generateKey](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/generateKey) with `extractable=false`. See also the [encrypted notes example](https://github.com/dfinity/examples/blob/master/motoko/encrypted-notes-dapp/src/frontend/src/lib/crypto.ts#L149-L159).
+- [Directrices de seguridad de Rust](https://anssi-fr.github.io/rust-guide/01_introduction.html),
+  en particular
+  [código inseguro](https://anssi-fr.github.io/rust-guide/04_language.html#unsafe-code),
+  [desbordamientos](https://anssi-fr.github.io/rust-guide/04_language.html#integer-overflows)
+  y
+  [Cargo-audit](https://anssi-fr.github.io/rust-guide/03_libraries.html#cargo-audit)
+  - Para operaciones de desbordamiento, considera utilizar variantes "saturated"
+    o "checked" de estas operaciones, como `saturated_add`, `saturated_sub`,
+    `checked_add`, `checked_sub`, etc. Consulta, por ejemplo, la
+    [documentación de Rust](https://doc.rust-lang.org/std/primitive.u32.html#method.saturating_add)
+    para `u32`.
 
-## Web security
-* Resources for setting security headers:
-  * [securityheaders.com](https://securityheaders.com/)
-  * [Permissions policy generator](https://www.permissionspolicy.com/)
-  * [Content security policy evaluator](https://csp-evaluator.withgoogle.com/) and [strict CSP](https://csp.withgoogle.com/docs/strict-csp.html)
-  * [OWASP secure headers project](https://owasp.org/www-project-secure-headers/)
-* [SSL server test](https://www.ssllabs.com/ssltest/)
-* Don’t use features that could lead to an XSS vulnerability, such as e.g. [@html in Svelte](https://svelte.dev/docs#template-syntax-html).
-* **Log out securely.** Clear all session data (especially [sessionStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage) and [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)), clear [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API), etc. on logout. Make sure other browser tabs showing the same origin are logged out if the logout is triggered in one tab. This may not happen automatically when the ICP JavaScript agent is used, since the [ICP JavaScript agent](https://www.npmjs.com/package/@dfinity/agent) keeps the private key in memory once initialized.
+## Criptografía
 
-## Testing
-These are some useful references for testing canisters which don't necessarily relate to security. However, having good test coverage is essential for developing secure applications.
-* In [effective Rust canisters](https://mmapped.blog/posts/01-effective-rust-canisters.html): [test upgrades](https://mmapped.blog/posts/01-effective-rust-canisters.html#test-upgrades), [make code target-independent](https://mmapped.blog/posts/01-effective-rust-canisters.html#target-independent)
-* Consider [PocketIC](/docs/building-apps/advanced/test/pocket-ic) for canister testing
+- [Fallos criptográficos de OWASP](https://owasp.org/Top10/A02_2021-Cryptographic_Failures/)
+  señala problemas relacionados con la criptografía o la falta de ella.
+- [Estándar de verificación de seguridad de aplicaciones OWASP](https://owasp.org/www-project-application-security-verification-standard/)
+  (ver Sección V6)
+- **Utiliza la
+  [API de Web Crypto](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API)**.
+  Almacenar material de clave en el almacenamiento del navegador (como
+  [sessionStorage](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API)
+  o
+  [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API))
+  se considera inseguro porque estas claves pueden ser accedidas por código
+  JavaScript, por ejemplo, en un ataque XSS. Para proteger la clave privada de
+  un acceso directo, utiliza `generateKey` de Web Crypto con
+  `extractable=false`. Consulta también el
+  [ejemplo de notas encriptadas](https://github.com/dfinity/examples/blob/master/motoko/encrypted-notes-dapp/src/frontend/src/lib/crypto.ts#L149-L159).
+
+## Seguridad web
+
+- Recursos para configurar encabezados de seguridad:
+  - [securityheaders.com](https://securityheaders.com/)
+  - [Generador de políticas de permisos](https://www.permissionspolicy.com/)
+  - [Evaluador de políticas de seguridad de contenido](https://csp-evaluator.withgoogle.com/)
+    y [CSP estricto](https://csp.withgoogle.com/docs/strict-csp.html)
+  - [Proyecto de encabezados seguros de OWASP](https://owasp.org/www-project-secure-headers/)
+- [Prueba de servidor SSL](https://www.ssllabs.com/ssltest/)
+- No utilices funciones que puedan llevar a una vulnerabilidad XSS, como por
+  ejemplo [@html en Svelte](https://svelte.dev/docs#template-syntax-html).
+- **Cierra la sesión de forma segura**. Borra todos los datos de sesión
+  (especialmente
+  [sessionStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage)
+  y
+  [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)),
+  borra
+  [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API),
+  etc. al cerrar la sesión. Asegúrate de que las otras pestañas del navegador
+  que muestren la misma página estén cerradas si se cierra la sesión en una
+  pestaña. Esto puede no ocurrir automáticamente cuando se utiliza el agente
+  JavaScript de ICP, ya que el
+  [agente JavaScript de ICP](https://www.npmjs.com/package/@dfinity/agent)
+  mantiene la clave privada en memoria una vez inicializada.
+
+## Pruebas
+
+Estas son algunas referencias útiles para probar canisters que no necesariamente
+están relacionadas con la seguridad. Sin embargo, tener una buena cobertura de
+pruebas es esencial para desarrollar aplicaciones seguras.
+
+- En
+  [canisters Rust efectivos](https://mmapped.blog/posts/01-effective-rust-canisters.html):
+  [pruebas de actualizaciones](https://mmapped.blog/posts/01-effective-rust-canisters.html#test-upgrades),
+  [hacer que el código sea independiente del objetivo](https://mmapped.blog/posts/01-effective-rust-canisters.html#target-independent)
+- Considera [PocketIC](/docs/building-apps/advanced/test/pocket-ic) para probar
+  canisters

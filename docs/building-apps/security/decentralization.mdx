@@ -4,73 +4,218 @@ keywords: [security, concept, decentralization, sns, governance]
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Security best practices: Decentralization
+# Mejores prácticas de seguridad: Descentralización
 
-<MarkdownChipRow labels={["Security", "Best practices"]} />
+<MarkdownChipRow labels={["Seguridad", "Mejores prácticas"]} />
 
-## Use a decentralized governance system like SNS to put dapps under decentralized control
+## Utiliza un sistema de gobernanza descentralizado como SNS para poner las dapps bajo control descentralizado
 
-### Security concerns
+### Preocupaciones de seguridad
 
-If single entities or small groups control canisters, they can apply changes or updates whenever they like. If a canister, e.g., holds assets such as ICP, ckBTC, or ckETH on a user's behalf, this effectively means that the controller could decide at any time to steal these funds through methods such as updating the canister and transferring the assets to their account.
+Si entidades individuales o grupos pequeños controlan los canisters, pueden
+realizar cambios o actualizaciones cuando lo deseen. Si un canister, por
+ejemplo, tiene activos como ICP, ckBTC o ckETH en nombre de un usuario, esto
+significa efectivamente que el controlador podría decidir en cualquier momento
+robar estos fondos a través de métodos como actualizar el canister y transferir
+los activos a su cuenta.
 
-Furthermore, the controller of canisters serving web content (such as e.g., the [asset canister](/docs/references/asset-canister)) could maliciously modify the web application to e.g., steal user funds or perform security-sensitive actions on the user's behalf. For example, if [Internet Identity](/docs/building-apps/authentication/overview) is used, the user principal's private key for the given origin is stored in the browser storage, and a malicious app can therefore fully control the private key, the user's session, and any assets controlled by that key.
+Además, el controlador de los canisters que sirven contenido web (como por
+ejemplo, el [canister de activos](/docs/references/asset-canister)) podría
+modificar maliciosamente la aplicación web para, por ejemplo, robar fondos de
+los usuarios o realizar acciones sensibles a la seguridad en nombre del usuario.
+Por ejemplo, si se utiliza
+[Internet Identity](/docs/building-apps/authentication/overview), la clave
+privada del principal del usuario para el origen dado se almacena en el
+almacenamiento del navegador, y una aplicación maliciosa puede controlar
+completamente la clave privada, la sesión del usuario y cualquier activo
+controlado por esa clave.
 
-Dapps are commonly reachable over their own custom domain name instead of ic0.app. These domains are registered with a DNS registrar by one of the developers. The developer can choose to have this domain point at a completely different web application, even one not hosted on ICP. Users will trust this domain and the app it serves. This could allow such a developer to steal funds, leak data, etc.
+Las dapps son comúnmente accesibles a través de su propio nombre de dominio
+personalizado en lugar de ic0.app. Estos dominios son registrados con un
+registrador DNS por uno de los desarrolladores. El desarrollador puede elegir
+que este dominio apunte a una aplicación web completamente diferente, incluso
+una que no esté alojada en ICP. Los usuarios confiarán en este dominio y en la
+aplicación que sirve. Esto podría permitir a dicho desarrollador robar fondos,
+filtrar datos, etc.
 
-A dapp might have privileged features that are only accessible to principals that are on an allow list. For example, minting new tokens, debugging functions, managing permissions, removing NFTs for digital rights violations, etc. This means that whoever controls that principal (such as the dapp developers) may have central control over these privileged features.
+Una dapp puede tener características privilegiadas que solo son accesibles para
+los principales que están en una lista de permitidos. Por ejemplo, crear nuevos
+tokens, funciones de depuración, administrar permisos, eliminar NFT por
+violaciones de derechos digitales, etc. Esto significa que quien controle ese
+principal (como los desarrolladores de la dapp) puede tener control central
+sobre estas características privilegiadas.
 
-For performance or privacy reasons, some components of a dapp may be hosted off-chain. These off-chain components often control principals used to interact with the onchain components and are usually controlled by a developer holding credentials to the off-chain cloud environment. On top of that, third party off-chain entities such as cloud providers can inspect and manipulate data in this environment if they choose. They could take ICP principal private keys out of this environment and call privileged operations on the canisters. Off-chain components can quickly lead to many additional centrally trusted parties. Depending on the value managed by a dapp, these parties could be tempted to act maliciously.
+Por razones de rendimiento o privacidad, algunos componentes de una dapp pueden
+estar alojados fuera de la cadena. Estos componentes fuera de la cadena a menudo
+controlan los principales utilizados para interactuar con los componentes en
+cadena y generalmente son controlados por un desarrollador que posee
+credenciales del entorno en la nube fuera de la cadena. Además, entidades fuera
+de la cadena de terceros, como proveedores de servicios en la nube, pueden
+inspeccionar y manipular datos en este entorno si así lo desean. Podrían sacar
+las claves privadas de los principales de ICP de este entorno y llamar a
+operaciones privilegiadas en los canisters. Los componentes fuera de la cadena
+pueden llevar rápidamente a muchas partes de confianza centralizadas
+adicionales. Dependiendo del valor gestionado por una dapp, estas partes podrían
+verse tentadas a actuar maliciosamente.
 
-### Recommendations
+### Recomendaciones
 
-In the following list, we first provide recommendations for centralized dapp control and then move to recommendations for increasingly decentralized settings. From a security perspective, more decentralization is favorable. The following list could also be used as a basis for assessing a dapp's level of decentralization. This is just a set of recommendations and may incomplete.
-1. **The dapp uses central, off-chain components:** The application makes use of centralized components such as those running in the cloud. The owners of these cloud services have full control over the application and assets managed by it. Your application should likely be further decentralized by avoiding central components. But while you have them, [securely manage your keys in the cloud](https://cloudsecurityalliance.org/research/topics/cloud-key-management/).
-2. **The dapp is controlled by the developer team:** Your project is not under decentralized control, for example, because it is in an early development stage or does not (yet) hold significant funds. In that case, it is recommended to manage access to your canisters securely and ideally not let individuals control the application. To achieve that, consider the following:
-    - Require approval by several individuals or parties to perform any canister controller operations.
-    - Require approval by several individuals or parties for any security-sensitive changes at the application level that are restricted to privileged principals, such as admin operations including permissions management, minting new tokens, removing NFTs for digital rights violations, etc.
-    - A helpful tool to achieve either of the above two points is the [orbit station canister](https://github.com/dfinity/orbit) which allows you to configure intricate policies for canister control. [Orbit](https://orbit.global/) also serves as an enterprise wallet where token funds are governed using policies. Ideally, individuals also manage their key material using hardware security modules, such as [YubyHSM](https://www.yubico.com/ch/store/yubihsm-2-series/) and physically protect these through methods such as using safes at different geographical locations. Some of HSMs support threshold signature schemes, which can help to further secure the setup. To increase transparency about the changes made to a dapp, consider using a tool like [LaunchTrail](https://github.com/spinner-cash/launchtrail).
-3. **Full decentralization using a DAO**: The dapp is controlled by a decentralized governance system such as ICP's [Service Nervous System (SNS)](/docs/building-apps/governing-apps/overview), so that any security-sensitive changes to the canisters are only executed if the SNS community approves them collectively through a proposal voting mechanism. If an SNS is used:
-    - Make sure voting power is distributed over many independent entities such that there is not one single or a few entities that can decide by themselves how the [DAO evolves](/docs/building-apps/governing-apps/tokenomics/tokenomics-intro#voting-power-and-decentralization).
-    - Ensure all components of the dapp are under SNS control, including the canisters serving the web frontends; see [SNS asset canisters](/docs/building-apps/governing-apps/managing/sns-asset-canister).
-    - Consider the [SNS preparation checklist](/docs/building-apps/governing-apps/tokenomics/sns-checklist). Important points from a security perspective are [tokenomics](/docs/building-apps/governing-apps/tokenomics/sns-checklist#11-tokenomics-specification), [disclosing dependencies to off-chain components](/docs/building-apps/governing-apps/tokenomics/sns-checklist#13-disclosure-of-dependencies) and [performing security reviews](/docs/building-apps/governing-apps/tokenomics/sns-checklist#21-security-review).
-    - Rather than [self-deploying the SNS code](/docs/building-apps/governing-apps/overview#self-deploy-the-sns-code) or [building your own DAO](/docs/building-apps/governing-apps/overview#build-your-own-dao--use-other-dao-frameworks), consider using the official SNS on the SNS subnet, as this guarantees that the SNS is running an NNS-blessed version and maintained as part of ICP.
-    - See also [verification and trust in a (launched) SNS](https://wiki.internetcomputer.org/wiki/Verification_and_trust_in_a_(launched)_SNS) and [SNS decentralization swap trust](https://wiki.internetcomputer.org/wiki/SNS_decentralization_swap_trust).
+En la siguiente lista, primero proporcionamos recomendaciones para el control
+centralizado de las dapps y luego pasamos a recomendaciones para entornos cada
+vez más descentralizados. Desde una perspectiva de seguridad, la
+descentralización es favorable. La siguiente lista también se puede utilizar
+como base para evaluar el nivel de descentralización de una dapp. Esta es solo
+un conjunto de recomendaciones y puede estar incompleto.
 
-An alternative to DAO control (3. above) would be to create an immutable canister smart contract by removing the canister controller completely. This can be achieved by setting the controller to a [black hole canister](https://github.com/ninegua/ic-blackhole). However, note that this implies that the canister can **never** be upgraded, which may have severe implications in case a bug is found. The complexity of ICP dapps and the fact that complex frontends are hosted onchain means that black holed canisters are rarely the right solution. The option to use a decentralized governance system and thus being able to upgrade smart contracts is a big advantage of the ICP ecosystem compared to other blockchains.
+1. **La dapp utiliza componentes centrales fuera de la cadena:** La aplicación
+   utiliza componentes centralizados, como los que se ejecutan en la nube. Los
+   propietarios de estos servicios en la nube tienen control total sobre la
+   aplicación y los activos gestionados por ella. Es probable que su aplicación
+   deba descentralizarse aún más evitando componentes centrales. Pero mientras
+   los tenga,
+   [gestione de forma segura sus claves en la nube](https://cloudsecurityalliance.org/research/topics/cloud-key-management/).
+2. **El equipo de desarrolladores controla la dapp:** Su proyecto no está bajo
+   control descentralizado, por ejemplo, porque está en una etapa temprana de
+   desarrollo o no tiene (aún) fondos significativos. En ese caso, se recomienda
+   gestionar el acceso a sus canisters de forma segura y, idealmente, no
+   permitir que individuos controlen la aplicación. Para lograrlo, considere lo
+   siguiente:
+   - Requiera la aprobación de varias personas o partes para realizar cualquier
+     operación del controlador del canister.
+   - Requiera la aprobación de varias personas o partes para cualquier cambio
+     sensible a la seguridad a nivel de la aplicación que esté restringido a los
+     principales privilegiados, como operaciones de administración que incluyen
+     la gestión de permisos, la creación de nuevos tokens, la eliminación de NFT
+     por violaciones de derechos digitales, etc.
+   - Una herramienta útil para lograr cualquiera de los dos puntos anteriores es
+     el [canister de estación de órbita](https://github.com/dfinity/orbit), que
+     le permite configurar políticas intrincadas para el control del canister.
+     [Orbit](https://orbit.global/) también sirve como una billetera empresarial
+     donde los fondos de tokens se rigen mediante políticas. Idealmente, las
+     personas también administran su material de clave utilizando módulos de
+     seguridad de hardware, como
+     [YubyHSM](https://www.yubico.com/ch/store/yubihsm-2-series/) y protegen
+     físicamente estos a través de métodos como el uso de cajas fuertes en
+     diferentes ubicaciones geográficas. Algunos de los HSM admiten esquemas de
+     firma de umbral, que pueden ayudar a asegurar aún más la configuración.
+     Para aumentar la transparencia sobre los cambios realizados en una dapp,
+     considere utilizar una herramienta como
+     [LaunchTrail](https://github.com/spinner-cash/launchtrail).
+3. **Descentralización completa utilizando un DAO**: La dapp está controlada por
+   un sistema de gobernanza descentralizado como el
+   [Service Nervous System (SNS)](/docs/building-apps/governing-apps/overview)
+   de ICP, de modo que cualquier cambio sensible a la seguridad en los canisters
+   solo se ejecuta si la comunidad de SNS los aprueba colectivamente a través de
+   un mecanismo de votación de propuestas. Si se utiliza un SNS:
+   - Asegúrese de que el poder de voto esté distribuido entre muchas entidades
+     independientes de manera que no haya una sola entidad o unas pocas
+     entidades que puedan decidir por sí mismas cómo evoluciona el
+     [DAO](/docs/building-apps/governing-apps/tokenomics/tokenomics-intro#voting-power-and-decentralization).
+   - Asegúrese de que todos los componentes de la dapp estén bajo el control del
+     SNS, incluidos los canisters que sirven los frontends web; consulte
+     [Canisters de activos del SNS](/docs/building-apps/governing-apps/managing/sns-asset-canister).
+   - Considere la
+     [lista de verificación de preparación del SNS](/docs/building-apps/governing-apps/tokenomics/sns-checklist).
+     Los puntos importantes desde una perspectiva de seguridad son
+     [tokenomics](/docs/building-apps/governing-apps/tokenomics/sns-checklist#11-tokenomics-specification),
+     [divulgación de dependencias de componentes fuera de la cadena](/docs/building-apps/governing-apps/tokenomics/sns-checklist#13-disclosure-of-dependencies)
+     y
+     [realización de revisiones de seguridad](/docs/building-apps/governing-apps/tokenomics/sns-checklist#21-security-review).
+   - En lugar de
+     [implementar el código del SNS por sí mismo](/docs/building-apps/governing-apps/overview#self-deploy-the-sns-code)
+     o
+     [crear su propio DAO](/docs/building-apps/governing-apps/overview#build-your-own-dao--use-other-dao-frameworks),
+     considere utilizar el SNS oficial en la subred del SNS, ya que esto
+     garantiza que el SNS esté ejecutando una versión bendecida por NNS y se
+     mantenga como parte de ICP.
+   - Consulte también
+     [verificación y confianza en un SNS (lanzado)](<https://wiki.internetcomputer.org/wiki/Verification_and_trust_in_a_(launched)_SNS>)
+     y
+     [confianza en el intercambio de descentralización del SNS](https://wiki.internetcomputer.org/wiki/SNS_decentralization_swap_trust).
+
+Una alternativa al control de DAO (3. arriba) sería crear un contrato
+inteligente de canister inmutable eliminando completamente el controlador del
+canister. Esto se puede lograr estableciendo el controlador en un
+[canister de agujero negro](https://github.com/ninegua/ic-blackhole). Sin
+embargo, tenga en cuenta que esto implica que el canister **nunca** se puede
+actualizar, lo que puede tener implicaciones graves en caso de encontrar un
+error. La complejidad de las dapps de ICP y el hecho de que los frontends
+complejos se alojen en la cadena significa que los canisters de agujero negro
+rara vez son la solución correcta. La opción de utilizar un sistema de
+gobernanza descentralizado y, por lo tanto, poder actualizar los contratos
+inteligentes es una gran ventaja del ecosistema de ICP en comparación con otras
+blockchains.
 
 :::info
-Note that, contrary to some other blockchains, immutable smart contracts need cycles to run, and they can receive cycles.
+
+Tenga en cuenta que, a diferencia de otras blockchains, los contratos
+inteligentes inmutables necesitan ciclos para ejecutarse y pueden recibir
+ciclos.
+
 :::
 
-It is also possible to implement a DAO [decentralized autonomous organization](https://en.wikipedia.org/wiki/Decentralized_autonomous_organization) on ICP from scratch. If you decide to do this (e.g., along the lines of the [basic DAO example](/docs/references/samples/rust/basic_dao/)), be aware that this is security critical and must be security reviewed carefully. Furthermore, users will need to verify that the DAO is controlled by itself.
+También es posible implementar un DAO
+[organización autónoma descentralizada](https://es.wikipedia.org/wiki/Organizaci%C3%B3n_aut%C3%B3noma_descentralizada)
+en ICP desde cero. Si decide hacer esto (por ejemplo, siguiendo el ejemplo
+básico de DAO), tenga en cuenta que esto es crítico para la seguridad y debe ser
+revisado cuidadosamente. Además, los usuarios deberán verificar que el DAO esté
+controlado por sí mismo.
 
-## Verify the control and level of decentralization of smart contracts you depend on
+## Verifique el control y el nivel de descentralización de los contratos inteligentes en los que depende
 
-### Security concern
+### Preocupación de seguridad
 
-If a dapp depends on a third-party canister smart contract (e.g., by making inter-canister calls to it), it is important to verify that the callee satisfies an appropriate level of decentralization. For example:
-- If funds or cycles are transferred to a third-party canister, one might require the canister to be controlled by a decentralized governance system, as otherwise these funds are centrally controlled.
-- If inter-canister calls are made to a centrally controlled and potentially malicious canister, that canister could execute a denial of service attack on the caller or even trigger functional bugs; see [be aware of the risks involved in calling untrustworthy canisters](/docs/building-apps/security/inter-canister-calls#be-aware-of-the-risks-involved-in-calling-untrustworthy-canisters).
+Si una dapp depende de un contrato inteligente de canister de terceros (por
+ejemplo, realizando llamadas entre canisters), es importante verificar que el
+receptor cumpla con un nivel adecuado de descentralización. Por ejemplo:
 
-### Recommendation
+- Si se transfieren fondos o ciclos a un canister de terceros, se puede requerir
+  que el canister esté controlado por un sistema de gobernanza descentralizado,
+  ya que de lo contrario estos fondos estarán controlados de forma centralizada.
+- Si se realizan llamadas entre canisters a un canister controlado de forma
+  centralizada y potencialmente malicioso, ese canister podría ejecutar un
+  ataque de denegación de servicio en el llamador o incluso activar errores
+  funcionales; consulte
+  [tenga en cuenta los riesgos involucrados al llamar a canisters no confiables](/docs/building-apps/security/inter-canister-calls#be-aware-of-the-risks-involved-in-calling-untrustworthy-canisters).
 
-If you interact with a canister that you require to be decentralized, make sure it is controlled by the NNS, a service nervous system (SNS) or a decentralized governance system, and review under what conditions and by whom the smart contract can be changed.
+### Recomendación
 
-## Don’t load JavaScript or other assets from untrusted domains
+Si interactúa con un canister que requiere que sea descentralizado, asegúrese de
+que esté controlado por el NNS, un sistema nervioso de servicios (SNS) o un
+sistema de gobernanza descentralizado, y revise en qué condiciones y por quién
+se puede cambiar el contrato inteligente.
 
-### Security concern
+## No cargue JavaScript u otros activos desde dominios no confiables
 
-Loading untrusted JavaScript from domains other than `<canister-id>.icp0.io` means you completely trust that domain. Also, assets loaded from these domains (incl. `<canister-id>.raw.icp0.io`) will not use asset certification.
+### Preocupación de seguridad
 
-If they deliver malicious JavaScript, they can take over the web app or account. This could, for example, happen by reading the private key managed by the [ICP JavaScript agent](https://www.npmjs.com/package/@dfinity/agent) from the browser's local storage.
+Cargar JavaScript no confiable desde dominios distintos a
+`<canister-id>.icp0.io` significa que confía completamente en ese dominio.
+Además, los activos cargados desde estos dominios (incluido
+`<canister-id>.raw.icp0.io`) no utilizarán certificación de activos.
 
-Note that also loading other assets such [as CSS](https://xsleaks.dev/docs/attacks/css-injection/) from untrusted domains is a security risk.
+Si entregan JavaScript malicioso, pueden tomar el control de la aplicación web o
+de la cuenta. Esto podría suceder, por ejemplo, al leer la clave privada
+administrada por el
+[agente JavaScript de ICP](https://www.npmjs.com/package/@dfinity/agent) desde
+el almacenamiento local del navegador.
 
-### Recommendation
+Tenga en cuenta que también cargar otros activos, como CSS, desde dominios no
+confiables es un riesgo para la seguridad.
 
-- Loading JavaScript and other assets from other origins should be avoided. Especially for security-critical applications, you can’t assume other domains to be trustworthy.
+### Recomendación
 
-- Make sure all the content delivered to the browser is served and certified by the canister using asset certification. This holds in particular for any JavaScript, but also for fonts, CSS, etc.
+- Se debe evitar cargar JavaScript y otros activos desde otros orígenes.
+  Especialmente para aplicaciones críticas de seguridad, no se puede asumir que
+  otros dominios sean confiables.
 
-- Use a [content security policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) to prevent scripts and other content from other origins from being loaded at all. See also [define security headers, including a content security policy (CSP)](/docs/building-apps/security/resources#web-security).
+- Asegúrese de que todo el contenido entregado al navegador sea servido y
+  certificado por el canister utilizando la certificación de activos. Esto es
+  especialmente válido para cualquier JavaScript, pero también para fuentes,
+  CSS, etc.
+
+- Utilice una
+  [política de seguridad de contenido](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)
+  para evitar que se carguen scripts y otro contenido desde otros orígenes.
+  Consulte también
+  [definir encabezados de seguridad, incluida una política de seguridad de contenido (CSP)](/docs/building-apps/security/resources#web-security).
