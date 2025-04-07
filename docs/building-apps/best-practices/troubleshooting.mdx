@@ -1,57 +1,108 @@
 ---
-keywords: [beginner, concept, best practices, latency, troubleshooting latency, subnet latency troubleshooting]
+keywords:
+  [
+    beginner,
+    concept,
+    best practices,
+    latency,
+    troubleshooting latency,
+    subnet latency troubleshooting,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Developer best practices: Troubleshooting latency
+# Mejores prácticas para desarrolladores: Solución de problemas de latencia
 
-<MarkdownChipRow labels={["Beginner", "Best practices"]} />
+<MarkdownChipRow labels={["Principiante", "Mejores prácticas"]} />
 
-When a dapp or canister is running with a high amount of latency, there are some steps that developers can take to troubleshoot or optimize the performance of their canisters.
+Cuando una aplicación descentralizada (dapp) o un canister se ejecuta con una
+alta cantidad de latencia, hay algunos pasos que los desarrolladores pueden
+tomar para solucionar problemas u optimizar el rendimiento de sus canisters.
 
-This document will detail some troubleshooting methods and performance optimizations that developers can use when troubleshooting latency.
+Este documento detallará algunos métodos de solución de problemas y
+optimizaciones de rendimiento que los desarrolladores pueden utilizar al
+solucionar problemas de latencia.
 
-## Troubleshooting subnet latency
+## Solución de problemas de latencia en la subred
 
-On subnets with low loads, query calls are answered in about 100 milliseconds, and update calls are answered in about 2 seconds.
+En subredes con cargas bajas, las llamadas de consulta se responden en
+aproximadamente 100 milisegundos, y las llamadas de actualización se responden
+en aproximadamente 2 segundos.
 
-On subnets with higher loads, your application may experience elevated latencies or reduced accessibility. To get more information about the subnet your canister is running on, view the canister's information on the [ICP dashboard](https://dashboard.internetcomputer.org/canisters). Look for the subnet your canister is deployed on, then compare the number of "Million Instructions Executed Per Second" for that subnet to other subnets.
+En subredes con cargas más altas, su aplicación puede experimentar latencias
+elevadas o accesibilidad reducida. Para obtener más información sobre la subred
+en la que se ejecuta su canister, consulte la información del canister en el
+[panel de control de ICP](https://dashboard.internetcomputer.org/canisters).
+Busque la subred en la que se implementa su canister y compare el número de
+"Millones de instrucciones ejecutadas por segundo" de esa subred con otras
+subredes.
 
-### Recommendation: Consider moving the canister to another subnet.
+### Recomendación: Considere mover el canister a otra subred.
 
-If your canister is running on a subnet that has a consistently high load and thus elevated latency, consider adding a [compute allocation](/docs/building-apps/essentials/gas-cost#execution-and-compute-allocation) setting. A compute allocation of 1% will guarantee your canister is scheduled for execution once every 100 rounds.
+Si su canister se está ejecutando en una subred que tiene una carga
+consistentemente alta y, por lo tanto, una latencia elevada, considere agregar
+una configuración de
+[asignación de cómputo](/docs/building-apps/essentials/gas-cost#execution-and-compute-allocation).
+Una asignación de cómputo del 1% garantizará que su canister se programe para su
+ejecución una vez cada 100 rondas.
 
-## Troubleshooting best practices
+## Mejores prácticas para solucionar problemas
 
-### Recommendation: Use query calls instead of update calls when possible.
+### Recomendación: Utilice llamadas de consulta en lugar de llamadas de actualización siempre que sea posible.
 
-[Query calls](/docs/building-apps/interact-with-canisters/query-calls) are executed on a single node within a subnet and do not go through consensus; therefore, they can be returned much faster than an update call. For some applications, query calls can be used in place of update calls to reduce latency.
+Las
+[llamadas de consulta](/docs/building-apps/interact-with-canisters/query-calls)
+se ejecutan en un solo nodo dentro de una subred y no pasan por el consenso; por
+lo tanto, pueden devolverse mucho más rápido que una llamada de actualización.
+Para algunas aplicaciones, las llamadas de consulta se pueden utilizar en lugar
+de las llamadas de actualización para reducir la latencia.
 
-However, the security trade-offs of query calls must be considered. Since query calls do not go through consensus, it is not recommended that they be used for retrieving sensitive information that requires data assurance. For example, returning financial data on a decentralized exchange dapp should not use basic query calls, as it is important the call return data that has been validated through the subnet's consensus. As an alternative, [certified queries](/docs/building-apps/interact-with-canisters/query-calls) may be used.
+Sin embargo, se deben considerar los compromisos de seguridad de las llamadas de
+consulta. Dado que las llamadas de consulta no pasan por el consenso, no se
+recomienda utilizarlas para recuperar información sensible que requiere garantía
+de datos. Por ejemplo, devolver datos financieros en una dapp de intercambio
+descentralizado no debe utilizar llamadas de consulta básicas, ya que es
+importante que la llamada devuelva datos que hayan sido validados a través del
+consenso de la subred. Como alternativa, se pueden utilizar
+[consultas certificadas](/docs/building-apps/interact-with-canisters/query-calls).
 
-### Recommendation: Use efficient query calls.
+### Recomendación: Utilice llamadas de consulta eficientes.
 
-You can improve the efficiency of query calls by:
+Puede mejorar la eficiencia de las llamadas de consulta al:
 
-- Avoid using unnecessary calls to the `balance()` and `time()` system APIs.
+- Evitar el uso innecesario de llamadas a las API del sistema `balance()` y
+  `time()`.
 
-- Utilize system API calls in places where their use is optimized.
+- Utilizar llamadas a las API del sistema en lugares donde su uso esté
+  optimizado.
 
-[Learn more in the improving query latencies blog post](https://internetcomputer.org/blog/features/improving-query-latencies).
+[Obtenga más información en la publicación del blog sobre la mejora de las latencias de consulta](https://internetcomputer.org/blog/features/improving-query-latencies).
 
-### Recommendation: Request data from heap memory instead of stable memory.
+### Recomendación: Solicite datos desde la memoria heap en lugar de la memoria estable.
 
-Requesting data from [heap memory](/docs/building-apps/canister-management/storage) instead of [stable memory](/docs/building-apps/canister-management/storage) can reduce latency in some applications.
+Solicitar datos desde la
+[memoria heap](/docs/building-apps/canister-management/storage) en lugar de la
+[memoria estable](/docs/building-apps/canister-management/storage) puede reducir
+la latencia en algunas aplicaciones.
 
-### Recommendation: Skip inter-canister calls when possible.
+### Recomendación: Evite las llamadas entre canisters cuando sea posible.
 
-Inter-canister calls are a slow operation since they use `await` methods. Skipping inter-canister calls when they are not necessary can help reduce canister latency.
+Las llamadas entre canisters son una operación lenta, ya que utilizan métodos
+`await`. Evitar las llamadas entre canisters cuando no sean necesarias puede
+ayudar a reducir la latencia del canister.
 
-### Recommendation: Follow canister best practices.
+### Recomendación: Siga las mejores prácticas del canister.
 
-To ensure that your canister is optimized, both for latency and cycles cost, be sure to follow the [canister general best practices](/docs/building-apps/best-practices/general), which include ways to implement efficient Motoko and Rust code.
+Para asegurarse de que su canister esté optimizado, tanto en términos de
+latencia como de costo de ciclos, asegúrese de seguir las
+[mejores prácticas generales del canister](/docs/building-apps/best-practices/general),
+que incluyen formas de implementar código eficiente en Motoko y Rust.
 
-### Recommendation: To troubleshoot network latency, obtain the boundary node address and request IDs your canister is using before reaching out to the DFINITY team.
+### Recomendación: Para solucionar problemas de latencia de red, obtenga la dirección del nodo límite y los ID de solicitud que su canister está utilizando antes de comunicarse con el equipo de DFINITY.
 
-In order for the team to troubleshoot network latency, they will need the boundary node ID and, if possible, the request ID. This information can be found by looking in the networking tab of the developer tools. The boundary node address will be listed as `Remote Address` and the request ID will be listed as the `X-Request-Id`.
+Para que el equipo pueda solucionar problemas de latencia de red, necesitarán el
+ID del nodo límite y, si es posible, el ID de la solicitud. Esta información se
+puede encontrar en la pestaña de redes de las herramientas para desarrolladores.
+La dirección del nodo límite se mostrará como `Dirección remota` y el ID de la
+solicitud se mostrará como `X-Request-Id`.

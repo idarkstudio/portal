@@ -1,60 +1,135 @@
 ---
-keywords: [concept, canister, trust, how to trust canisters, trusting canister, can you trust a canister, how to verify canister]
+keywords:
+  [
+    concept,
+    canister,
+    trust,
+    how to trust canisters,
+    trusting canister,
+    can you trust a canister,
+    how to verify canister,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 
-# Trust in canisters
+# Confianza en los canisters
 
-<MarkdownChipRow labels={["Beginner" , "Education", "Concept"]} />
+<MarkdownChipRow labels={["Principiante", "Educación", "Concepto"]} />
 
-Applications that provide DeFi or other valuable transactions, such as the ability to transfer assets, require that users trust the application to act honestly and reliably. How can one ensure that it is safe to entrust assets to a canister?
+Las aplicaciones que brindan transacciones DeFi u otras transacciones valiosas,
+como la capacidad de transferir activos, requieren que los usuarios confíen en
+la aplicación para actuar de manera honesta y confiable. ¿Cómo se puede asegurar
+que es seguro confiar los activos a un canister?
 
-Users must have confidence that:
+Los usuarios deben tener confianza en que:
 
-1.  The canister does what it is supposed to do.
+1. El canister hace lo que se supone que debe hacer.
 
-2.  The canister behavior will not unexpectedly change.
+2. El comportamiento del canister no cambiará inesperadamente.
 
-## Confidence that the canister does what it is supposed to do
+## Confianza en que el canister hace lo que se supone que debe hacer
 
-The correct behavior of a canister can be checked in two steps. First, inspect the source code used to generate the Wasm code deployed in a canister to ensure that it implements the expected or claimed functionality and only this functionality.
+El comportamiento correcto de un canister se puede verificar en dos pasos.
+Primero, inspeccione el código fuente utilizado para generar el código Wasm
+implementado en un canister para asegurarse de que implementa la funcionalidad
+esperada o reclamada y solo esta funcionalidad.
 
-Second, ensure that the Wasm module the canister runs has been generated from the claimed source code. Here, reproducibility of the build is crucial: the developer should have constructed the Wasm module so that precisely the same Wasm can be rebuilt from scratch. The user can then compare the hash of the rebuilt Wasm module with the module hash reported by ICP. Developers and users can find guidance on ensuring reproducibility in [reproducible canisters](/docs/building-apps/best-practices/reproducible-builds).
+Segundo, asegúrese de que el módulo Wasm que ejecuta el canister se haya
+generado a partir del código fuente reclamado. Aquí, la reproducibilidad de la
+compilación es crucial: el desarrollador debería haber construido el módulo Wasm
+de manera que se pueda reconstruir exactamente el mismo Wasm desde cero. Luego,
+el usuario puede comparar el hash del módulo Wasm reconstruido con el hash del
+módulo informado por ICP. Los desarrolladores y los usuarios pueden encontrar
+orientación sobre cómo garantizar la reproducibilidad en
+[compilaciones reproducibles](/docs/building-apps/best-practices/reproducible-builds).
 
-Additionally, developers can utilize the [canister history](/docs/building-apps/canister-management/history) feature to track changes to the canister's Wasm module hash.
+Además, los desarrolladores pueden utilizar la función de
+[historial del canister](/docs/building-apps/canister-management/history) para
+realizar un seguimiento de los cambios en el hash del módulo Wasm del canister.
 
-## Confidence that the canister behavior will not unexpectedly change
+## Confianza en que el comportamiento del canister no cambiará inesperadamente
 
-Canister smart contracts are deployed and managed by controllers. A controller's level of decentralization can range from being managed by a single person or team of people up to being managed by the NNS, an SNS, or another kind of onchain DAO. Among other capabilities, the controllers can change the code for the canisters that they control because the canister code is **mutable**. The controllers have complete control over the assets, like ICP tokens or bitcoins, held by the canister they manage. This feature brings canisters closer to typical software and makes them suitable for a broad range of applications where software logic can be changed on an as-needed basis.
+Los contratos inteligentes de los canisters son implementados y gestionados por
+controladores. El nivel de descentralización de un controlador puede variar
+desde ser gestionado por una sola persona o equipo de personas hasta ser
+gestionado por el NNS, un SNS u otro tipo de DAO en la cadena. Entre otras
+capacidades, los controladores pueden cambiar el código de los canisters que
+controlan porque el código del canister es **mutable**. Los controladores tienen
+control total sobre los activos, como tokens ICP o bitcoins, que posee el
+canister que administran. Esta característica acerca los canisters al software
+típico y los hace adecuados para una amplia gama de aplicaciones donde la lógica
+del software puede cambiarse según sea necesario.
 
-For critical applications like those used in DeFi, centralized mutability can be dangerous. The controller could change a benign canister into a canister that steals assets.
+Para aplicaciones críticas como las utilizadas en DeFi, la mutabilidad
+centralizada puede ser peligrosa. El controlador podría convertir un canister
+benigno en un canister que roba activos.
 
 :::info
-Canister controllers, if not voluntarily decentralized, have complete control over the user assets held by the canister, such as any ICP tokens or bitcoin held by the canister on the user's behalf. The controller, if malicious, can steal these assets. In other words, as a user, if you interact with a canister that deals with your assets, inspect the canister to know how it handles them. If you determine that the canister is storing assets in its subaccounts, ensure that the canister controller is decentralized.
+
+Los controladores de los canisters, si no están descentralizados de manera
+voluntaria, tienen control total sobre los activos del usuario que posee el
+canister, como tokens ICP o bitcoins que posee el canister en nombre del
+usuario. El controlador, si es malicioso, puede robar estos activos. En otras
+palabras, como usuario, si interactúa con un canister que maneja sus activos,
+inspeccione el canister para saber cómo los maneja. Si determina que el canister
+almacena activos en sus subcuentas, asegúrese de que el controlador del canister
+esté descentralizado.
+
 :::
 
-## Black hole canisters
+## Canisters de agujero negro
 
-A similar effect can also be achieved by setting the controller of a canister to be itself. In this case, however, you need to carefully verify that the canister cannot somehow submit a request to upgrade itself, e.g., by issuing a reinstall request. Here, code inspection and reproducible builds are crucial.
+Un efecto similar también se puede lograr configurando el controlador de un
+canister para que sea el propio canister. En este caso, sin embargo, debe
+verificar cuidadosamente que el canister no pueda enviar una solicitud para
+actualizarse, por ejemplo, emitiendo una solicitud de reinstalación. Aquí, la
+inspección del código y las compilaciones reproducibles son cruciales.
 
-Finally, a somewhat more useful solution is to pass control of the canister to a so-called [“black hole” canister](https://github.com/ninegua/ic-blackhole). This canister has only itself as a controller but allows third parties to obtain useful information about the canisters the black hole controls, such as the available cycles balance of a black-holed canister. An instance of a black hole canister is [e3mmv-5qaaa-aaaah-aadma-cai](https://icscan.io/canister/e3mmv-5qaaa-aaaah-aadma-cai) which is [thoroughly documented](https://github.com/ninegua/ic-blackhole). Note that the repository linked here mentions canister immutability, but this is a red herring.
+Finalmente, una solución algo más útil es transferir el control del canister a
+un llamado
+[canister de "agujero negro"](https://github.com/ninegua/ic-blackhole). Este
+canister solo tiene a sí mismo como controlador, pero permite a terceros obtener
+información útil sobre los canisters que controla el agujero negro, como el
+saldo de ciclos disponibles de un canister en el agujero negro. Una instancia de
+un canister de agujero negro es
+[e3mmv-5qaaa-aaaah-aadma-cai](https://icscan.io/canister/e3mmv-5qaaa-aaaah-aadma-cai),
+que está [ampliamente documentado](https://github.com/ninegua/ic-blackhole).
+Tenga en cuenta que el repositorio vinculado aquí menciona la inmutabilidad del
+canister, pero esto es una distracción.
 
-## Verifying a canister's controllers
+## Verificación de los controladores de un canister
 
-A user can verify the list of controllers for a canister using [`dfx canister info`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-info):
+Un usuario puede verificar la lista de controladores de un canister utilizando
+[`dfx canister info`](/docs/building-apps/developer-tools/dfx/dfx-canister#dfx-canister-info):
 
 ```
 dfx canister info <canister-id> --network ic
 ```
 
-A user can also obtain the list of a canister's controllers via a [`read_state` request](/references/ic-interface-spec.md/#http-read-state) to get the relevant [canister information](/references/ic-interface-spec.md#state-tree-canister-information), which includes the list of controllers. A canister cannot obtain this information.
+Un usuario también puede obtener la lista de controladores de un canister a
+través de una solicitud
+[`read_state`](/references/ic-interface-spec.md/#http-read-state) para obtener
+la información relevante del
+[canister](/references/ic-interface-spec.md#state-tree-canister-information),
+que incluye la lista de controladores. Un canister no puede obtener esta
+información.
 
-If a canister does not have any controllers, it cannot be changed and is thus immutable. It can only be uninstalled by the NNS via NNS proposal, assuming the integrity of the platform is maintained.
+Si un canister no tiene controladores, no se puede cambiar y, por lo tanto, es
+inmutable. Solo puede ser desinstalado por el NNS a través de una propuesta del
+NNS, asumiendo que se mantiene la integridad de la plataforma.
 
-## Control by distributed governance
+## Control mediante gobernanza distribuida
 
-A more complex but powerful approach is to give control over the canister to a decentralized autonomous organization (DAO). It is possible to hand the control over to an [SNS DAO that is built into the platform](/docs/building-apps/governing-apps/overview) or to build a custom governance. The advantage of the latter is that the governance of the canister can be tailored specifically to the canister or project that the canister is a part of. One can imagine different levels of complexity and control that such a governance mechanism may implement. In both cases, the trust requirements are moved to the DAO controlling the canister, where all of the considerations regarding code inspection and reproducibility apply.
-
+Un enfoque más complejo pero poderoso es otorgar el control del canister a una
+organización autónoma descentralizada (DAO). Es posible ceder el control a un
+[DAO SNS que está integrado en la plataforma](/docs/building-apps/governing-apps/overview)
+o construir una gobernanza personalizada. La ventaja de esta última opción es
+que la gobernanza del canister se puede adaptar específicamente al canister o
+proyecto del que forma parte. Se pueden imaginar diferentes niveles de
+complejidad y control que este mecanismo de gobernanza puede implementar. En
+ambos casos, los requisitos de confianza se trasladan a la DAO que controla el
+canister, donde se aplican todas las consideraciones sobre inspección de código
+y reproducibilidad.

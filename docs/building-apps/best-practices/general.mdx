@@ -1,65 +1,114 @@
 ---
-keywords: [beginner, concept, best practices, generous canister top-up, efficient implementations, state backup and restoration]
+keywords:
+  [
+    beginner,
+    concept,
+    best practices,
+    generous canister top-up,
+    efficient implementations,
+    state backup and restoration,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Developer best practices: General
+# Mejores prácticas para desarrolladores: General
 
-<MarkdownChipRow labels={["Beginner", "Best practices"]} />
+<MarkdownChipRow labels={["Principiante", "Mejores prácticas"]} />
 
-This guide outlines essential development best practices for building on the Internet Computer Protocol (ICP).
+Esta guía describe las mejores prácticas de desarrollo esenciales para construir
+en el Protocolo de Internet Computer (ICP).
 
-### Recommendation: Generous canister top-up.
+### Recomendación: Recarga generosa de cycles de canister.
 
-Ensure all canisters have sufficient cycles to sustain operations for several years initially. Given the cost-effectiveness of storage and computation on ICP compared to other platforms, this upfront investment is usually modest.
+Asegúrate de que todos los canisters tengan suficientes cycles para mantener las
+operaciones durante varios años inicialmente. Dado el costo-efectividad del
+almacenamiento y la computación en ICP en comparación con otras plataformas,
+esta inversión inicial suele ser modesta.
 
-Refer to the [topping up cycles page](/docs/building-apps/canister-management/topping-up) to learn how to top-up cycles effectively.
+Consulta la página de
+[topping up cycles](/docs/building-apps/canister-management/topping-up) para
+aprender cómo recargar cycles de manera efectiva.
 
-Refer to the [cycles estimate](/docs/building-apps/essentials/gas-cost) page to estimate cycle usage.
+Consulta la página de
+[estimación de cycles](/docs/building-apps/essentials/gas-cost) para estimar el
+uso de cycles.
 
-### Recommendation: Manage cycle depletion.
+### Recomendación: Gestión de la depleción de cycles.
 
-ICP features a mechanism to prevent canisters from running out of cycles. Canisters have a configurable `freezing_threshold`, dynamically evaluated in cycles. Set `freezing_threshold` conservatively, ensuring at least 90 to 180 days' worth of cycles for proactive management.
+ICP cuenta con un mecanismo para evitar que los canisters se queden sin cycles.
+Los canisters tienen un `freezing_threshold` configurable, evaluado
+dinámicamente en cycles. Establece `freezing_threshold` de manera conservadora,
+asegurando al menos 90 a 180 días de cycles para una gestión proactiva.
 
-Refer to [this resource](/docs/building-apps/canister-management/topping-up#managing-cycle-depletion-with-freezing-threshold) to learn how to configure the `freezing_threshold` of a canister.
+Consulta
+[este recurso](/docs/building-apps/canister-management/topping-up#managing-cycle-depletion-with-freezing-threshold)
+para aprender cómo configurar el `freezing_threshold` de un canister.
 
-To make sure you won’t get surprised by a high cycle burn rate or hitting an instruction limit, you can use the recently added [performance counter API](https://internetcomputer.org/blog/features/async-performance-counter) to profile your canisters even before going live.
+Para asegurarte de no sorprenderte con una alta tasa de consumo de cycles o
+alcanzar un límite de instrucciones, puedes utilizar la API de
+[contadores de rendimiento](https://internetcomputer.org/blog/features/async-performance-counter)
+recientemente agregada para perfilar tus canisters incluso antes de lanzarlos.
 
-### Recommendation: Efficient implementations.
+### Recomendación: Implementaciones eficientes.
 
-Optimize canister implementation to avoid unnecessary costs.
+Optimiza la implementación del canister para evitar costos innecesarios.
 
-Use [canister timers](/docs/building-apps/network-features/periodic-tasks-timers) over plain heartbeats for reduced daily costs.
+Utiliza
+[temporizadores de canister](/docs/building-apps/network-features/periodic-tasks-timers)
+en lugar de latidos simples para reducir los costos diarios.
 
 #### Motoko
 
-1. Opt for `TrieMap` over `HashMap` to prevent automatic resizing overhead.
-2. Utilize `Buffer` instead of `Array` for dynamic resizing.
-3. Consider `Blob` over `[Nat8]` for compact storage and reduced GC pressure:
+1. Opta por `TrieMap` en lugar de `HashMap` para evitar los costos de
+   redimensionamiento automático.
+2. Utiliza `Buffer` en lugar de `Array` para redimensionamiento dinámico.
+3. Considera `Blob` en lugar de `[Nat8]` para un almacenamiento compacto y una
+   menor presión en la recolección de basura (GC):
 
-    - Use `Blob` instead of `[Nat8]` for storing large binary assets.
-    - Use `Blob` instead of `[Nat8]` when sending or receiving Candid `vec nat8/blob` values. The choice is yours, but `Blobs` are 4x more compact and much less taxing on garbage collection (GC).
+   - Utiliza `Blob` en lugar de `[Nat8]` para almacenar activos binarios
+     grandes.
+   - Utiliza `Blob` en lugar de `[Nat8]` al enviar o recibir valores Candid
+     `vec nat8/blob`. La elección es tuya, pero los `Blobs` son 4 veces más
+     compactos y mucho menos exigentes para la recolección de basura (GC).
 
-4. Store large Blobs in stable memory for efficient manual management.
-5. Use the `compacting-gc` setting, especially in append-only scenarios, to allow access to larger heaps and reduce the cost of copying large, stationary objects.
-6. Be mindful of calling an [actor class]((/docs/motoko/main/writing-motoko/actor-classes), as the overhead is similar to that of installing a fresh canister.
+4. Almacena `Blobs` grandes en memoria estable para una gestión manual
+   eficiente.
+5. Utiliza la configuración `compacting-gc`, especialmente en escenarios de solo
+   agregado, para permitir el acceso a montones más grandes y reducir el costo
+   de copiar objetos grandes y estacionarios.
+6. Ten cuidado al llamar a una [clase de
+   actor]((/docs/motoko/main/writing-motoko/actor-classes), ya que el costo es
+   similar al de instalar un canister nuevo.
 
 #### Rust
-1. Exercise caution with `Vec<u8>` and `String` types for state serialization. Due to Rust limitations, using these types would increase the number of instructions required to encode or decode the message.
-2. Refer to recommended blogs and articles for effective Rust canister development.
 
-#### Resources
+1. Ten cuidado con los tipos `Vec<u8>` y `String` para la serialización del
+   estado. Debido a las limitaciones de Rust, el uso de estos tipos aumentaría
+   el número de instrucciones necesarias para codificar o decodificar el
+   mensaje.
+2. Consulta blogs y artículos recomendados para el desarrollo efectivo de
+   canisters en Rust.
 
-Several resources on efficient implementations include:
+#### Recursos
 
-- [Blog post on effective Rust canisters by Roman Kashitsyn](https://mmapped.blog/posts/01-effective-rust-canisters.html)
-- [Good practices for canister development by Joachim Breitner](https://www.joachim-breitner.de/blog/788-How_to_audit_an_Internet_Computer_canister)
+Algunos recursos sobre implementaciones eficientes incluyen:
 
-### Recommendation: State backup and restoration.
+- [Publicación de blog sobre canisters efectivos en Rust por Roman Kashitsyn](https://mmapped.blog/posts/01-effective-rust-canisters.html)
+- [Buenas prácticas para el desarrollo de canisters por Joachim Breitner](https://www.joachim-breitner.de/blog/788-How_to_audit_an_Internet_Computer_canister)
 
-Implement backup mechanisms within canisters for state protection against deallocation or upgrade issues. Explore [backup strategies](https://forum.dfinity.org/t/backup-restore-function-for-a-canister/12849/3) like those employed by [Distrikt](https://distrikt.app/).
+### Recomendación: Respaldo y restauración del estado.
 
-### Recommendation: Transaction history storage.
+Implementa mecanismos de respaldo dentro de los canisters para proteger el
+estado contra problemas de desasignación o actualización. Explora
+[estrategias de respaldo](https://forum.dfinity.org/t/backup-restore-function-for-a-canister/12849/3)
+como las empleadas por [Distrikt](https://distrikt.app/).
 
-If your application needs to store transaction history, consider using dedicated services like [CAP](https://cap.ooo/) for maintaining transaction logs. This facilitates integration with explorers and wallets and aids in ownership state reconstruction if the main canister is compromised. Be mindful of additional costs associated with inter-canister calls.
+### Recomendación: Almacenamiento del historial de transacciones.
+
+Si tu aplicación necesita almacenar el historial de transacciones, considera
+utilizar servicios dedicados como [CAP](https://cap.ooo/) para mantener
+registros de transacciones. Esto facilita la integración con exploradores y
+billeteras, y ayuda en la reconstrucción del estado de propiedad en caso de que
+el canister principal se vea comprometido. Ten en cuenta los costos adicionales
+asociados con las llamadas entre canisters.

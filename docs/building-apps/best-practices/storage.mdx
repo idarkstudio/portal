@@ -4,37 +4,56 @@ keywords: [beginner, concept, best practices, storage, storage best practices]
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Developer best practices: Storage
+# Mejores prácticas para desarrolladores: Almacenamiento
 
-<MarkdownChipRow labels={["Beginner", "Best practices"]} />
+<MarkdownChipRow labels={["Principiante", "Mejores prácticas"]} />
 
-There are two forms of storage available to ICP canisters: **heap memory** and **stable memory**.
+Existen dos formas de almacenamiento disponibles para los canisters de ICP:
+**memoria heap** y **memoria estable**.
 
-**Heap memory** is a canister's Wasm memory. This memory does not store data long-term. The heap memory is cleared each time a canister is upgraded. Heap memory is limited to 4GiB. It is used by default for data such as variable values, arguments passed to a canister, and the result of a method's execution.
+La **memoria heap** es la memoria Wasm de un canister. Esta memoria no almacena
+datos a largo plazo. La memoria heap se borra cada vez que se actualiza un
+canister. La memoria heap está limitada a 4GiB. Se utiliza de forma
+predeterminada para datos como valores de variables, argumentos pasados a un
+canister y el resultado de la ejecución de un método.
 
-**Stable memory** is a secondary storage type that is used to store data long-term. Stable memory data is persisted throughout the canister's lifetime, including canister upgrades. Stable memory is limited to 500GiB. To use stable memory, you must anticipate which data you want to persist across different canister processes and states.
+La **memoria estable** es un tipo de almacenamiento secundario que se utiliza
+para almacenar datos a largo plazo. Los datos de la memoria estable se mantienen
+a lo largo de la vida útil del canister, incluyendo las actualizaciones del
+canister. La memoria estable está limitada a 500GiB. Para utilizar la memoria
+estable, debes anticipar qué datos deseas persistir en diferentes procesos y
+estados del canister.
 
-| Memory feature | Heap memory | Stable memory |
-|----------------|-------------|---------------|
-|Storage capacity| 4GiB        | 500GiB        |
-|Intended use    | Small datasets, frequently accessed data, temporary data | Large datasets, infrequently accessed data, important data that must persist |
-|Persistence     | Does not persist across upgrades | Data is preserved and persists across upgrades |
-|Performance     | Fast read/write operations | Slightly decreased read/write operations |
+| Característica de memoria   | Memoria heap                                                             | Memoria estable                                                                                   |
+| --------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
+| Capacidad de almacenamiento | 4GiB                                                                     | 500GiB                                                                                            |
+| Uso previsto                | Conjuntos de datos pequeños, datos de acceso frecuente, datos temporales | Conjuntos de datos grandes, datos de acceso poco frecuente, datos importantes que deben persistir |
+| Persistencia                | No persiste en las actualizaciones                                       | Los datos se conservan y persisten en las actualizaciones                                         |
+| Rendimiento                 | Operaciones de lectura/escritura rápidas                                 | Operaciones de lectura/escritura ligeramente disminuidas                                          |
 
-[Learn more about canister storage](/docs/building-apps/canister-management/storage).
+[Aprende más sobre el almacenamiento de canisters](/docs/building-apps/canister-management/storage).
 
-## Storage best practices
+## Mejores prácticas de almacenamiento
 
-### Recommendation: Use stable memory directly.
+### Recomendación: Utiliza la memoria estable directamente.
 
-It is recommended to use stable memory directly, such as through [stable structures](https://github.com/dfinity/stable-structures), for any data that is important. Linking data to your canister's Wasm binary and using pre/post upgrade hooks can be extremely risky. There are several areas for potential errors or bugs that can result in data loss.
+Se recomienda utilizar la memoria estable directamente, como a través de
+[estructuras estables](https://github.com/dfinity/stable-structures), para
+cualquier dato que sea importante. Vincular datos al binario Wasm de tu canister
+y utilizar ganchos de pre/post actualización puede ser extremadamente
+arriesgado. Existen varias áreas donde pueden ocurrir errores o errores que
+pueden resultar en pérdida de datos.
 
-### Recommendation: Use heap memory for small datasets.
+### Recomendación: Utiliza la memoria heap para conjuntos de datos pequeños.
 
-Heap data is better suited to be used for small data sets (under 4GiB) or data that is frequently accessed and not necessary for long-term persistence.
+Los datos de la memoria heap son más adecuados para conjuntos de datos pequeños
+(menos de 4GiB) o datos que se acceden con frecuencia y no son necesarios para
+una persistencia a largo plazo.
 
-### Recommendation: Use stable memory for large datasets.
+### Recomendación: Utiliza la memoria estable para conjuntos de datos grandes.
 
-Stable memory should be used for large data sets (more than 4GiB but less than 500GiB) or data that is infrequently accessed.
+La memoria estable debe utilizarse para conjuntos de datos grandes (más de 4GiB
+pero menos de 500GiB) o datos que se acceden con poca frecuencia.
 
-Ultimately, the form of memory you choose to utilize for your canister will depend on the most optimal workflow for your project.
+En última instancia, la forma de memoria que elijas utilizar para tu canister
+dependerá del flujo de trabajo más óptimo para tu proyecto.

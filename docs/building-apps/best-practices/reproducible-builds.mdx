@@ -1,100 +1,241 @@
 ---
-keywords: [intermediate, test, best practice, reproducible, reproducible builds, reproducible build environments, docker]
+keywords:
+  [
+    intermediate,
+    test,
+    best practice,
+    reproducible,
+    reproducible builds,
+    reproducible build environments,
+    docker,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 
-# Developer best practices: Reproducible builds
+# Mejores prácticas para desarrolladores: Compilaciones reproducibles
 
-<MarkdownChipRow labels={["Intermediate", "Best practices"]} />
+<MarkdownChipRow labels={["Intermedio", "Mejores prácticas"]} />
 
-If you are using a canister that you did not develop yourself, you may want to verify that the canister is running the code that you expect it to be before giving it control to make important decisions for you, such as accepting ICP for a payment. Verifying a canister's code requires confirming that the Wasm module is the correct result of compiling the canister source code and that the canister is in fact running that Wasm module and not another Wasm module.
+Si estás utilizando un canister que no desarrollaste tú mismo, es posible que
+quieras  
+verificar que el canister está ejecutando el código que esperas antes de darle
+control  
+para tomar decisiones importantes por ti, como aceptar ICP para un pago.
+Verificar el  
+código de un canister requiere confirmar que el módulo Wasm es el resultado
+correcto  
+de compilar el código fuente del canister y que el canister, de hecho, está
+ejecutando  
+ese módulo Wasm y no otro.
 
-It is therefore recommended that canister authors ensure trusted and [reproducible builds](https://reproducible-builds.org/docs/definition/) of the Wasm module are possible from their source code. Such builds allow anyone to follow the same steps as the canister authors and yield the exact same Wasm module, which can then be compared to the Wasm module executing on ICP.
+Por lo tanto, se recomienda que los autores de canisters aseguren que es
+posible  
+realizar compilaciones de Wasm de confianza y  
+[reproducibles](https://reproducible-builds.org/docs/definition/) a partir de
+su  
+código fuente. Estas compilaciones permiten que cualquiera siga los mismos pasos
+que  
+los autores del canister y obtenga exactamente el mismo módulo Wasm, que luego
+puede  
+compararse con el módulo Wasm que se ejecuta en ICP.
 
-## Considerations for developers
+## Consideraciones para desarrolladores
 
-When developing code meant to be reproducible, it is recommended to use [Docker or a similar technology](#build-environments-using-docker) to conveniently set up the operating system and the build tools and fix their versions for the user. If the build tools you are using don’t guarantee fully reproducible builds, Docker can also help by minimizing the differences in paths, environment variables, etc. The build tools and the base Docker image should be sourced from somewhere that the user can trust. Ideally, you want to minimize the number of dependencies, as the user may have to rebuild all of your dependencies to properly reproduce your build.
+Al desarrollar código que se espera que sea reproducible, se recomienda usar  
+[Docker o una tecnología similar](#build-environments-using-docker) para
+configurar  
+convenientemente el sistema operativo y las herramientas de compilación y fijar
+sus  
+versiones para el usuario. Si las herramientas de compilación que estás
+utilizando no  
+garantizan compilaciones completamente reproducibles, Docker también puede
+ayudar  
+minimizando las diferencias en rutas, variables de entorno, etc. Las
+herramientas de  
+compilación y la imagen base de Docker deben provenir de una fuente en la que
+el  
+usuario pueda confiar. Idealmente, se debe minimizar el número de dependencias,
+ya que  
+el usuario podría tener que recompilar todas tus dependencias para reproducir  
+correctamente tu compilación.
 
-However, build tools aren’t perfect and may fail to ensure reproducible builds. If reproducibility is critical for your canister (e.g., it holds other users' funds), [test it](#testing-reproducibility).
+Sin embargo, las herramientas de compilación no son perfectas y pueden fallar
+al  
+garantizar compilaciones reproducibles. Si la reproducibilidad es crítica para
+tu  
+canister (por ejemplo, si maneja fondos de otros usuarios),  
+[pruébalo](#testing-reproducibility).
 
-## Obtaining the Wasm module hash
+## Obtener el hash del módulo Wasm
 
-ICP does not allow you to access the Wasm module of an arbitrary canister. This is a design decision, as developers might want to keep some code private. However, ICP does allow anyone to access the SHA-256 of the Wasm module.
+ICP no permite acceder al módulo Wasm de un canister arbitrario. Esta es una
+decisión  
+de diseño, ya que los desarrolladores podrían querer mantener algo de código
+privado.  
+Sin embargo, ICP sí permite que cualquiera acceda al SHA-256 del módulo Wasm.
 
-To obtain this hash, you must first note the principal of the canister whose code you want to check. For example, to check the code of the Internet Identity canister, the principal is `rdmx6-jaaaa-aaaaa-aaadq-cai`. Then, the easiest way to access this data is using [`dfx`](/docs/building-apps/getting-started/install) from a command line using the following command:
+Para obtener este hash, primero debes identificar el principal del canister cuyo
+código  
+quieres verificar. Por ejemplo, para verificar el código del canister de
+Internet  
+Identity, el principal es `rdmx6-jaaaa-aaaaa-aaadq-cai`. Luego, la forma más
+fácil de  
+acceder a estos datos es usando  
+[`dfx`](/docs/building-apps/getting-started/install) desde una línea de comandos
+con  
+el siguiente comando:
 
 ```bash
 dfx canister --network ic info rdmx6-jaaaa-aaaaa-aaadq-cai
 ```
 
-This will return the controller(s) of the canister and the Wasm module hash:
+Esto devolverá el(los) controlador(es) del canister y el hash del módulo Wasm:
 
 ```
 Controllers: r7inp-6aaaa-aaaaa-aaabq-cai
 Module hash: 0x86ab08ea53e4da5bba4f27baa931e2edc5ab2a1f228c204a5340992c16389f66
 ```
 
-You will need to run this command from a directory that contains a valid `dfx.json` file. If you don’t have such a directory, you can create one using `dfx new`.
+Necesitarás ejecutar este comando desde un directorio que contenga un archivo  
+`dfx.json` válido. Si no tienes un directorio así, puedes crear uno usando  
+`dfx new`.
 
-Here, ICP tells us that the hash of the Wasm module of the `rdmx6-jaaaa-aaaaa-aaadq-cai` canister is `0x86ab08ea53e4da5bba4f27baa931e2edc5ab2a1f228c204a5340992c16389f66`.
+Aquí, ICP nos indica que el hash del módulo Wasm del canister  
+`rdmx6-jaaaa-aaaaa-aaadq-cai` es  
+`0x86ab08ea53e4da5bba4f27baa931e2edc5ab2a1f228c204a5340992c16389f66`.
 
-The check above provides you the **current** hash of the canister’s Wasm module, but the **controllers** of a canister may change the code at any time, such as to upgrade the canister. However, if the list of controllers is empty or the only controller is a [blackhole](https://github.com/ninegua/ic-blackhole) canister, you know that the canister is immutable since no one has the power to change the code.
+La verificación anterior te proporciona el hash **actual** del módulo Wasm del  
+canister, pero los **controladores** de un canister pueden cambiar el código
+en  
+cualquier momento, por ejemplo, para actualizar el canister. Sin embargo, si la
+lista  
+de controladores está vacía o el único controlador es un canister  
+[blackhole](https://github.com/ninegua/ic-blackhole), sabes que el canister es  
+inmutable, ya que nadie tiene el poder de cambiar el código.
 
-## Verifying the build is reproducible
+## Verificar que la compilación sea reproducible
 
-Next, check whether this hash corresponds to some given source code. This only works if the build process for the code is reproducible.
+A continuación, verifica si este hash corresponde a un determinado código
+fuente. Esto  
+solo funciona si el proceso de compilación del código es reproducible.
 
-As a canister author, there are a few things you have to provide to your users to allow them to reproduce your build:
+Como autor de un canister, hay algunas cosas que debes proporcionar a tus
+usuarios para  
+permitirles reproducir tu compilación:
 
--   The same source code that you used to create the Wasm module for the canister.
+- El mismo código fuente que utilizaste para crear el módulo Wasm del canister.
 
--   Instructions on how to recreate your build environment.
+- Instrucciones sobre cómo recrear tu entorno de compilación.
 
--   Instructions on how to repeat the process of building the Wasm from the source code. The process must be deterministic to ensure that it results in the exact same Wasm. It also has to be trusted, such that the user can be convinced that the Wasm is a faithful translation of the source code and not an artifact of a malicious build tool. In particular, look for `.dfx`, `node_modules`, and `target` directories that could contain prebuilt files.
+- Instrucciones sobre cómo repetir el proceso de compilación del Wasm a partir
+  del  
+  código fuente. El proceso debe ser determinista para garantizar que produzca  
+  exactamente el mismo Wasm. También debe ser confiable, de forma que el usuario
+  pueda  
+  convencerse de que el Wasm es una traducción fiel del código fuente y no un
+  artefacto  
+  de una herramienta de compilación maliciosa. En particular, busca los
+  directorios  
+  `.dfx`, `node_modules` y `target` que podrían contener archivos precompilados.
 
-### Providing the source code
+### Proporcionar el código fuente
 
-Typically, it is recommended that developers version your code in `git` or some other version control system, and versioned code may be available in a public repository such as GitHub. In this case, as the developer, you should note the particular commit that was used when producing the code that has been deployed to ICP and communicate it to the users who may want to verify your canister. Alternatively, you can also provide a package (i.e., a zip file or a tarball) containing the source code you used to build your canister.
+Normalmente, se recomienda que los desarrolladores versionen su código en `git`
+u otro  
+sistema de control de versiones, y el código versionado puede estar disponible
+en un  
+repositorio público como GitHub. En este caso, como desarrollador, debes anotar
+el  
+commit específico que se utilizó al producir el código que fue desplegado en ICP
+y  
+comunicarlo a los usuarios que puedan querer verificar tu canister.
+Alternativamente,  
+también puedes proporcionar un paquete (por ejemplo, un archivo zip o tarball)
+que  
+contenga el código fuente que utilizaste para construir tu canister.
 
-### Reproducing build environments
+### Reproducir entornos de compilación
 
-Before building your code, you should document the build environment you are using in detail. In particular, for the languages supported by the IC SDK (Motoko, Rust, TypeScript, Python):
+Antes de compilar tu código, debes documentar en detalle el entorno de
+compilación que  
+estás utilizando. En particular, para los lenguajes compatibles con el IC SDK
+(Motoko,  
+Rust, TypeScript, Python):
 
--   Note your local machine's operating system and its version.
+- Anota el sistema operativo de tu máquina local y su versión.
 
--   If you are using the IC SDK, note the version used. You can install arbitrary versions of the IC SDK using [`dfxvm`](/docs/building-apps/developer-tools/dfxvm/dfxvm-install).
+- Si estás utilizando el IC SDK, anota la versión usada. Puedes instalar
+  versiones  
+  arbitrarias del IC SDK usando  
+  [`dfxvm`](/docs/building-apps/developer-tools/dfxvm/dfxvm-install).
 
--   If you are building Motoko code in a way other than `dfx build`, note the version of `moc` you are using.
+- Si estás compilando código en Motoko de una forma distinta a `dfx build`,
+  anota la  
+  versión de `moc` que estás utilizando.
 
--   If you are building Rust, note the version of `cargo` you are using.
+- Si estás compilando en Rust, anota la versión de `cargo` que estás utilizando.
 
-- If you are building TypeScript, note the version of [Azle](https://demergent-labs.github.io/azle/).
+- Si estás compilando en TypeScript, anota la versión de  
+  [Azle](https://demergent-labs.github.io/azle/).
 
-- If you are building Python, note the version of Python and [Kybra](https://demergent-labs.github.io/kybra/).
+- Si estás compilando en Python, anota la versión de Python y
+  [Kybra](https://demergent-labs.github.io/kybra/).
 
--   If you are using a framework for frontend development, such as React, Vite, or webpack, note their versions.
+- Si estás usando un framework para desarrollo frontend, como React, Vite o
+  webpack, anota sus versiones.
 
--   If your build process depends on any environment variables (such as the timezone or locale), note them.
+- Si tu proceso de compilación depende de variables de entorno (como la zona
+  horaria o  
+  la configuración regional), anótalas.
 
-You should communicate all of these to your user in the reproducible build instructions. Ideally, provide an executable recipe or script to recreate the build environment using tools such as Docker or Nix. It is recommended to use Docker, as it allows you to also pinpoint the operating system used for building the software.
+Debes comunicar todo esto a tu usuario en las instrucciones para la
+compilación  
+reproducible. Idealmente, proporciona una receta o script ejecutable para
+recrear el  
+entorno de compilación usando herramientas como Docker o Nix. Se recomienda usar
+Docker,  
+ya que también te permite fijar el sistema operativo utilizado para compilar
+el  
+software.
 
-### Build environments using Docker
+### Entornos de compilación usando Docker
 
-[Docker containers](https://docs.docker.com/) are a popular solution for providing reproducible build environments.
+[Contenedores Docker](https://docs.docker.com/) son una solución popular para  
+proporcionar entornos de compilación reproducibles.
 
 :::info
-For developers using macOS, it is recommended to install Docker using [lima](https://github.com/lima-vm/lima), as it proves more stable than Docker Desktop or Docker Machine. In particular, it avoids some QEMU bugs on Apple M1 machines.
+
+Para desarrolladores que usan macOS, se recomienda instalar Docker usando  
+[lima](https://github.com/lima-vm/lima), ya que resulta más estable que Docker
+Desktop  
+o Docker Machine. En particular, evita algunos bugs de QEMU en máquinas Apple
+M1.
+
 :::
 
-After setting Docker up, you can use a `Dockerfile` to provide the user with a particular version of the operating system, as well as other necessary tooling, such as `dfx`, Node.js, and the Rust toolchain.
+Después de configurar Docker, puedes usar un `Dockerfile` para proporcionar al
+usuario  
+una versión específica del sistema operativo, así como otras herramientas
+necesarias,  
+como `dfx`, Node.js y la herramienta de Rust.
 
 :::caution
-It is advised to stick with `x86_64` for running the Docker container, as builds are generally not reproducible across architectures. See the [docs](https://github.com/lima-vm/lima/blob/master/docs/multi-arch.md) on setting up cross-platform Docker containers in case your host environment is not `x86_64`.
+
+Se recomienda mantenerse en `x86_64` para ejecutar el contenedor Docker,  
+ya que las compilaciones generalmente no son reproducibles entre arquitecturas.
+Consulta  
+la
+[documentación](https://github.com/lima-vm/lima/blob/master/docs/multi-arch.md)  
+sobre cómo configurar contenedores Docker multiplataforma si tu entorno host no
+es `x86_64`.
+
 :::
 
-Below is an example Dockerfile that creates a standardized Rust build environment.
+A continuación, se muestra un ejemplo de Dockerfile que crea un entorno de
+compilación  
+estandarizado para Rust.
 
 ```dockerfile title="Dockerfile"
 FROM ubuntu:22.04
@@ -136,40 +277,64 @@ COPY . /canister
 WORKDIR /canister
 ```
 
-#### What this does
+#### Qué hace esto
 
-There are a couple of things worth noting about this `Dockerfile`:
+Hay un par de cosas que vale la pena señalar sobre este `Dockerfile`:
 
--   It starts from an official Docker image, such that all the installed tools are standard and come from standard sources. This provides the user with confidence that the build environment hasn’t been tampered with, and thus that the build process using Docker can be trusted.
+- Comienza a partir de una imagen oficial de Docker, de modo que todas las
+  herramientas instaladas son estándar y provienen de fuentes estándar. Esto
+  brinda al usuario la confianza de que el entorno de construcción no ha sido
+  manipulado y, por lo tanto, que se puede confiar en el proceso de construcción
+  usando Docker.
 
--   To ensure that specific versions of the build tools are installed, it installs them directly rather than through a package manager. Package managers usually don’t provide a way of pinning the build tools to specific versions.
+- Para garantizar que se instalen versiones específicas de las herramientas de
+  construcción, se instalan directamente en lugar de utilizar un gestor de
+  paquetes. Los gestores de paquetes generalmente no permiten fijar versiones
+  específicas de las herramientas de construcción.
 
-To use this `Dockerfile`, get Docker [up and running](https://docs.docker.com), place the `Dockerfile` in the project directory of your canister, and create the Docker container by running:
+Para usar este `Dockerfile`, inicia Docker
+[correctamente](https://docs.docker.com), coloca el `Dockerfile` en el
+directorio del proyecto de tu canister y crea el contenedor de Docker
+ejecutando:
 
 ```bash
 docker build -t mycanister .
 ```
 
-This creates a Docker container image called `mycanister`, with Node.js, Rust, and `dfx` installed in it. Your canister source code will be copied to the directory `/canister`. You should invoke `docker build` from the canister project directory. You can then enter an interactive shell inside of your Docker container by running:
+Esto crea una imagen de contenedor Docker llamada `mycanister`, con Node.js,
+Rust y `dfx` instalados. El código fuente de tu canister se copiará al
+directorio `/canister`. Debes ejecutar `docker build` desde el directorio del
+proyecto del canister. Luego puedes entrar a una terminal interactiva dentro del
+contenedor Docker ejecutando:
 
 ```bash
 docker run -it --rm mycanister
 ```
 
-From here, you can experiment with the steps needed to build your canister. Once you are confident that the steps are deterministic, you can also put them in the `Dockerfile`. For example, to run a build script, add the line:
+Desde aquí, puedes experimentar con los pasos necesarios para construir tu
+canister. Una vez que estés seguro de que los pasos son deterministas, también
+puedes agregarlos al `Dockerfile`. Por ejemplo, para ejecutar un script de
+construcción, agrega la línea:
 
 ```dockerfile
 RUN ./build_script.sh
 ```
 
-You can see an example in the [Dockerfile of the Internet Identity canister](https://github.com/dfinity/internet-identity/blob/397d0087a29855564c47f0fd3323f60b5b67a8fa/Dockerfile).
+Puedes ver un ejemplo en el  
+[Dockerfile del canister de Internet Identity](https://github.com/dfinity/internet-identity/blob/397d0087a29855564c47f0fd3323f60b5b67a8fa/Dockerfile).
 
-### Example build script
+### Script de construcción de ejemplo
 
-Below is an example script that can be used to programmatically build a Rust project:
+A continuación se muestra un script de ejemplo que puede usarse para construir
+un proyecto Rust de manera programática:
 
 :::info
-This is an example build script for a Rust project and does not include a fully comprehensive example of what a build script may contain, nor does it include build instructions for other languages such as Motoko.
+
+Este es un script de construcción de ejemplo para un proyecto en Rust y no
+incluye un ejemplo completamente exhaustivo de lo que puede contener un script
+de construcción, ni incluye instrucciones de construcción para otros lenguajes
+como Motoko.
+
 :::
 
 ```bash
@@ -183,7 +348,8 @@ cargo build --locked --target wasm32-unknown-unknown --release
 ic-wasm target/wasm32-unknown-unknown/release/example_backend.wasm -o example_backend.wasm shrink
 ```
 
-A build script such as the one above can be specified as a custom build script in `dfx.json`:
+Un script de construcción como el anterior se puede especificar como un script
+de construcción personalizado en `dfx.json`:
 
 ```json title="dfx.json"
 "canisters": {
@@ -197,59 +363,101 @@ A build script such as the one above can be specified as a custom build script i
 }
 ```
 
+### Garantizando el determinismo del proceso de construcción
 
-### Ensuring the determinism of the build process
+A continuación, considera si es necesario hacer que la construcción sea
+determinista. Para que el proceso de construcción sea determinista:
 
-Next, consider if it is necessary to make the build deterministic. For the build process to be deterministic:
+- #### Paso 1: Necesitarás asegurarte de que cualquier dependencia de tu canister siempre se resuelva de la misma manera. La mayoría de las herramientas de construcción permiten fijar las dependencias a una versión específica.
 
-- #### Step 1: You will need to ensure that any dependencies of your canister are always resolved in the same way. Most build tools support a way of pinning dependencies to a particular version.
+Para `npm`, ejecutar `npm install` creará un archivo `package-lock.json` con
+algunas versiones fijas de todas las dependencias (transitivas) de tu proyecto
+que satisfacen los requisitos especificados en tu `package.json`. Sin embargo,
+`npm install` sobrescribirá el archivo `package-lock.json` cada vez que se
+invoque. Por lo tanto, una vez que estés listo para crear la versión final de tu
+canister, ejecuta `npm install` solo una vez. Luego, haz commit del
+`package-lock.json` a tu sistema de control de versiones. Finalmente, al
+verificar la construcción para reproducibilidad, usa `npm ci` en lugar de
+`npm install`.
 
-For `npm`, running `npm install` will create a `package-lock.json` file with some fixed versions of all (transitive) dependencies of your project that satisfy the requirements specified in your `package.json`. However, `npm install` will overwrite the `package-lock.json` file every time it is invoked. Thus, once you are ready to create the final version of your canister, run `npm install` only once. After that, commit `package-lock.json` to your version control system. Finally, when checking the build for reproducibility, use `npm ci` instead of `npm install`.
+Para código Rust, Cargo generará automáticamente un archivo `Cargo.lock` con las
+versiones fijas de tus dependencias (transitivas). Al igual que con
+`package-lock.json`, deberías hacer commit de este archivo a tu sistema de
+control de versiones una vez que estés listo para producir la versión final de
+tu canister. Además, Cargo por defecto ignora las versiones bloqueadas de las
+dependencias. Pasa la opción `--locked` al comando `cargo` para asegurarte de
+que se usen las dependencias bloqueadas.
 
-For Rust code, Cargo will automatically generate a `Cargo.lock` file with the fixed versions of your (transitive) dependencies. Like with `package-lock.json`, you should commit this file to your version control system once you are ready to produce the final version of your canister. Furthermore, Cargo by default ignores the locked versions of dependencies. Pass the `--locked` flag to the `cargo` command to ensure that the locked dependencies are used.
+- #### Paso 2: Tus propios scripts de construcción no deben introducir no-determinismo.
 
-- #### Step 2: Your own build scripts must not introduce non-determinism.
+Fuentes de no-determinismo incluyen aleatoriedad, marcas de tiempo, concurrencia
+u ofuscadores de código. Fuentes menos obvias incluyen configuraciones
+regionales (locales), rutas absolutas de archivos, el orden de archivos en un
+directorio y URLs remotas cuyo contenido puede cambiar. Además, depender de
+complementos de construcción de terceros te expone a cualquier no-determinismo
+introducido por estos.
 
-Sources of non-determinism include randomness, timestamps, concurrency, or code obfuscators. Less obvious sources include locales, absolute file paths, the order of files in a directory, and remote URLs whose content can change. Furthermore, relying on third-party build plug-ins exposes you to any non-determinism introduced by these.
+- #### Paso 3: Dadas las mismas dependencias y scripts de construcción deterministas, las herramientas de construcción en sí mismas (`moc` para Motoko, `cargo` para Rust, `npx` para TypeScript, `pip` para Python o `webpack` para desarrollo frontend) también deben ser deterministas.
 
-- #### Step 3: Given the same dependencies and deterministic build scripts, the build tools themselves (`moc` for Motoko, `cargo` for Rust, `npx` for TypeScript, `pip` for Python, or `webpack` for frontend development) must also be deterministic.
+Estas herramientas buscan ser deterministas. Sin embargo, son piezas de software
+complejas y garantizar el determinismo no es trivial. Por lo tanto, los errores
+de no-determinismo pueden, y de hecho, ocurren.
 
-These tools aim to be deterministic. However, they are complicated pieces of software, and ensuring determinism is nontrivial. Thus, non-determinism bugs can and do occur.
+#### Consideraciones deterministas en Motoko
 
-#### Motoko deterministic considerations
+El compilador de Motoko busca ser determinista y reproducible; si encuentras
+problemas de reproducibilidad, por favor envía un
+[nuevo issue](https://github.com/dfinity/motoko/issues/new/choose), y el equipo
+tratará de abordarlos en la medida de lo posible.
 
-The Motoko compiler aims to be deterministic and reproducible; if you find reproducibility issues, please submit a [new issue](https://github.com/dfinity/motoko/issues/new/choose), and the team will try to address them to the extent possible.
+#### Consideraciones deterministas en Rust
 
-#### Rust deterministic considerations
+Para Rust, consulta la
+[lista de problemas actuales de posible no-determinismo en Rust](https://github.com/rust-lang/rust/labels/A-reproducibility).  
+Si has observado diferencias entre código Rust compilado a Wasm bajo Linux y
+macOS, se recomienda fijar la plataforma de construcción y su versión.
 
-For Rust, see the [list of current potential non-determinism issues in Rust](https://github.com/rust-lang/rust/labels/A-reproducibility). If you have observed differences between Rust code compiled to Wasm under Linux and macOS, it is recommended to pin the build platform and its version.
+#### Consideraciones deterministas en Webpack
 
-#### Webpack deterministic considerations
+Para webpack,  
+[la asignación determinista de nombres de módulos y chunks](https://webpack.js.org/configuration/optimization/)  
+que deberías usar ha sido introducida desde la versión 5.
 
-For webpack, [deterministic naming of module and chunk IDs](https://webpack.js.org/configuration/optimization/) that you should use has been introduced since version 5.
+### Probando la reproducibilidad
 
-### Testing reproducibility
-
-If reproducibility is vital for your code, you should test the build to increase your confidence in its reproducibility. The tool [reprotest](https://salsa.debian.org/reproducible-builds/reprotest) can help you automate reproducibility tests, as it tests your build by running it in two different environments that differ in characteristics such as paths, time, file order, and others, and comparing the results. To check your build with `reprotest`, add the following line to your `Dockerfile`:
+Si la reproducibilidad es vital para tu código, deberías probar la construcción
+para aumentar tu confianza en su reproducibilidad. La herramienta  
+[reprotest](https://salsa.debian.org/reproducible-builds/reprotest) puede
+ayudarte a automatizar pruebas de reproducibilidad, ya que prueba tu
+construcción ejecutándola en dos entornos diferentes que difieren en
+características como rutas, tiempo, orden de archivos y otras, y compara los
+resultados. Para verificar tu construcción con `reprotest`, agrega la siguiente
+línea a tu `Dockerfile`:
 
 ```dockerfile
 RUN apt -yqq install --no-install-recommends reprotest disorderfs faketime rsync sudo wabt
 ```
 
-When using `dfx build --network ic`, you need to prebuild your frontend dependencies by running `npm ci` before `dfx build --network ic` or by setting the custom build type in `dfx.json` and running `npm ci` in your build script. Your project directory should contain a `canister_ids.json` file containing the IDs of your canisters on the mainnet. Below is an example `canister_ids.json` file:
+Al usar `dfx build --network ic`, necesitas preconstruir tus dependencias
+frontend ejecutando `npm ci` antes de `dfx build --network ic` o estableciendo
+el tipo de construcción personalizada en `dfx.json` y ejecutando `npm ci` en tu
+script de construcción. Tu directorio del proyecto debe contener un archivo
+`canister_ids.json` que contenga los IDs de tus canisters en la red principal. A
+continuación se muestra un ejemplo de archivo `canister_ids.json`:
 
 ```json title="canister_ids.json"
 {
-  "example_backend": {
-    "ic": "rrkah-fqaaa-aaaaa-aaaaq-cai"
-  },
-  "example_frontend": {
-    "ic": "ryjl3-tyaaa-aaaaa-aaaba-cai"
-  }
+  "example_backend": {
+    "ic": "rrkah-fqaaa-aaaaa-aaaaq-cai"
+  },
+  "example_frontend": {
+    "ic": "ryjl3-tyaaa-aaaaa-aaaba-cai"
+  }
 }
 ```
 
-Now, from the root directory of your canister project, you can test the reproducibility of your build using the commands:
+Ahora, desde el directorio raíz de tu proyecto de canister, puedes probar la
+reproducibilidad de tu construcción utilizando los comandos:
 
 ```
 docker build -t mycanister .
@@ -258,54 +466,109 @@ docker run --rm --privileged -it mycanister
 /canister# reprotest -vv --store-dir=artifacts --variations '+all,-time' 'dfx build --network ic' '.dfx/ic/canisters/*/*.wasm'
 ```
 
-#### What this does
-- The first command builds the Docker container using the `Dockerfile` provided earlier.
-- The second command opens an interactive shell in the container, indicated by the flag `-it`. You can run this in privileged mode using the `--privileged` flag, as `reprotest` uses kernel modules for some build environment variations. You can also run it in non-privileged mode by excluding some of the variations; see the [reprotest manual](https://manpages.debian.org/stretch/reprotest/reprotest.1.en.html). The `--rm` flag will destroy the container after you close its shell.
-- Once inside the container, a directory is created for the build artifacts, and `reprotest` is launched in verbose mode using the `-vv` flags. You need to give it the build command you want to run as the first argument; in this example it is `dfx build --network ic`. It will then run the build in two different environments.
-- Finally, you need to tell `reprotest` which paths to compare at the end of the two builds. In this example, it compares the Wasm code for all canisters, which is found in the `.dfx/ic` directory. It is encouraged that you compare the artifacts produced by 'reprotest` while manually changing your system time.
+#### Qué hace esto
+
+- El primer comando construye el contenedor Docker utilizando el `Dockerfile`
+  proporcionado anteriormente.
+- El segundo comando abre una shell interactiva en el contenedor, indicada por
+  el flag `-it`. Puedes ejecutarlo en modo privilegiado usando el flag
+  `--privileged`, ya que `reprotest` utiliza módulos del kernel para algunas
+  variaciones del entorno de construcción. También puedes ejecutarlo en modo no
+  privilegiado excluyendo algunas de las variaciones; consulta el  
+  [manual de reprotest](https://manpages.debian.org/stretch/reprotest/reprotest.1.en.html).  
+  El flag `--rm` destruirá el contenedor después de que cierres la shell.
+- Una vez dentro del contenedor, se crea un directorio para los artefactos de
+  construcción y se lanza `reprotest` en modo detallado utilizando los flags
+  `-vv`. Debes proporcionarle el comando de construcción que deseas ejecutar
+  como primer argumento; en este ejemplo es `dfx build --network ic`. Luego
+  ejecutará la construcción en dos entornos diferentes.
+- Finalmente, necesitas decirle a `reprotest` qué rutas comparar al final de las
+  dos construcciones. En este ejemplo, compara el código Wasm de todos los
+  canisters, que se encuentra en el directorio `.dfx/ic`.  
+  Se recomienda comparar los artefactos producidos por `reprotest` mientras se
+  cambia manualmente la hora del sistema.
 
 :::info
-This workflow omits the time variation because the Rust compiler uses `jemalloc` for dynamic memory allocation, and this library is not [compatible](https://github.com/wolfcw/libfaketime/issues/130) with `faketime` used by `reprotest` to implement the time variation.
+
+Este flujo de trabajo omite la variación de tiempo porque el compilador de Rust
+utiliza `jemalloc` para la asignación dinámica de memoria, y esta biblioteca no
+es  
+[compatible](https://github.com/wolfcw/libfaketime/issues/130) con `faketime`,
+que es usado por `reprotest` para implementar la variación de tiempo.
+
 :::
 
-If the comparison doesn’t find any differences, you will see an output similar to this one:
+Si la comparación no encuentra diferencias, verás una salida similar a esta:
 
 ```
 =======================
 Reproduction successful
 =======================
 No differences in ./.dfx/ic/canisters/*/*.wasm
-6b2a15a918219138836e88e9c95f9c5d2d7b6d465df83ae05d6fd2b0f14f8a97  ./.dfx/ic/canisters/example_backend/example_backend.wasm
-a047686c1d517e21d447bcd42c9394a12cdb240e06425b830c99d3a689b5ee20  ./.dfx/ic/canisters/example_frontend/assetstorage.wasm
-a047686c1d517e21d447bcd42c9394a12cdb240e06425b830c99d3a689b5ee20  ./.dfx/ic/canisters/example_frontend/example_frontend.wasm
+6b2a15a918219138836e88e9c95f9c5d2d7b6d465df83ae05d6fd2b0f14f8a97  ./.dfx/ic/canisters/example_backend/example_backend.wasm
+a047686c1d517e21d447bcd42c9394a12cdb240e06425b830c99d3a689b5ee20  ./.dfx/ic/canisters/example_frontend/assetstorage.wasm
+a047686c1d517e21d447bcd42c9394a12cdb240e06425b830c99d3a689b5ee20  ./.dfx/ic/canisters/example_frontend/example_frontend.wasm
 ```
 
-This is a good indicator that your build is not affected by your environment.
+Esto es un buen indicador de que tu construcción no está siendo afectada por tu
+entorno.
 
 :::info
-Note that `reprotest` can’t check that your dependencies are pinned properly. It is recommended that you run the container `reprotest` builds under several host operating systems and compare the results. If the comparison does find differences between the Wasm code produced in two builds, it will output a diff. You will then likely want to use the `--store-dir` flag of `reprotest` to store the outputs and the diff somewhere where you can analyze them. If you are struggling to achieve reproducibility, consider also using [DetTrace](https://github.com/dettrace/dettrace), which is a container abstraction that tries to make arbitrary builds deterministic.
+
+Ten en cuenta que `reprotest` no puede comprobar que tus dependencias estén
+fijadas correctamente.  
+Se recomienda ejecutar el contenedor que construye `reprotest` en varios
+sistemas operativos anfitriones y comparar los resultados.  
+Si la comparación encuentra diferencias entre el código Wasm producido en dos
+construcciones, se mostrará un diff.  
+Probablemente querrás usar el flag `--store-dir` de `reprotest` para guardar las
+salidas y el diff en algún lugar donde puedas analizarlos.  
+Si tienes dificultades para lograr la reproducibilidad, considera también usar  
+[DetTrace](https://github.com/dettrace/dettrace), que es una abstracción de
+contenedor que intenta hacer que las construcciones arbitrarias sean
+deterministas.
+
 :::
 
-Finally, if your build is reproducible, you can compare the hash of the resulting Wasm code to the hash of the code that is running in a canister, which you retrieve as follows:
+Finalmente, si tu construcción es reproducible, puedes comparar el hash del
+código Wasm resultante con el hash del código que se está ejecutando en un
+canister, el cual puedes obtener de la siguiente forma:
 
 ```
 dfx canister --network ic info <canister-id>
 ```
 
-Beware that this hash might change if the controllers upgrade the canister code.
+Ten cuidado, ya que este hash puede cambiar si los controladores actualizan el
+código del canister.
 
-## Long-term considerations
+## Consideraciones a largo plazo
 
-Even after you achieve reproducibility for your builds, there are still other things to consider for the long term.
+Incluso después de lograr reproducibilidad en tus construcciones, aún hay otras
+cosas que considerar a largo plazo.
 
-Reproducibility can be more demanding if you expect your canister code to stay around for years and remain reproducible. The biggest challenges are to ensure that your:
+La reproducibilidad puede ser más exigente si esperas que tu código de canister
+permanezca durante años y siga siendo reproducible. Los mayores desafíos son
+asegurar que tu:
 
--  Build toolchain is available in the future.
+- Herramienta de construcción esté disponible en el futuro.
 
--  Dependencies are available.
+- Dependencias estén disponibles.
 
--  Toolchain still runs and correctly builds your dependencies.
+- Herramienta de construcción aún se ejecute y construya correctamente tus
+  dependencias.
 
-Distributions and package archives may drop old versions of packages, including both your toolchain and their dependencies. Websites may go offline, and URLs might stop working. It’s prudent to back up all of your toolchain and dependencies. You should consider getting involved in projects such as [Software Heritage](https://www.softwareheritage.org/), which do this on a large scale.
+Las distribuciones y archivos de paquetes pueden eliminar versiones antiguas de
+paquetes, incluyendo tanto tu herramienta como sus dependencias.  
+Los sitios web pueden dejar de estar disponibles y las URLs pueden dejar de
+funcionar.  
+Es prudente respaldar todas tus herramientas de construcción y dependencias.  
+Deberías considerar involucrarte en proyectos como  
+[Software Heritage](https://www.softwareheritage.org/), que hacen esto a gran
+escala.
 
-You might have to adjust your build process to ensure that your canister still builds. Even if the build changes, if it still yields the same result, your users can be confident that your canister is running the correct code. The trust argument is easier if your dependencies come from a trustworthy source, such as the Software Heritage project.
+Podrías tener que ajustar tu proceso de construcción para asegurar que tu
+canister siga compilándose.  
+Incluso si la construcción cambia, si aún produce el mismo resultado, tus
+usuarios pueden confiar en que tu canister está ejecutando el código correcto.  
+El argumento de confianza es más fácil si tus dependencias provienen de una
+fuente confiable, como el proyecto Software Heritage.

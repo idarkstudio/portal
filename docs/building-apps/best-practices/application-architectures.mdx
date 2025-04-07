@@ -1,52 +1,103 @@
 ---
-keywords: [beginner, concept, application architectures, architectures, project structure, application structure, app structure, how to structure app, how to structure project]
+keywords:
+  [
+    beginner,
+    concept,
+    application architectures,
+    architectures,
+    project structure,
+    application structure,
+    app structure,
+    how to structure app,
+    how to structure project,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 
-# Application architecture considerations
+# Consideraciones de arquitectura de aplicaciones
 
-<MarkdownChipRow labels={["Beginner", "Education", "Concept"]} />
+<MarkdownChipRow labels={["Principiante", "Educación", "Concepto"]} />
 
-A common question when developing an application is how and where to store the data. In contrast to traditional platforms, ICP does not provide a database.
-Instead, ICP can persist changes in the <GlossaryTooltip>canister</GlossaryTooltip> state using stable memory.
-This means that developers have a lot of freedom in organizing and storing the data. The recommended practice is to use already existing libraries, such as the Motoko [stable regions](/docs/motoko/main/stable-memory/stable-regions) library or the Rust [stable-structures](https://github.com/dfinity/stable-structures) library, to store data in the stable memory.
+Una pregunta común al desarrollar una aplicación es cómo y dónde almacenar los
+datos. A diferencia de las plataformas tradicionales, ICP no proporciona una
+base de datos. En su lugar, ICP puede persistir los cambios en el estado del
+<GlossaryTooltip>canister</GlossaryTooltip> utilizando memoria estable. Esto
+significa que los desarrolladores tienen mucha libertad para organizar y
+almacenar los datos. La práctica recomendada es utilizar bibliotecas ya
+existentes, como la biblioteca de
+[regiones estables](/docs/motoko/main/stable-memory/stable-regions) de Motoko o
+la biblioteca de
+[estructuras estables](https://github.com/dfinity/stable-structures) de Rust,
+para almacenar datos en la memoria estable.
 
-Another question that developers should ask is how to structure their application. It is possible to build an application consisting of multiple canisters that communicate with each other.
-A common pitfall for new developers is designing the application for millions of users from the get-go without understanding the underlying trade-offs of the system.
-It is better to start with the simplest possible architecture and iteratively improve it with user growth.
+Otra pregunta que los desarrolladores deben hacerse es cómo estructurar su
+aplicación. Es posible construir una aplicación que conste de múltiples
+canisters que se comuniquen entre sí. Un error común para los nuevos
+desarrolladores es diseñar la aplicación para millones de usuarios desde el
+principio sin comprender los compromisos subyacentes del sistema. Es mejor
+comenzar con la arquitectura más simple posible y mejorarla de forma iterativa
+con el crecimiento de usuarios.
 
-## Canister-per-service architecture
-Canisters can be thought of as microservices, where each canister is responsible for a specific service of the application, such as managing users, storing data, or processing data.
-Note that all benefits and disadvantages of the traditional microservice architecture apply here as well.
-The default project structure that [`dfx new`](/docs/building-apps/developer-tools/dfx/dfx-new) generates can be viewed as the simplest microservice architecture, with the frontend canister being responsible for serving web assets and the backend canister being responsible for the core logic of the application.
+## Arquitectura de un canister por servicio
 
-## Single canister architecture
+Los canisters se pueden considerar como microservicios, donde cada canister es
+responsable de un servicio específico de la aplicación, como gestionar usuarios,
+almacenar datos o procesar datos. Tenga en cuenta que todos los beneficios y
+desventajas de la arquitectura de microservicios tradicional también se aplican
+aquí. La estructura de proyecto predeterminada generada por
+[`dfx new`](/docs/building-apps/developer-tools/dfx/dfx-new) se puede ver como
+la arquitectura de microservicios más simple, con el canister de frontend siendo
+responsable de servir activos web y el canister de backend siendo responsable de
+la lógica principal de la aplicación.
 
-A single canister can host the entire application stack, including its web assets, core logic, and data. To write a single canister that hosts frontend assets and backend core logic, you will need to use a library for the asset storage API, such as the `ic-certified-assets` library for Rust canisters. A few examples of single canister projects include:
+## Arquitectura de un solo canister
 
-- [HTTPS greet example](https://github.com/krpeacock/server/tree/main/examples/http_greet).
+Un solo canister puede alojar toda la pila de la aplicación, incluidos sus
+activos web, lógica principal y datos. Para escribir un solo canister que aloje
+activos de frontend y lógica principal de backend, deberá utilizar una
+biblioteca para la API de almacenamiento de activos, como la biblioteca
+`ic-certified-assets` para canisters de Rust. Algunos ejemplos de proyectos de
+un solo canister incluyen:
 
-- [Internet Identity integration example](https://github.com/dfinity/internet-identity/tree/main/demos/using-dev-build).
+- [Ejemplo de saludo HTTPS](https://github.com/krpeacock/server/tree/main/examples/http_greet).
 
-Even though this architecture is simple, it can scale to thousands of users and gigabytes of data.
+- [Ejemplo de integración de Identidad en Internet](https://github.com/dfinity/internet-identity/tree/main/demos/using-dev-build).
 
-## Canister-per-subnet architecture
+Aunque esta arquitectura es simple, puede escalar a miles de usuarios y
+gigabytes de datos.
 
-ICP scales horizontally via <GlossaryTooltip>subnets</GlossaryTooltip>, so applications can also scale by utilizing more subnets.
-One way to achieve this is to have one or multiple canisters per subnet and then shard data over these canisters to distribute the load.
-This is the most scalable architecture and could, in theory, support millions of users and terabytes of data.
-Since the application data and logic are distributed over multiple subnets, this requires expert knowledge of distributed programming.
-The cost of development and maintenance is much higher compared to the single-canister architecture.
+## Arquitectura de un canister por subred
 
-## Canister-per-user architecture
-This architecture is based on the vision that Web3 users should have full control over their data.
-The idea is to create a canister per user and make the user the controller of their canister.
-The main canister of the application would then orchestrate user canisters to implement the application’s functionality.
-Since users are controllers of their canisters, they can install their own code, decide how to participate in the application, and determine what data to share.
-These user benefits come at large development costs because the main canister needs to be programmed in such a way that it can handle all possible actions of potentially malicious user canisters.
-This is a new and unprecedented way of programming.
-**There hasn’t been a successful implementation of this vision yet.**
-A couple of projects that opted for this architecture, but only [NFID Vaults](https://nfidvaults.com) have given the ownership of canisters to the users.
-A common misconception is that the canister-per-user architecture is the most scalable; actually, canister-per-subnet is more performant because it can utilize multiple subnets without having the overhead of too many canisters.
+ICP escala horizontalmente a través de
+
+<GlossaryTooltip>subredes</GlossaryTooltip>, por lo que las aplicaciones también
+pueden escalar utilizando más subredes. Una forma de lograr esto es tener uno o
+varios canisters por subred y luego fragmentar los datos en estos canisters para
+distribuir la carga. Esta es la arquitectura más escalable y, en teoría, podría
+admitir millones de usuarios y terabytes de datos. Dado que los datos y la
+lógica de la aplicación se distribuyen en múltiples subredes, esto requiere
+conocimientos expertos de programación distribuida. El costo de desarrollo y
+mantenimiento es mucho mayor en comparación con la arquitectura de un solo
+canister.
+
+## Arquitectura de un canister por usuario
+
+Esta arquitectura se basa en la visión de que los usuarios de Web3 deben tener
+control total sobre sus datos. La idea es crear un canister por usuario y hacer
+que el usuario sea el controlador de su canister. El canister principal de la
+aplicación luego orquestará los canisters de usuario para implementar la
+funcionalidad de la aplicación. Dado que los usuarios son los controladores de
+sus canisters, pueden instalar su propio código, decidir cómo participar en la
+aplicación y determinar qué datos compartir. Estos beneficios para los usuarios
+conllevan altos costos de desarrollo porque el canister principal debe
+programarse de tal manera que pueda manejar todas las acciones posibles de
+canisters de usuarios potencialmente maliciosos. Esta es una forma de
+programación nueva e sin precedentes. **Todavía no ha habido una implementación
+exitosa de esta visión.** Algunos proyectos que optaron por esta arquitectura,
+pero solo [NFID Vaults](https://nfidvaults.com) han dado la propiedad de los
+canisters a los usuarios. Un error común es pensar que la arquitectura de un
+canister por usuario es la más escalable; en realidad, la arquitectura de un
+canister por subred es más eficiente porque puede utilizar múltiples subredes
+sin tener la sobrecarga de demasiados canisters.

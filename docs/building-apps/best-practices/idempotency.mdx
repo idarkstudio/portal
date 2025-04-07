@@ -1,107 +1,299 @@
 ---
-keywords: [intermediate, concept, best practices, safe retries, idempotency, idempotent canister APIs]
+keywords:
+  [
+    intermediate,
+    concept,
+    best practices,
+    safe retries,
+    idempotency,
+    idempotent canister APIs,
+  ]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
 
-# Developer best practices: Safe retries and idempotency
+# Mejores prácticas para desarrolladores: reintentos seguros e idempotencia
 
-<MarkdownChipRow labels={["Intermediate", "Best practices"]} />
+<MarkdownChipRow labels={["Intermedio", "Mejores prácticas"]} />
 
-In the case of network issues or other unexpected behavior, ICP clients (such as agents) that issue
-ingress update calls may be unable to determine whether their ingress
-request has been processed. For example, this can happen if the client loses its
-connection until the request status has been removed from the state tree, since ICP will remove the request from the system state tree some time after the ingress expiry.
-Similarly, canisters which call other canisters using bounded-wait calls may be unable to determine whether the call was successful or not.
+En caso de problemas de red u otro comportamiento inesperado, los clientes de
+ICP (como los agentes) que emiten llamadas de actualización de ingreso pueden no
+poder determinar si su solicitud de ingreso ha sido procesada. Por ejemplo, esto
+puede suceder si el cliente pierde su conexión hasta que el estado de la
+solicitud se haya eliminado del árbol de estado del sistema, ya que ICP
+eliminará la solicitud del árbol de estado del sistema algún tiempo después del
+vencimiento del ingreso. De manera similar, los canisters que llaman a otros
+canisters utilizando llamadas de espera acotada pueden no poder determinar si la
+llamada fue exitosa o no.
 
-This can be risky as the callers (external users or applications for ingress messages, or canisters for inter-canister calls) might decide to retry transactions, potentially leading to serious security vulnerabilities such as double spending.
+Esto puede ser arriesgado ya que los llamantes (usuarios externos o aplicaciones
+para mensajes de ingreso, o canisters para llamadas entre canisters) podrían
+decidir reintentar transacciones, lo que podría llevar a graves vulnerabilidades
+de seguridad como el doble gasto.
 
-Thus, it is important to design and/or use canister APIs such that it is possible to retry requests safely, even when the ICP provides no information about previous request attempts. This page describes general approaches that both the canister authors and the clients can adopt to enable safe retries.
+Por lo tanto, es importante diseñar y/o utilizar APIs de canister de manera que
+sea posible reintentar solicitudes de manera segura, incluso cuando ICP no
+proporciona información sobre intentos de solicitud anteriores. Esta página
+describe enfoques generales que tanto los autores de canisters como los clientes
+pueden adoptar para habilitar reintentos seguros.
 
-Please read the [reference on ingress messaging](/docs/building-apps/essentials/message-execution) to learn about the messaging basics and potential errors.
+Por favor, lee la
+[referencia sobre mensajes de ingreso](/docs/building-apps/essentials/message-execution)
+para aprender sobre los conceptos básicos de mensajería y posibles errores.
 
-## Idempotent canister APIs
+## APIs de canister idempotentes
 
-We say that a canister endpoint is idempotent if executing it multiple times is equivalent to executing it once.[^1] Whenever an endpoint is idempotent or can be made idempotent by the developer, this provides an easy way to implement safe retries.
+Decimos que un punto de conexión de un canister es idempotente si ejecutarlo
+varias veces es equivalente a ejecutarlo una vez.[^1] Cuando un punto de
+conexión es idempotente o puede hacerse idempotente por el desarrollador, esto
+proporciona una forma fácil de implementar reintentos seguros.
 
-Given an idempotent endpoint, you can implement retries from an external application by retrying the call until you observe a certified response, either a replied or rejected status; see the illustration below. If such a response is ever observed, it's sure that the transaction has been executed at least once which, thanks to idempotency, has the same result as executing it exactly once. However, the application may not be willing to wait for a response indefinitely and a timeout could be implemented. Upon timeout, an error should be displayed to the user instructing them to wait until the latest message that has been sent has expired (as defined by the request's `ingress_expiry`) and then manually check the status of the transaction. Ideally, timeouts should be rare and not occur during normal operation.
+Dado un punto de conexión idempotente, puedes implementar reintentos desde una
+aplicación externa volviendo a intentar la llamada hasta que observes una
+respuesta certificada, ya sea un estado de respuesta o rechazo; consulta la
+ilustración a continuación. Si alguna vez se observa una respuesta de este tipo,
+es seguro que la transacción se ha ejecutado al menos una vez, lo que, gracias a
+la idempotencia, tiene el mismo resultado que ejecutarla exactamente una vez.
+Sin embargo, es posible que la aplicación no esté dispuesta a esperar una
+respuesta indefinidamente y se pueda implementar un tiempo de espera. Al vencer
+el tiempo de espera, se debe mostrar un error al usuario indicándole que espere
+hasta que el último mensaje que se haya enviado haya expirado (según lo definido
+por el `ingress_expiry` de la solicitud) y luego verifique manualmente el estado
+de la transacción. Idealmente, los tiempos de espera deberían ser raros y no
+ocurrir durante el funcionamiento normal.
 
-![Retrying an idempotent call](/img/docs/retry_idempotency.png)
+![Reintentando una llamada idempotente](/img/docs/retry_idempotency.png)
 
-The situation is similar for bounded-wat inter-canister calls. Given an idempotent endpoint, the calling canister can keep retrying until a response other than `SYS_UNKNOWN` is observed, or give up after a timeout, if waiting indefinitely is not an option.
+La situación es similar para las llamadas entre canisters con espera acotada.
+Dado un punto de conexión idempotente, el canister que realiza la llamada puede
+seguir intentando hasta que se observe una respuesta distinta de `SYS_UNKNOWN`,
+o rendirse después de un tiempo de espera si esperar indefinidamente no es una
+opción.
 
-Below are two approaches to making endpoints idempotent: sequence numbers and (time window) ID deduplication.
+A continuación se presentan dos enfoques para hacer que los puntos de conexión
+sean idempotentes: números de secuencia y deduplicación de ID (ventana de
+tiempo).
 
-### Update sequence numbers
+### Números de secuencia de actualización
 
-An endpoint can make use of sequence numbers to provide idempotency by taking a sequence number parameter in addition to other parameters. In the extreme case, a canister could keep a single expected sequence number for every endpoint, and a call could only be accepted if it contained the next expected sequence number, causing the expected sequence number to be incremented upon call execution. This trivially implies that any call can only be executed once. More practically, an expected sequence number is kept for each caller principal, or, in the case of ledger-like canisters, each ledger account. Note that Ethereum implements this mechanism.
+Un punto de conexión puede utilizar números de secuencia para proporcionar
+idempotencia al tomar un parámetro de número de secuencia además de otros
+parámetros. En el caso extremo, un canister podría mantener un solo número de
+secuencia esperado para cada punto de conexión, y una llamada solo se aceptaría
+si contenía el siguiente número de secuencia esperado, lo que haría que el
+número de secuencia esperado se incrementara al ejecutar la llamada. Esto
+implica trivialmente que cualquier llamada solo se puede ejecutar una vez. De
+manera más práctica, se mantiene un número de secuencia esperado para cada
+principal del llamante, o, en el caso de canisters similares a los libros de
+contabilidad, para cada cuenta del libro de contabilidad. Ten en cuenta que
+Ethereum implementa este mecanismo.
 
-The advantages of this approach are:
-1. Sequence numbers are simple to implement and understand.
-1. When applicable, it has a modest memory footprint because only the next expected sequence number must be stored (for example, per active account).
+Las ventajas de este enfoque son:
 
-The approach also has some disadvantages:
-1. It limits the throughput. When per-caller sequence numbers are used, it means that the caller can generally perform only one ingress call per consensus block, translating to a throughput of about 1 ingress call per second for that user. The situation is better for inter-canister calls, as the requests (if delivered) will be delivered in the order in which they were sent. Thus, the calling canister can issue multiple requests simultaneously, using appropriate sequence numbers. Under normal load, all requests should be delivered. However, under heavy load where the system may drop some requests, requests that follow such a dropped request may become invalid.
+1. Los números de secuencia son simples de implementar y entender.
+2. Cuando corresponde, tiene una huella de memoria modesta porque solo se debe
+   almacenar el siguiente número de secuencia esperado (por ejemplo, por cuenta
+   activa).
 
-2. It limits concurrency. The user has to sequentialize all their calls. This is straightforward to do when the user is another canister, but it can be much more difficult when the canister is called through ingress messages. In particular, it's complicated when the user is using multiple clients or devices to access the canister, for example. This concurrency problem also makes the approach  inapplicable to cases where anonymous users are allowed to trigger update calls.
+El enfoque también tiene algunas desventajas:
 
-3. If the sequence number is stored per user or per account, tracking them for too many users can exhaust the canister memory, even if each individual number is small. This could, e.g., be exploited by an attacker to exhaust the memory. The approach is thus best suited for cases where the user has to pay for the usage in some way (e.g., the ledgers usually require a fee to both create an account and transfer funds), which thwarts attackers by requiring them to invest significant funds in an attack.
+1. Limita el rendimiento. Cuando se utilizan números de secuencia por llamante,
+   significa que el llamante generalmente solo puede realizar una llamada de
+   ingreso por bloque de consenso, lo que se traduce en un rendimiento de
+   aproximadamente 1 llamada de ingreso por segundo para ese usuario. La
+   situación es mejor para las llamadas entre canisters, ya que las solicitudes
+   (si se entregan) se entregarán en el orden en que se enviaron. Por lo tanto,
+   el canister que realiza la llamada puede emitir múltiples solicitudes
+   simultáneamente, utilizando números de secuencia adecuados. Bajo carga
+   normal, todas las solicitudes deberían entregarse. Sin embargo, bajo una
+   carga pesada donde el sistema puede descartar algunas solicitudes, las
+   solicitudes que siguen a una solicitud descartada pueden volverse inválidas.
 
-### ID deduplication
+2. Limita la concurrencia. El usuario debe secuencializar todas sus llamadas.
+   Esto es fácil de hacer cuando el usuario es otro canister, pero puede ser
+   mucho más difícil cuando el canister se llama a través de mensajes de
+   ingreso. En particular, es complicado cuando el usuario utiliza múltiples
+   clientes o dispositivos para acceder al canister, por ejemplo. Este problema
+   de concurrencia también hace que el enfoque no sea aplicable en casos en los
+   que se permite a los usuarios anónimos activar llamadas de actualización.
 
-Another approach to idempotency is to make the calls uniquely identifiable on the receiving canister side (e.g., by using user-chosen IDs, sequence numbers, or a combination of several argument fields) to make sure a given call is executed at most once. The canister then deduplicates calls before executing them; if a call with the same ID has been executed previously, the new call is simply ignored (potentially returning the result of the previous call). Thus, the user can safely keep retrying the call until they get a response.
+3. Si el número de secuencia se almacena por usuario o por cuenta, rastrearlos
+   para demasiados usuarios puede agotar la memoria del canister, incluso si
+   cada número individual es pequeño. Esto podría ser explotado por un atacante
+   para agotar la memoria. Por lo tanto, el enfoque es más adecuado para casos
+   en los que el usuario debe pagar por el uso de alguna manera (por ejemplo,
+   los libros de contabilidad suelen requerir una tarifa tanto para crear una
+   cuenta como para transferir fondos), lo que dificulta a los atacantes al
+   requerirles que inviertan fondos significativos en un ataque.
 
-For example, the ICRC ledger standard provides deduplication in this way. Using identical values for all call parameters, including the `created_at_time` and `memo` parameters, when issuing a transaction makes the transaction call idempotent by deduplicating calls with the same parameters.
+### Deduplicación de ID
 
-However, a naive implementation of this approach can exhaust the canister memory, as all successfully executed IDs need to be kept around forever.
-Thus, the deduplication is usually time-limited to a certain time window. For example, the ICP ledger uses a 24-hour window, and the ICRC standard defines a configuration parameter `TX_WINDOW` that determines the window length.
+Otro enfoque para la idempotencia es hacer que las llamadas sean únicamente
+identificables en el lado del canister receptor (por ejemplo, mediante el uso de
+IDs elegidos por el usuario, números de secuencia o una combinación de varios
+campos de argumentos) para asegurarse de que una llamada dada se ejecute como
+máximo una vez. Luego, el canister deduplica las llamadas antes de ejecutarlas;
+si se ha ejecutado una llamada con el mismo ID anteriormente, se ignora
+simplemente la nueva llamada (devolviendo potencialmente el resultado de la
+llamada anterior). De esta manera, el usuario puede volver a intentar la llamada
+de manera segura hasta que obtenga una respuesta.
 
-Moreover, the ICP/ICRC ledgers use the `created_at_time` parameter to limit the validity period of a call. Roughly, the call is only considered valid if its `created_at_time` is not in the future and at most 24 hours in the past.[^2] This avoids the problem where the deduplication window expiring would allow a retried call to succeed again.
+Por ejemplo, el estándar de libro de contabilidad ICRC proporciona deduplicación
+de esta manera. El uso de valores idénticos para todos los parámetros de
+llamada, incluidos los parámetros `created_at_time` y `memo`, al emitir una
+transacción hace que la llamada de transacción sea idempotente mediante la
+deduplicación de llamadas con los mismos parámetros.
 
-But even with this improvement used in the ledgers, the time window approach implicitly assumes that the client will be able to get a definite answer to their call within the time window. For example, after the 24 hours expire, the user cannot easily tell if their ledger transfer happened; their only option is to analyze the ledger blocks, which is somewhat tedious and has to be done carefully to avoid asynchrony issues; see the section on [queryable call results](#queryable-call-results).
+Sin embargo, una implementación ingenua de este enfoque puede agotar la memoria
+del canister, ya que todos los IDs ejecutados con éxito deben mantenerse
+indefinidamente. Por lo tanto, la deduplicación generalmente se limita a una
+ventana de tiempo determinada. Por ejemplo, el libro de contabilidad ICP utiliza
+una ventana de 24 horas, y el estándar ICRC define un parámetro de configuración
+`TX_WINDOW` que determina la duración de la ventana.
 
-Relying solely on a time window for deduplication does not guarantee bounded memory usage. In theory, an unlimited number of updates could occur within the time window, though in practice, this is constrained by the scaling limits of the ICP. The ICP/ICRC ledgers thus also define a maximum capacity: a limit on the number of deduplicated transactions (i.e., deduplication IDs) that can be stored in their deduplication store. Once this capacity is reached, further transactions are rejected until older transactions expire from the deduplication store at the end of the time window. Yet another extension of the approach is to guarantee deduplication for the stated time window as above but keep storing deduplication IDs even beyond that window, as long as the capacity is not reached. This way, the clients obtain a hard deduplication guarantee for the time window and a best-effort attempt to deduplicate transactions even past the window.
+Además, los libros de contabilidad ICP/ICRC utilizan el parámetro
+`created_at_time` para limitar el período de validez de una llamada. En términos
+generales, la llamada solo se considera válida si su `created_at_time` no está
+en el futuro y como máximo 24 horas en el pasado.[^2] Esto evita el problema de
+que la ventana de deduplicación expire y permita que una llamada reintentada
+tenga éxito nuevamente.
 
-An alternative is to do away with the time window and store the deduplication data forever. This requires storing this data in multiple canisters in order to prevent exhausting canister memory, similar to how the ICP/ICRC ledgers store transaction data in the archive canister. This shifts the tedious part of querying the deduplication data (e.g., ledger blocks) from the user to the canister.
+Pero incluso con esta mejora utilizada en los libros de contabilidad, el enfoque
+de ventana de tiempo asume implícitamente que el cliente podrá obtener una
+respuesta definitiva a su llamada dentro de la ventana de tiempo. Por ejemplo,
+después de que expiren las 24 horas, el usuario no puede determinar fácilmente
+si se realizó su transferencia de libro de contabilidad; su única opción es
+analizar los bloques del libro de contabilidad, lo cual es algo tedioso y debe
+hacerse con cuidado para evitar problemas de asincronía; consulta la sección
+sobre
+[resultados de llamadas consultables](#resultados-de-llamadas-consultables).
 
-Summarizing, the advantages of this approach are:
-1. It can support high throughput.
-2. It requires no synchronization on the part of the user and supports use cases like multiple devices.
+Confiar únicamente en una ventana de tiempo para la deduplicación no garantiza
+el uso limitado de memoria. En teoría, un número ilimitado de actualizaciones
+podría ocurrir dentro de la ventana de tiempo, aunque en la práctica esto está
+limitado por los límites de escalabilidad de ICP. Los libros de contabilidad
+ICP/ICRC también definen una capacidad máxima: un límite en la cantidad de
+transacciones deduplicadas (es decir, IDs de deduplicación) que se pueden
+almacenar en su almacén de deduplicación. Una vez que se alcanza esta capacidad,
+se rechazan las transacciones adicionales hasta que las transacciones más
+antiguas expiren del almacén de deduplicación al final de la ventana de tiempo.
+Otra extensión del enfoque es garantizar la deduplicación para la ventana de
+tiempo indicada anteriormente, pero seguir almacenando los IDs de deduplicación
+incluso más allá de esa ventana, siempre que no se alcance la capacidad. De esta
+manera, los clientes obtienen una garantía de deduplicación sólida para la
+ventana de tiempo y un intento de deduplicación de transacciones incluso después
+de la ventana.
 
-The disadvantages are:
-1. It is more complicated to implement than sequence numbers.
-2. If a time window is used, it usually implicitly assumes that the user learns the call outcome within the time window.
-3. The memory usage can grow fairly high with high supported throughput and long deduplication windows. For example, supporting 100 transactions per second with a deduplication window of 24 hours can require hundreds of megabytes of heap space. This can be mitigated by using multiple canisters to store the deduplication data, at the expense of further implementation complexity and higher latency.
+Una alternativa es prescindir de la ventana de tiempo y almacenar los datos de
+deduplicación para siempre. Esto requiere almacenar estos datos en múltiples
+canisters para evitar agotar la memoria del canister, de manera similar a cómo
+los libros de contabilidad ICP/ICRC almacenan los datos de transacciones en el
+canister de archivo. Esto traslada la parte tediosa de consultar los datos de
+deduplicación (por ejemplo, bloques de libro de contabilidad) del usuario al
+canister.
 
-## Other approaches to safe retries
+En resumen, las ventajas de este enfoque son:
 
-In the absence of idempotent endpoints, or even in addition to them, clients may be able to use other endpoints to make their retries safe.
+1. Puede admitir un alto rendimiento.
+2. No requiere sincronización por parte del usuario y admite casos de uso como
+   múltiples dispositivos.
 
-### Queryable call results
+Las desventajas son:
 
-If the canister, in addition to the update endpoint, also exposes a query that can inform the user of the result of the update, the client can also use this for safe retries as follows:
+1. Es más complicado de implementar que los números de secuencia.
+2. Si se utiliza una ventana de tiempo, generalmente asume implícitamente que el
+   usuario conoce el resultado de la llamada dentro de la ventana de tiempo.
+3. El uso de memoria puede aumentar considerablemente con un alto rendimiento
+   admitido y ventanas de deduplicación largas. Por ejemplo, admitir 100
+   transacciones por segundo con una ventana de deduplicación de 24 horas puede
+   requerir cientos de megabytes de espacio en el montón. Esto se puede mitigar
+   utilizando múltiples canisters para almacenar los datos de deduplicación, a
+   expensas de una mayor complejidad de implementación y mayor latencia.
 
-1. Attempt to perform the update.
-1. If the result of the update is unknown (e.g., not present in the ingress history anymore, or a `SYS_UNKNOWN` error is returned for an inter-canister call), query the call result endpoint to determine whether the update was applied or not. Moreover, one needs to ensure that the previously sent call cannot be applied in the future. If both of these are true, the call might be retried or safely reported as failed.
+## Otros enfoques para reintentos seguros
 
-In practice, this pattern may be more complicated. For example, the ICP ledger exposes a `query_blocks` method that can be used to implement the above pattern for transfers initiated as ingress messages:
+En ausencia de puntos de conexión idempotentes, o incluso además de ellos, los
+clientes pueden utilizar otros puntos de conexión para hacer que sus reintentos
+sean seguros.
 
-1. Call the `query_blocks` method on the ledger to determine what the last block (as specified in the `chain_length` field of the response) currently is. Let's call this `last_block`.
-1. Attempt to perform a transfer. This ingress message includes an `ingress_expiry` field.
-1. If the result of the transfer is unknown, ensure that the transfer will not be applied at a later point:
-   * If using ingress messages, call the `read_state` endpoint on the ledger canister to obtain the `/time` branch of the system state tree. Repeat this until the reported time exceeds the `ingress_expiry` time.
-    * If using inter-canister calls, perform all subsequent calls (`query_blocks`) listed below from the same canister that initiated the transfer. The [ordering guarantees](/docs/references/message-execution-properties) then ensure that the transfer cannot happen later.
-1. Call the `query_blocks` method on the ledger again to retrieve all ledger blocks since `last_block`, and check that the `timestamp` also exceeds the `ingress_expiry` time. In case of failure, retry until a result is obtained. Then, scan through the returned blocks to determine whether the transaction has been included or not.
+### Resultados de llamadas consultables
 
-### 2-step transfers
+Si el canister, además del punto de conexión de actualización, también expone
+una consulta que puede informar al usuario sobre el resultado de la
+actualización, el cliente también puede utilizar esto para reintentos seguros de
+la siguiente manera:
 
-Another approach applicable to ledgers (such as ICRC-1 or ICP) is to perform transfers in two steps:
+1. Intentar realizar la actualización.
+2. Si el resultado de la actualización es desconocido (por ejemplo, no está
+   presente en el historial de ingreso, o se devuelve un error `SYS_UNKNOWN`
+   para una llamada entre canisters), consultar el punto de conexión de
+   resultado de llamada para determinar si la actualización se aplicó o no.
+   Además, es necesario asegurarse de que la llamada enviada anteriormente no se
+   pueda aplicar en el futuro. Si ambas condiciones son verdaderas, la llamada
+   se puede reintentar o informar de manera segura como fallida.
 
-1. First, transfer the tokens to an intermediate subaccount of the sender that's specific to this transaction. For example, if the transaction has a unique ID, the client can hash the ID to obtain a subaccount. The transferred amount should be the desired amount plus the ledger transaction fee.
-1. If the result of the above transfer is unknown, query the balance of the transaction-specific subaccount. Like in the ["queryable call result"](#queryable-call-results) approach, if using ingress messages, this should be repeated until the `timestamp` accompanying the response exceeds the `ingress_expiry`. If the balance is 0, the transaction can safely be reported as failed, or it can be retried (starting from step 1). If the balance is at least the expected balance, one can proceed.
-1. If the transfer to the transaction-specific subaccount succeeded (as determined either by the transfer result or by the balance query above), the client sends another transfer from the transaction-specific subaccount to the desired target account. This can be repeated as many times as necessary until a result of the call is known. Once a result is known, the overall transfer can be declared as succeeded, even if this step fails with an error, as this signifies that some previous attempt to transfer the money to the target succeeded.
+En la práctica, este patrón puede ser más complicado. Por ejemplo, el libro de
+contabilidad ICP expone un método `query_blocks` que se puede utilizar para
+implementar el patrón anterior para transferencias iniciadas como mensajes de
+ingreso:
 
+1. Llamar al método `query_blocks` en el libro de contabilidad para determinar
+   cuál es el último bloque (según se especifica en el campo `chain_length` de
+   la respuesta) en ese momento. Llamémoslo `last_block`.
+2. Intentar realizar una transferencia. Este mensaje de ingreso incluye un campo
+   `ingress_expiry`.
+3. Si el resultado de la transferencia es desconocido, asegurarse de que la
+   transferencia no se aplicará en un momento posterior:
+   - Si se utilizan mensajes de ingreso, llamar al punto de conexión
+     `read_state` en el canister del libro de contabilidad para obtener la rama
+     `/time` del árbol de estado del sistema. Repetir esto hasta que el tiempo
+     informado supere el tiempo `ingress_expiry`.
+   - Si se utilizan llamadas entre canisters, realizar todas las llamadas
+     subsiguientes (`query_blocks`) enumeradas a continuación desde el mismo
+     canister que inició la transferencia. Las
+     [garantías de ordenamiento](/docs/references/message-execution-properties)
+     aseguran que la transferencia no pueda ocurrir más tarde.
+4. Llamar nuevamente al método `query_blocks` en el libro de contabilidad para
+   recuperar todos los bloques del libro de contabilidad desde `last_block` y
+   verificar que la `timestamp` también supere el tiempo `ingress_expiry`. En
+   caso de fallo, reintentar hasta obtener un resultado. Luego, examinar los
+   bloques devueltos para determinar si la transacción se ha incluido o no.
 
- [^1]: "Equivalent" is meant from the user perspective here. Multiple executions may trigger changes such as those in the canister's cycle balance, but they are not relevant for the user.
+### Transferencias de 2 pasos
 
- [^2]: More precisely, the ledger also allows for a small time drift of `created_at_time` into the future, which has to be taken into account when clearing the deduplication window.
+Otro enfoque aplicable a los libros de contabilidad (como ICRC-1 o ICP) es
+realizar transferencias en dos pasos:
+
+1. Primero, transferir los tokens a una subcuenta intermedia del remitente que
+   sea específica para esta transacción. Por ejemplo, si la transacción tiene un
+   ID único, el cliente puede aplicar una función hash al ID para obtener una
+   subcuenta. La cantidad transferida debe ser la cantidad deseada más la tarifa
+   de transacción del libro de contabilidad.
+2. Si el resultado de la transferencia anterior es desconocido, consultar el
+   saldo de la subcuenta específica de la transacción. Al igual que en el
+   enfoque de
+   ["resultados de llamadas consultables"](#resultados-de-llamadas-consultables),
+   si se utilizan mensajes de ingreso, esto debe repetirse hasta que la
+   `timestamp` que acompaña la respuesta supere el `ingress_expiry`. Si el saldo
+   es 0, la transacción se puede informar de manera segura como fallida, o se
+   puede reintentar (comenzando desde el paso 1). Si el saldo es al menos el
+   saldo esperado, se puede proceder.
+3. Si la transferencia a la subcuenta específica de la transacción se realizó
+   correctamente (según se determine tanto por el resultado de la transferencia
+   como por la consulta de saldo anterior), el cliente envía otra transferencia
+   desde la subcuenta específica de la transacción a la cuenta de destino
+   deseada. Esto se puede repetir tantas veces como sea necesario hasta que se
+   conozca un resultado de la llamada. Una vez que se conoce un resultado, la
+   transferencia general se puede declarar como exitosa, incluso si este paso
+   falla con un error, ya que esto indica que algún intento anterior de
+   transferir el dinero al destino tuvo éxito.
+
+[^1]:
+    "Equivalente" se entiende desde la perspectiva del usuario aquí. Múltiples
+    ejecuciones pueden desencadenar cambios como los del saldo del ciclo del
+    canister, pero no son relevantes para el usuario.
+
+[^2]:
+    Más precisamente, el libro de contabilidad también permite una pequeña
+    deriva de tiempo de `created_at_time` hacia el futuro, lo cual debe tenerse
+    en cuenta al limpiar la ventana de deduplicación.
