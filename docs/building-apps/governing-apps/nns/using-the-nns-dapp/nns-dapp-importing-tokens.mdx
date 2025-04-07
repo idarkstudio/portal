@@ -3,79 +3,128 @@ keywords: [beginner, governance, tutorial, nns]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
-import '/src/components/CenterImages/center.scss';
+import "/src/components/CenterImages/center.scss";
 
-# Import ICRC tokens
+# Importar tokens ICRC
 
-<MarkdownChipRow labels={["Beginner", "Governance", "Tutorial"]} />
+<MarkdownChipRow labels={["Principiante", "Gobernanza", "Tutorial"]} />
 
 <div class="text--center">
-<p> </p>
+  <p> </p>
 </div>
 <div class="text--center">
-<iframe width="660" height="415" src="https://www.youtube.com/embed/zcXmarBk2L4?si=OIxq9LwY0DLzHvE1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> </div>
+  <iframe
+    width="660"
+    height="415"
+    src="https://www.youtube.com/embed/zcXmarBk2L4?si=OIxq9LwY0DLzHvE1"
+    title="YouTube video player"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allowfullscreen
+  ></iframe>
+</div>
 
+La NNS dapp se enfoca en proporcionar una interfaz de usuario simple donde los
+miembros de la comunidad pueden interactuar con diferentes sistemas de
+gobernanza en cadena desplegados en el Internet Computer.
 
+Para ampliar las capacidades del monedero, los usuarios de la NNS dapp pueden
+importar cualquier token que soporte ICRC-1. Esto incluye todos los tokens
+ICRC-2 e ICRC-3.
 
-The NNS dapp focuses on providing a simple user interface where community members can interact with different on-chain governance systems deployed on the Internet Computer.
+## Cómo encontrar los IDs de canister ledger de los tokens
 
-To extend wallet capabilities, users of the NNS dapp can import any token that supports ICRC-1. This includes all ICRC-2 and ICRC-3 tokens.
+Si deseas mantener tokens en tu monedero NNS fuera de la lista proporcionada por
+la NNS, necesitas importar el token usando su ID de canister ledger. Este
+proceso simplemente guarda una lista de IDs de canister ledger de tokens en tu
+cuenta, permitiendo a la NNS dapp saber qué tokens recuperar.
 
-## How to find ledger canister IDs of tokens
-
-If you want to hold tokens in your NNS wallet outside of the list provided by the NNS, you need to import the token using its ledger canister ID. This process simply saves a list of token ledger canister IDs on your account letting the NNS dapp know which tokens to fetch.
-
-The NNS dapp relies on index canisters to display transaction histories. If your token has an index canister, you can import it by using its index canister ID.
+La NNS dapp se basa en canisters índice para mostrar historiales de
+transacciones. Si tu token tiene un canister índice, puedes importarlo usando su
+ID de canister índice.
 
 :::warning
-The NNS dapp accepts any token that supports the ICRC-1 standard. A token can pretend to be another token, so make sure to get the ledger canister ID from reputable places.
+
+La NNS dapp acepta cualquier token que soporte el estándar ICRC-1. Un token
+puede hacerse pasar por otro, así que asegúrate de obtener el ID de canister
+ledger de fuentes confiables.
+
 :::
 
-There are several ways to find ledger canister IDs of ICRC-1 tokens. The tutorial video above mentions two. This is a more comprehensive list.
+Hay varias maneras de encontrar los IDs de canister ledger de tokens ICRC-1. El
+video tutorial anterior menciona dos. Esta es una lista más completa.
 
-- [ICPSwap](https://info.icpswap.com/swap): Curated list of tokens traded on ICPSwap updated by the ICPSwap SNS DAO.
-- [ICP Tokens](https://icptokens.net/): Curated list of tokens traded on ICP-based DEXs updated by ICP Tokens.
-- [ICP Dashboard](https://dashboard.internetcomputer.org/): List of all chain-key tokens (under Chain Fusion menu option) updated automatically.
-- [nftGeek](https://t5t44-naaaa-aaaah-qcutq-cai.raw.icp0.io/tokens): Curated list of tokens traded on ICP-based DEXs updated by nftGeek.
-- [ICPEx](https://icpex.org/dashboard): Curated list of tokens traded on ICPEx updated by ICPEx.
-- [CoinMarketCap](https://coinmarketcap.com/view/internet-computer-ecosystem/): The ICRC tokens that are listed on CoinMarketCap provide their ledger canister ID under Contract.
-- [CoinGecko](https://www.coingecko.com/en/categories/internet-computer-ecosystem): The ICRC tokens that are listed on CoinGecko provide their ledger canister ID under Contract.
+- [ICPSwap](https://info.icpswap.com/swap): Lista curada de tokens comerciados
+  en ICPSwap actualizada por el ICPSwap SNS DAO.
+- [ICP Tokens](https://icptokens.net/): Lista curada de tokens comerciados en
+  DEXs basadas en ICP actualizada por ICP Tokens.
+- [ICP Dashboard](https://dashboard.internetcomputer.org/): Lista de todos los
+  tokens chain-key (en el menú de Chain Fusion) actualizada automáticamente.
+- [nftGeek](https://t5t44-naaaa-aaaah-qcutq-cai.raw.icp0.io/tokens): Lista
+  curada de tokens comerciados en DEXs basadas en ICP actualizada por nftGeek.
+- [ICPEx](https://icpex.org/dashboard): Lista curada de tokens comerciados en
+  ICPEx actualizada por ICPEx.
+- [CoinMarketCap](https://coinmarketcap.com/view/internet-computer-ecosystem/):
+  Los tokens ICRC que están listados en CoinMarketCap proporcionan su ID de
+  canister ledger bajo Contract.
+- [CoinGecko](https://www.coingecko.com/en/categories/internet-computer-ecosystem):
+  Los tokens ICRC que están listados en CoinGecko proporcionan su ID de canister
+  ledger bajo Contract.
 
+## Cómo importar tokens ICRC
 
-## How to import ICRC tokens
-
-First, find the ledger canister ID of the token you want to import to your NNS dapp wallet. The list above covers most tokens deployed on the Internet Computer. Once you have its ledger canister ID, you may optionally look for its index canister to display the transaction history.
+Primero, encuentra el ID de canister ledger del token que deseas importar a tu
+monedero NNS dapp. La lista anterior cubre la mayoría de los tokens desplegados
+en el Internet Computer. Una vez que tengas su ID de canister ledger, puedes
+buscar opcionalmente su canister índice para mostrar el historial de
+transacciones.
 
 :::info
-Importing an index canister is completely optional. Many popular tokens **do not have index canisters**.
+
+Importar un canister índice es completamente opcional. Muchos tokens populares
+**no tienen canisters índice**.
+
 :::
 
-- **Step 1:**  Sign into the NNS dapp, and navigate to **Tokens**. At the bottom of the table, click **Import Token**.
+- **Paso 1:** Inicia sesión en la NNS dapp y navega a **Tokens**. En la parte
+  inferior de la tabla, haz clic en **Importar token**.
 
 ![NNS Import Tokens 1](../../_attachments/nns-import-tokens-1.webp)
 
 :::info
-If you want to hide the tokens you don't hold for better visibility, you can click the settings button at the top right corner of the table, and enable **Hide zero balances**.
+
+Si deseas ocultar los tokens que no posees para una mejor visibilidad, puedes
+hacer clic en el botón de configuración en la esquina superior derecha de la
+tabla y habilitar **Ocultar balances en cero**.
+
 :::
 
-- **Step 2:** Paste the ledger and index canister IDs to the corresponding input fields. If you don't provide the index canister ID now, you can add it any time in the future.
+- **Paso 2:** Pega los IDs del canister ledger e índice en los campos
+  correspondientes. Si no proporcionas el ID del canister índice ahora, puedes
+  agregarlo en cualquier momento en el futuro.
 
 ![NNS Import Tokens 2](../../_attachments/nns-import-tokens-2.webp)
 
-- **Step 3**: Confirm that this is the token you wish to import. By clicking the link you can see the canister on the ICP dashboard.
+- **Paso 3:** Confirma que este es el token que deseas importar. Al hacer clic
+  en el enlace puedes ver el canister en el panel de control de ICP.
 
 ![NNS Import Tokens 3](../../_attachments/nns-import-tokens-3.webp)
 
-Once your token was successfully imported, you can send tokens to your principal ID.
+Una vez que tu token fue importado exitosamente, puedes enviar tokens a tu ID de
+principal.
 
 ![NNS Import Tokens 4](../../_attachments/nns-import-tokens-4.webp)
 
-Going back, you should see all imported tokens in the tokens table.
+Al regresar, deberías ver todos los tokens importados en la tabla de tokens.
 
 ![NNS Import Tokens 5](../../_attachments/nns-import-tokens-5.webp)
 
-You can add and remove tokens any time. **Note**: removing a token doesn't remove the asset itself. If you remove a token that has a balance above 0, you can always re-import it, and the asset will be accessible.
+Puedes agregar y eliminar tokens en cualquier momento. **Nota**: eliminar un
+token no elimina el activo en sí. Si eliminas un token que tiene un balance
+superior a 0, siempre puedes volver a importarlo y el activo estará accesible.
 
-The NNS dapp will not remember which tokens you imported, so you will need to remember any token you intend to re-import in the future.
+La NNS dapp no recordará qué tokens importaste, por lo que necesitarás recordar
+cualquier token que planees volver a importar en el futuro.
 
 ![NNS Import Tokens 5](../../_attachments/nns-import-tokens-6.webp)

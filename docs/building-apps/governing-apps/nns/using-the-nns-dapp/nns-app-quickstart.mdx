@@ -3,79 +3,110 @@ keywords: [beginner, governance, tutorial, nns]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
-import '/src/components/CenterImages/center.scss';
+import "/src/components/CenterImages/center.scss";
 
-# Authentication
+# Autenticación
 
-<MarkdownChipRow labels={["Beginner", "Governance", "Tutorial"]} />
+<MarkdownChipRow labels={["Principiante", "Gobernanza", "Tutorial"]} />
 
+Existen diferentes formas de interactuar con el DAO de NNS para participar en la
+gobernanza.
 
+Esta guía demostrará cómo interactuar con NNS a través de la
+[NNS dapp](https://nns.ic0.app). También puedes interactuar con NNS a través de
+otras herramientas, como [quill](https://github.com/dfinity/quill) y
+[ic-js](https://github.com/dfinity/ic-js/tree/main/packages/nns).
 
-There are different ways to interact with the NNS DAO to participate in governance.
+Esta sección comienza con un tutorial sobre cómo conectarse e iniciar sesión en
+NNS dapp. En las siguientes páginas, verás cómo usar NNS dapp para
+[transferir tokens](/docs/building-apps/governing-apps/nns/using-the-nns-dapp/nns-dapp-send-and-receive-tokens),
+[apostar tokens y configurar una neurona](/docs/building-apps/governing-apps/nns/using-the-nns-dapp/nns-dapp-staking-a-neuron),
+y cómo participar en votaciones ya sea
+[votando manualmente](/docs/building-apps/governing-apps/nns/using-the-nns-dapp/nns-dapp-voting-on-proposals)
+o
+[seguir otras neuronas](/docs/building-apps/governing-apps/nns/using-the-nns-dapp/nns-dapp-following-other-neurons).
 
-This guide will demonstrate how to interface with the NNS through the [NNS dapp](https://nns.ic0.app).
-You can interact with the NNS through other tools, such as [quill](https://github.com/dfinity/quill)
-and [ic-js](https://github.com/dfinity/ic-js/tree/main/packages/nns).
+## Conectarse al DAO de NNS usando NNS dapp
 
-This section starts with a tutorial on how to connect and log in to the NNS dapp.
-In the following pages, you will see how to use the NNS dapp to
-[transfer tokens](/docs/building-apps/governing-apps/nns/using-the-nns-dapp/nns-dapp-send-and-receive-tokens),
-[stake tokens and set up a neuron](/docs/building-apps/governing-apps/nns/using-the-nns-dapp/nns-dapp-staking-a-neuron),
-and how to participate in voting either by [voting manually](/docs/building-apps/governing-apps/nns/using-the-nns-dapp/nns-dapp-voting-on-proposals)
- or by [following other neurons](/docs/building-apps/governing-apps/nns/using-the-nns-dapp/nns-dapp-following-other-neurons).
+Para conectarse a NNS utilizando la aplicación Network Nervous System (NNS)
+dapp, sigue estos pasos que también se explican en los primeros minutos de este
+video.
 
-
-## Connect to the NNS DAO using the NNS dapp
-
-To connect to the NNS using the Network Nervous System (NNS) dapp, follow these steps which are also explained in the first minutes of this video.
 <div class="text--center">
-<p> </p>
+  <p> </p>
 </div>
 <div class="text--center">
-<iframe width="660" height="415" src="https://www.youtube.com/embed/XU54fbCzFmE?si=NU3rq9Pz7GlGW3ar" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> </div>
+  <iframe
+    width="660"
+    height="415"
+    src="https://www.youtube.com/embed/XU54fbCzFmE?si=NU3rq9Pz7GlGW3ar"
+    title="Reproductor de video de YouTube"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allowfullscreen
+  ></iframe>
+</div>
 
-- #### Step 1:  Open a browser and navigate to the [Network Nervous System (NNS)](https://nns.ic0.app) dapp.
+- #### Paso 1: Abre un navegador y ve a la [Network Nervous System (NNS)](https://nns.ic0.app) dapp.
 
 ![NNS dapp](../../_attachments/nns1.png)
 
-- #### Step 2:  Click **Login** to connect to [Internet Identity](https://identity.ic0.app).
+- #### Paso 2: Haz clic en **Iniciar sesión** para conectarte a [Internet Identity](https://identity.ic0.app).
 
-![Connect with Internet Identity](../../_attachments/nns2.png)
+![Conectarse con Internet Identity](../../_attachments/nns2.png)
 
-If you haven’t previously registered, you can click **Register with Internet Identity** to register.
+Si no te has registrado previamente, puedes hacer clic en **Registrarse con
+Internet Identity** para registrarte.
 
 :::info
-We strongly recommend you add multiple devices and authentication methods to your Internet Identity. For example, register multiple physical devices like your computer and phone with a security key and using the authentication options that those devices—and browsers running on them—support.
+
+Recomendamos encarecidamente que agregues varios dispositivos y métodos de
+autenticación a tu Internet Identity. Por ejemplo, registra varios dispositivos
+físicos como tu computadora y teléfono con una llave de seguridad y utilizando
+las opciones de autenticación que esos dispositivos y los navegadores que se
+ejecutan en ellos admiten.
+
 :::
 
-For more information about creating an Internet Identity, see [how to use Internet Identity](https://internetidentity.zendesk.com/hc/en-us/articles/15430677359124-How-Do-I-Create-an-Internet-Identity-on-My-Mobile-Device-).
+Para obtener más información sobre cómo crear una Internet Identity, consulta
+[cómo usar Internet Identity](https://internetidentity.zendesk.com/hc/en-us/articles/15430677359124-How-Do-I-Create-an-Internet-Identity-on-My-Mobile-Device-).
 
-After you have registered, you can click **Login** to authenticate using your anchor and the authentication method—for example, a security key or fingerprint—you have registered.
+Después de registrarte, puedes hacer clic en **Iniciar sesión** para
+autenticarte utilizando tu ancla y el método de autenticación, por ejemplo, una
+llave de seguridad o huella digital, que hayas registrado.
 
-- #### Step 3:  Click **Proceed** to access to the Network Nervous System (NNS) dapp.
+- #### Paso 3: Haz clic en **Continuar** para acceder a la Network Nervous System (NNS) dapp.
 
-## Add an account
+## Agregar una cuenta
 
-Logging on using an Internet Identity creates a main account for you in the Internet Computer ledger. If your ICP utility tokens are associated with your developer identity; that is, the identity created by the SDK `dfx` command-line interface. Your main account displays 0.00 for your ICP utility token balance. For example:
+Iniciar sesión utilizando una Internet Identity crea una cuenta principal para
+ti en el libro mayor de Internet Computer. Si tus tokens de utilidad ICP están
+asociados con tu identidad de desarrollador, es decir, la identidad creada por
+la interfaz de línea de comandos `dfx` del SDK. Tu cuenta principal mostrará un
+saldo de 0.00 para tus tokens de utilidad ICP. Por ejemplo:
 
 ![nns app main](../../_attachments/nns3.png)
 
-Before transferring any tokens, you can create one or more linked subaccounts or attach a hardware wallet to your account.
+Antes de transferir cualquier token, puedes crear una o más subcuentas
+vinculadas o conectar una hardware wallet a tu cuenta.
 
-To add an account for managing ICP utility tokens:
+Para agregar una cuenta para administrar tokens de utilidad ICP:
 
-- #### Step 1:  On the default 'Tokens' tab, click 'ICP', then **Add Account**.
+- #### Paso 1: En la pestaña predeterminada 'Tokens', haz clic en 'ICP' y luego en **Agregar cuenta**.
 
-![Add account](../../_attachments/nns4.png)
+![Agregar cuenta](../../_attachments/nns4.png)
 
-- #### Step 2:  Select the type of account to add.
+- #### Paso 2: Selecciona el tipo de cuenta que deseas agregar.
 
-    -   **New Account** creates a new subaccount linked to your Main account address in the ledger.
+  - **Nueva cuenta** crea una nueva subcuenta vinculada a la dirección de tu
+    cuenta principal en el libro mayor.
 
-    -   **New Account (Hardware Wallet)** adds a hardware wallet to your main account address in the ledger.
+  - **Nueva cuenta (hardware wallet)** agrega una hardware wallet a la dirección
+    de tu cuenta principal en el libro mayor.
 
-![Select account](../../_attachments/nns5.png)
+![Seleccionar cuenta](../../_attachments/nns5.png)
 
-- #### Step 3:  Click **New Account**, type an Account Name, then click **Create**.
+- #### Paso 3: Haz clic en **Nueva cuenta**, escribe un nombre de cuenta y luego haz clic en **Crear**.
 
-![new linked account](../../_attachments/nns6.png)
+![nueva cuenta vinculada](../../_attachments/nns6.png)

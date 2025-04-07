@@ -3,71 +3,85 @@ keywords: [beginner, governance, tutorial, nns]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
-import '/src/components/CenterImages/center.scss';
+import "/src/components/CenterImages/center.scss";
 import { GlossaryTooltip } from "/src/components/Tooltip/GlossaryTooltip";
 
-# Additional features
+# Funcionalidades adicionales
 
-<MarkdownChipRow labels={["Intermediate", "Governance", "Tutorial"]} />
+<MarkdownChipRow labels={["Intermedio", "Gobernanza", "Tutorial"]} />
 
+Además de ser el portal para interactuar con el NNS DAO, la aplicación NNS
+también proporciona acceso a los DAO de SNS, sus lanzamientos y permite a los
+usuarios gestionar los canisters que controlan. Esta es una guía breve sobre
+algunas de estas funcionalidades adicionales.
 
-In addition to being the portal for interacting with the NNS DAO, the NNS dapp also provides access to the SNS DAOs, their launches, and allows users to manage canisters that they control.
-This is a brief guide to some of these additional functionalities.
+## Intercambios de descentralización de SNS
 
-## SNS decentralization swaps
+Puedes participar en intercambios de descentralización de SNS desde la
+aplicación NNS utilizando la pestaña 'Launchpad'. Un SNS es una versión avanzada
+de una organización autónoma descentralizada, donde los participantes del SNS
+pueden votar sobre propuestas, como una nueva característica, un elemento del
+roadmap o la asignación de fondos de SNS.
 
-You can participate in SNS decentralization swaps from the NNS dapp using the 'Launchpad' tab. An SNS is an advanced version of a decentralized autonomous organization, where the participants of the SNS can vote on proposals, such as a new feature, roadmap item, or allocation of SNS funds.
+[Aprende más sobre los SNS](https://internetcomputer.org/sns).
 
-[Learn more about SNSes](https://internetcomputer.org/sns).
+Para ver los intercambios de descentralización de SNS actuales y pasados desde
+la aplicación NNS:
 
-To view current and past SNS decentralization swaps from the NNS dapp:
-
-- #### Step 1:  From the NNS dapp, click **Launchpad** from the left navigation bar.
+- #### Paso 1: Desde la aplicación NNS, haz clic en **Launchpad** en la barra de navegación izquierda.
 
 ![Launchpad](../../_attachments/nns21.png)
 
-- #### Step 2: Select any SNS swap to view the details, such as the status, total participants, token supply, and when the swap ended.
+- #### Paso 2: Selecciona cualquier intercambio de SNS para ver los detalles, como el estado, el número total de participantes, el suministro de tokens y cuándo finalizó el intercambio.
 
-![SNS swap](../../_attachments/nns22.png)
+![Intercambio de SNS](../../_attachments/nns22.png)
 
-## Deploying and managing canisters from the NNS dapp
+## Desplegar y gestionar canisters desde la aplicación NNS
 
-You must have **cycles** available to create and manage [<GlossaryTooltip>canisters</GlossaryTooltip>](/docs/concepts/glossary#c).
-The [NNS dapp](https://nns.ic0.app) provides a convenient way for you to create and manage canisters by enabling you to convert ICP utility tokens into cycles and attach cycles to specific canister identifiers.
+Debes tener **ciclos** disponibles para crear y gestionar
+[canisters](/docs/concepts/glossary#c). La aplicación [NNS](https://nns.ic0.app)
+proporciona una forma conveniente de crear y gestionar canisters al permitirte
+convertir tokens de utilidad ICP en ciclos y adjuntar ciclos a identificadores
+de canisters específicos.
 
-To create a new canister:
+Para crear un nuevo canister:
 
-- #### Step 1:  From the NNS dapp, click **Canisters**, then click **Create Canister** or **Link Canister**.
+- #### Paso 1: Desde la aplicación NNS, haz clic en **Canisters**, luego haz clic en **Crear Canister** o **Enlazar Canister**.
 
-![My canisters](../../_attachments/nns23.png)
+![Mis canisters](../../_attachments/nns23.png)
 
-- #### Step 2: If you select **Create Canister**, select the source account you'd like to use to create the canister.
+- #### Paso 2: Si seleccionas **Crear Canister**, selecciona la cuenta de origen que deseas utilizar para crear el canister.
 
-![Create a new canister](../../_attachments/nns24.png)
+![Crear un nuevo canister](../../_attachments/nns24.png)
 
-- #### Step 3: Then, enter the amount of ICP tokens and cycles to create the canister with. Then select **Review Canister Creation**.
+- #### Paso 3: Luego, ingresa la cantidad de tokens ICP y ciclos para crear el canister. Luego selecciona **Revisar Creación de Canister**.
 
-![Create a new canister](../../_attachments/nns25.png)
+![Crear un nuevo canister](../../_attachments/nns25.png)
 
-- #### Step 4:  Review the ICP utility tokens to cycles details, then click **Confirm** to continue.
+- #### Paso 4: Revisa los detalles de la conversión de tokens de utilidad ICP a ciclos, luego haz clic en **Confirmar** para continuar.
 
-After you click Confirm, you can review:
-- The new canister identifier.
-- The number of cycles available for the canister to use.
-- The controlling principal that currently has full management rights for the new canister.
+Después de hacer clic en Confirmar, puedes revisar:
+
+- El nuevo identificador del canister.
+- El número de ciclos disponibles para que el canister los utilice.
+- El principal controlador que actualmente tiene derechos de gestión completos
+  para el nuevo canister.
 
 :::info
-To change the principal used as the controller of the canister, click **Change Controllers**.
 
-To add cycles to the canister, click **Add Cycles**.
+Para cambiar el principal utilizado como controlador del canister, haz clic en
+**Cambiar Controladores**.
+
+Para agregar ciclos al canister, haz clic en **Agregar Ciclos**.
+
 :::
 
-- #### Step 5: To link a canister, input the canister's ID, then select **Confirm**.
+- #### Paso 5: Para enlazar un canister, ingresa el ID del canister, luego selecciona **Confirmar**.
 
-![Link canister](../../_attachments/nns26.png)
+![Enlazar canister](../../_attachments/nns26.png)
 
-- #### Step 6: Return to the **Canisters** tab to see the canisters you have created.
+- #### Paso 6: Vuelve a la pestaña **Canisters** para ver los canisters que has creado.
 
-For example:
+Por ejemplo:
 
-![Canister list](../../_attachments/nns27.png)
+![Lista de canisters](../../_attachments/nns27.png)

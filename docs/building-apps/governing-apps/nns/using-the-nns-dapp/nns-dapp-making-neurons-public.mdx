@@ -3,32 +3,40 @@ keywords: [beginner, governance, tutorial, nns]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
-import '/src/components/CenterImages/center.scss';
+import "/src/components/CenterImages/center.scss";
 
-# Making neurons public
+# Haciendo neuronas públicas
 
-<MarkdownChipRow labels={["Beginner", "Governance", "Tutorial"]} />
+<MarkdownChipRow labels={["Principiante", "Gobernanza", "Tutorial"]} />
 
+Las configuraciones de visibilidad de las neuronas están disponibles para apoyar
+un [índice de neuronas](https://dashboard.internetcomputer.org/proposal/48491)
+mientras se respeta la privacidad de los titulares de las neuronas. Una neurona
+puede ser privada o pública. Para las neuronas públicas, cualquier persona que
+conozca el ID de la neurona puede ver los detalles completos de la neurona,
+incluyendo cómo votan en las propuestas.
+[Aprende más sobre las diferencias entre neuronas privadas y públicas](/docs/building-apps/governing-apps/nns/concepts/neurons/neuron-management#neuron-visibility).
 
+## Cómo cambiar la visibilidad de tu neurona
 
-Neuron visibility settings are available in order to support a [neuron index](https://dashboard.internetcomputer.org/proposal/48491) while respecting neuron holders' privacy. A neuron can be private or public. For public neurons, anyone who knows the neuron's ID can see the full neuron's details, including how they vote on proposals. [Learn more about the differences between private and public neurons](/docs/building-apps/governing-apps/nns/concepts/neurons/neuron-management#neuron-visibility).
+- **Paso 1:** Ve a la [aplicación NNS](https://nns.ic0.app/) e inicia sesión con
+  tu [Identidad en Internet](/docs/building-apps/authentication/overview).
 
-## How to change your neuron's visibility
-
-- **Step 1:** Go to the [NNS dapp](https://nns.ic0.app/) and sign in with your [Internet Identity](/docs/building-apps/authentication/overview).
-
-- **Step 2:** Navigate to **Neuron Staking**, and click on the neuron you would like to make public.
+- **Paso 2:** Navega hasta **Neuron Staking** y haz clic en la neurona que
+  deseas hacer pública.
 
 ![NNS Import Tokens 2](../../_attachments/nns-neuron-visibility-1.webp)
 
-- **Step 3**: Scroll down and click on **Make Neuron Public**.
+- **Paso 3**: Desplázate hacia abajo y haz clic en **Hacer Neurona Pública**.
 
 ![NNS Import Tokens 3](../../_attachments/nns-neuron-visibility-2.webp)
 
-- **Step 4**: Select all neurons you wish to make public and click **Confirm**.
+- **Paso 4**: Selecciona todas las neuronas que deseas hacer públicas y haz clic
+  en **Confirmar**.
 
 ![NNS Import Tokens 4](../../_attachments/nns-neuron-visibility-3.webp)
 
-From the neurons table, you should now see a checkmark next to neurons that are public.
+En la tabla de neuronas, ahora deberías ver una marca de verificación junto a
+las neuronas que son públicas.
 
 ![NNS Import Tokens 4](../../_attachments/nns-neuron-visibility-4.webp)

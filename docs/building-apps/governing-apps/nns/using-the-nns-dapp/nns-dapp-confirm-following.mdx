@@ -3,49 +3,85 @@ keywords: [beginner, governance, tutorial, nns]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
-import '/src/components/CenterImages/center.scss';
+import "/src/components/CenterImages/center.scss";
 
-# Periodic neuron following confirmation
+# Confirmación periódica de seguimiento de neuronas
 
-<MarkdownChipRow labels={["Beginner", "Governance", "Tutorial"]} />
+<MarkdownChipRow labels={["Principiante", "Gobernanza", "Tutorial"]} />
 
 <div class="text--center">
-<p> </p>
+  <p> </p>
 </div>
 
-The main idea of periodic confirmation of following is that in order to get rewards, governance participants have to remain active voters and regularly confirm their following settings. Neurons that set following once or were created with default following and then never interacted with the NNS again get lower, adjusted voting rewards. To find more information about the feature and community discussions about it, please see the [blog post](https://medium.com/dfinity/onchain-governance-improvement-periodic-confirmation-of-following-4c8fd73f578d), [forum discussion](https://forum.dfinity.org/t/periodic-confirmation-design/34215), and the adopted [motion proposal](https://dashboard.internetcomputer.org/proposal/132411).
+La idea principal de la confirmación periódica de seguimiento es que, para
+obtener recompensas, los participantes de la gobernanza deben seguir siendo
+votantes activos y confirmar regularmente su configuración de seguimiento. Las
+neuronas que establecen el seguimiento una vez o que se crearon con el
+seguimiento predeterminado y luego nunca interactuaron con el NNS nuevamente
+obtienen recompensas de votación ajustadas y más bajas. Para obtener más
+información sobre la función y las discusiones de la comunidad al respecto,
+consulta la
+[publicación en el blog](https://medium.com/dfinity/onchain-governance-improvement-periodic-confirmation-of-following-4c8fd73f578d),
+[discusión en el foro](https://forum.dfinity.org/t/periodic-confirmation-design/34215),
+y la propuesta de
+[moción adoptada](https://dashboard.internetcomputer.org/proposal/132411).
 
-## Maximizing voting rewards
+## Maximizar las recompensas de votación
 
-In order to keep your voting power and thus keep getting voting rewards, you need to take at least one of the following three actions once every 6 months for each of your neurons:
-1. [Vote directly](/docs/building-apps/governing-apps/nns/using-the-nns-dapp/nns-dapp-voting-on-proposals).
-2. [Set or edit following](/docs/building-apps/governing-apps/nns/using-the-nns-dapp/nns-dapp-following-other-neurons).
-3. Confirm following.
+Para mantener tu poder de voto y, por lo tanto, seguir recibiendo recompensas de
+votación, debes realizar al menos una de las siguientes tres acciones una vez
+cada 6 meses para cada una de tus neuronas:
+
+1. [Votar directamente](/docs/building-apps/governing-apps/nns/using-the-nns-dapp/nns-dapp-voting-on-proposals).
+2. [Establecer o editar el seguimiento](/docs/building-apps/governing-apps/nns/using-the-nns-dapp/nns-dapp-following-other-neurons).
+3. Confirmar el seguimiento.
 
 :::info
-Note that if you're following other neurons, you will only receive the maximum voting rewards if the neurons you follow vote on all proposals. To see how neurons vote, visit [vpGeek](https://f2djv-5aaaa-aaaah-qdbea-cai.raw.icp0.io/knownNeurons).
+
+Ten en cuenta que si sigues a otras neuronas, solo recibirás las recompensas de
+votación máximas si las neuronas que sigues votan en todas las propuestas. Para
+ver cómo votan las neuronas, visita
+[vpGeek](https://f2djv-5aaaa-aaaah-qdbea-cai.raw.icp0.io/knownNeurons).
+
 :::
 
-## How to confirm neuron following
+## Cómo confirmar el seguimiento de la neurona
 
-- **Step 1:** Sign into the [NNS dapp](https://nns.ic0.app/), navigate to **Neuron Staking**, and click on **Internet Computer**. If you have neurons that are within 30 days of missing rewards, you will see a banner with a warning.
+- **Paso 1:** Inicia sesión en la [aplicación NNS](https://nns.ic0.app/), ve a
+  **Neuron Staking** y haz clic en **Internet Computer**. Si tienes neuronas que
+  están a menos de 30 días de perder recompensas, verás un banner con una
+  advertencia.
 
 ![NNS Periodic Confirmation 1](../../_attachments/periodic-1.webp)
 
-- **Step 2:** Click on **Confirm Following**, and you will be prompted with a modal window. Here, you can review the following for all of your neurons. If you agree with your current following setup, you can click **Confirm Following** to apply it to all neurons. Alternatively, clicking any of them will bring you to the **Neuron Details** page, where you can edit (or confirm) your following for a single neuron.
+- **Paso 2:** Haz clic en **Confirm Following** y se abrirá una ventana modal.
+  Aquí, puedes revisar el seguimiento de todas tus neuronas. Si estás de acuerdo
+  con tu configuración de seguimiento actual, puedes hacer clic en **Confirmar
+  seguimiento** para aplicarlo a todas las neuronas. Alternativamente, si haces
+  clic en alguna de ellas, se te llevará a la página **Detalles de la neurona**,
+  donde puedes editar (o confirmar) el seguimiento de una sola neurona.
 
 ![NNS Periodic Confirmation 1](../../_attachments/periodic-2.webp)
 
-Once you confirmed following on all of your neurons, the warning will disappear, and the neuron inactivity timer will be reset to 6 months.
+Una vez que hayas confirmado el seguimiento en todas tus neuronas, la
+advertencia desaparecerá y el temporizador de inactividad de la neurona se
+restablecerá a 6 meses.
 
-Alternatively, you can:
+Alternativamente, puedes:
 
-- **Step 3**: Navigate to **Neuron Staking** and click on **Internet Computer**. Select any of your neurons, which will bring you to the **Neuron Details** page.
+- **Paso 3:** Ve a **Neuron Staking** y haz clic en **Internet Computer**.
+  Selecciona una de tus neuronas, lo que te llevará a la página **Detalles de la
+  neurona**.
 
 ![NNS Import Tokens 3](../../_attachments/periodic-3.webp)
 
-- **Step 4**: Click on **Confirm Following**, which will open up a modal window. Here, you can review and confirm your following. Make sure you still agree with the decision you made in the past. Otherwise, you can edit your following on this page.
+- **Paso 4:** Haz clic en **Confirm Following**, lo que abrirá una ventana
+  modal. Aquí, puedes revisar y confirmar tu seguimiento. Asegúrate de que aún
+  estás de acuerdo con la decisión que tomaste en el pasado. De lo contrario,
+  puedes editar tu seguimiento en esta página.
 
 ![NNS Import Tokens 4](../../_attachments/periodic-4.webp)
 
-Note that alternatively, you can vote on a proposal, which will reset the neuron inactivity timer for all neurons that voted, or edit your following.
+Ten en cuenta que, alternativamente, puedes votar en una propuesta, lo que
+restablecerá el temporizador de inactividad de la neurona para todas las
+neuronas que votaron, o editar tu seguimiento.

@@ -3,116 +3,155 @@ keywords: [beginner, governance, tutorial, nns]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
-import '/src/components/CenterImages/center.scss';
+import "/src/components/CenterImages/center.scss";
 
-# Staking a neuron
+# Hacer _staking_ de una neurona
 
-<MarkdownChipRow labels={["Beginner", "Governance", "Tutorial"]} />
+<MarkdownChipRow labels={["Principiante", "Gobernanza", "Tutorial"]} />
 
-When a person or organization has ICP utility tokens locked up in a neuron, they can propose and vote on governance proposals.
-To encourage participation, neuron holders are also rewarded for voting in proportion to the number of ICP utility tokens they have locked up,
-the length of the lock-up period, called the *dissolve delay*, and the age of their neuron.
+Cuando una persona u organización tiene tokens de utilidad ICP bloqueados en una
+neurona, pueden proponer y votar sobre propuestas de gobernanza. Para fomentar
+la participación, los titulares de neuronas también son recompensados por votar
+en proporción al número de tokens de utilidad ICP que tienen bloqueados, el
+tiempo del período de bloqueo, llamado _retraso de disolución_, y la antigüedad
+de su neurona.
 
-After network participants create a neuron, the locked balance of ICP utility tokens can only be unlocked by fully **dissolving** the neuron.
-It's **dissolve delay** determines the time it takes for a neuron to be unlocked once it is in the dissolving state.
-A dissolving neuron can always be put back into the non-dissolving state.
-When the dissolve timer reaches zero, the neuron owner can dissolve the neuron and unlock the neuron's balance of ICP.
+Después de que los participantes de la red crean una neurona, el saldo bloqueado
+de tokens de utilidad ICP solo se puede desbloquear al **disolver
+completamente** la neurona. Su **retraso de disolución** determina el tiempo que
+tarda una neurona en desbloquearse una vez que está en estado de disolución. Una
+neurona en disolución siempre puede volver al estado de no disolución. Cuando el
+temporizador de disolución llega a cero, el propietario de la neurona puede
+disolverla y desbloquear su saldo de ICP.
 
-## Stake ICP utility tokens in a neuron
+## Hacer _staking_ de tokens de utilidad ICP en una neurona
 
-After you transfer ICP utility tokens to the NNS dapp, you can use it to create and manage neurons,
-vote on proposals, and create canisters on the Internet Computer.
+Después de transferir tokens de utilidad ICP a la dapp del NNS, puedes usarla
+para crear y gestionar neuronas, votar en propuestas y crear canisters en el
+Internet Computer.
 
-Neurons are required to participate in governance to earn rewards. To create a neuron, you must lock up some number of ICP utility tokens for a period of time.
-The minimum stake required to create a neuron is 1 ICP utility token. You can configure the period of time the stake is locked from 6 months up to a maximum of 8 years.
+Se requieren neuronas para participar en la gobernanza y ganar recompensas. Para
+crear una neurona, debes bloquear una cantidad de tokens de utilidad ICP durante
+un período de tiempo. La participación mínima requerida para crear una neurona
+es de 1 token de utilidad ICP. Puedes configurar el período de tiempo del
+bloqueo desde 6 meses hasta un máximo de 8 años.
+
 <div class="text--center">
-<p> </p>
+  <p> </p>
 </div>
 <div class="text--center">
-<iframe width="660" height="415" src="https://www.youtube.com/embed/3o0eBOaHP_4?si=k7vR9eulGzK_iLiY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> </div>
+  <iframe
+    width="660"
+    height="415"
+    src="https://www.youtube.com/embed/3o0eBOaHP_4?si=k7vR9eulGzK_iLiY"
+    title="Reproductor de video de YouTube"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allowfullscreen
+  ></iframe>
+</div>
 
-To stake ICP utility tokens:
+Para hacer _staking_ de tokens de utilidad ICP:
 
-- #### Step 1:  In the NNS dapp, select **Neuron Staking** from the left navigation bar, then click **Stake Neurons** in the bottom of the window.
+- #### Paso 1: En la dapp del NNS, selecciona **Neuron Staking** en la barra de navegación izquierda, luego haz clic en **Stake Neurons** en la parte inferior de la ventana.
 
 ![Neuron staking](../../_attachments/nns8.png)
 
-- #### Step 2 :  Select which wallet you'd like to use as the source, then type the number of ICP utility tokens to stake, then click **Create**.
+- #### Paso 2 : Selecciona qué billetera deseas usar como fuente, luego escribe la cantidad de tokens de utilidad ICP para hacer _staking_, y haz clic en **Create**.
 
 ![Neuron staking](../../_attachments/nns9.png)
 
-- #### Step 3:  Set the dissolve delay for the neuron to control the length of time the stake is locked, then click **Update Delay**.
+- #### Paso 3: Establece el retraso de disolución de la neurona para controlar el período durante el cual el _stake_ estará bloqueado, luego haz clic en **Update Delay**.
 
-For example:
+Por ejemplo:
 
 ![dissolve delay](../../_attachments/nns-dissolve.png)
 
-- #### Step 4:  Click **Confirm and Set Delay** to confirm the lock up period.
+- #### Paso 4: Haz clic en **Confirm and Set Delay** para confirmar el período de bloqueo.
 
 ![neuron properties](../../_attachments/nns-settings.png)
 
-## What you can do after creating a neuron
-After you have locked the stake and created a neuron, you can set it up and modify it.
-These are some of the things you can modify:
+## Qué puedes hacer después de crear una neurona
 
--   Start the dissolve delay timer by clicking **Start Unlock**.
--   Increase the dissolve delay period by clicking **Increase Dissolve Delay**.
--   Stop the dissolve delay after starting the unlock countdown by clicking **Lockup**.
--   Increase the number of ICP utility tokens you have staked.
+Después de haber bloqueado el _stake_ y creado una neurona, puedes configurarla
+y modificarla. Estas son algunas de las cosas que puedes modificar:
 
-For more tutorials on what you can do with your neuron, we refer to
-[Advanced neuron operations](/docs/building-apps/governing-apps/nns/using-the-nns-dapp/nns-dapp-advanced-neuron-operations).
+- Iniciar el temporizador de disolución haciendo clic en **Start Unlock**.
+- Aumentar el período de retraso de disolución haciendo clic en **Increase
+  Dissolve Delay**.
+- Detener la disolución después de iniciar la cuenta regresiva haciendo clic en
+  **Lockup**.
+- Aumentar la cantidad de tokens de utilidad ICP que tienes en _staking_.
 
-### Start and stop dissolving the neuron
+Para más tutoriales sobre lo que puedes hacer con tu neurona, consulta
+[Operaciones avanzadas con neuronas](/docs/building-apps/governing-apps/nns/using-the-nns-dapp/nns-dapp-advanced-neuron-operations).
 
-Creating a new neuron does not automatically start the dissolve delay timer. You must explicitly start the timer countdown by clicking **Start Unlock**.
+### Iniciar y detener la disolución de la neurona
 
-For example, if you set a dissolve delay of 1 year and want to immediately begin the countdown, you should click **Start Unlock** as part of the process of creating the neuron. If you change your mind and want to stop a current countdown in progress, you can click **Lockup**.
+Crear una nueva neurona no inicia automáticamente el temporizador de disolución.
+Debes iniciar explícitamente la cuenta regresiva haciendo clic en **Start
+Unlock**.
 
-After you click **Lockup** to stop the dissolve delay, you can click **Start Unlock** to resume the countdown without changing the existing dissolve delay period. If you want to continue a countdown already in progress but extend the lock up period, you can click **Increase Dissolve Delay** then select a longer dissolve delay.
+Por ejemplo, si estableces un retraso de disolución de 1 año y deseas iniciar
+inmediatamente la cuenta regresiva, debes hacer clic en **Start Unlock** como
+parte del proceso de creación de la neurona. Si cambias de opinión y deseas
+detener una cuenta regresiva en curso, puedes hacer clic en **Lockup**.
 
-### Top up an existing neuron with additional ICP utility tokens
+Después de hacer clic en **Lockup** para detener el retraso de disolución,
+puedes hacer clic en **Start Unlock** para reanudar la cuenta regresiva sin
+cambiar el período existente de retraso de disolución. Si deseas continuar una
+cuenta regresiva ya en curso pero extender el período de bloqueo, puedes hacer
+clic en **Increase Dissolve Delay** y luego seleccionar un retraso de disolución
+más largo.
 
-After you create a neuron, you can increase the number of ICP utility tokens you have staked in that neuron to increase your voting power and rewards. For example, if you initially stake a small number of ICP utility tokens, then decide to purchase additional tokens, you have the option to create a new neuron or "top-up" your existing neuron.
+### Recargar una neurona existente con tokens de utilidad ICP adicionales
 
-To increase the stake in an existing neuron:
+Después de crear una neurona, puedes aumentar la cantidad de tokens de utilidad
+ICP que tienes en _staking_ en esa neurona para aumentar tu poder de voto y
+recompensas. Por ejemplo, si inicialmente haces _staking_ con una pequeña
+cantidad de tokens ICP, y luego decides comprar más, tienes la opción de crear
+una nueva neurona o “recargar” tu neurona existente.
 
-- #### Step 1:  Follow the steps in [stake ICP utility tokens in a neuron](#stake-icp) to stake the original neuron using the [Network Nervous System (NNS)](https://nns.ic0.app) dapp.
+Para aumentar el _stake_ en una neurona existente:
 
-- #### Step 2:  Look up the transaction in the Internet Computer Association [transaction dashboard](https://dashboard.internetcomputer.org/transactions) to get the neuron address.
+- #### Paso 1: Sigue los pasos en [hacer _staking_ de tokens de utilidad ICP en una neurona](#stake-icp) para hacer _staking_ de la neurona original usando la dapp del [Network Nervous System (NNS)](https://nns.ic0.app).
 
-You can use the account identifier for your main ICP ledger account to search for your transactions.
+- #### Paso 2: Busca la transacción en el [panel de transacciones](https://dashboard.internetcomputer.org/transactions) de la Internet Computer Association para obtener la dirección de la neurona.
 
-- #### Step 3:  Return to the [Network Nervous System (NNS)](https://nns.ic0.app) dapp, then from the 'My Neuron Staking' window, click **New Transaction**.
+Puedes usar el identificador de cuenta de tu cuenta principal del libro mayor de
+ICP para buscar tus transacciones.
 
-- #### Step 4:  Paste the neuron address from the transaction dashboard into the **Destination** address field, then click **Continue**.
+- #### Paso 3: Regresa a la dapp del [Network Nervous System (NNS)](https://nns.ic0.app), luego desde la ventana ‘My Neuron Staking’, haz clic en **New Transaction**.
 
-- #### Step 5:  Type the amount of ICP utility tokens you want to add to the specified neuron, then click **Continue**.
+- #### Paso 4: Pega la dirección de la neurona desde el panel de transacciones en el campo de dirección **Destination**, luego haz clic en **Continue**.
+
+- #### Paso 5: Escribe la cantidad de tokens de utilidad ICP que deseas agregar a la neurona especificada, luego haz clic en **Continue**.
 
 ![Increase stake](../../_attachments/nns10.png)
 
-- #### Step 6:  Verify the transaction details, then click **Send Now**.
+- #### Paso 6: Verifica los detalles de la transacción, luego haz clic en **Send Now**.
 
 ![Confirm increase stake](../../_attachments/nns11.png)
 
-- #### Step 7:  Once the transaction has completed, you will see the increased stake value.
+- #### Paso 7: Una vez completada la transacción, verás el valor del _stake_ aumentado.
 
 ![Increased stake](../../_attachments/nns12.png)
 
-### Disburse a dissolved neuron into an account
+### Dispersar una neurona disuelta a una cuenta
 
-When the dissolve delay timer for a neuron reaches zero, you can disburse the neuron’s stake and transfer its locked ICP utility token balance to the ledger account you specify.
+Cuando el temporizador de retraso de disolución de una neurona llega a cero,
+puedes dispersar el _stake_ de la neurona y transferir su saldo bloqueado de
+tokens de utilidad ICP a la cuenta del libro mayor que especifiques.
 
-To disburse a neuron and return its ICP utility tokens:
+Para dispersar una neurona y devolver sus tokens de utilidad ICP:
 
-- #### Step 1:  From the NNS dapp, select 'My Neuron Staking', then click on an unlocked neuron that has reach the ended of its dissolve delay period.
+- #### Paso 1: Desde la dapp del NNS, selecciona 'My Neuron Staking', luego haz clic en una neurona desbloqueada que haya llegado al final de su período de retraso de disolución.
 
-- #### Step 2:  Click **Disburse**:
+- #### Paso 2: Haz clic en **Disburse**:
 
-- #### Step 3:  Type an address or select an account to receive the ICP utility tokens.
+- #### Paso 3: Escribe una dirección o selecciona una cuenta para recibir los tokens de utilidad ICP.
 
 ![select account](../../_attachments/select-account.png)
 
-- #### Step 4:  Verify the transaction information, then click **Confirm and Send**.
-
-
+- #### Paso 4: Verifica la información de la transacción, luego haz clic en **Confirm and Send**.

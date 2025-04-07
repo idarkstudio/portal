@@ -1,197 +1,369 @@
 ---
-keywords: [advanced, governance, tutorial, nns, voting, proposals, verifying proposals]
+keywords:
+  [advanced, governance, tutorial, nns, voting, proposals, verifying proposals]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
-import '/src/components/CenterImages/center.scss';
+import "/src/components/CenterImages/center.scss";
 
-# Verifying proposals
+# Verificación de propuestas
 
-<MarkdownChipRow labels={["Advanced", "Governance", "Tutorial"]} />
+<MarkdownChipRow labels={["Avanzado", "Gobernanza", "Tutorial"]} />
 
-The decentralized nature of the NNS is one of the key factors of the Internet Computer's security - it ensures that there is no single point of failure.
-Therefore, it is important that proposals are verified by as many governance participants as possible.
-Each neuron verifying a proposal can define their own criteria for when a proposal should be adopted or rejected. This provides inputs that can be considered in this process.
+La naturaleza descentralizada del NNS es uno de los factores clave de la
+seguridad del Internet Computer: garantiza que no exista un único punto de
+falla. Por lo tanto, es importante que las propuestas sean verificadas por la
+mayor cantidad posible de participantes de gobernanza. Cada neurona que verifica
+una propuesta puede definir sus propios criterios para decidir cuándo debe
+adoptarse o rechazarse una propuesta. Esto proporciona insumos que pueden ser
+considerados en este proceso.
 
-The community is encouraged to discuss proposals and their verification on the [developer forum](https://forum.dfinity.org/), using the category `Governance` with sub-category `NNS proposal discussion` and using the proposal’s topic as a tag.
+Se anima a la comunidad a debatir las propuestas y su verificación en el
+[foro de desarrolladores](https://forum.dfinity.org/), usando la categoría
+`Governance` con la subcategoría `NNS proposal discussion` y utilizando el tema
+de la propuesta como etiqueta.
 
-## Verify protocol canister management proposals
-If you are looking to verify [protocol canister management proposals](/docs/building-apps/governing-apps/nns/concepts/proposals/proposal-topics#Topic:-`ProtocolCanisterManagement`), you
-can refer to this video that explains the process on the example of an NNS governance canister upgrade:
+## Verificar propuestas de gestión de canisters del protocolo
+
+Si buscas verificar
+[propuestas de gestión de canisters del protocolo](/docs/building-apps/governing-apps/nns/concepts/proposals/proposal-topics#Topic:-`ProtocolCanisterManagement`),
+puedes consultar este video que explica el proceso con el ejemplo de una
+actualización del canister de gobernanza del NNS:
 
 <div class="text--center">
-<p> </p>
+  <p> </p>
 </div>
 <div class="text--center">
-<iframe width="660" height="415" src="https://www.youtube.com/embed/BsIg4JZobqU?si=psrn6IViSJJ7xgnb" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> </div>
+  <iframe
+    width="660"
+    height="415"
+    src="https://www.youtube.com/embed/BsIg4JZobqU?si=psrn6IViSJJ7xgnb"
+    title="YouTube video player"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allowfullscreen
+  ></iframe>{" "}
+</div>
 
-Apart from regularly checking open proposals, the following sections list some relevant information for
-proposals submitted by the DFINITY foundation.
+Además de revisar regularmente las propuestas abiertas, las siguientes secciones
+enumeran información relevante para las propuestas presentadas por la fundación
+DFINITY.
 
-### NNS canister upgrades
-* For updates to the NNS canisters, you can follow [the IC repository](https://github.com/dfinity/ic). More specifically, the following sub-directories are relevant:
+### Actualizaciones de canisters del NNS
 
-    - `rs/ledger_suite/common/ledger_canister_core`
-    - `rs/ledger_suite/common/ledger_core`
-    - `rs/ledger_suite/icp/archive`
-    - `rs/ledger_suite/icp/index`,
-    - `rs/ledger_suite/icp/ledger/src`
-    - `rs/nns/cmc`
-    - `rs/nns/governance`
-    - `rs/nns/gtc`
-    - `rs/nns/handlers/lifeline`,
-    - `rs/nns/handlers/root/impl`
-    - `rs/nns/identity`
-    - `rs/nns/nns-ui`
-    - `rs/packages/icrc-ledger_types`
-    - `rs/registry/canister`
+- Para actualizaciones en los canisters del NNS, puedes seguir
+  [el repositorio del IC](https://github.com/dfinity/ic). Más específicamente,
+  los siguientes subdirectorios son relevantes:
 
-* NNS core canister upgrade proposals are announced [on the developer forum](https://forum.dfinity.org/t/nns-updates-aggregation-thread/23551).
-* You can find the instructions on how to verify that the Wasm in the proposal was indeed build from the provided `git commit` in the proposal's section "Wasm Verification" (see [this example proposal](https://dashboard.internetcomputer.org/proposal/129394)).
+  - `rs/ledger_suite/common/ledger_canister_core`
+  - `rs/ledger_suite/common/ledger_core`
+  - `rs/ledger_suite/icp/archive`
+  - `rs/ledger_suite/icp/index`,
+  - `rs/ledger_suite/icp/ledger/src`
+  - `rs/nns/cmc`
+  - `rs/nns/governance`
+  - `rs/nns/gtc`
+  - `rs/nns/handlers/lifeline`,
+  - `rs/nns/handlers/root/impl`
+  - `rs/nns/identity`
+  - `rs/nns/nns-ui`
+  - `rs/packages/icrc-ledger_types`
+  - `rs/registry/canister`
 
-### ICP ledger suite upgrades
-* For updates on the ICP ledger suite, you can follow [the IC repository](https://github.com/dfinity/ic). More specifically, the following sub-directories are relevant:
-    - `rs/ledger_suite/icp/ledger` is the directory for the ICP ledger
+- Las propuestas de actualización de canisters del núcleo del NNS se anuncian
+  [en el foro de desarrolladores](https://forum.dfinity.org/t/nns-updates-aggregation-thread/23551).
+- Puedes encontrar instrucciones sobre cómo verificar que el Wasm de la
+  propuesta fue efectivamente construido a partir del `git commit` provisto en
+  la sección "Wasm Verification" de la propuesta (ver
+  [este ejemplo de propuesta](https://dashboard.internetcomputer.org/proposal/129394)).
 
+### Actualizaciones del conjunto de ledgers ICP
 
-## Verify IC OS version election proposals
+- Para actualizaciones en el conjunto de ledgers de ICP, puedes seguir
+  [el repositorio del IC](https://github.com/dfinity/ic). Más específicamente,
+  el siguiente subdirectorio es relevante:
+  - `rs/ledger_suite/icp/ledger` es el directorio del ledger de ICP
 
-If you are looking to verify [IC OS version election proposals](/docs/building-apps/governing-apps/nns/concepts/proposals/proposal-topics#Topic:-`IcOsVersionElection`), you
-can refer to this video:
+## Verificar propuestas de elección de versión del IC OS
+
+Si buscas verificar
+[propuestas de elección de versión del IC OS](/docs/building-apps/governing-apps/nns/concepts/proposals/proposal-topics#Topic:-`IcOsVersionElection`),
+puedes consultar este video:
 
 <div class="text--center">
-<p> </p>
+  <p> </p>
 </div>
 <div class="text--center">
-<iframe width="660" height="415" src="https://www.youtube.com/embed/z3rAQBkO8uI?si=AcIaAl51UN4bppIX" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> </div>
+  <iframe
+    width="660"
+    height="415"
+    src="https://www.youtube.com/embed/z3rAQBkO8uI?si=AcIaAl51UN4bppIX"
+    title="YouTube video player"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allowfullscreen
+  ></iframe>{" "}
+</div>
 
-You can also consider the following information for proposals submitted by the DFINITY foundation:
+También puedes considerar la siguiente información para propuestas presentadas
+por la fundación DFINITY:
 
-* Each proposal submitted by the DFINITY foundation has a corresponding post on the forum (see [example](https://forum.dfinity.org/t/proposal-to-elect-new-release-rc-2024-05-01-23-01/30247)). Relevant posts can be found under the `Governance` category with the tags `replica` and `release`.
-* The relevant code is available in [the IC repository](https://github.com/dfinity/ic).
-* To verify that the code in the proposal is built from the specified `git commit`, follow the instructions in the [README file of the IC repository](https://github.com/dfinity/ic#verifying-releases).
-* Each proposal summary includes instructions for verifying the proposal payload. See this [example](https://dashboard.internetcomputer.org/proposal/130083). These steps are tested on Ubuntu 22.04, which is the recommended operating system for the verification process.
+- Cada propuesta presentada por la fundación DFINITY tiene una publicación
+  correspondiente en el foro (ver
+  [ejemplo](https://forum.dfinity.org/t/proposal-to-elect-new-release-rc-2024-05-01-23-01/30247)).
+  Las publicaciones relevantes pueden encontrarse en la categoría `Governance`
+  con las etiquetas `replica` y `release`.
+- El código relevante está disponible en
+  [el repositorio del IC](https://github.com/dfinity/ic).
+- Para verificar que el código de la propuesta fue construido desde el
+  `git commit` especificado, sigue las instrucciones en el
+  [archivo README del repositorio del IC](https://github.com/dfinity/ic#verifying-releases).
+- El resumen de cada propuesta incluye instrucciones para verificar el contenido
+  de la propuesta. Ver este
+  [ejemplo](https://dashboard.internetcomputer.org/proposal/130083). Estos pasos
+  han sido probados en Ubuntu 22.04, que es el sistema operativo recomendado
+  para el proceso de verificación.
 
 ```
-# From https://github.com/dfinity/ic#verifying-releases
+# Desde https://github.com/dfinity/ic#verifying-releases
 sudo apt-get install -y curl && curl --proto '=https' --tlsv1.2 -sSLO https://raw.githubusercontent.com/dfinity/ic/ec35ebd252d4ffb151d2cfceba3a86c4fb87c6d6/gitlab-ci/tools/repro-check.sh && chmod +x repro-check.sh && ./repro-check.sh -c ec35ebd252d4ffb151d2cfceba3a86c4fb87c6d6
 ```
 
-* The reproducibility check script is versioned, cryptographically checksummed, and open-sourced, ensuring it cannot change post-submission. The proposal summary is immutable after submission. The upgrade image contents are cryptographically checksummed, and the checksum is included in the proposal payload and verified during the upgrade process.
-* For GuestOS, DFINITY aims for a weekly release cycle, resulting in approximately one proposal per week plus additional feature builds.
-* For HostOS, there is no fixed release cycle, but an upgrade is typically proposed every 3-6 months.
+- El script de verificación de reproducibilidad está versionado, tiene suma de
+  verificación criptográfica y es de código abierto, lo que garantiza que no
+  pueda cambiar después de su envío. El resumen de la propuesta es inmutable una
+  vez enviada. El contenido de la imagen de actualización está protegido por
+  suma de verificación criptográfica, y esta suma se incluye en el contenido de
+  la propuesta y se verifica durante el proceso de actualización.
+- Para GuestOS, DFINITY tiene como objetivo un ciclo de lanzamientos semanal, lo
+  que resulta en aproximadamente una propuesta por semana, además de
+  compilaciones adicionales de funcionalidades.
+- Para HostOS, no hay un ciclo de lanzamientos fijo, pero normalmente se propone
+  una actualización cada 3-6 meses.
 
+## Verificar propuestas de gestión de participantes
 
-## Verify participant management proposals
-If you are looking to verify [participant management proposals](/docs/building-apps/governing-apps/nns/concepts/proposals/proposal-topics#Topic:-`ParticipantManagement`),
-these are some steps you can consider for verification.
+Si buscas verificar
+[propuestas de gestión de participantes](/docs/building-apps/governing-apps/nns/concepts/proposals/proposal-topics#Topic:-`ParticipantManagement`),
+estos son algunos pasos que puedes considerar para su verificación.
 
-### Add or remove node providers
+### Agregar o remover proveedores de nodos
 
-For proposals that add or remove node providers, you can check that:
-* There is a proper forum introduction by the new node provider.
-* Self-declaration and identity documents have been uploaded on the wiki.
-* Hashes of the self-declaration and identity document match the hashes in the proposal.
-* If this is a new region or community, there is an entry in the public Chamber of Commerce register (if Chamber
-of Commerce number is provided).
+Para propuestas que agregan o remueven proveedores de nodos, puedes verificar
+que:
 
-### Add or remove data centers
-For proposals that add or remove data centers, you can:
-  * Check who submitted the proposal. This is typically only a new node provider.
-  * Perform an Internet search to verify whether this is a legitimate data center.
+- Haya una presentación adecuada en el foro por parte del nuevo proveedor de
+  nodos.
+- La autodeclaración y los documentos de identidad hayan sido cargados en el
+  wiki.
+- Las sumas hash de la autodeclaración y del documento de identidad coincidan
+  con las hash en la propuesta.
+- Si se trata de una nueva región o comunidad, exista una entrada en el registro
+  público de la Cámara de Comercio (si se proporciona el número de la Cámara de
+  Comercio).
 
-## Verify node admin proposals
-If you are looking to verify [node admin proposals](/docs/building-apps/governing-apps/nns/concepts/proposals/proposal-topics#Topic:-`NodeAdmin`),
-these are some steps you can consider for verification.
+### Agregar o eliminar centros de datos
 
-### Update node configuration
-In such a proposal, a node provider sets the number of nodes and the `node_type` (Gen1, Gen2).
-You can:
-* Check these against the originally approved node allowance (whether that allowance was approved, and whether it matches the IC target topology using the [GitHub tooling](https://github.com/StephanusFischer/decentralization)
+Para propuestas que agregan o eliminan centros de datos, puedes:
 
-### Add node operator
-This proposal sets the allowance for a particular node provider in a specific data center.
-You can perform the following checks:
-* If it matches the IC target topology using the [GitHub tooling](https://github.com/StephanusFischer/decentralization). For example, such proposals should be rejected if the target topology has been reached.
-* Whether the node `provider-id` and `data center-id` match with the previously submitted add node provider and add data center proposals.
+- Verificar quién envió la propuesta. Normalmente, esto solo lo hace un nuevo
+  proveedor de nodos.
+- Realizar una búsqueda en Internet para verificar si se trata de un centro de
+  datos legítimo.
 
-### Remove nodes from the network
-This is a proposal to remove (unhealthy) nodes from the network.
-You can:
-* Check whether the nodes are indeed unassigned and not in a particular subnet.
+## Verificar propuestas de administración de nodos
 
+Si estás buscando verificar
+[propuestas de administración de nodos](/docs/building-apps/governing-apps/nns/concepts/proposals/proposal-topics#Topic:-`NodeAdmin`),
+estos son algunos pasos que puedes considerar para la verificación.
 
-## Verify subnet management proposals
-If you are looking to verify [subnet management proposals](/docs/building-apps/governing-apps/nns/concepts/proposals/proposal-topics#Topic:-`SubnetManagement`), these are some steps you can consider for verification.
+### Actualizar configuración de nodo
 
-### Node replacement proposals
-You can:
-* Check whether the nodes are replaced because they are dead/unhealthy, or replaced for other good reasons.
+En este tipo de propuesta, un proveedor de nodos establece el número de nodos y
+el `node_type` (Gen1, Gen2). Puedes:
 
-### Other proposals of this topic
-You can:
-* Check whether the reasoning in the proposal makes sense with regard to which proposals need to be adopted in which order.
+- Verificarlos contra la asignación de nodos aprobada originalmente (si esa
+  asignación fue aprobada, y si coincide con la topología objetivo del IC usando
+  la
+  [herramienta en GitHub](https://github.com/StephanusFischer/decentralization)
 
-## Verify service nervous system management proposals
-If you are looking to verify [service nervous system management proposals](/docs/building-apps/governing-apps/nns/concepts/proposals/proposal-topics#Topic:-`ServiceNervousSystemManagement`),
-you can refer to this video that explains the process using an example of an NNS proposal that elects a new SNS
-governance Wasm:
+### Agregar operador de nodo
+
+Esta propuesta establece la asignación para un proveedor de nodos específico en
+un centro de datos determinado. Puedes realizar las siguientes verificaciones:
+
+- Si coincide con la topología objetivo del IC usando la
+  [herramienta en GitHub](https://github.com/StephanusFischer/decentralization).
+  Por ejemplo, tales propuestas deberían ser rechazadas si ya se ha alcanzado la
+  topología objetivo.
+- Si el `provider-id` del nodo y el `data center-id` coinciden con las
+  propuestas previamente enviadas para agregar proveedor de nodo y agregar
+  centro de datos.
+
+### Eliminar nodos de la red
+
+Esta es una propuesta para eliminar nodos (defectuosos) de la red. Puedes:
+
+- Verificar si los nodos están efectivamente sin asignar y no en una subred
+  particular.
+
+## Verificar propuestas de administración de subredes
+
+Si estás buscando verificar
+[propuestas de administración de subredes](/docs/building-apps/governing-apps/nns/concepts/proposals/proposal-topics#Topic:-`SubnetManagement`),
+estos son algunos pasos que puedes considerar para la verificación.
+
+### Propuestas de reemplazo de nodos
+
+Puedes:
+
+- Verificar si los nodos se reemplazan porque están muertos/defectuosos, o si se
+  reemplazan por otras razones válidas.
+
+### Otras propuestas de este tema
+
+Puedes:
+
+- Verificar si el razonamiento en la propuesta tiene sentido con respecto a qué
+  propuestas deben adoptarse y en qué orden.
+
+## Verificar propuestas de administración de service nervous system
+
+Si estás buscando verificar
+[propuestas de administración del service nervous system](/docs/building-apps/governing-apps/nns/concepts/proposals/proposal-topics#Topic:-`ServiceNervousSystemManagement`),
+puedes consultar este video que explica el proceso usando un ejemplo de una
+propuesta del NNS que elige un nuevo Wasm de gobernanza del SNS:
 
 <div class="text--center">
-<p> </p>
+  <p> </p>
 </div>
 <div class="text--center">
-<iframe width="660" height="415" src="https://www.youtube.com/embed/i_ANhb0E1Io?si=BXPTalE8lnBQwuBg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> </div>
+  <iframe
+    width="660"
+    height="415"
+    src="https://www.youtube.com/embed/i_ANhb0E1Io?si=BXPTalE8lnBQwuBg"
+    title="YouTube video player"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allowfullscreen
+  ></iframe>{" "}
+</div>
 
+Además de revisar regularmente las propuestas abiertas, aquí hay información
+relevante sobre propuestas enviadas por la fundación DFINITY.
 
-Apart from regularly checking open proposals, here some relevant information for proposals submitted by the DFINITY foundation.
+- Puedes encontrar el código para la gobernanza del SNS, el SNS root y el SNS
+  swap en
+  [el repositorio del SNS](https://github.com/dfinity/ic/tree/master/rs/sns). El
+  SNS también utiliza la suite de ledger ICRC, que puedes encontrar en
+  [el repositorio de la suite de ledger](https://github.com/dfinity/ic/tree/master/rs/ledger_suite/icrc1).
+- Las propuestas de actualización del SNS se anuncian en
+  [este hilo del foro](https://forum.dfinity.org/t/sns-upgrade-aggregation-thread/24259).
+- Puedes encontrar las instrucciones para verificar que el Wasm en la propuesta
+  fue efectivamente construido desde el `git commit` proporcionado en la sección
+  "Wasm Verification" de la propuesta (ver
+  [esta propuesta de ejemplo](https://dashboard.internetcomputer.org/proposal/129633)).
 
-* You can find the code for the SNS governance, SNS root, and SNS swap in [the SNS repository](https://github.com/dfinity/ic/tree/master/rs/sns).
-The SNS also uses the ICRC ledger suite, which you can find in [the ledger suite repository](https://github.com/dfinity/ic/tree/master/rs/ledger_suite/icrc1).
-* SNS upgrade proposals are announced in [this forum thread](https://forum.dfinity.org/t/sns-upgrade-aggregation-thread/24259).
-* You can find the instructions on how to verify that the Wasm in the proposal was indeed build from the provided `git commit` in the proposal's section "Wasm Verification" (see [this example proposal](https://dashboard.internetcomputer.org/proposal/129633)).
+## Verificar propuestas de administración de canisters de aplicaciones
 
-
-## Verify application canister management proposals
-If you are looking to verify [application canister management proposals](/docs/building-apps/governing-apps/nns/concepts/proposals/proposal-topics#Topic:-`ApplicationCanisterManagement`), you can refer to this video that explains the process on the example of an NNS frontend dapp upgrade proposal:
+Si estás buscando verificar
+[propuestas de administración de canisters de aplicaciones](/docs/building-apps/governing-apps/nns/concepts/proposals/proposal-topics#Topic:-`ApplicationCanisterManagement`),
+puedes consultar este video que explica el proceso usando el ejemplo de una
+propuesta de actualización del frontend del NNS:
 
 <div class="text--center">
-<p> </p>
+  <p> </p>
 </div>
 <div class="text--center">
-<iframe width="660" height="415" src="https://www.youtube.com/embed/J-aJFJ_4zIw?si=e6_iWReqaamEaVYO" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> </div>
+  <iframe
+    width="660"
+    height="415"
+    src="https://www.youtube.com/embed/J-aJFJ_4zIw?si=e6_iWReqaamEaVYO"
+    title="YouTube video player"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allowfullscreen
+  ></iframe>{" "}
+</div>
 
-Apart from regularly checking open proposals, the following sections list some relevant information for proposals submitted by the DFINITY foundation.
+Además de revisar regularmente las propuestas abiertas, las siguientes secciones
+listan información relevante sobre propuestas enviadas por la fundación DFINITY.
 
-### NNS frontend dapp upgrades
-* For updates to the NNS frontend dapp, you can follow [the NNS dapp repository](https://github.com/dfinity/nns-dapp).
+### Actualizaciones del dapp frontend del NNS
 
-### Ledger upgrades for ckBTC, ckETH, and ckERC20
+- Para actualizaciones del dapp frontend del NNS, puedes seguir
+  [el repositorio del dapp del NNS](https://github.com/dfinity/nns-dapp).
 
-* For updates to the NNS canisters, you can follow [the IC repository](https://github.com/dfinity/ic). More specifically, the following sub-directories are relevant:
-    - `rs/ledger_suite/icrc1/ledger` for the ckBTC, ckETH, and ckERC20 ledgers, where `rs/ledger_suite/icrc1/ledger:ledger_canister` is the Wasm relevant for the ckBTC ledger and `rs/ledger_suite/icrc1/ledger:ledger_canister_u256.wasm` the Wasm for the ckETH and ckERC20 ledgers.
+### Actualizaciones del ledger para ckBTC, ckETH y ckERC20
 
-* You can find the instructions on how to verify that the Wasm in the proposal was indeed build from the provided `git commit` in the proposal.
+- Para actualizaciones de los canisters del NNS, puedes seguir
+  [el repositorio del IC](https://github.com/dfinity/ic). Más específicamente,
+  los siguientes subdirectorios son relevantes:
 
-### Ledger suite orchestrator canister upgrades
-The ledger suite orchestrator manages all ledger suites of all ckERC20 tokens. The orchestrator can
-upgrade managed canisters or add new ckERC20 tokens. See the [README](https://github.com/dfinity/ic/blob/master/rs/ethereum/ledger-suite-orchestrator/README.adoc) for more details.
+  - `rs/ledger_suite/icrc1/ledger` para los ledgers de ckBTC, ckETH y ckERC20,
+    donde `rs/ledger_suite/icrc1/ledger:ledger_canister` es el Wasm relevante
+    para el ledger de ckBTC y
+    `rs/ledger_suite/icrc1/ledger:ledger_canister_u256.wasm` el Wasm para los
+    ledgers de ckETH y ckERC20.
 
-* The following sub-directories in the [IC repository](https://github.com/dfinity/ic) are relevant:
-    - `rs/ethereum/ledger-suite-orchestrator`
+- Puedes encontrar las instrucciones para verificar que el Wasm en la propuesta
+  fue efectivamente construido desde el `git commit` proporcionado en la
+  propuesta.
 
-* You can find the instructions on how to verify that the Wasm in the proposal was indeed built from the provided `git commit` in the proposal.
+### Actualizaciones del canister orquestador de la suite de ledger
 
-### Internet Identity upgrades
-* For updates to the [Internet Identity (II)](/docs/building-apps/authentication/overview) canister, you can find the code in [the II repository](https://github.com/dfinity/internet-identity).
-* Each proposal points to the relevant commit that was used.
-* You can find the instructions on how to verify that the Wasm in the proposal was indeed build from the provided `git commit` in the proposal itself (see for example the section "Wasm Verification" in [this example proposal](https://dashboard.internetcomputer.org/proposal/129486)) and in the [GitHub release pages](https://github.com/dfinity/internet-identity/releases).
+El orquestador de la suite de ledger administra todas las suites de ledger de
+todos los tokens ckERC20. El orquestador puede actualizar canisters gestionados
+o agregar nuevos tokens ckERC20. Consulta el
+[README](https://github.com/dfinity/ic/blob/master/rs/ethereum/ledger-suite-orchestrator/README.adoc)
+para más detalles.
 
+- Los siguientes subdirectorios del
+  [repositorio del IC](https://github.com/dfinity/ic) son relevantes:
 
-### Bitcoin canister upgrades
-Please refer to the [Bitcoin canister documentation](https://github.com/dfinity/bitcoin-canister/blob/master/README.md) for more information about the Bitcoin canister.
+  - `rs/ethereum/ledger-suite-orchestrator`
 
-* You can find the code for the Bitcoin canister in [the `bitcoin-canister` repository](https://github.com/dfinity/bitcoin-canister).
-* These proposals are not expected to happen frequently, but rather when there are important updates to be applied to the Bitcoin canister. You can expect that a new release will be cut in preparation of an upgrade in the above repository. See this [example release](https://github.com/dfinity/bitcoin-canister/releases/tag/release%2F2024-04-26).
-* There are 2 Bitcoin canisters, one following the Bitcoin testnet and one following the Bitcoin mainnet network. The proposals will be specific to one of these canisters. Typically, you can expect that the proposal to upgrade the Bitcoin testnet canister happens 1 week before the one to upgrade the Bitcoin mainnet canister.
-* You can find the instructions on how to verify that the Wasm in the proposal was indeed built from the provided `git commit` in the proposal's section "How can I verify the Wasm hash of this canister?" (see [this example proposal](https://dashboard.internetcomputer.org/proposal/129499)).
+- Puedes encontrar las instrucciones para verificar que el Wasm en la propuesta
+  fue efectivamente construido desde el `git commit` proporcionado en la
+  propuesta.
+
+### Actualizaciones de Internet Identity
+
+- Para actualizaciones del canister de
+  [Internet Identity (II)](/docs/building-apps/authentication/overview), puedes
+  encontrar el código en
+  [el repositorio de II](https://github.com/dfinity/internet-identity).
+- Cada propuesta apunta al commit relevante que fue utilizado.
+- Puedes encontrar las instrucciones para verificar que el Wasm en la propuesta
+  fue efectivamente construido desde el `git commit` proporcionado en la propia
+  propuesta (ver por ejemplo la sección "Wasm Verification" en
+  [esta propuesta de ejemplo](https://dashboard.internetcomputer.org/proposal/129486))
+  y en las
+  [páginas de lanzamientos de GitHub](https://github.com/dfinity/internet-identity/releases).
+
+### Actualizaciones del canister de Bitcoin
+
+Consulta la
+[documentación del canister de Bitcoin](https://github.com/dfinity/bitcoin-canister/blob/master/README.md)
+para más información sobre el canister de Bitcoin.
+
+- Puedes encontrar el código del canister de Bitcoin en
+  [el repositorio `bitcoin-canister`](https://github.com/dfinity/bitcoin-canister).
+- Estas propuestas no se esperan con frecuencia, sino solo cuando hay
+  actualizaciones importantes que aplicar al canister de Bitcoin. Puedes esperar
+  que se publique una nueva versión en preparación para una actualización en el
+  repositorio mencionado. Consulta este
+  [ejemplo de lanzamiento](https://github.com/dfinity/bitcoin-canister/releases/tag/release%2F2024-04-26).
+- Hay 2 canisters de Bitcoin, uno siguiendo la red de prueba (testnet) y otro
+  siguiendo la red principal (mainnet) de Bitcoin. Las propuestas serán
+  específicas para uno de estos canisters. Normalmente, puedes esperar que la
+  propuesta para actualizar el canister de la testnet de Bitcoin ocurra 1 semana
+  antes de la actualización del canister de la mainnet.
+- Puedes encontrar las instrucciones para verificar que el Wasm en la propuesta
+  fue efectivamente construido desde el `git commit` proporcionado en la sección
+  "How can I verify the Wasm hash of this canister?" de la propuesta (ver
+  [esta propuesta de ejemplo](https://dashboard.internetcomputer.org/proposal/129499)).

@@ -3,67 +3,102 @@ keywords: [intermediate, governance, tutorial, nns]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
-import '/src/components/CenterImages/center.scss';
+import "/src/components/CenterImages/center.scss";
 
-# Accessing neurons created with quill
+# Accediendo a neuronas creadas con quill
 
-<MarkdownChipRow labels={["Intermediate", "Governance", "Tutorial"]} />
+<MarkdownChipRow labels={["Intermedio", "Gobernanza", "Tutorial"]} />
 
 <div class="text--center">
-<p> </p>
+  <p> </p>
 </div>
 <div class="text--center">
-<iframe width="660" height="415" src="https://www.youtube.com/embed/lKbYUmqF7J4?si=jIvx5rEza7BnMchE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> </div>
+  <iframe
+    width="660"
+    height="415"
+    src="https://www.youtube.com/embed/lKbYUmqF7J4?si=jIvx5rEza7BnMchE"
+    title="Reproductor de video de YouTube"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allowfullscreen
+  ></iframe>{" "}
+</div>
 
+Es posible que tengas neuronas controladas por un ID principal que fue creado
+usando [quill](https://github.com/dfinity/quill/). En este caso, puede resultar
+incómodo administrar tus neuronas a través de la terminal. Si conoces la frase
+semilla de este ID principal, puedes usar una billetera de hardware Ledger para
+administrar tus neuronas a través de la [NNS dapp](https://nns.ic0.app/).
 
-You may have neurons controlled by a principal ID that was created using [quill](https://github.com/dfinity/quill/). In this case, it may be inconvenient to manage your neurons through the terminal. If you know the seed phrase of this principal ID, you can use a Ledger hardware wallet to manage your neurons through the [NNS dapp](https://nns.ic0.app/).
+## Cómo acceder a neuronas controladas por un ID principal creado con quill
 
-## How to access neurons controlled by a principal ID created with quill
+Para seguir este proceso, es posible que desees configurar un nuevo dispositivo
+Ledger. Si lo haces, salta **paso 1** y **paso 2**. Consulta el mensaje de
+advertencia a continuación para obtener más información.
 
-To follow this process, you may want to set up a new Ledger device. If you do, skip **step 1** and **step 2**. See warning message below for more information.
-
-- **Step 1**: Unlock your Ledger device and navigate to **Settings Manage device** > **Security** > **Reset device**
+- **Paso 1**: Desbloquea tu dispositivo Ledger y ve a **Configuración** >
+  **Administrar dispositivo** > **Seguridad** > **Restablecer dispositivo**
 
 ![NNS Dapp Ledger 1](../../_attachments/ledger-1.webp)
 
-- **Step 2**: Type in your PIN to reset your Ledger device.
+- **Paso 2**: Ingresa tu PIN para restablecer tu dispositivo Ledger.
 
 :::caution
-**Warning**: This process will reset the private key of your Ledger device. **You will no longer have access to digital assets you hold on this device.**
 
-While you can always regain access by resetting the device with its current seed phrase, you may want to use a new Ledger device to continue. In general, it is advised to securely store your seed phrase.
+**Advertencia**: Este proceso restablecerá la clave privada de tu dispositivo
+Ledger. **Ya no tendrás acceso a los activos digitales que tengas en este
+dispositivo.**
+
+Siempre puedes recuperar el acceso restableciendo el dispositivo con su frase
+semilla actual, pero es posible que desees usar un nuevo dispositivo Ledger para
+continuar. En general, se recomienda almacenar de forma segura tu frase semilla.
+
 :::
 
-- **Step 3**: After your Ledger device has been successfully reset, navigate to **Restore from Recovery phrase**.
+- **Paso 3**: Después de que tu dispositivo Ledger se haya restablecido
+  correctamente, ve a **Restaurar desde frase de recuperación**.
 
 ![NNS Dapp Ledger 2](../../_attachments/ledger-2.webp)
 
-- **Step 4**: Select the number of words in your seed phrase, and enter the seed phrase of the principal ID that controls the neurons you would like to access.
+- **Paso 4**: Selecciona el número de palabras en tu frase semilla y ingresa la
+  frase semilla del ID principal que controla las neuronas a las que deseas
+  acceder.
 
 ![NNS Dapp Ledger 3](../../_attachments/ledger-3.webp)
 
-- **Step 5**: Install the **Internet Computer** app on your Ledger device.
+- **Paso 5**: Instala la aplicación **Internet Computer** en tu dispositivo
+  Ledger.
 
 ![NNS Dapp Ledger 4](../../_attachments/ledger-4.webp)
 
-- **Step 6**: Go to the [NNS dapp](https://nns.ic0.app/) and Sign in with **Internet Identity**.
+- **Paso 6**: Ve a la [NNS dapp](https://nns.ic0.app/) e inicia sesión con
+  **Identidad en Internet**.
 
-- **Step 7**: Go to **Tokens** > **Internet Computer** > **+ Add Account** and select **New Account (Hardware Wallet)**.
+- **Paso 7**: Ve a **Tokens** > **Internet Computer** > **+ Agregar cuenta** y
+  selecciona **Nueva cuenta (Billetera de hardware)**.
 
 ![NNS Dapp Ledger 5](../../_attachments/ledger-5.webp)
 
-- **Step 8**: While your Ledger device is connected to your computer, select your device from the popup to connect.
+- **Paso 8**: Mientras tu dispositivo Ledger esté conectado a tu computadora,
+  selecciona tu dispositivo en el cuadro emergente para conectarlo.
 
 ![NNS Dapp Ledger 6](../../_attachments/ledger-6.webp)
 
-- **Step 9**: You can verify the principal ID and account ID, then click **Create**.
+- **Paso 9**: Puedes verificar el ID principal y el ID de cuenta, luego haz clic
+  en **Crear**.
 
 ![NNS Dapp Ledger 7](../../_attachments/ledger-7.webp)
 
-- **Step 10**: Select the ICP account you just created
+- **Paso 10**: Selecciona la cuenta de ICP que acabas de crear.
 
-- **Step 11**: Click **Show Neurons** and approve the transaction on your Ledger device
+- **Paso 11**: Haz clic en **Mostrar neuronas** y aprueba la transacción en tu
+  dispositivo Ledger.
 
 ![NNS Dapp Ledger 8](../../_attachments/ledger-8.webp)
 
-- **Step 12**: Click **Add to NNS Dapp** to add your NNS Dapp principal ID as a hotkey to the neurons. This allows you to see and manage your neurons using the NNS Dapp. For all actions outside of voting and changing following, you will need to have your Ledger device connected and approve the action.
+- **Paso 12**: Haz clic en **Agregar a NNS Dapp** para agregar tu ID principal
+  de NNS Dapp como una tecla de acceso rápido a las neuronas. Esto te permite
+  ver y administrar tus neuronas utilizando la NNS Dapp. Para todas las acciones
+  fuera de votar y cambiar seguidores, necesitarás tener tu dispositivo Ledger
+  conectado y aprobar la acción.

@@ -3,62 +3,81 @@ keywords: [beginner, governance, tutorial, nns]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
-import '/src/components/CenterImages/center.scss';
+import "/src/components/CenterImages/center.scss";
 
-# Configuring neuron following
+# Configurando el seguimiento de neuronas
 
-<MarkdownChipRow labels={["Beginner", "Governance", "Tutorial"]} />
+<MarkdownChipRow labels={["Principiante", "Gobernanza", "Tutorial"]} />
 
 <div class="text--center">
-<p> </p>
+  <p> </p>
 </div>
 <div class="text--center">
-<iframe width="660" height="415" src="https://www.youtube.com/embed/6BznC9p3w8w?si=m7nc7xTGq5YUtXa3" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> </div>
+  <iframe
+    width="660"
+    height="415"
+    src="https://www.youtube.com/embed/6BznC9p3w8w?si=m7nc7xTGq5YUtXa3"
+    title="Reproductor de video de YouTube"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allowfullscreen
+  ></iframe>{" "}
+</div>
 
+Los propietarios de neuronas pueden encontrar difícil votar manualmente en cada
+propuesta presentada a la NNS. Por ejemplo, es posible que no tengan el tiempo o
+la experiencia necesaria para evaluar cada propuesta individual. La NNS utiliza
+una forma de democracia líquida para abordar estos desafíos llamada
+**seguimiento**.
 
-Neuron owners may find it hard to manually vote on every proposal submitted to the NNS.
-For example, they may not have the time or necessary expertise to evaluate each individual proposal.
-The NNS uses a form of liquid democracy to address these challenges called **following**.
+Dado que es de interés de cada neurona seguir a otras neuronas que respalden los
+mejores intereses de la red y los suyos propios, recomendamos estudiar las
+reglas precisas del seguimiento, así como cómo encontrar neuronas para seguir en
+[Seguimiento](/docs/building-apps/governing-apps/nns/concepts/neurons/neuron-following).
+Para obtener información sobre cómo convertirse en una neurona que puede ser
+seguida, consulte
+[Registro de una neurona conocida](/docs/building-apps/governing-apps/nns/concepts/neurons/becoming-a-known-neuron).
 
-As it is in each neuron's interest to follow other neurons that support the best interests of the network and their
-own, we recommend to study the precise rules of following as well as how you can find neurons to follow on
-[Following](/docs/building-apps/governing-apps/nns/concepts/neurons/neuron-following). For information about how you
-can become a neuron that can be followed, we refer to [Registering a known neuron](/docs/building-apps/governing-apps/nns/concepts/neurons/becoming-a-known-neuron).
+## Configuración del seguimiento de tus neuronas en la aplicación NNS
 
-## Setting your neurons' following in the NNS dapp
+Para configurar tu neurona para seguir a un grupo de otras neuronas:
 
-To configure your neuron to follow a group of another neurons:
-
-- #### Step 1: From the NNS dapp, select 'Neuron Staking', then select the neuron that you'd like to set a following rule for.
+- #### Paso 1: Desde la aplicación NNS, selecciona 'Neuron Staking', luego selecciona la neurona para la cual deseas establecer una regla de seguimiento.
 
 ![NNS Neuron following 1](../../_attachments/nns8.png)
 
-- #### Step 2: In the neuron's details, scroll down to the 'Following' section and select 'Follow Neurons'.
+- #### Paso 2: En los detalles de la neurona, desplázate hacia abajo hasta la sección 'Seguimiento' y selecciona 'Seguir neuronas'.
 
 ![NNS Neuron following 2](../../_attachments/nns13.png)
 
-- #### Step 3: Next, select a topic to follow.
+- #### Paso 3: A continuación, selecciona un tema para seguir.
 
-The topic refers to the different types of proposals; for example, the 'Governance' topic defines a following role for governance-related proposals, while the 'Subnet Management' topic defines a following role for subnet management proposals. There is also a 'catch-all' rule that can be followed for all proposal types except for governance, SNS, and neurons' fund.
+El tema se refiere a los diferentes tipos de propuestas; por ejemplo, el tema
+'Gobernanza' define un rol de seguimiento para propuestas relacionadas con la
+gobernanza, mientras que el tema 'Gestión de subredes' define un rol de
+seguimiento para propuestas de gestión de subredes. También hay una regla de
+'atrapar todo' que se puede seguir para todos los tipos de propuestas excepto
+gobernanza, SNS y el fondo de las neuronas.
 
-For this example, select 'SNS & Neurons' Fund'.
+Para este ejemplo, selecciona 'SNS & Neurons' Fund'.
 
 ![NNS Neuron following 3](../../_attachments/nns14.png)
 
-- #### Step 4: Select 'Add Followee'.
+- #### Paso 4: Selecciona 'Agregar seguido'.
 
 ![NNS Neuron following 4](../../_attachments/nns15.png)
 
-- #### Step 5: Enter a Neuron ID to follow, or select a group of neurons from the menu provided.
+- #### Paso 5: Ingresa un ID de neurona para seguir, o selecciona un grupo de neuronas del menú proporcionado.
 
-In this example, select 'DFINITY Foundation'.
+En este ejemplo, selecciona 'DFINITY Foundation'.
 
 ![NNS Neuron following 5](../../_attachments/nns16.png)
 
-- #### Step 6: The window will now reflect the following configuration:
+- #### Paso 6: La ventana ahora reflejará la configuración de seguimiento:
 
 ![NNS Neuron following 6](../../_attachments/nns17.png)
 
-The configuration will also now be shown in the neuron's details:
+La configuración también se mostrará en los detalles de la neurona:
 
 ![NNS Neuron following 7](../../_attachments/nns18.png)

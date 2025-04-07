@@ -3,28 +3,40 @@ keywords: [intermediate, governance, tutorial, nns]
 ---
 
 import { MarkdownChipRow } from "/src/components/Chip/MarkdownChipRow";
-import '/src/components/CenterImages/center.scss';
+import "/src/components/CenterImages/center.scss";
 
-# Spawn new neurons
+# Generar nuevas neuronas
 
-<MarkdownChipRow labels={["Intermediate", "Governance", "Tutorial"]} />
+<MarkdownChipRow labels={["Intermedio", "Gobernanza", "Tutorial"]} />
 
+Una vez que estés más familiarizado con el NNS, es posible que desees utilizar
+la aplicación NNS para realizar operaciones adicionales en las neuronas.
 
-Once you are a bit more familiar with the NNS, you might want to use the NNS dapp to perform additional neuron operations.
+Para obtener más información sobre las neuronas, incluyendo los conceptos de
+recompensas de votación y qué hacen las diferentes operaciones de neuronas en
+detalle, consulta la
+[Descripción general de las neuronas](/docs/building-apps/governing-apps/nns/concepts/neurons/neuron-overview).
 
-For more background on neurons, including the concepts of voting rewards and what the different neuron operations do in details,
-refer to the [Neurons overview](/docs/building-apps/governing-apps/nns/concepts/neurons/neuron-overview).
+## Generar tus recompensas de votación en una nueva neurona
 
-## Spawn your voting rewards into a new neuron
-As you vote on proposals, either directly or by following the votes of other neurons, the maturity associated with your neuron increases, which in turn increases the rewards you earn for participating in governance.
-When the maturity for a locked stake reaches a minimum threshold of 1 ICP, you can spawn a new neuron. The spawn operation creates a new neuron that locks a new balance of ICP on the ledger.
+A medida que votas en propuestas, ya sea directamente o siguiendo los votos de
+otras neuronas, la madurez asociada con tu neurona aumenta, lo que a su vez
+aumenta las recompensas que obtienes por participar en la gobernanza. Cuando la
+madurez de una apuesta bloqueada alcanza un umbral mínimo de 1 ICP, puedes
+generar una nueva neurona. La operación de generación crea una nueva neurona que
+bloquea un nuevo saldo de ICP en el libro mayor.
 
-For example, if you have a neuron that contains 100 ICP utility tokens and it has a maturity of 10 percent, you can spawn a new neuron that contains approximately 10 new ICP tokens. For the neuron with 100 ICP tokens to reach the minimum threshold for spawning, its maturity would need to be greater than 1 percent.
+Por ejemplo, si tienes una neurona que contiene 100 tokens de utilidad ICP y
+tiene una madurez del 10 por ciento, puedes generar una nueva neurona que
+contenga aproximadamente 10 nuevos tokens de ICP. Para que la neurona con 100
+tokens de ICP alcance el umbral mínimo para la generación, su madurez debería
+ser mayor al 1 por ciento.
 
-After you spawn a new neuron from an existing neuron, the maturity for the existing neuron falls to zero.
+Después de generar una nueva neurona a partir de una neurona existente, la
+madurez de la neurona existente se reduce a cero.
 
-To spawn new neurons from an existing neuron:
+Para generar nuevas neuronas a partir de una neurona existente:
 
-- #### Step 1:  From the NNS dapp, select 'Neuron Staking', then click the neuron that has reached the minimum maturity required to spawn a new neuron.
+- #### Paso 1: Desde la aplicación NNS, selecciona 'Neuron Staking' y luego haz clic en la neurona que ha alcanzado la madurez mínima requerida para generar una nueva neurona.
 
-- #### Step 2:  Click **Spawn Neuron**.
+- #### Paso 2: Haz clic en **Generar Neurona**.
